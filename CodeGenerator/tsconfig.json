@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "lib": ["es2019"],
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "outDir": "build",
+    "sourceMap": true,
+    "target": "es6"
+  },
+  "compileOnSave": true,
+  "include": [
+    "src"
+  ]
+}

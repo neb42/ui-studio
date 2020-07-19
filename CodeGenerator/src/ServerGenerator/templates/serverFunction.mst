@@ -1,0 +1,18 @@
+{{=<% %>=}}
+
+<% #serverFunctions %>
+import <% name %> from './serverFunctions/<% name %>';
+<% /serverFunctions %>
+<% #queries %>
+import <% name %> from './queries/<% name %>';
+<% /queries %>
+
+const <% name %> = ({
+  <% #clientDependencies %>
+    <% name %>,
+  <% /clientDependencies %> 
+}) => {
+  <% functionString %>
+};
+
+export default <% name %>;

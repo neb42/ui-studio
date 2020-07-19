@@ -1,0 +1,39 @@
+{{=<% %>=}}
+
+import * as express from 'express';
+import * as cookieParser from 'cookie-parser';
+import * as cors from 'cors';
+
+<% #serverFunctions %>
+import <% name %> from './serverFunctions/<% name %>';
+<% /serverFunctions %>
+<% #queries %>
+import <% name %> from './queries/<% name %>';
+<% /queries %>
+
+<% #both %>
+const ${name}_endpoint = async (request, response, next) => {
+  try {
+    const result = await ${name}();
+    response.status(200).send(result);
+  } catch (error) {
+    next(error);
+  };
+};
+<% /both %>
+
+const router = express.Router();
+<% #both %>
+  router.post(
+    '/<% name %>',
+    <% name %>_endpoint,
+  );
+};
+<% /both %>
+
+const app = express();
+app.use(cookieParser());
+app.use(cors({ origin: true }));
+app.use('/api', router);
+
+export default app;

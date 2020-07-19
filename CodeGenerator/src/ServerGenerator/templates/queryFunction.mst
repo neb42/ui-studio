@@ -1,0 +1,22 @@
+{{=<% %>=}}
+
+import { <% dataset.name %> } from './datasets';
+<% #serverFunctions %>
+import <% name %> from './serverFunctions/<% name %>';
+<% /serverFunctions %>
+<% #queries %>
+import <% name %> from './queries/<% name %>';
+<% /queries %>
+
+const <% name %> = ({
+  <% #clientDependencies %>
+    <% name %>,
+  <% /clientDependencies %> 
+}) => {
+  return <% dataset.name %>.query(`<% queryString %>`, (error, results, fields) => {
+    if (error) throw error;
+    return results;
+  });
+};
+
+export default <% name %>;
