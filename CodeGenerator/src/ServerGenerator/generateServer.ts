@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import { promises as fs, existsSync } from 'fs';
 import * as path from 'path';
 
 import generateServerFunctionFiles from './serverFunctions';
@@ -12,11 +12,10 @@ interface Args {
   serverFunctions: ServerFunction[];
   clientFunctions: ClientFunction[];
   widgets: Widget[];
+  getChildrenOfTypes: (nodeKey: string, types: string[]) => string[];
+  basePath: string,
 }
 
-const basePath = '/tmp/server';
-const queriesPath = path.join(basePath, 'Queries');
-const serverFunctionsPath = path.join(basePath, 'ServerFunctions');
 
 const generateServer = async ({
   datasets,
@@ -24,17 +23,31 @@ const generateServer = async ({
   serverFunctions,
   clientFunctions,
   widgets,
+  getChildrenOfTypes,
+  basePath,
 }: Args) => {
-  await Promise.all([
-    fs.mkdir(basePath),
-    fs.mkdir(queriesPath),
-    fs.mkdir(serverFunctionsPath),
-  ]);
+  const serverPath = path.join(basePath, 'server');
+  const queriesPath = path.join(serverPath, 'queries');
+  const serverFunctionsPath = path.join(serverPath, 'serverFunctions');
 
-  generateDatasetsFile(datasets, basePath);
-  generateQueriesFunctionFiles(queries, queriesPath);
-  generateServerFunctionFiles(serverFunctions, serverFunctionsPath);
-  generateRouterFile([... clientFunctions, ...widgets], basePath);
+  if (!existsSync(serverPath)){
+    await fs.mkdir(serverPath);
+  }
+  if (!existsSync(queriesPath)){
+    await fs.mkdir(queriesPath);
+  }
+  if (!existsSync(serverFunctionsPath)){
+    await fs.mkdir(serverFunctionsPath);
+  }
+
+  const getClientDeps = key => getChildrenOfTypes(key, ['widget', 'clientFunction']);
+  const getServerFunctionDeps = key => getChildrenOfTypes(key, ['serverFunction']);
+  const getQueryDeps = key => getChildrenOfTypes(key, ['query']);
+
+  generateDatasetsFile(datasets, serverPath);
+  generateQueriesFunctionFiles(queries, queriesPath, getClientDeps);
+  generateServerFunctionFiles(serverFunctions, serverFunctionsPath, getClientDeps);
+  generateRouterFile([... clientFunctions, ...widgets], serverPath, getServerFunctionDeps, getQueryDeps);
 };
 
 export default generateServer;

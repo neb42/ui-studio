@@ -1230,6 +1230,11 @@ graceful-fs@^4.1.2:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
+graph-data-structure@^1.12.1:
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/graph-data-structure/-/graph-data-structure-1.12.1.tgz#fc6020e30a9ffdaa0d9c126eb8476a7757f39a5d"
+  integrity sha512-0DHxFEUk2EHO19PQrcOckz91WZPk7Itl2mmNpGdpSIZUtBUHRVJPtuuZCJAXB69YRL4fKDCRv2cX3ly8aZZ0QQ==
+
 has-ansi@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/has-ansi/-/has-ansi-2.0.0.tgz#34f5049ce1ecdf2b0649af3ef24e45ed35416d91"

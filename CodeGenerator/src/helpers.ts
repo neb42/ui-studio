@@ -1,41 +1,27 @@
-const buildFunction = ({ name, dependencies }) => `${name}({${getClientDeps(dependencies).map(d => d.name).join(', ')}})`;
+const buildFunction = (name: string, clientDeps: string[]) =>
+  `${name}({${clientDeps.join(', ')}})`;
 
-export const getClientDeps = ({ serverFunctions, widgets, clientFunctions, queries }: Dependencies) => {
-  return [
-    ...widgets,
-    ...clientFunctions,
-    ...serverFunctions.flatMap(s => getClientDeps(s.dependencies)),
-    ...queries.flatMap(q => getClientDeps(q.dependencies)),
-  ];
-};
+interface BuildTemplateParamsArgs {
+  serverFunctions: string[],
+  queries: string[],
+  clientDeps: string[],
+}
 
-export const getQueryDeps = ({ serverFunctions, widgets, clientFunctions, queries }: Dependencies) => {
-  return [
-    ...queries,
-    ...widgets.flatMap(c => getQueryDeps(c.dependencies)),
-    ...clientFunctions.flatMap(c => getQueryDeps(c.dependencies)),
-  ];
-}; 
-
-export const getServerFunctionDeps = ({ serverFunctions, widgets, clientFunctions, queries }: Dependencies) => {
-  return [
-    ...queries,
-    ...widgets.flatMap(c => getServerFunctionDeps(c.dependencies)),
-    ...clientFunctions.flatMap(c => getServerFunctionDeps(c.dependencies)),
-  ];
-}; 
-
-export const buildTemplateParams = (dependencies: Dependencies) => ({
-  ...dependencies.serverFunctions.reduce((acc, cur) => ({
+export const buildTemplateParams = ({
+  serverFunctions,
+  queries,
+  clientDeps,
+}: BuildTemplateParamsArgs) => ({
+  ...serverFunctions.reduce((acc, cur) => ({
     ...acc,
-    [cur.name]: buildFunction(cur),
+    [cur]: buildFunction(cur, clientDeps),
   }), {}),
-  ...dependencies.queries.reduce((acc, cur) => ({
+  ...queries.reduce((acc, cur) => ({
     ...acc,
-    [cur.name]: buildFunction(cur),
+    [cur]: buildFunction(cur, clientDeps),
   }), {}),
-  ...getClientDeps(dependencies).reduce((acc, cur) => ({
+  ...clientDeps.reduce((acc, cur) => ({
     ...acc,
-    [cur.name]: cur.name,
+    [cur]: cur,
   }), {}),
 }); 

@@ -1,23 +1,80 @@
+import { promises as fs, existsSync } from 'fs';
+import Graph from 'graph-data-structure';
+
 import generateServer from './ServerGenerator/generateServer';
-import generateClient from './ClientGenerator/generateClient';
+// import generateClient from './ClientGenerator/generateClient';
 
-const run = () => {
-  const nodes = [];
+import * as FakeData from './fakeData';
 
-  const datasets = nodes.filter(o => o.type === 'dataset');
-  const queries = nodes.filter(o => o.type === 'query');
-  const serverFunctions = nodes.filter(o => o.type === 'serverFunction');
-  const clientFunctions = nodes.filter(o => o.type === 'clientFunction');
-  const pages = nodes.filter(o => o.type === 'pages');
-  const layouts = nodes.filter(o => o.type === 'layout');
-  const components = nodes.filter(o => o.type === 'component');
+const basePath = '/Users/bmcalindin/Desktop/generatedCode';
+
+const run = async () => {
+  const datasets: { [key: string]: Dataset; } = FakeData.dataset;
+  const queries: { [key: string]: Query; } = FakeData.queries;
+  const serverFunctions: { [key: string]: ServerFunction; } = FakeData.serverFunctions;
+  const clientFunctions: { [key: string]: ClientFunction; } = FakeData.clientFunctions;
+  const widgets: { [key: string]: Widget; } = FakeData.widgets;
+  const layouts: { [key: string]: Layout; } = FakeData.layouts;
+  const pages: { [key: string]: Page; } = FakeData.pages;
+
+  const all = {
+    ...datasets,
+    ...queries,
+    ...serverFunctions,
+    ...clientFunctions,
+    ...pages,
+    ...layouts,
+    ...widgets,
+  };
+
+  const dependencyGraph = Graph();
+  Object.keys(all).forEach(k => dependencyGraph.addNode(k));
+  Object.values({
+    ...queries,
+    ...serverFunctions,
+    ...clientFunctions,
+    ...widgets,
+  }).forEach(v => Object.values(v.dependencies)
+    .forEach(depSet => 
+      depSet.forEach(d => dependencyGraph.addEdge(v.name, d))
+    )
+  );
+
+  const elementGraph = Graph();
+  Object.keys({ ...pages, ...layouts, ... widgets }).forEach(k => elementGraph.addNode(k));
+  Object.values({ ...widgets, ...layouts }).forEach(v => elementGraph.addEdge(v.parent, v.name));
+
+  const getChildrenOfTypes = (nodeKey: string, types: string[]): string[] => {
+    const allChildren = dependencyGraph.depthFirstSearch([nodeKey], false);
+    return allChildren.filter(c => types.includes(all[c].type));
+  };
+
+  if (!existsSync(basePath)){
+    await fs.mkdir(basePath);
+  }
 
   generateServer({
-    datasets,
-    queries,
-    serverFunctions,
-    clientFunctions,
-    components,
+    datasets: Object.values(datasets),
+    queries: Object.values(queries),
+    serverFunctions: Object.values(serverFunctions),
+    clientFunctions: Object.values(clientFunctions),
+    widgets: Object.values(widgets),
+    getChildrenOfTypes,
+    basePath,
   });
-  generateClient();
+
+  // generateClient({
+  //   queries,
+  //   serverFunctions,
+  //   clientFunctions,
+  //   widgets,
+  //   pages,
+  //   layouts,
+  // });
 };
+
+try {
+  run();
+} catch (error) {
+  console.log(error)
+}

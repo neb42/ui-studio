@@ -1,15 +1,14 @@
 {{=<% %>=}}
-
 <% #serverFunctions %>
-import <% name %> from './serverFunctions/<% name %>';
+import <% . %> from './serverFunctions/<% . %>';
 <% /serverFunctions %>
 <% #queries %>
-import <% name %> from './queries/<% name %>';
+import <% . %> from './queries/<% . %>';
 <% /queries %>
 
 const <% name %> = ({
   <% #clientDependencies %>
-    <% name %>,
+  <% . %>,
   <% /clientDependencies %> 
 }) => {
   <% functionString %>

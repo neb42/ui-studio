@@ -1,20 +1,19 @@
 {{=<% %>=}}
-
 import * as express from 'express';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 
 <% #serverFunctions %>
-import <% name %> from './serverFunctions/<% name %>';
+import <% . %> from './serverFunctions/<% . %>';
 <% /serverFunctions %>
 <% #queries %>
-import <% name %> from './queries/<% name %>';
+import <% . %> from './queries/<% . %>';
 <% /queries %>
 
 <% #both %>
-const ${name}_endpoint = async (request, response, next) => {
+const <% . %>_endpoint = async (request, response, next) => {
   try {
-    const data = await ${name}();
+    const data = await <% . %>();
     response.status(200).send({ data });
   } catch (error) {
     next(error);
@@ -25,8 +24,8 @@ const ${name}_endpoint = async (request, response, next) => {
 const router = express.Router();
 <% #both %>
   router.post(
-    '/<% name %>',
-    <% name %>_endpoint,
+    '/<% . %>',
+    <% . %>_endpoint,
   );
 };
 <% /both %>

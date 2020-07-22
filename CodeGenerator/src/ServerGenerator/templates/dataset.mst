@@ -1,15 +1,14 @@
 {{=<% %>=}}
-
 import mysql from 'mysql';
 
 <% #datasets %>
-const <% ds.name %> = mysql.createConnection({
-  host: '<% ds.host %>',
-  port: <% ds.port %>,
-  user: '<% ds.user %>',
-  password: '<% ds.password %>',
-  database: '<% ds.database %>',
+const <% name %> = mysql.createConnection({
+  host: '<% host %>',
+  port: <% port %>,
+  user: '<% user %>',
+  password: '<% password %>',
+  database: '<% database %>',
 });
-<% ds.name %>.connect();
-export <% ds.name %>;
+<% name %>.connect();
+export <% name %>;
 <% /datasets %>

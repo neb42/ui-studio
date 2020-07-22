@@ -1,19 +1,18 @@
 {{=<% %>=}}
-
-import { <% dataset.name %> } from './datasets';
+import { <% dataset %> } from './datasets';
 <% #serverFunctions %>
-import <% name %> from './serverFunctions/<% name %>';
+import <% . %> from './serverFunctions/<% . %>';
 <% /serverFunctions %>
 <% #queries %>
-import <% name %> from './queries/<% name %>';
+import <% . %> from './queries/<% . %>';
 <% /queries %>
 
 const <% name %> = ({
   <% #clientDependencies %>
-    <% name %>,
+  <% . %>,
   <% /clientDependencies %> 
 }) => {
-  return <% dataset.name %>.query(`<% queryString %>`, (error, results, fields) => {
+  return <% dataset %>.query(`<% queryString %>`, (error, results, fields) => {
     if (error) throw error;
     return results;
   });

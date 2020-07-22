@@ -5,10 +5,12 @@
     "noImplicitReturns": true,
     "outDir": "build",
     "sourceMap": true,
-    "target": "es6"
+    "target": "es6",
+    "esModuleInterop": true
   },
   "compileOnSave": true,
   "include": [
     "src"
-  ]
+  ],
+  "exclude": ["src/ClientGenerator/"]
 }
