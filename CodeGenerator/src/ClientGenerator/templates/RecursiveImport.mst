@@ -1,0 +1,5 @@
+{{=<% %>=}}
+import <% type %>_<% name %> from './components/<% type %>_<% name %>';
+<% #children %>
+<% >recursive_import %>
+<% /children %>

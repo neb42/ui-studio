@@ -2,7 +2,7 @@ interface Dependencies {
   queries: Query[];
   serverFunctions: ServerFunction[];
   clientFunctions: ClientFunction[];
-  components: Component[];
+  widgets: Widget[];
 }
 
 interface Dataset {
@@ -33,15 +33,27 @@ interface ClientFunction {
   functionString: string;
 }
 
-interface Component {
-  type: 'component';
+interface Widget {
+  type: 'widget';
   name: string;
   dependencies: Dependencies;
 }
 
 interface Layout {
   type: 'layout';
+  layoutType: 'grid' | 'flex';
   name: string;
   dependencies: Dependencies;
-  children: Component[];
+}
+
+interface Node {
+  type: 'layout' | 'widget';
+  name: string;
+  children: Node[];
+}
+
+interface Page {
+  type: 'page';
+  name: string;
+  children: Node[];
 }

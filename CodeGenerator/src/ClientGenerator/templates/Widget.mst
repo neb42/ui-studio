@@ -1,0 +1,50 @@
+{{=<% %>=}}
+
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import styled from 'styled-components';
+
+<% #dependencies %>
+import <% name %>_selector from './selectors/<% name %>';
+<% /dependencies %>
+
+const mapStateToProps = (state) => ({
+  <% #dependencies %>
+  <% name %>: <% name %>_selector(state),
+  <% /dependencies %>
+});
+
+const mapDispatchToProps = (dispatch) =>  bindActionCreators({ updateWidget }, dispatch);
+
+const WidgetWrapper = styled.div``;
+
+const Widget_<% name %> = ({
+  <% #dependencies %>
+  <% name %>,
+  <% /dependencies %>
+  updateWidget,
+  children,
+}) => {
+  const [ref, setRef] = React.useState();
+
+  React.useEffect(() => {
+    updateWidget({
+      <% #exposedProperties %>
+      <% name%>: ref.<% name %>,
+      <% /exposedProperties %>
+    });
+  }, [
+    <% #exposedProperties %>
+    ref.<% name %>,
+    <% /exposedProperties %>
+  ]);
+
+  return React.createElement(
+    WidgetWrapper,
+    {}, 
+    React.createElement(<% component %>, { ref: r => setRef(r) }, children),
+  );
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Widget<% name %>);

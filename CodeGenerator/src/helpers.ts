@@ -1,26 +1,26 @@
 const buildFunction = ({ name, dependencies }) => `${name}({${getClientDeps(dependencies).map(d => d.name).join(', ')}})`;
 
-export const getClientDeps = ({ serverFunctions, components, clientFunctions, queries }: Dependencies) => {
+export const getClientDeps = ({ serverFunctions, widgets, clientFunctions, queries }: Dependencies) => {
   return [
-    ...components,
+    ...widgets,
     ...clientFunctions,
     ...serverFunctions.flatMap(s => getClientDeps(s.dependencies)),
     ...queries.flatMap(q => getClientDeps(q.dependencies)),
   ];
 };
 
-export const getQueryDeps = ({ serverFunctions, components, clientFunctions, queries }: Dependencies) => {
+export const getQueryDeps = ({ serverFunctions, widgets, clientFunctions, queries }: Dependencies) => {
   return [
     ...queries,
-    ...components.flatMap(c => getQueryDeps(c.dependencies)),
+    ...widgets.flatMap(c => getQueryDeps(c.dependencies)),
     ...clientFunctions.flatMap(c => getQueryDeps(c.dependencies)),
   ];
 }; 
 
-export const getServerFunctionDeps = ({ serverFunctions, components, clientFunctions, queries }: Dependencies) => {
+export const getServerFunctionDeps = ({ serverFunctions, widgets, clientFunctions, queries }: Dependencies) => {
   return [
     ...queries,
-    ...components.flatMap(c => getServerFunctionDeps(c.dependencies)),
+    ...widgets.flatMap(c => getServerFunctionDeps(c.dependencies)),
     ...clientFunctions.flatMap(c => getServerFunctionDeps(c.dependencies)),
   ];
 }; 

@@ -1,0 +1,16 @@
+{{=<% %>=}}
+
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+
+import rootReducer from './reducers';
+
+const reduxMiddleware = [thunk];
+
+const store = createStore(
+  rootReducer,
+  {},
+  compose(applyMiddleware(reduxMiddleware)),
+);
+
+export default store;

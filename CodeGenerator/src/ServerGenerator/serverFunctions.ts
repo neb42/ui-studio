@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as Mustache from 'mustache';
 
-import { getClientDeps, buildTemplateParams } from './helpers';
+import { getClientDeps, buildTemplateParams } from '../helpers';
 
 const generateServerFunctionFiles = (serverFunctions: ServerFunction[], basePath: string): Promise<void[]> => {
   return Promise.all(serverFunctions.map(async s => {

@@ -1,0 +1,49 @@
+const initialState = {
+  <% #foo %>
+  <% name %>: {
+    value: null,
+    loading: false,
+    error: false,
+  },
+  <% /foo %>
+};
+
+const <% type %> = (state = initialState, action) => {
+  switch (action.type) {
+    case '<% type %>_API_CALL_PENDING': {
+      return {
+        ...state,
+        [action.name]: {
+          ...state.serverFunction[action.name],
+          loading: true,
+          error: false,
+        },
+      };
+    }
+    case '<% type %>_API_CALL_FULFILLED': {
+      return {
+        ...state,
+        [action.name]: {
+          ...state.serverFunction[action.name],
+          value: action.payload,
+          loading: false,
+          error: false,
+        },
+      };
+    }
+    case '<% type %>_API_CALL_REJECTED': {
+      return {
+        ...state,
+        [action.name]: {
+          ...state.serverFunction[action.name],
+          loading: false,
+          error: true,
+        },
+      };
+    }
+    default:
+      return state;
+  }
+};
+
+export default <% type %>;

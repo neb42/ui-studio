@@ -1,0 +1,13 @@
+import { combineReducers } from 'redux';
+
+import query from './query';
+import serverFunction from './serverFunction';
+import widget from './widget';
+
+const rootReducer = combineReducers({
+  query,
+  serverFunction,
+  widget,
+});
+
+export default rootReducer;

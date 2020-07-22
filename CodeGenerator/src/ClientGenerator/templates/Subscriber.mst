@@ -1,0 +1,57 @@
+{{=<% %>=}}
+
+import axios from 'axios';
+
+import store from '../store';
+
+<% #clientFunctions %>
+import <% name %>_selector from '../selectors/<% name %>';
+<% /clientFunctions %>
+<% #widgets %>
+import <% name %>_selector from '../selectors/<% name %>';
+<% /widgets %>
+
+const select = (state) => {
+  const value = {};
+  <% #clientFunctions %>
+  value[<% name %>] = <% name %>_selector(state); 
+  <% /clientFunctions %>
+  <% #widgets %>
+  value[<% name %>] = <% name %>_selector(state); 
+  <% /widgets %>
+  return value;
+};
+
+let currentValue;
+
+const handleChange = async () => {
+  const previousValue = currentValue;
+
+  currentValue = select(store.getState());
+
+  if (JSON.stringify(previousValue) !== JSON.stringify(currentValue)) {
+    try {
+      store.dispatch({
+        type: '<% type %>_API_CALL_PENDING',
+        name: '<% name %>',
+      });
+
+      const { data: { data }, status } = await axios.post(/api/<% name %>, currentValue);
+
+      if (status !== 200) throw new Error(`Status code: ${status}`);
+
+      store.dispatch({
+        type: '<% type %>_API_CALL_FULFILLED',
+        name: '<% name %>',
+        payload: data,
+      });
+    } catch(error) {
+      store.dispatch({
+        type: '<% type %>_API_CALL_REJECTED',
+        name: '<% name %>',
+      });
+    }
+  }
+};
+
+store.subscribe(handleChange);

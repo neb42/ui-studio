@@ -11,7 +11,7 @@ interface Args {
   queries: Query[];
   serverFunctions: ServerFunction[];
   clientFunctions: ClientFunction[];
-  components: Component[];
+  widgets: Widget[];
 }
 
 const basePath = '/tmp/server';
@@ -23,7 +23,7 @@ const generateServer = async ({
   queries,
   serverFunctions,
   clientFunctions,
-  components,
+  widgets,
 }: Args) => {
   await Promise.all([
     fs.mkdir(basePath),
@@ -34,7 +34,7 @@ const generateServer = async ({
   generateDatasetsFile(datasets, basePath);
   generateQueriesFunctionFiles(queries, queriesPath);
   generateServerFunctionFiles(serverFunctions, serverFunctionsPath);
-  generateRouterFile([... clientFunctions, ...components], basePath);
+  generateRouterFile([... clientFunctions, ...widgets], basePath);
 };
 
 export default generateServer;

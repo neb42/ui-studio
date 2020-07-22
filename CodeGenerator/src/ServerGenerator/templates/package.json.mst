@@ -1,0 +1,14 @@
+{
+  "name": <% appName %>/server,
+  "scripts": {
+    "build": "babel --quiet <% buildDirectory %> <% sourceDirectory %>"
+  },
+  "dependencies": {
+    "cors": "<% packageVersions.cors %>",
+    "cookie-parser": "<% packageVersions.cookieParser %>",
+    "express": "<% packageVersions.express %>"
+  },
+  "devDependencies": {
+    "@faculty/babel-preset": "<% packageVersions.facultyBabelPreset %>",
+  }
+}

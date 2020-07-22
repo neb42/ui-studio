@@ -1,0 +1,11 @@
+{{=<% %>=}}
+
+const <% name %>_selector = (state) => {
+  <% #functionString %>
+    return <% functionString %>
+  <% /functionString %>
+  <% ^functionString %>
+    return state.<% type %>.<% name %>;
+  <% /functionString %>
+}
+export default <% name %>_selector;

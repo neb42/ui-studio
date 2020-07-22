@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as Mustache from 'mustache';
 
-import { getClientDeps, buildTemplateParams } from './helpers';
+import { getClientDeps, buildTemplateParams } from '../helpers';
 
 const generateQueriesFunctionFiles = (queries: Query[], basePath: string): Promise<void[]> => {
   return Promise.all(queries.map(async q => {

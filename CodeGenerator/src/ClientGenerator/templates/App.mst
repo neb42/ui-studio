@@ -1,0 +1,23 @@
+{{=<% %>=}}
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
+import { defaultTokens } from '@faculty/adler-tokens';
+
+import '@babel/polyfill';
+import 'whatwg-fetch';
+import 'd3-transition';
+
+import store from './store';
+
+const rootElement = document.getElementById('root');
+ReactDOM.render(
+  <ThemeProvider theme={defaultTokens}>
+    <Provider store={store}>
+      <Routes  store={store} history={history} />,
+    </Provider>
+  </ThemeProvider>,
+  rootElement,
+);
