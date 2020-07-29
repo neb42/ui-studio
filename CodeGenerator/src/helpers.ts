@@ -1,26 +1,26 @@
-const buildFunction = (name: string, clientDeps: string[]) =>
-  `${name}({${clientDeps.join(', ')}})`;
+const buildFunction = (name: string, deps: string[]) =>
+  `${name}({${deps.join(', ')}})`;
 
-interface BuildTemplateParamsArgs {
-  serverFunctions: string[],
-  queries: string[],
-  clientDeps: string[],
+interface BuildServerTemplateParamsArgs {
+  serverFunctions: string[];
+  queries: string[];
+  deps: string[];
 }
 
-export const buildTemplateParams = ({
+export const buildServerTemplateParams = ({
   serverFunctions,
   queries,
-  clientDeps,
-}: BuildTemplateParamsArgs) => ({
+  deps,
+}: BuildServerTemplateParamsArgs) => ({
   ...serverFunctions.reduce((acc, cur) => ({
     ...acc,
-    [cur]: buildFunction(cur, clientDeps),
+    [cur]: buildFunction(cur, deps),
   }), {}),
   ...queries.reduce((acc, cur) => ({
     ...acc,
-    [cur]: buildFunction(cur, clientDeps),
+    [cur]: buildFunction(cur, deps),
   }), {}),
-  ...clientDeps.reduce((acc, cur) => ({
+  ...deps.reduce((acc, cur) => ({
     ...acc,
     [cur]: cur,
   }), {}),

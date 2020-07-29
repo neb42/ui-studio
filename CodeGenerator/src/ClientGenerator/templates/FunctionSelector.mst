@@ -1,0 +1,10 @@
+{{=<% %>=}}
+<% #dependencies %>
+import selector_<% name %> from './selectors/<% name %>';
+<% /dependencies %>
+
+const selector_<% name %> = (state) => {
+  <% functionString %>
+};
+
+export default selector_<% name %>;

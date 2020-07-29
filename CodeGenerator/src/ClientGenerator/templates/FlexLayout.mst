@@ -1,10 +1,9 @@
 {{=<% %>=}}
-
 import React from 'react';
 import styled from 'styled-components';
 
-const FlexLayout = styled.div`
-  display: flex;
+const layout_<% name %> = styled.div`
+  display: grid;
 `;
 
-export default FlexLayout;
+export default layout_<% name %>;

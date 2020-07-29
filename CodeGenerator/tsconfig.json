@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["es2019"],
+    "lib": ["es2020"],
     "module": "commonjs",
     "noImplicitReturns": true,
     "outDir": "build",
@@ -11,6 +11,5 @@
   "compileOnSave": true,
   "include": [
     "src"
-  ],
-  "exclude": ["src/ClientGenerator/"]
+  ]
 }

@@ -1,5 +1,4 @@
 {{=<% %>=}}
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -16,7 +15,7 @@ const rootElement = document.getElementById('root');
 ReactDOM.render(
   <ThemeProvider theme={defaultTokens}>
     <Provider store={store}>
-      <Routes  store={store} history={history} />,
+      <Routes />
     </Provider>
   </ThemeProvider>,
   rootElement,

@@ -1,14 +1,17 @@
+{{=<% %>=}}
 {
-  "name": <% appName %>/server,
+  "name": "<% appName %>/server"
   "scripts": {
     "build": "babel --quiet <% buildDirectory %> <% sourceDirectory %>"
   },
   "dependencies": {
-    "cors": "<% packageVersions.cors %>",
-    "cookie-parser": "<% packageVersions.cookieParser %>",
-    "express": "<% packageVersions.express %>"
+    <% #dependencies %>
+    "<% name %>": "<% version %>"<% ^last %>, <% /last %>      
+    <% /dependencies %>
   },
   "devDependencies": {
-    "@faculty/babel-preset": "<% packageVersions.facultyBabelPreset %>",
+    <% #devDependencies %>
+    "<% name %>": "<% version %>"<% ^last %>, <% /last %>      
+    <% /devDependencies %>
   }
 }

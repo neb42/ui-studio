@@ -1,26 +1,17 @@
 {{=<% %>=}}
-
 import axios from 'axios';
 
 import store from '../store';
 
-<% #clientFunctions %>
-import <% name %>_selector from '../selectors/<% name %>';
-<% /clientFunctions %>
-<% #widgets %>
-import <% name %>_selector from '../selectors/<% name %>';
-<% /widgets %>
+<% #clientDeps %>
+import selector_<% . %> from '../selectors/<% . %>';
+<% /clientDeps %>
 
-const select = (state) => {
-  const value = {};
-  <% #clientFunctions %>
-  value[<% name %>] = <% name %>_selector(state); 
-  <% /clientFunctions %>
-  <% #widgets %>
-  value[<% name %>] = <% name %>_selector(state); 
-  <% /widgets %>
-  return value;
-};
+const select = (state) => ({
+  <% #clientDeps %>
+  <% . %>: selector_<% . %>(state),
+  <% /clientDeps %>
+});
 
 let currentValue;
 
@@ -36,7 +27,7 @@ const handleChange = async () => {
         name: '<% name %>',
       });
 
-      const { data: { data }, status } = await axios.post(/api/<% name %>, currentValue);
+      const { data: { data }, status } = await axios.post('/api/<% name %>', currentValue);
 
       if (status !== 200) throw new Error(`Status code: ${status}`);
 

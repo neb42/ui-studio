@@ -2,9 +2,7 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as Mustache from 'mustache';
 
-import { getQueryDeps, getServerFunctionDeps } from '../helpers';
-
-const generateApiReducerFile = async (foo: Query[] | ServerFunction[], type: 'query' | 'serverFunction', basePath: string): Promise<void> => {
+const generateApiReducerFile = async (foo: string[], type: 'query' | 'serverFunction', basePath: string): Promise<void> => {
   const data = await fs.readFile(path.join(__dirname, 'templates', 'ApiReducer.mst'));
   const renderedFile = Mustache.render(data.toString(), { foo, type });
   return fs.writeFile(path.join(basePath, `${type}.js`), renderedFile);
@@ -22,10 +20,15 @@ const generateRootReducerFile = async (basePath: string): Promise<void> => {
   return fs.writeFile(path.join(basePath, 'index.js'), renderedFile);
 };
 
-const generateReducerFiles = async (widgets: Widget[], clientFunctions: ClientFunction[], basePath: string): Promise<void[]> => {
+const generateReducerFiles = async (
+  widgets: Widget[],
+  clientFunctions: ClientFunction[],
+  basePath: string,
+  getChildrenOfTypes: (nodeKey: string, types: string[]) => string[],
+): Promise<void[]> => {
   const both = [...widgets, ...clientFunctions];
-  const queries = both.flatMap(f => getQueryDeps(f.dependencies));
-  const serverFunctions = both.flatMap(f => getServerFunctionDeps(f.dependencies));
+  const queries = both.flatMap(f => getChildrenOfTypes(f.name, ['query']));
+  const serverFunctions = both.flatMap(f => getChildrenOfTypes(f.name, ['serverFunction']));
 
   return Promise.all([
     generateApiReducerFile(queries, 'query', basePath),

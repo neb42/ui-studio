@@ -2,13 +2,16 @@ import { promises as fs, existsSync } from 'fs';
 import Graph from 'graph-data-structure';
 
 import generateServer from './ServerGenerator/generateServer';
-// import generateClient from './ClientGenerator/generateClient';
+import generateClient from './ClientGenerator/generateClient';
 
 import * as FakeData from './fakeData';
 
 const basePath = '/Users/bmcalindin/Desktop/generatedCode';
 
-const run = async () => {
+const run = async (appId: string) => {
+  / * Get from database */
+  const appName = 'my-app';
+
   const datasets: { [key: string]: Dataset; } = FakeData.dataset;
   const queries: { [key: string]: Query; } = FakeData.queries;
   const serverFunctions: { [key: string]: ServerFunction; } = FakeData.serverFunctions;
@@ -16,6 +19,7 @@ const run = async () => {
   const widgets: { [key: string]: Widget; } = FakeData.widgets;
   const layouts: { [key: string]: Layout; } = FakeData.layouts;
   const pages: { [key: string]: Page; } = FakeData.pages;
+  / * Get from database */
 
   const all = {
     ...datasets,
@@ -49,11 +53,23 @@ const run = async () => {
     return allChildren.filter(c => types.includes(all[c].type));
   };
 
+  const buildTree = (node: string) => {
+    const element = all[node];
+    const children = elementGraph.adjacent(node);
+    return {
+      name: element.name, 
+      type: element.type,
+      children: children.map(buildTree),
+    };
+  };
+  const elementTree: ElementTree[] = Object.keys(pages).map(buildTree);
+
   if (!existsSync(basePath)){
     await fs.mkdir(basePath);
   }
 
   generateServer({
+    appName,
     datasets: Object.values(datasets),
     queries: Object.values(queries),
     serverFunctions: Object.values(serverFunctions),
@@ -63,18 +79,28 @@ const run = async () => {
     basePath,
   });
 
-  // generateClient({
-  //   queries,
-  //   serverFunctions,
-  //   clientFunctions,
-  //   widgets,
-  //   pages,
-  //   layouts,
-  // });
+  generateClient({
+    elementTree,
+    queries: Object.values(queries),
+    serverFunctions: Object.values(serverFunctions),
+    clientFunctions: Object.values(clientFunctions),
+    widgets: Object.values(widgets),
+    pages: Object.values(pages),
+    layouts: Object.values(layouts),
+    getChildrenOfTypes,
+    basePath,
+  });
+
+  // buildServer();
+  // buildClient();
+
+  // moveClientBundleToServer
+
+  // generateDeploymentFiles
 };
 
 try {
-  run();
+  run(process.env.APP_ID);
 } catch (error) {
   console.log(error)
 }

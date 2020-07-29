@@ -36,6 +36,7 @@ interface Widget {
   type: 'widget';
   name: string;
   parent: string;
+  component: string;
   dependencies: Dependencies;
 }
 
@@ -50,4 +51,10 @@ interface Layout {
 interface Page {
   type: 'page';
   name: string;
+}
+
+interface ElementTree {
+  name: string;
+  type: 'page' | 'layout' | 'widget';
+  children: ElementTree[];
 }

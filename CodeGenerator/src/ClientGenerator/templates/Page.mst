@@ -1,12 +1,11 @@
 {{=<% %>=}}
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 
 <% >recursive_import %>
 
-const Page_<% name %> = () => {
+const <% type %>_<% name %> = () => {
   return React.createElement('div', {}, <% >recursive_element %>);
 };
 

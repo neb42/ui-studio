@@ -5,9 +5,10 @@
   "license": "MIT",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
-    "copy-templates": "yarn copy-templates:server",
+    "copy-templates": "yarn copy-templates:server && yarn copy-templates:client",
     "copy-templates:server": "cp -r src/ServerGenerator/templates build/ServerGenerator/templates",
-    "build": "tsc && yarn copy-templates"
+    "copy-templates:client": "cp -r src/ClientGenerator/templates build/ClientGenerator/templates",
+    "build": "rm -rf build/* && tsc && yarn copy-templates"
   },
   "devDependencies": {
     "@types/node": "^14.0.23",

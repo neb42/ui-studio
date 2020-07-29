@@ -13,7 +13,7 @@ import <% . %> from './queries/<% . %>';
 <% #both %>
 const <% . %>_endpoint = async (request, response, next) => {
   try {
-    const data = await <% . %>();
+    const data = await <% . %>(request.body);
     response.status(200).send({ data });
   } catch (error) {
     next(error);
@@ -23,11 +23,10 @@ const <% . %>_endpoint = async (request, response, next) => {
 
 const router = express.Router();
 <% #both %>
-  router.post(
-    '/<% . %>',
-    <% . %>_endpoint,
-  );
-};
+router.post(
+  '/<% . %>',
+  <% . %>_endpoint,
+);
 <% /both %>
 
 const app = express();
@@ -35,4 +34,32 @@ app.use(cookieParser());
 app.use(cors({ origin: true }));
 app.use('/api', router);
 
-export default app;
+app.get('*', (request, response) => {
+    consolidate
+      .dot(path.resolve(__dirname, '../index.html'), {
+        cache: true,
+        ...clientEnvVariables,
+      })
+      .then(html => {
+        response.set('content-type', 'text/html');
+        response.send(html);
+        response.end();
+      });
+  });
+
+app.get('*', (request, response) => {
+  response.sendFile(path.join(__dirname + '/index.html'));
+});
+
+if (require.main === module) {
+  app.listen(port, error => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.info(`Running with NODE_ENV=${process.env.NODE_ENV}`);
+      console.info('==> 🌎  Listening on http://localhost:%s/', port);
+    }
+  });
+} else {
+  module.exports = app;
+}

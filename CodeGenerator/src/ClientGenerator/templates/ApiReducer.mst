@@ -1,6 +1,7 @@
+{{=<% %>=}}
 const initialState = {
   <% #foo %>
-  <% name %>: {
+  <% . %>: {
     value: null,
     loading: false,
     error: false,

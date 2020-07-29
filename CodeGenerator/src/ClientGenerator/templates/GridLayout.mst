@@ -1,10 +1,9 @@
 {{=<% %>=}}
-
 import React from 'react';
 import styled from 'styled-components';
 
-const GridLayout = styled.div`
+const layout_<% name %> = styled.div`
   display: grid;
 `;
 
-export default GridLayout;
+export default layout_<% name %>;

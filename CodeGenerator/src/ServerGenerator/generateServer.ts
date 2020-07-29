@@ -5,19 +5,22 @@ import generateServerFunctionFiles from './serverFunctions';
 import generateDatasetsFile from './dataset';
 import generateQueriesFunctionFiles from './queries';
 import generateRouterFile from './router';
+import generateCoreFiles from './core';
 
 interface Args {
+  appName: string,
   datasets: Dataset[];
   queries: Query[];
   serverFunctions: ServerFunction[];
   clientFunctions: ClientFunction[];
   widgets: Widget[];
   getChildrenOfTypes: (nodeKey: string, types: string[]) => string[];
-  basePath: string,
+  basePath: string;
 }
 
 
 const generateServer = async ({
+  appName,
   datasets,
   queries,
   serverFunctions,
@@ -25,7 +28,7 @@ const generateServer = async ({
   widgets,
   getChildrenOfTypes,
   basePath,
-}: Args) => {
+}: Args): Promise<[void[], void, void[], void[], void]> => {
   const serverPath = path.join(basePath, 'server');
   const queriesPath = path.join(serverPath, 'queries');
   const serverFunctionsPath = path.join(serverPath, 'serverFunctions');
@@ -44,10 +47,13 @@ const generateServer = async ({
   const getServerFunctionDeps = key => getChildrenOfTypes(key, ['serverFunction']);
   const getQueryDeps = key => getChildrenOfTypes(key, ['query']);
 
-  generateDatasetsFile(datasets, serverPath);
-  generateQueriesFunctionFiles(queries, queriesPath, getClientDeps);
-  generateServerFunctionFiles(serverFunctions, serverFunctionsPath, getClientDeps);
-  generateRouterFile([... clientFunctions, ...widgets], serverPath, getServerFunctionDeps, getQueryDeps);
+  return Promise.all([
+    generateCoreFiles(appName, serverPath),
+    generateDatasetsFile(datasets, serverPath),
+    generateQueriesFunctionFiles(queries, queriesPath, getClientDeps),
+    generateServerFunctionFiles(serverFunctions, serverFunctionsPath, getClientDeps),
+    generateRouterFile([... clientFunctions, ...widgets], serverPath, getServerFunctionDeps, getQueryDeps),
+  ]);
 };
 
 export default generateServer;

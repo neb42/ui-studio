@@ -6,8 +6,9 @@ const generateGridLayoutFiles = async (layouts: Layout[], basePath: string): Pro
   return Promise.all(layouts.map(async l => {
     const data = await fs.readFile(path.join(__dirname, 'templates', 'GridLayout.mst'));
     const renderedFile = Mustache.render(data.toString(), {
+      name: l.name,
     });
-    return fs.writeFile(path.join(basePath, `${l.name}.js`), renderedFile);
+    return fs.writeFile(path.join(basePath, `layout_${l.name}.js`), renderedFile);
   }));
 };
 
@@ -15,8 +16,9 @@ const generateFlexLayoutFiles = async (layouts: Layout[], basePath: string): Pro
   return Promise.all(layouts.map(async l => {
     const data = await fs.readFile(path.join(__dirname, 'templates', 'FlexLayout.mst'));
     const renderedFile = Mustache.render(data.toString(), {
+      name: l.name,
     });
-    return fs.writeFile(path.join(basePath, `${l.name}.js`), renderedFile);
+    return fs.writeFile(path.join(basePath, `layout_${l.name}.js`), renderedFile);
   }));
 };
 

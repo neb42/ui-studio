@@ -1,17 +1,16 @@
 {{=<% %>=}}
-
 import React from 'react';
 import { Route, Switch, BrowserRouter as Router } from 'react-router';
 
 <% #pages %>
-import <% name %> from './pages/<% name %>';
+import page_<% name %> from './pages/page_<% name %>';
 <% /pages %>
 
-const Routes = ({ history, store }) => (
+const Routes = () => (
   <Router>
     <Switch>
       <% #pages %>
-        <Route path="/<% name %>" component={<% name %>} />
+      <Route path="/<% name %>" component={page_<% name %>} />
       <% /pages %>
     </Switch>
   </Router>

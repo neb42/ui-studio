@@ -1,19 +1,20 @@
 {{=<% %>=}}
-
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
 
 <% #dependencies %>
-import <% name %>_selector from './selectors/<% name %>';
+import selector_<% . %> from './selectors/<% . %>';
 <% /dependencies %>
 
-const mapStateToProps = (state) => ({
-  <% #dependencies %>
-  <% name %>: <% name %>_selector(state),
-  <% /dependencies %>
-});
+const mapStateToProps = (state) => {
+  const values = {
+    <% #dependencies %>
+    <% . %>: selector_<% . %>(state),
+    <% /dependencies %>
+  };
+};
 
 const mapDispatchToProps = (dispatch) =>  bindActionCreators({ updateWidget }, dispatch);
 
@@ -21,7 +22,7 @@ const WidgetWrapper = styled.div``;
 
 const Widget_<% name %> = ({
   <% #dependencies %>
-  <% name %>,
+  <% . %>,
   <% /dependencies %>
   updateWidget,
   children,
@@ -31,12 +32,12 @@ const Widget_<% name %> = ({
   React.useEffect(() => {
     updateWidget({
       <% #exposedProperties %>
-      <% name%>: ref.<% name %>,
+      <% . %>: ref.<% . %>,
       <% /exposedProperties %>
     });
   }, [
     <% #exposedProperties %>
-    ref.<% name %>,
+    ref.<% . %>,
     <% /exposedProperties %>
   ]);
 
