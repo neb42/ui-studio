@@ -80,6 +80,7 @@ const run = async (appId: string) => {
   });
 
   generateClient({
+    appName,
     elementTree,
     queries: Object.values(queries),
     serverFunctions: Object.values(serverFunctions),

@@ -8,8 +8,10 @@ import generateRoutesFile from './routes';
 import generateSubscriberFiles from './subscribers';
 import generateWidgetFiles from './widget';
 import generateSelectorFiles from './selector';
+import generateCoreFiles from './core';
 
 interface Args {
+  appName: string;
   elementTree: ElementTree[];
   queries: Query[];
   serverFunctions: ServerFunction[];
@@ -22,6 +24,7 @@ interface Args {
 }
 
 const generateClient = async ({
+  appName,
   elementTree,
   queries,
   serverFunctions,
@@ -33,14 +36,19 @@ const generateClient = async ({
   basePath,
 }: Args) => {
   const clientPath = path.join(basePath, 'client');
-  const componentsPath = path.join(clientPath, 'components');
-  const reducersPath = path.join(clientPath, 'reducers');
-  const pagesPath = path.join(clientPath, 'pages');
-  const subscribersPath = path.join(clientPath, 'subscribers');
-  const selectorsPath = path.join(clientPath, 'selectors');
+  const srcPath = path.join(clientPath, 'src');
+  const componentsPath = path.join(srcPath, 'components');
+  const reducersPath = path.join(srcPath, 'reducers');
+  const pagesPath = path.join(srcPath, 'pages');
+  const subscribersPath = path.join(srcPath, 'subscribers');
+  const selectorsPath = path.join(srcPath, 'selectors');
+  const publicPath = path.join(clientPath, 'public');
 
   if (!existsSync(clientPath)){
     await fs.mkdir(clientPath);
+  }
+  if (!existsSync(srcPath)){
+    await fs.mkdir(srcPath);
   }
   if (!existsSync(componentsPath)){
     await fs.mkdir(componentsPath);
@@ -57,15 +65,19 @@ const generateClient = async ({
   if (!existsSync(selectorsPath)){
     await fs.mkdir(selectorsPath);
   }
+  if (!existsSync(publicPath)){
+    await fs.mkdir(publicPath);
+  }
 
   return Promise.all([
     generateLayoutFiles(layouts, componentsPath),
     generatePageFiles(elementTree, pagesPath),
     generateReducerFiles(widgets, clientFunctions, reducersPath, getChildrenOfTypes),
-    generateRoutesFile(pages, pagesPath),
+    generateRoutesFile(pages, srcPath),
     generateSubscriberFiles([...clientFunctions, ...widgets], subscribersPath, getChildrenOfTypes),
     generateWidgetFiles(widgets, componentsPath),
     generateSelectorFiles(widgets, clientFunctions, selectorsPath, getChildrenOfTypes),
+    generateCoreFiles(appName, clientPath),
   ]);
 };
 
