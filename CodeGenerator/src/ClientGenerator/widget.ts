@@ -10,6 +10,7 @@ const generateWidgetFiles = async (widgets: Widget[], basePath: string): Promise
   return Promise.all(widgets.map(async w => {
     const data = await fs.readFile(path.join(__dirname, 'templates', 'Widget.mst'));
     const renderedFile = Mustache.render(data.toString(), {
+      name: w.name,
       component: componentMap[w.component],
       dependencies: Object.values(w.dependencies).flat(),
       exposedProperties: [],

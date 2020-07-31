@@ -1,6 +1,6 @@
 {{=<% %>=}}
+<% #children %>
 React.createElement(<% type %>_<% name %>, {}, [
-  <% #children %>
-  <% >recursive_element %>,
-  <% /children %>
-])
+  <% >recursive_element %>
+]),
+<% /children %>

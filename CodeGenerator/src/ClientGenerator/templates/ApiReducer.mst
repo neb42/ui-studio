@@ -15,7 +15,7 @@ const <% type %> = (state = initialState, action) => {
       return {
         ...state,
         [action.name]: {
-          ...state.serverFunction[action.name],
+          ...state[action.name],
           loading: true,
           error: false,
         },
@@ -25,7 +25,7 @@ const <% type %> = (state = initialState, action) => {
       return {
         ...state,
         [action.name]: {
-          ...state.serverFunction[action.name],
+          ...state[action.name],
           value: action.payload,
           loading: false,
           error: false,
@@ -36,7 +36,7 @@ const <% type %> = (state = initialState, action) => {
       return {
         ...state,
         [action.name]: {
-          ...state.serverFunction[action.name],
+          ...state[action.name],
           loading: false,
           error: true,
         },

@@ -50,7 +50,7 @@ const run = async (appId: string) => {
 
   const getChildrenOfTypes = (nodeKey: string, types: string[]): string[] => {
     const allChildren = dependencyGraph.depthFirstSearch([nodeKey], false);
-    return allChildren.filter(c => types.includes(all[c].type));
+    return Array.from(new Set(allChildren.filter(c => types.includes(all[c].type))));
   };
 
   const buildTree = (node: string) => {

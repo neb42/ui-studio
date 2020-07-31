@@ -6,7 +6,7 @@ import styled from 'styled-components';
 <% >recursive_import %>
 
 const <% type %>_<% name %> = () => {
-  return React.createElement('div', {}, <% >recursive_element %>);
+  return React.createElement('div', {}, [<% >recursive_element %>]);
 };
 
-export default Page;
+export default <% type %>_<% name %>;

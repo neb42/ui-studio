@@ -28,7 +28,7 @@ const widgetTable: Widget[] = [
 const layoutTable: Layout[] = [
   { type: 'layout', layoutType: 'grid', name: 'l_grid1', parent: 'p_page1', dependencies: emptyDeps },
   { type: 'layout', layoutType: 'flex', name: 'l_flex1', parent: 'l_grid1', dependencies: emptyDeps },
-  { type: 'layout', layoutType: 'flex', name: 'l_flex2', parent: 'l_grid2', dependencies: emptyDeps },
+  { type: 'layout', layoutType: 'flex', name: 'l_flex2', parent: 'l_grid1', dependencies: emptyDeps },
 ];
 const pageTable: Page[] = [
   { type: 'page', name: 'p_page1' },

@@ -1,3 +1,5 @@
+type GetChildrenOfTypes = (nodeKey: string, types: ('widget' | 'layout' | 'clientFunction' | 'serverFunction' | 'query' | 'dataset')[]) => string[];
+
 interface Dependencies {
   queries: string[];
   serverFunctions: string[];

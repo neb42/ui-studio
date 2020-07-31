@@ -12,6 +12,10 @@ import Routes from './routes';
 
 import store from './store';
 
+<% #subscribers %>
+import <% . %> from './subscribers/<% . %>';
+<% /subscribers %>
+
 const rootElement = document.getElementById('root');
 ReactDOM.render(
   <ThemeProvider theme={defaultTokens}>

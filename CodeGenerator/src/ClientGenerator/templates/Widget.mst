@@ -1,18 +1,56 @@
-{{=<% %>=}}
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
 
-<% #dependencies %>
-import selector_<% . %> from './selectors/<% . %>';
-<% /dependencies %>
+import updateWidget from '../actions/updateWidget';
+
+{{ #dependencies }}
+import selector_{{{ . }}} from '../selectors/{{{ . }}}';
+{{ /dependencies }}
 
 const mapStateToProps = (state) => {
-  const values = {
-    <% #dependencies %>
-    <% . %>: selector_<% . %>(state),
-    <% /dependencies %>
+  const rawValues = {
+    {{ #dependencies }}
+    {{{ . }}}: selector_{{{ . }}}(state),
+    {{ /dependencies }}
+  };
+
+  const loading = Object.keys(rawValues).some(k => {
+    const v = rawValues[k];
+    if (v && typeof v === 'object' && Object.keys(v).includes('loading')) {
+      if (v.loading) {
+        return true;
+      }
+    }
+    return false;
+  });
+
+  const error = Object.keys(rawValues).some(k => {
+    const v = rawValues[k];
+    if (v && typeof v === 'object' && Object.keys(v).includes('error')) {
+      if (v.error) {
+        return true;
+      }
+    }
+    return false;
+  });
+
+  const values = Object.keys(rawValues).reduce((acc, cur) => {
+    const v = rawValues[cur];
+    if (v && typeof v === 'object' && Object.keys(v).includes('value')) {
+      return {
+        ...acc,
+        [cur]: v.value, 
+      };
+    }
+    return { ...acc, [cur]: v };
+  }, {});
+
+  return {
+    ...values,
+    error,
+    loading,
   };
 };
 
@@ -20,32 +58,32 @@ const mapDispatchToProps = (dispatch) =>  bindActionCreators({ updateWidget }, d
 
 const WidgetWrapper = styled.div``;
 
-const Widget_<% name %> = ({
-  <% #dependencies %>
-  <% . %>,
-  <% /dependencies %>
+const Widget_{{{ name }}} = ({
+  {{ #dependencies }}
+  {{{ . }}},
+  {{ /dependencies }}
   updateWidget,
   children,
 }) => {
   const [ref, setRef] = React.useState();
 
   React.useEffect(() => {
-    updateWidget({
-      <% #exposedProperties %>
-      <% . %>: ref.<% . %>,
-      <% /exposedProperties %>
+    updateWidget('{{{ name }}}', {
+      {{ #exposedProperties }}
+      {{{ . }}}: ref.{{{ . }}},
+      {{ /exposedProperties }}
     });
   }, [
-    <% #exposedProperties %>
-    ref.<% . %>,
-    <% /exposedProperties %>
+    {{ #exposedProperties }}
+    ref.{{{ . }}},
+    {{ /exposedProperties }}
   ]);
 
   return React.createElement(
     WidgetWrapper,
     {}, 
-    React.createElement(<% component %>, { ref: r => setRef(r) }, children),
+    React.createElement({{{ component }}}, { ref: r => setRef(r) }, children),
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Widget<% name %>);
+export default connect(mapStateToProps, mapDispatchToProps)(Widget_{{{ name }}});

@@ -27,8 +27,8 @@ const generateReducerFiles = async (
   getChildrenOfTypes: (nodeKey: string, types: string[]) => string[],
 ): Promise<void[]> => {
   const both = [...widgets, ...clientFunctions];
-  const queries = both.flatMap(f => getChildrenOfTypes(f.name, ['query']));
-  const serverFunctions = both.flatMap(f => getChildrenOfTypes(f.name, ['serverFunction']));
+  const queries = Array.from(new Set(both.flatMap(f => getChildrenOfTypes(f.name, ['query']))));
+  const serverFunctions = Array.from(new Set(both.flatMap(f => getChildrenOfTypes(f.name, ['serverFunction']))));
 
   return Promise.all([
     generateApiReducerFile(queries, 'query', basePath),

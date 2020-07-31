@@ -3,7 +3,6 @@ import * as path from 'path';
 import * as Mustache from 'mustache';
 
 const coreFiles = [
-  { template: 'index.mst', fileName: path.join('src', 'index.js') },
   { template: 'index.html.mst', fileName: path.join('public', 'index.html') },
   { template: 'Store.mst', fileName: path.join('src', 'store.js') },
 ];
@@ -16,6 +15,8 @@ const dependencies = [
   { name: 'redux', version: 'latest', last: false },
   { name: 'react-redux', version: 'latest', last: false },
   { name: 'redux-thunk', version: 'latest', last: false },
+  { name: 'react-router', version: 'latest', last: false },
+  { name: 'react-router-dom', version: 'latest', last: false },
   { name: 'styled-components', version: 'latest', last: false },
   { name: '@faculty/adler-tokens', version: 'latest', last: false },
   { name: '@faculty/adler-web-components', version: 'latest', last: false },
@@ -38,9 +39,17 @@ const generateParameterlessFile = async (template: string, fileName: string, bas
   return fs.writeFile(path.join(basePath, fileName), renderedFile);
 };
 
-const generateCoreFiles = (appName: string, basePath: string): Promise<void[]> => {
+const generateIndexFile = async (foo: (Widget | ClientFunction)[], basePath: string, getChildrenOfTypes: GetChildrenOfTypes) => {
+  const subscribers = Array.from(new Set(foo.flatMap(f => getChildrenOfTypes(f.name, ['query', 'serverFunction']))));
+  const data = await fs.readFile(path.join(__dirname, 'templates', 'index.mst'));
+  const renderedFile = Mustache.render(data.toString(), { subscribers });
+  return fs.writeFile(path.join(basePath, 'src', 'index.js'), renderedFile);
+};
+
+const generateCoreFiles = (foo: (Widget | ClientFunction)[], appName: string, basePath: string, getChildrenOfTypes: GetChildrenOfTypes): Promise<void[]> => {
   return Promise.all([
     generatePackageDotJsonFile(appName, basePath),
+    generateIndexFile(foo, basePath, getChildrenOfTypes),
     ...coreFiles.map(f => generateParameterlessFile(f.template, f.fileName, basePath)),
   ]);
 };

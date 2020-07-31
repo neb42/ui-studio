@@ -9,6 +9,7 @@ import generateSubscriberFiles from './subscribers';
 import generateWidgetFiles from './widget';
 import generateSelectorFiles from './selector';
 import generateCoreFiles from './core';
+import generateActionFiles from './actions';
 
 interface Args {
   appName: string;
@@ -42,6 +43,7 @@ const generateClient = async ({
   const pagesPath = path.join(srcPath, 'pages');
   const subscribersPath = path.join(srcPath, 'subscribers');
   const selectorsPath = path.join(srcPath, 'selectors');
+  const actionsPath = path.join(srcPath, 'actions');
   const publicPath = path.join(clientPath, 'public');
 
   if (!existsSync(clientPath)){
@@ -65,6 +67,9 @@ const generateClient = async ({
   if (!existsSync(selectorsPath)){
     await fs.mkdir(selectorsPath);
   }
+  if (!existsSync(actionsPath)){
+    await fs.mkdir(actionsPath);
+  }
   if (!existsSync(publicPath)){
     await fs.mkdir(publicPath);
   }
@@ -77,7 +82,8 @@ const generateClient = async ({
     generateSubscriberFiles([...clientFunctions, ...widgets], subscribersPath, getChildrenOfTypes),
     generateWidgetFiles(widgets, componentsPath),
     generateSelectorFiles(widgets, clientFunctions, selectorsPath, getChildrenOfTypes),
-    generateCoreFiles(appName, clientPath),
+    generateActionFiles(actionsPath),
+    generateCoreFiles([...clientFunctions, ...widgets], appName, clientPath, getChildrenOfTypes),
   ]);
 };
 

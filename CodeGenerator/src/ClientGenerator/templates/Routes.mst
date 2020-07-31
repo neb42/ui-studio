@@ -1,6 +1,6 @@
 {{=<% %>=}}
 import React from 'react';
-import { Route, Switch, BrowserRouter as Router } from 'react-router';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
 <% #pages %>
 import page_<% name %> from './pages/<% name %>';

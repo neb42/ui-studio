@@ -35,6 +35,7 @@ const generateSelectorFiles = async (
 
   return Promise.all([
     ...clientFunctions.map(c => generateFunctionSelectorFile(c, basePath)),
+    ...widgets.map(w => generateSimpleSelectorFile(w.name, 'widget', basePath)),
     ...queries.map(q => generateSimpleSelectorFile(q, 'query', basePath)),
     ...serverFunctions.map(s => generateSimpleSelectorFile(s, 'serverFunction', basePath)),
   ]);

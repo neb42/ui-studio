@@ -8,7 +8,7 @@ const generateGridLayoutFiles = async (layouts: Layout[], basePath: string): Pro
     const renderedFile = Mustache.render(data.toString(), {
       name: l.name,
     });
-    return fs.writeFile(path.join(basePath, `layout_${l.name}.js`), renderedFile);
+    return fs.writeFile(path.join(basePath, `${l.name}.js`), renderedFile);
   }));
 };
 
@@ -18,7 +18,7 @@ const generateFlexLayoutFiles = async (layouts: Layout[], basePath: string): Pro
     const renderedFile = Mustache.render(data.toString(), {
       name: l.name,
     });
-    return fs.writeFile(path.join(basePath, `layout_${l.name}.js`), renderedFile);
+    return fs.writeFile(path.join(basePath, `${l.name}.js`), renderedFile);
   }));
 };
 
