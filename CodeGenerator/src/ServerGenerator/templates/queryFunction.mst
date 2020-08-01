@@ -1,4 +1,6 @@
 {{=<% %>=}}
+import util from 'util';
+
 import { <% dataset %> } from '../datasets';
 <% #serverFunctions %>
 import <% . %> from '../serverFunctions/<% . %>';
@@ -7,15 +9,15 @@ import <% . %> from '../serverFunctions/<% . %>';
 import <% . %> from './<% . %>';
 <% /queries %>
 
+const query = util.promisify(<% dataset %>.query).bind(<% dataset %>);
+
 const <% name %> = ({
   <% #clientDependencies %>
   <% . %>,
   <% /clientDependencies %> 
 }) => {
-  return <% dataset %>.query(`<% queryString %>`, (error, results, fields) => {
-    if (error) throw error;
-    return results;
-  });
+  const rows = await query(`<% queryString %>`);
+  return rows;
 };
 
 export default <% name %>;

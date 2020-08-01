@@ -11,6 +11,7 @@ const generateServerFunctionFiles = (serverFunctions: ServerFunction[], basePath
       serverFunctions: s.dependencies.serverFunctions,
       queries: s.dependencies.queries,
       deps: clientDeps,
+      escapeFunctions: false,
     }));
 
     const data = await fs.readFile(path.join(__dirname, 'templates', 'serverFunction.mst'));

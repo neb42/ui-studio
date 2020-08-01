@@ -7,6 +7,7 @@ const dependencies = [
   { name: 'cookie-parser', version: 'latest', last: false },
   { name: 'express', version: 'latest', last: false },
   { name: 'mysql', version: 'latest', last: false },
+  { name: 'body-parser', version: 'latest', last: false },
 ];
 dependencies[dependencies.length - 1 ].last = true;
 

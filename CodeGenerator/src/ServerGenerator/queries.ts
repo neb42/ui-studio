@@ -11,6 +11,7 @@ const generateQueriesFunctionFiles = (queries: Query[], basePath: string, getCli
       serverFunctions: q.dependencies.serverFunctions,
       queries: q.dependencies.queries,
       deps: clientDeps,
+      escapeFunctions: true,
     }));
     const data = await fs.readFile(path.join(__dirname, 'templates', 'queryFunction.mst'));
     const renderedFile = Mustache.render(data.toString(), {

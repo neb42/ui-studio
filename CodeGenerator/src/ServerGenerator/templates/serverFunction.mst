@@ -1,17 +1,16 @@
-{{=<% %>=}}
-<% #serverFunctions %>
-import <% . %> from './<% . %>';
-<% /serverFunctions %>
-<% #queries %>
-import <% . %> from '../queries/<% . %>';
-<% /queries %>
+{{ #serverFunctions }}
+import {{ . }} from './{{ . }}';
+{{ /serverFunctions }}
+{{ #queries }}
+import {{ . }} from '../queries/{{ . }}';
+{{ /queries }}
 
-const <% name %> = ({
-  <% #clientDependencies %>
-  <% . %>,
-  <% /clientDependencies %> 
+const {{ name }} = ({
+  {{ #clientDependencies }}
+  {{ . }},
+  {{ /clientDependencies }} 
 }) => {
-  <% functionString %>
+  {{{ functionString }}}
 };
 
-export default <% name %>;
+export default {{ name }};
