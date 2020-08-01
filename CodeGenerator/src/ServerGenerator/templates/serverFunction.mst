@@ -1,9 +1,9 @@
 {{=<% %>=}}
 <% #serverFunctions %>
-import <% . %> from './serverFunctions/<% . %>';
+import <% . %> from './<% . %>';
 <% /serverFunctions %>
 <% #queries %>
-import <% . %> from './queries/<% . %>';
+import <% . %> from '../queries/<% . %>';
 <% /queries %>
 
 const <% name %> = ({

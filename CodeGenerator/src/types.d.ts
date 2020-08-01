@@ -10,6 +10,11 @@ interface Dependencies {
 interface Dataset {
   type: 'dataset';
   name: string;
+  host: string;
+  port: number;
+  user: string;
+  password: string;
+  database: string;
 }
 
 interface Query {

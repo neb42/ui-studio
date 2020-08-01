@@ -6,7 +6,7 @@ const emptyDeps: Dependencies = {
 };
 
 const datasetTable: Dataset[] = [
-  { type: 'dataset', name: 'd_dataset1' },
+  { type: 'dataset', name: 'd_dataset1', host: 'wyqk6x041tfxg39e.chr7pe7iynqr.eu-west-1.rds.amazonaws.com', port: 3306, user: 'ijgu2hm7ysgtu42l', password: 'pb8ra7vvrvolyifr', database: 'yksyaelyn0at98gk' },
 ];
 const queryTable: Query[] = [
   { type: 'query', name: 'q_query1', queryString: '', dataset: 'd_dataset1', dependencies: { ...emptyDeps, serverFunctions: ['f_serverFunc1'] }},

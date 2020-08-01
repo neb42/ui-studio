@@ -2,7 +2,7 @@
 import mysql from 'mysql';
 
 <% #datasets %>
-const <% name %> = mysql.createConnection({
+export const <% name %> = mysql.createConnection({
   host: '<% host %>',
   port: <% port %>,
   user: '<% user %>',
@@ -10,5 +10,4 @@ const <% name %> = mysql.createConnection({
   database: '<% database %>',
 });
 <% name %>.connect();
-export <% name %>;
 <% /datasets %>

@@ -30,11 +30,15 @@ const generateServer = async ({
   basePath,
 }: Args): Promise<[void[], void, void[], void[], void]> => {
   const serverPath = path.join(basePath, 'server');
-  const queriesPath = path.join(serverPath, 'queries');
-  const serverFunctionsPath = path.join(serverPath, 'serverFunctions');
+  const srcPath = path.join(serverPath, 'src');
+  const queriesPath = path.join(srcPath, 'queries');
+  const serverFunctionsPath = path.join(srcPath, 'serverFunctions');
 
   if (!existsSync(serverPath)){
     await fs.mkdir(serverPath);
+  }
+  if (!existsSync(srcPath)){
+    await fs.mkdir(srcPath);
   }
   if (!existsSync(queriesPath)){
     await fs.mkdir(queriesPath);
@@ -49,10 +53,10 @@ const generateServer = async ({
 
   return Promise.all([
     generateCoreFiles(appName, serverPath),
-    generateDatasetsFile(datasets, serverPath),
+    generateDatasetsFile(datasets, srcPath),
     generateQueriesFunctionFiles(queries, queriesPath, getClientDeps),
     generateServerFunctionFiles(serverFunctions, serverFunctionsPath, getClientDeps),
-    generateRouterFile([... clientFunctions, ...widgets], serverPath, getServerFunctionDeps, getQueryDeps),
+    generateRouterFile([... clientFunctions, ...widgets], srcPath, getServerFunctionDeps, getQueryDeps),
   ]);
 };
 

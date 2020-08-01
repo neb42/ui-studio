@@ -1,7 +1,10 @@
 {{=<% %>=}}
-import * as express from 'express';
-import * as cookieParser from 'cookie-parser';
-import * as cors from 'cors';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 <% #serverFunctions %>
 import <% . %> from './serverFunctions/<% . %>';
@@ -50,6 +53,8 @@ app.get('*', (request, response) => {
 app.get('*', (request, response) => {
   response.sendFile(path.join(__dirname + '/index.html'));
 });
+
+const port = 3000;
 
 if (require.main === module) {
   app.listen(port, error => {

@@ -1,10 +1,10 @@
 {{=<% %>=}}
-import { <% dataset %> } from './datasets';
+import { <% dataset %> } from '../datasets';
 <% #serverFunctions %>
-import <% . %> from './serverFunctions/<% . %>';
+import <% . %> from '../serverFunctions/<% . %>';
 <% /serverFunctions %>
 <% #queries %>
-import <% . %> from './queries/<% . %>';
+import <% . %> from './<% . %>';
 <% /queries %>
 
 const <% name %> = ({

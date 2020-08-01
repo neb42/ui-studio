@@ -3,20 +3,24 @@ import * as path from 'path';
 import * as Mustache from 'mustache';
 
 const dependencies = [
-  { name: 'cors', version: 'x.x.x', last: false },
-  { name: 'cookie-parser', version: 'x.x.x', last: false },
-  { name: 'express', version: 'x.x.x', last: false },
+  { name: 'cors', version: 'latest', last: false },
+  { name: 'cookie-parser', version: 'latest', last: false },
+  { name: 'express', version: 'latest', last: false },
+  { name: 'mysql', version: 'latest', last: false },
 ];
 dependencies[dependencies.length - 1 ].last = true;
 
 const devDependencies = [
-  { name: '@faculty/babel-preset', version: 'x.x.x', last: false },
+  { name: '@babel/core', version: 'latest', last: false },
+  { name: '@babel/cli', version: 'latest', last: false },
+  { name: '@babel/node', version: 'latest', last: false },
+  { name: '@babel/preset-env', version: 'latest', last: false },
 ];
 devDependencies[devDependencies.length - 1 ].last = true;
 
 const generatePackageDotJsonFile = async (appName: string, basePath: string): Promise<void> => {
   const data = await fs.readFile(path.join(__dirname, 'templates', 'package.json.mst'));
-  const renderedFile = Mustache.render(data.toString(), { appName, devDependencies, dependencies, buildDirectory: '', sourceDirectory: '' });
+  const renderedFile = Mustache.render(data.toString(), { appName, devDependencies, dependencies, buildDirectory: 'build', sourceDirectory: 'src' });
   return fs.writeFile(path.join(basePath, 'package.json'), renderedFile);
 };
 
