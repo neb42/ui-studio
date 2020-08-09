@@ -26,8 +26,8 @@ export interface Page {
   name: string;
 }
 
-export interface ElementTree {
+export interface ElementTreeNode {
   name: string;
   type: 'page' | 'layout' | 'widget';
-  children: ElementTree[];
+  children: ElementTreeNode[];
 }

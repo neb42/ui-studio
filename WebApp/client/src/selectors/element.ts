@@ -1,6 +1,6 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
 import Graph from 'graph-data-structure';
-import { ElementTree } from 'types/element';
+import { ElementTreeNode } from 'types/element';
 import { Store, Store$Element$Page, Store$Element$Layout, Store$Element$Widget } from 'types/store';
 
 export const getPages = (state: Store): Store$Element$Page => state.element.pages;
@@ -10,13 +10,13 @@ export const getWidgets = (state: Store): Store$Element$Widget => state.element.
 export const makeGetElementTree = (): OutputParametricSelector<
   Store,
   string,
-  ElementTree,
+  ElementTreeNode,
   (
     pageName: string,
     pages: Store$Element$Page,
     layouts: Store$Element$Layout,
     widgets: Store$Element$Widget,
-  ) => ElementTree
+  ) => ElementTreeNode
 > =>
   createSelector(
     (_: Store, pageName: string) => pageName,
@@ -36,7 +36,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
         elementGraph.addEdge(v.parent, v.name),
       );
 
-      const buildTree = (node: string): ElementTree => {
+      const buildTree = (node: string): ElementTreeNode => {
         const element = all[node];
         const children = elementGraph.adjacent(node);
         return {
@@ -46,7 +46,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
         };
       };
 
-      const elementTree: ElementTree = buildTree(pageName);
+      const elementTree = buildTree(pageName);
       return elementTree;
     },
   );

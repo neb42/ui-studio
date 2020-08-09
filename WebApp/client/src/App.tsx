@@ -1,7 +1,13 @@
 import React from 'react';
 
-const App = () => {
-  return <div>UI Builder</div>;
+import { ElementTree } from './components/ElementTree';
+
+const App = (): JSX.Element => {
+  return (
+    <div>
+      <ElementTree pageName="p_page1" />
+    </div>
+  );
 };
 
 export default App;
