@@ -1,4 +1,4 @@
-import { ADD_WIDGET, ADD_LAYOUT, Action$Element } from 'actions/element';
+import { ADD_WIDGET, ADD_LAYOUT, SELECT_ELEMENT, Action$Element } from 'actions/element';
 import { Store$Element } from 'types/store';
 
 const emptyDeps = {
@@ -9,6 +9,7 @@ const emptyDeps = {
 };
 
 const initialState: Store$Element = {
+  selectedElement: null,
   pages: {
     p_page1: { type: 'page', name: 'p_page1' },
   },
@@ -89,6 +90,12 @@ const element = (state: Store$Element = initialState, action: Action$Element) =>
           ...state.layouts,
           [action.payload.name]: action.payload,
         },
+      };
+    }
+    case SELECT_ELEMENT: {
+      return {
+        ...state,
+        selectedElement: action.payload,
       };
     }
     default:

@@ -9,6 +9,7 @@ export type Store$Element$Layout = KeyedObject<Layout>;
 export type Store$Element$Widget = KeyedObject<Widget>;
 
 export interface Store$Element {
+  selectedElement: string | null;
   pages: Store$Element$Page;
   layouts: Store$Element$Layout;
   widgets: Store$Element$Widget;

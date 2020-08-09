@@ -1,0 +1,1 @@
+export { ElementConfig } from './ElementConfig';

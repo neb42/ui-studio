@@ -6,6 +6,8 @@ import { Store, Store$Element$Page, Store$Element$Layout, Store$Element$Widget }
 export const getPages = (state: Store): Store$Element$Page => state.element.pages;
 export const getLayouts = (state: Store): Store$Element$Layout => state.element.layouts;
 export const getWidgets = (state: Store): Store$Element$Widget => state.element.widgets;
+export const getSelectedElementName = (state: Store): string | null =>
+  state.element.selectedElement;
 
 export const makeGetElementTree = (): OutputParametricSelector<
   Store,
@@ -48,5 +50,20 @@ export const makeGetElementTree = (): OutputParametricSelector<
 
       const elementTree = buildTree(pageName);
       return elementTree;
+    },
+  );
+
+export const makeGetSelectedElement = () =>
+  createSelector(
+    getSelectedElementName,
+    getPages,
+    getLayouts,
+    getWidgets,
+    (selectedElementName, pages, layouts, widgets) => {
+      if (selectedElementName === null) return null;
+      if (selectedElementName in pages) return pages[selectedElementName];
+      if (selectedElementName in layouts) return layouts[selectedElementName];
+      if (selectedElementName in widgets) return widgets[selectedElementName];
+      return null;
     },
   );

@@ -1,13 +1,8 @@
 import React from 'react';
-
-import { ElementTree } from './components/ElementTree';
+import { PageBuilder } from 'pages/PageBuilder';
 
 const App = (): JSX.Element => {
-  return (
-    <div>
-      <ElementTree pageName="p_page1" />
-    </div>
-  );
+  return <PageBuilder pageName="p_page1" />;
 };
 
 export default App;
