@@ -82,7 +82,7 @@ const Widget_{{{ name }}} = ({
   return React.createElement(
     WidgetWrapper,
     {}, 
-    React.createElement({{{ component }}}, { ref: r => setRef(r) }, children),
+    React.createElement({{{ component }}}, { ref: r => setRef(r) }, {{ #children }}{{{ children }}}{{ /children }}{{ ^children }}children{{ /children }}),
   );
 };
 

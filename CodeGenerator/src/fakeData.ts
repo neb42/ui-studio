@@ -20,10 +20,10 @@ const clientFunctionTable: ClientFunction[] = [
   { type: 'clientFunction', name: 'f_clientFunc2', functionString: 'return 10;', dependencies: emptyDeps },
 ];
 const widgetTable: Widget[] = [
-  { type: 'widget', name: 'w_widget1', parent: 'l_flex1', component: 'text', dependencies: emptyDeps },
-  { type: 'widget', name: 'w_widget2', parent: 'l_flex1', component: 'text', dependencies: emptyDeps },
-  { type: 'widget', name: 'w_widget3', parent: 'l_flex2', component: 'text', dependencies: { ...emptyDeps, queries: ['q_query1'] }},
-  { type: 'widget', name: 'w_widget4', parent: 'l_grid1', component: 'text', dependencies: { ...emptyDeps, clientFunctions: ['f_clientFunc2'], serverFunctions: ['f_serverFunc1'] }},
+  { type: 'widget', name: 'w_widget1', parent: 'l_flex1', component: 'text', dependencies: emptyDeps, props: { children: 'w_widget1' } },
+  { type: 'widget', name: 'w_widget2', parent: 'l_flex1', component: 'text', dependencies: emptyDeps, props: { children: 'w_widget2' } },
+  { type: 'widget', name: 'w_widget3', parent: 'l_flex2', component: 'text', dependencies: { ...emptyDeps, queries: ['q_query1'] }, props: { children: 'w_widget3' }},
+  { type: 'widget', name: 'w_widget4', parent: 'l_grid1', component: 'text', dependencies: { ...emptyDeps, clientFunctions: ['f_clientFunc2'], serverFunctions: ['f_serverFunc1'] }, props: { children: 'w_widget4' }},
 ];
 const layoutTable: Layout[] = [
   { type: 'layout', layoutType: 'grid', name: 'l_grid1', parent: 'p_page1', dependencies: emptyDeps },

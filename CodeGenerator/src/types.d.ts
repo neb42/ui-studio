@@ -45,6 +45,7 @@ interface Widget {
   parent: string;
   component: string;
   dependencies: Dependencies;
+  props: { [key: string]: any };
 }
 
 interface Layout {

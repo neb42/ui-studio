@@ -11,7 +11,7 @@ import <% . %> from './<% . %>';
 
 const query = util.promisify(<% dataset %>.query).bind(<% dataset %>);
 
-const <% name %> = ({
+const <% name %> = async ({
   <% #clientDependencies %>
   <% . %>,
   <% /clientDependencies %> 
