@@ -10,9 +10,9 @@ export type Store$Element$Widget = KeyedObject<Widget>;
 
 export interface Store$Element {
   selectedElement: string | null;
-  pages: Store$Element$Page;
-  layouts: Store$Element$Layout;
-  widgets: Store$Element$Widget;
+  page: Store$Element$Page;
+  layout: Store$Element$Layout;
+  widget: Store$Element$Widget;
 }
 
 export interface Store {

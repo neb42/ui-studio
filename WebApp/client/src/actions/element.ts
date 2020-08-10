@@ -1,5 +1,7 @@
 export const ADD_WIDGET = 'ADD_WIDGET';
 export const ADD_LAYOUT = 'ADD_LAYOUT';
+export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
+export const UPDATE_ELEMENT = 'UPDATE_ELEMENT';
 export const SELECT_ELEMENT = 'SELECT_ELEMENT';
 
 const defaultLayoutConfig = {
@@ -41,6 +43,7 @@ interface AddWidget {
     name: string;
     component: string;
     parent: string;
+    [key: string]: any;
   };
 }
 
@@ -58,6 +61,57 @@ export const addWidget = (component: 'text', parent: string): AddWidget => {
   };
 };
 
+interface UpdateElement {
+  type: 'UPDATE_ELEMENT';
+  payload: {
+    name: string;
+    type: 'widget' | 'layout' | 'page';
+    key: string;
+    value: any;
+  };
+}
+
+export const updateElement = (
+  name: string,
+  type: 'widget' | 'layout' | 'page',
+  key: string,
+  value: any,
+): UpdateElement => {
+  return {
+    type: UPDATE_ELEMENT,
+    payload: {
+      name,
+      type,
+      key,
+      value,
+    },
+  };
+};
+
+interface UpdateElementName {
+  type: 'UPDATE_ELEMENT_NAME';
+  payload: {
+    currentName: string;
+    type: 'widget' | 'layout' | 'page';
+    name: string;
+  };
+}
+
+export const updateElementName = (
+  currentName: string,
+  type: 'widget' | 'layout' | 'page',
+  name: string,
+): UpdateElementName => {
+  return {
+    type: UPDATE_ELEMENT_NAME,
+    payload: {
+      currentName,
+      name,
+      type,
+    },
+  };
+};
+
 interface SelectElement {
   type: 'SELECT_ELEMENT';
   payload: string;
@@ -68,4 +122,9 @@ export const selectElement = (name: string): SelectElement => ({
   payload: name,
 });
 
-export type Action$Element = AddLayout | AddWidget | SelectElement;
+export type Action$Element =
+  | AddLayout
+  | AddWidget
+  | SelectElement
+  | UpdateElement
+  | UpdateElementName;

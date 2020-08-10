@@ -3,9 +3,9 @@ import Graph from 'graph-data-structure';
 import { ElementTreeNode } from 'types/element';
 import { Store, Store$Element$Page, Store$Element$Layout, Store$Element$Widget } from 'types/store';
 
-export const getPages = (state: Store): Store$Element$Page => state.element.pages;
-export const getLayouts = (state: Store): Store$Element$Layout => state.element.layouts;
-export const getWidgets = (state: Store): Store$Element$Widget => state.element.widgets;
+export const getPages = (state: Store): Store$Element$Page => state.element.page;
+export const getLayouts = (state: Store): Store$Element$Layout => state.element.layout;
+export const getWidgets = (state: Store): Store$Element$Widget => state.element.widget;
 export const getSelectedElementName = (state: Store): string | null =>
   state.element.selectedElement;
 
@@ -38,6 +38,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
         elementGraph.addEdge(v.parent, v.name),
       );
 
+      // console.log(all);
       const buildTree = (node: string): ElementTreeNode => {
         const element = all[node];
         const children = elementGraph.adjacent(node);

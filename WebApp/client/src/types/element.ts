@@ -9,8 +9,9 @@ export interface Widget {
   type: 'widget';
   name: string;
   parent: string;
-  component: string;
+  component: 'text';
   dependencies: Dependencies;
+  props: { [key: string]: any };
 }
 
 export interface Layout {
@@ -19,11 +20,13 @@ export interface Layout {
   name: string;
   parent: string;
   dependencies: Dependencies;
+  props: { [key: string]: any };
 }
 
 export interface Page {
   type: 'page';
   name: string;
+  props: { [key: string]: any };
 }
 
 export interface ElementTreeNode {

@@ -1,4 +1,11 @@
-import { ADD_WIDGET, ADD_LAYOUT, SELECT_ELEMENT, Action$Element } from 'actions/element';
+import {
+  ADD_WIDGET,
+  ADD_LAYOUT,
+  SELECT_ELEMENT,
+  UPDATE_ELEMENT,
+  UPDATE_ELEMENT_NAME,
+  Action$Element,
+} from 'actions/element';
 import { Store$Element } from 'types/store';
 
 const emptyDeps = {
@@ -10,16 +17,17 @@ const emptyDeps = {
 
 const initialState: Store$Element = {
   selectedElement: null,
-  pages: {
-    p_page1: { type: 'page', name: 'p_page1' },
+  page: {
+    p_page1: { type: 'page', name: 'p_page1', props: {} },
   },
-  widgets: {
+  widget: {
     w_widget1: {
       type: 'widget',
       name: 'w_widget1',
       parent: 'l_flex1',
       component: 'text',
       dependencies: emptyDeps,
+      props: { children: '' },
     },
     w_widget2: {
       type: 'widget',
@@ -27,6 +35,7 @@ const initialState: Store$Element = {
       parent: 'l_flex1',
       component: 'text',
       dependencies: emptyDeps,
+      props: { children: '' },
     },
     w_widget3: {
       type: 'widget',
@@ -34,6 +43,7 @@ const initialState: Store$Element = {
       parent: 'l_flex2',
       component: 'text',
       dependencies: { ...emptyDeps, queries: ['q_query1'] },
+      props: { children: '' },
     },
     w_widget4: {
       type: 'widget',
@@ -45,15 +55,17 @@ const initialState: Store$Element = {
         clientFunctions: ['f_clientFunc2'],
         serverFunctions: ['f_serverFunc1'],
       },
+      props: { children: '' },
     },
   },
-  layouts: {
+  layout: {
     l_grid1: {
       type: 'layout',
       layoutType: 'grid',
       name: 'l_grid1',
       parent: 'p_page1',
       dependencies: emptyDeps,
+      props: {},
     },
     l_flex1: {
       type: 'layout',
@@ -61,6 +73,7 @@ const initialState: Store$Element = {
       name: 'l_flex1',
       parent: 'l_grid1',
       dependencies: emptyDeps,
+      props: {},
     },
     l_flex2: {
       type: 'layout',
@@ -68,6 +81,7 @@ const initialState: Store$Element = {
       name: 'l_flex2',
       parent: 'l_grid1',
       dependencies: emptyDeps,
+      props: {},
     },
   },
 };
@@ -78,7 +92,7 @@ const element = (state: Store$Element = initialState, action: Action$Element) =>
       return {
         ...state,
         widgets: {
-          ...state.widgets,
+          ...state.widget,
           [action.payload.name]: action.payload,
         },
       };
@@ -87,7 +101,7 @@ const element = (state: Store$Element = initialState, action: Action$Element) =>
       return {
         ...state,
         layouts: {
-          ...state.layouts,
+          ...state.layout,
           [action.payload.name]: action.payload,
         },
       };
@@ -96,6 +110,35 @@ const element = (state: Store$Element = initialState, action: Action$Element) =>
       return {
         ...state,
         selectedElement: action.payload,
+      };
+    }
+    case UPDATE_ELEMENT: {
+      return {
+        ...state,
+        [action.payload.type]: {
+          ...state[action.payload.type],
+          [action.payload.name]: {
+            ...state[action.payload.type][action.payload.name],
+            props: {
+              ...state[action.payload.type][action.payload.name].props,
+              [action.payload.key]: action.payload.value,
+            },
+          },
+        },
+      };
+    }
+    case UPDATE_ELEMENT_NAME: {
+      const { [action.payload.currentName]: current, ...other } = state[action.payload.type];
+      return {
+        ...state,
+        selectedElement: action.payload.name,
+        [action.payload.type]: {
+          ...other,
+          [action.payload.name]: {
+            ...current,
+            name: action.payload.name,
+          },
+        },
       };
     }
     default:
