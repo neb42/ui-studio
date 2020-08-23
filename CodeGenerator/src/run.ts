@@ -8,19 +8,28 @@ import * as FakeData from './fakeData';
 
 const basePath = '/Users/bmcalindin/Desktop/generatedCode';
 
-const run = async (appId: string) => {
-  / * Get from database */
-  const appName = 'my-app';
+type Data = {
+  datasets: { [key: string]: Dataset; };
+  queries: { [key: string]: Query; };
+  serverFunctions: { [key: string]: ServerFunction; };
+  clientFunctions: { [key: string]: ClientFunction; };
+  widgets: { [key: string]: Widget; };
+  layouts: { [key: string]: Layout; };
+  pages: { [key: string]: Page; };
+}
 
-  const datasets: { [key: string]: Dataset; } = FakeData.dataset;
-  const queries: { [key: string]: Query; } = FakeData.queries;
-  const serverFunctions: { [key: string]: ServerFunction; } = FakeData.serverFunctions;
-  const clientFunctions: { [key: string]: ClientFunction; } = FakeData.clientFunctions;
-  const widgets: { [key: string]: Widget; } = FakeData.widgets;
-  const layouts: { [key: string]: Layout; } = FakeData.layouts;
-  const pages: { [key: string]: Page; } = FakeData.pages;
-  / * Get from database */
-
+export const run = async (
+  appName: string,
+  {
+    datasets,
+    queries,
+    serverFunctions,
+    clientFunctions,
+    widgets,
+    layouts,
+    pages,
+  }: Data,
+) => {
   const all = {
     ...datasets,
     ...queries,
@@ -100,8 +109,18 @@ const run = async (appId: string) => {
   // generateDeploymentFiles
 };
 
-try {
-  run(process.env.APP_ID);
-} catch (error) {
-  console.log(error)
+if (typeof require !== 'undefined' && require.main === module) {
+  try {
+    run('App name', {
+      datasets: FakeData.dataset,
+      queries: FakeData.queries,
+      serverFunctions: FakeData.serverFunctions,
+      clientFunctions: FakeData.clientFunctions,
+      widgets: FakeData.widgets,
+      layouts: FakeData.layouts,
+      pages: FakeData.pages,
+    });
+  } catch (error) {
+    console.log(error)
+  }
 }
