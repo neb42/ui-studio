@@ -37,12 +37,7 @@ export const ElementConfig = (): JSX.Element => {
             rowsMax={4}
             onChange={(e) =>
               dispatch(
-                updateElement(
-                  selectedElement.name,
-                  selectedElement.type,
-                  config.key,
-                  e.target.value,
-                ),
+                updateElement(selectedElement.id, selectedElement.type, config.key, e.target.value),
               )
             }
           />
@@ -62,7 +57,7 @@ export const ElementConfig = (): JSX.Element => {
           value={selectedElement.name}
           required
           onChange={(e) =>
-            dispatch(updateElementName(selectedElement.name, selectedElement.type, e.target.value))
+            dispatch(updateElementName(selectedElement.id, selectedElement.type, e.target.value))
           }
         />
         {selectedElement.type === 'widget' &&

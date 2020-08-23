@@ -6,6 +6,7 @@ export interface Dependencies {
 }
 
 export interface Widget {
+  id: string;
   type: 'widget';
   name: string;
   parent: string;
@@ -15,6 +16,7 @@ export interface Widget {
 }
 
 export interface Layout {
+  id: string;
   type: 'layout';
   layoutType: 'grid' | 'flex';
   name: string;
@@ -24,12 +26,14 @@ export interface Layout {
 }
 
 export interface Page {
+  id: string;
   type: 'page';
   name: string;
   props: { [key: string]: any };
 }
 
 export interface ElementTreeNode {
+  id: string;
   name: string;
   type: 'page' | 'layout' | 'widget';
   children: ElementTreeNode[];

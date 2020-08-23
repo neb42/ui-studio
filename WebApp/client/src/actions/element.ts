@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export const ADD_WIDGET = 'ADD_WIDGET';
 export const ADD_LAYOUT = 'ADD_LAYOUT';
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
@@ -18,6 +20,7 @@ const defaultComponentConfig = {
 interface AddLayout {
   type: 'ADD_LAYOUT';
   payload: {
+    id: string;
     name: string;
     layoutType: 'grid' | 'flex';
     parent: string;
@@ -29,6 +32,7 @@ export const addLayout = (layoutType: 'grid' | 'flex', parent: string): AddLayou
   return {
     type: ADD_LAYOUT,
     payload: {
+      id: uuidv4(),
       name,
       layoutType,
       parent,
@@ -40,6 +44,7 @@ export const addLayout = (layoutType: 'grid' | 'flex', parent: string): AddLayou
 interface AddWidget {
   type: 'ADD_WIDGET';
   payload: {
+    id: string;
     name: string;
     component: string;
     parent: string;
@@ -53,6 +58,7 @@ export const addWidget = (component: 'text', parent: string): AddWidget => {
   return {
     type: ADD_WIDGET,
     payload: {
+      id: uuidv4(),
       name,
       component,
       parent,
@@ -64,7 +70,7 @@ export const addWidget = (component: 'text', parent: string): AddWidget => {
 interface UpdateElement {
   type: 'UPDATE_ELEMENT';
   payload: {
-    name: string;
+    id: string;
     type: 'widget' | 'layout' | 'page';
     key: string;
     value: any;
@@ -72,7 +78,7 @@ interface UpdateElement {
 }
 
 export const updateElement = (
-  name: string,
+  id: string,
   type: 'widget' | 'layout' | 'page',
   key: string,
   value: any,
@@ -80,7 +86,7 @@ export const updateElement = (
   return {
     type: UPDATE_ELEMENT,
     payload: {
-      name,
+      id,
       type,
       key,
       value,
@@ -91,21 +97,21 @@ export const updateElement = (
 interface UpdateElementName {
   type: 'UPDATE_ELEMENT_NAME';
   payload: {
-    currentName: string;
+    id: string;
     type: 'widget' | 'layout' | 'page';
     name: string;
   };
 }
 
 export const updateElementName = (
-  currentName: string,
+  id: string,
   type: 'widget' | 'layout' | 'page',
   name: string,
 ): UpdateElementName => {
   return {
     type: UPDATE_ELEMENT_NAME,
     payload: {
-      currentName,
+      id,
       name,
       type,
     },

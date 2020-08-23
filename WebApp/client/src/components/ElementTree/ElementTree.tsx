@@ -17,7 +17,7 @@ interface Props {
 }
 
 const TreeNode = ({ node }: { node: ElementTreeNode }): JSX.Element => (
-  <TreeItem nodeId={node.name} label={node.name}>
+  <TreeItem nodeId={node.id} label={node.name}>
     {node.children.map((c) => (
       <TreeNode key={c.name} node={c} />
     ))}
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const ElementTree = ({ pageName }: Props): JSX.Element => {
+export const ElementTree = ({ pageName }: Props): JSX.Element | null => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const getElementTree = React.useMemo(makeGetElementTree, []);
@@ -41,6 +41,8 @@ export const ElementTree = ({ pageName }: Props): JSX.Element => {
   const handleSelect = (event: React.ChangeEvent<any>, nodeId: string) => {
     dispatch(selectElement(nodeId));
   };
+
+  if (!elementTree) return null;
 
   return (
     <Styles.Container>
