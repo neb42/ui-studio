@@ -1,0 +1,27 @@
+{
+  "name": "@ui-builder/code-generator",
+  "version": "0.1.0",
+  "description": "> TODO: description",
+  "author": "Ben McAlindin <bmcalindin@faculty.ai>",
+  "homepage": "https://github.com/neb42/ui-builder#readme",
+  "license": "MIT",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neb42/ui-builder.git"
+  },
+  "scripts": {
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "copy-templates": "yarn copy-templates:server && yarn copy-templates:client",
+    "copy-templates:server": "cp -r src/ServerGenerator/templates build/ServerGenerator/templates",
+    "copy-templates:client": "cp -r src/ClientGenerator/templates build/ClientGenerator/templates",
+    "build": "rm -rf build/* && tsc && yarn copy-templates"
+  },
+  "dependencies": {
+    "eslint-plugin-flowtype": "^5.2.0",
+    "graph-data-structure": "^1.12.1",
+    "mustache": "^4.0.1",
+    "pg": "^8.3.0",
+    "uuid": "^8.3.0"
+  }
+}

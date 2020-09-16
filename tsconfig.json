@@ -1,0 +1,6 @@
+{
+  "baseUrl": "./packages",
+  "paths": {
+    "@ui-builder/code-generator": ["CodeGenerator/src"]
+  }
+}
