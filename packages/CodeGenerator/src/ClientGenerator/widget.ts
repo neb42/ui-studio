@@ -4,12 +4,13 @@ import * as path from 'path';
 import * as Mustache from 'mustache';
 
 import { Widget } from '../types';
+import { FilePaths } from '../FilePaths';
 
 const componentMap = {
   text: '"span"',
 };
 
-const generateWidgetFiles = async (widgets: Widget[], basePath: string): Promise<void[]> => {
+const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
   return Promise.all(
     widgets.map(async (w) => {
       const data = await fs.readFile(path.join(__dirname, 'templates', 'Widget.mst'));
@@ -35,7 +36,7 @@ const generateWidgetFiles = async (widgets: Widget[], basePath: string): Promise
         props,
         children,
       });
-      return fs.writeFile(path.join(basePath, `${w.name}.js`), renderedFile);
+      return fs.writeFile(path.join(FilePaths.components, `${w.name}.js`), renderedFile);
     }),
   );
 };

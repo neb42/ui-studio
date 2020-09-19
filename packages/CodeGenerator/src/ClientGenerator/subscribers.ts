@@ -3,29 +3,12 @@ import * as path from 'path';
 
 import * as Mustache from 'mustache';
 
-import { ClientFunction, Widget, GetChildrenOfTypes } from '../types';
+import { FilePaths } from '../FilePaths';
 
-const generateSubscriberFiles = async (
-  foo: (Widget | ClientFunction)[],
-  basePath: string,
-  getChildrenOfTypes: GetChildrenOfTypes,
-): Promise<void[]> => {
-  const queries = foo.flatMap((f) => getChildrenOfTypes(f.name, ['query']));
-  const serverFunctions = foo.flatMap((f) => getChildrenOfTypes(f.name, ['serverFunction']));
-
-  const bar = (set: string[], type: string) =>
-    set.map(async (s) => {
-      const clientDeps = getChildrenOfTypes(s, ['clientFunction', 'widget']);
-      const data = await fs.readFile(path.join(__dirname, 'templates', 'Subscriber.mst'));
-      const renderedFile = Mustache.render(data.toString(), {
-        name: s,
-        type,
-        clientDeps,
-      });
-      return fs.writeFile(path.join(basePath, `${s}.js`), renderedFile);
-    });
-
-  return Promise.all([...bar(queries, 'query'), ...bar(serverFunctions, 'serverFunction')]);
+const generateSubscriberFiles = async (): Promise<void> => {
+  const data = await fs.readFile(path.join(__dirname, 'templates', 'Subscriber.mst'));
+  const renderedFile = Mustache.render(data.toString(), {});
+  return fs.writeFile(path.join(FilePaths.clientSrc, 'subscriber.js'), renderedFile);
 };
 
 export default generateSubscriberFiles;

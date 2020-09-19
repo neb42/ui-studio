@@ -5,22 +5,16 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { defaultTokens } from '@faculty/adler-tokens';
 
-import Routes from './routes';
-
-// import 'whatwg-fetch';
-// import 'd3-transition';
-
+import App from './App';
 import store from './store';
 
-<% #subscribers %>
-import <% . %> from './subscribers/<% . %>';
-<% /subscribers %>
+import subscriber from './subscriber';
 
 const rootElement = document.getElementById('root');
 ReactDOM.render(
   <ThemeProvider theme={defaultTokens}>
     <Provider store={store}>
-      <Routes />
+      <App />
     </Provider>
   </ThemeProvider>,
   rootElement,

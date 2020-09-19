@@ -3,14 +3,12 @@ import * as path from 'path';
 
 import * as Mustache from 'mustache';
 
-const generateUpdateWidgetActionFile = async (basePath: string): Promise<void> => {
-  const data = await fs.readFile(path.join(__dirname, 'templates', 'UpdateWidgetAction.mst'));
-  const renderedFile = Mustache.render(data.toString(), {});
-  return fs.writeFile(path.join(basePath, 'updateWidget.js'), renderedFile);
-};
+import { FilePaths } from '../FilePaths';
 
-const generateActionFiles = async (basePath: string): Promise<void[]> => {
-  return Promise.all([generateUpdateWidgetActionFile(basePath)]);
+const generateActionFiles = async (): Promise<void> => {
+  const data = await fs.readFile(path.join(__dirname, 'templates', 'Actions.mst'));
+  const renderedFile = Mustache.render(data.toString(), {});
+  return fs.writeFile(path.join(FilePaths.clientSrc, 'actions.js'), renderedFile);
 };
 
 export default generateActionFiles;

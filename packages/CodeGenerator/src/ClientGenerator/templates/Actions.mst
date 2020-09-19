@@ -1,0 +1,15 @@
+import axios from 'axios';
+
+export const updateWidget = (name, exposedProperties) => ({
+  type: 'UPDATE_WIDGET',
+  name,
+  payload: exposedProperties,
+});
+
+export const initFunctions = () => async (dispatch) => {
+  const { data: { data }, status } = await axios.get('/api/init-functions');
+  dispatch({
+    type: 'INIT_FUNCTIONS',
+    payload: data,
+  });
+};

@@ -3,16 +3,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
 
-import updateWidget from '../actions/updateWidget';
-
-{{ #dependencies }}
-import selector_{{{ . }}} from '../selectors/{{{ . }}}';
-{{ /dependencies }}
+import { updateWidget } from '../actions';
+import { getFunction } from '../selectors';
 
 const mapStateToProps = (state) => {
   const rawValues = {
     {{ #dependencies }}
-    {{{ . }}}: selector_{{{ . }}}(state),
+    {{{ . }}}: getFunction(state)('{{{ . }}}'),
     {{ /dependencies }}
   };
 

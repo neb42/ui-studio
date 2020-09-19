@@ -21,7 +21,6 @@
     "eslint-plugin-flowtype": "^5.2.0",
     "graph-data-structure": "^1.12.1",
     "mustache": "^4.0.1",
-    "pg": "^8.3.0",
     "uuid": "^8.3.0"
   }
 }

@@ -4,8 +4,9 @@ import * as path from 'path';
 import * as Mustache from 'mustache';
 
 import { ElementTree } from '../types';
+import { FilePaths } from '../FilePaths';
 
-const generatePageFiles = (elementTree: ElementTree[], basePath: string) => {
+const generatePageFiles = (elementTree: ElementTree[]): Promise<void[]> => {
   return Promise.all(
     elementTree.map(async (e) => {
       const [data, recursiveImport, recursiveElement] = await Promise.all([
@@ -25,7 +26,7 @@ const generatePageFiles = (elementTree: ElementTree[], basePath: string) => {
           recursive_element: recursiveElement.toString(),
         },
       );
-      return fs.writeFile(path.join(basePath, `${e.name}.js`), renderedFile);
+      return fs.writeFile(path.join(FilePaths.pages, `${e.name}.js`), renderedFile);
     }),
   );
 };

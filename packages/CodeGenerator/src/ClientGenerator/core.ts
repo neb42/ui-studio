@@ -3,11 +3,13 @@ import * as path from 'path';
 
 import * as Mustache from 'mustache';
 
-import { ClientFunction, Widget, GetChildrenOfTypes } from '../types';
+import { FilePaths } from '../FilePaths';
 
 const coreFiles = [
-  { template: 'index.html.mst', fileName: path.join('public', 'index.html') },
-  { template: 'Store.mst', fileName: path.join('src', 'store.js') },
+  { template: 'index.html.mst', fileName: path.join(FilePaths.public, 'index.html') },
+  { template: 'Store.mst', fileName: path.join(FilePaths.clientSrc, 'store.js') },
+  { template: 'App.mst', fileName: path.join(FilePaths.clientSrc, 'App.js') },
+  { template: 'index.mst', fileName: path.join(FilePaths.clientSrc, 'index.js') },
 ];
 
 const dependencies = [
@@ -29,51 +31,27 @@ dependencies[dependencies.length - 1].last = true;
 const devDependencies = [];
 // devDependencies[devDependencies.length - 1 ].last = true;
 
-const generatePackageDotJsonFile = async (appName: string, basePath: string): Promise<void> => {
+const generatePackageDotJsonFile = async (): Promise<void> => {
   const data = await fs.readFile(path.join(__dirname, 'templates', 'package.json.mst'));
   const renderedFile = Mustache.render(data.toString(), {
-    appName,
     devDependencies,
     dependencies,
     buildDirectory: '',
     sourceDirectory: '',
   });
-  return fs.writeFile(path.join(basePath, 'package.json'), renderedFile);
+  return fs.writeFile(path.join(FilePaths.client, 'package.json'), renderedFile);
 };
 
-const generateParameterlessFile = async (
-  template: string,
-  fileName: string,
-  basePath: string,
-): Promise<void> => {
+const generateParameterlessFile = async (template: string, fileName: string): Promise<void> => {
   const data = await fs.readFile(path.join(__dirname, 'templates', template));
   const renderedFile = Mustache.render(data.toString(), {});
-  return fs.writeFile(path.join(basePath, fileName), renderedFile);
+  return fs.writeFile(fileName, renderedFile);
 };
 
-const generateIndexFile = async (
-  foo: (Widget | ClientFunction)[],
-  basePath: string,
-  getChildrenOfTypes: GetChildrenOfTypes,
-) => {
-  const subscribers = Array.from(
-    new Set(foo.flatMap((f) => getChildrenOfTypes(f.name, ['query', 'serverFunction']))),
-  );
-  const data = await fs.readFile(path.join(__dirname, 'templates', 'index.mst'));
-  const renderedFile = Mustache.render(data.toString(), { subscribers });
-  return fs.writeFile(path.join(basePath, 'src', 'index.js'), renderedFile);
-};
-
-const generateCoreFiles = (
-  foo: (Widget | ClientFunction)[],
-  appName: string,
-  basePath: string,
-  getChildrenOfTypes: GetChildrenOfTypes,
-): Promise<void[]> => {
+const generateCoreFiles = (): Promise<void[]> => {
   return Promise.all([
-    generatePackageDotJsonFile(appName, basePath),
-    generateIndexFile(foo, basePath, getChildrenOfTypes),
-    ...coreFiles.map((f) => generateParameterlessFile(f.template, f.fileName, basePath)),
+    generatePackageDotJsonFile(),
+    ...coreFiles.map((f) => generateParameterlessFile(f.template, f.fileName)),
   ]);
 };
 

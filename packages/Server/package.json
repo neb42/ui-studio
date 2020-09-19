@@ -1,27 +1,35 @@
 {
-  "name": "@ui-builder/preview-server",
+  "name": "@ui-builder/server",
   "version": "0.1.0",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/ui-builder#readme",
   "license": "MIT",
   "main": "build/server.js",
+  "bin": {
+    "ui-builder": "build/server.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/neb42/ui-builder.git"
   },
   "scripts": {
     "clean": "rm -rf build/*",
-    "build": "yarn clean && tsc",
+    "build:server": "yarn clean && tsc",
+    "build:client": "cd client && yarn build && cp -r build/ ../build/client",
+    "build": "yarn build:server && yarn build:client",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "dev": "yarn build && yarn start",
+    "dev": "yarn build:server && yarn start",
     "start": "node ."
   },
   "dependencies": {
+    "@types/yargs": "^15.0.5",
     "@ui-builder/code-generator": "*",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "socket.io": "^2.3.0"
+    "nodemon": "^2.0.4",
+    "socket.io": "^2.3.0",
+    "yargs": "^16.0.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.7",

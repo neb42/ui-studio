@@ -3,47 +3,32 @@ import * as path from 'path';
 
 import * as Mustache from 'mustache';
 
-import { ClientFunction, Widget } from '../types';
+import { Widget } from '../types';
+import { FilePaths } from '../FilePaths';
 
-const generateApiReducerFile = async (
-  foo: string[],
-  type: 'query' | 'serverFunction',
-  basePath: string,
-): Promise<void> => {
-  const data = await fs.readFile(path.join(__dirname, 'templates', 'ApiReducer.mst'));
-  const renderedFile = Mustache.render(data.toString(), { foo, type });
-  return fs.writeFile(path.join(basePath, `${type}.js`), renderedFile);
+const generateFunctionsReducerFile = async (): Promise<void> => {
+  const data = await fs.readFile(path.join(__dirname, 'templates', 'FunctionsReducer.mst'));
+  const renderedFile = Mustache.render(data.toString(), {});
+  return fs.writeFile(path.join(FilePaths.reducers, 'functions.js'), renderedFile);
 };
 
-const generateWidgetReducerFile = async (widgets: Widget[], basePath: string): Promise<void> => {
+const generateWidgetReducerFile = async (widgets: Widget[]): Promise<void> => {
   const data = await fs.readFile(path.join(__dirname, 'templates', 'WidgetReducer.mst'));
   const renderedFile = Mustache.render(data.toString(), { widgets });
-  return fs.writeFile(path.join(basePath, 'widget.js'), renderedFile);
+  return fs.writeFile(path.join(FilePaths.reducers, 'widget.js'), renderedFile);
 };
 
-const generateRootReducerFile = async (basePath: string): Promise<void> => {
+const generateRootReducerFile = async (): Promise<void> => {
   const data = await fs.readFile(path.join(__dirname, 'templates', 'RootReducer.mst'));
   const renderedFile = Mustache.render(data.toString(), {});
-  return fs.writeFile(path.join(basePath, 'index.js'), renderedFile);
+  return fs.writeFile(path.join(FilePaths.reducers, 'index.js'), renderedFile);
 };
 
-const generateReducerFiles = async (
-  widgets: Widget[],
-  clientFunctions: ClientFunction[],
-  basePath: string,
-  getChildrenOfTypes: (nodeKey: string, types: string[]) => string[],
-): Promise<void[]> => {
-  const both = [...widgets, ...clientFunctions];
-  const queries = Array.from(new Set(both.flatMap((f) => getChildrenOfTypes(f.name, ['query']))));
-  const serverFunctions = Array.from(
-    new Set(both.flatMap((f) => getChildrenOfTypes(f.name, ['serverFunction']))),
-  );
-
+const generateReducerFiles = async (widgets: Widget[]): Promise<void[]> => {
   return Promise.all([
-    generateApiReducerFile(queries, 'query', basePath),
-    generateApiReducerFile(serverFunctions, 'serverFunction', basePath),
-    generateWidgetReducerFile(widgets, basePath),
-    generateRootReducerFile(basePath),
+    generateWidgetReducerFile(widgets),
+    generateFunctionsReducerFile(),
+    generateRootReducerFile(),
   ]);
 };
 

@@ -1,7 +1,0 @@
-const updateWidget = (name, exposedProperties) => ({
-  type: 'UPDATE_WIDGET',
-  name,
-  payload: exposedProperties,
-});
-
-export default updateWidget;

@@ -1,9 +1,0 @@
-{{ #dependencies }}
-import selector_{{ . }} from './{{ . }}';
-{{ /dependencies }}
-
-const selector_{{ name }} = (state) => {
-  {{{ functionString }}}
-};
-
-export default selector_{{ name }};

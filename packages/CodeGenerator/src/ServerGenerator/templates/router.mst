@@ -1,4 +1,3 @@
-{{=<% %>=}}
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
@@ -7,25 +6,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-
-<% #serverFunctions %>
-import <% . %> from './serverFunctions/<% . %>';
-<% /serverFunctions %>
-<% #queries %>
-import <% . %> from './queries/<% . %>';
-<% /queries %>
-
-<% #both %>
-const endpoint_<% . %> = async (request, response, next) => {
-  try {
-    const data = await <% . %>(request.body);
-    response.status(200).send({ data });
-  } catch (error) {
-    next(error);
-  };
-};
-
-<% /both %>
+import { Functions } from 'functions-pkg';
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -34,12 +15,30 @@ router.use(
     extended: true,
   }),
 );
-<% #both %>
-router.post(
-  '/<% . %>',
-  endpoint_<% . %>,
-);
-<% /both %>
+
+const functions = new Functions();
+functions.registered.forEach(f => {
+  router.post(
+    `/function_${f.name}`,
+    async (request, response, next) => {
+      try {
+        const data = await functions[f.name](request.body);
+        response.status(200).send({ data });
+      } catch (error) {
+        next(error);
+      };
+    },
+  );
+});
+
+router.get('/init-functions', async (request, response, next) => {
+  try {
+    const data = functions.registered;
+    response.status(200).send({ data });
+  } catch (error) {
+    next(error);
+  };
+});
 
 const app = express();
 app.use(cookieParser());

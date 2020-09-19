@@ -165,6 +165,7 @@ const widgetTable: Widget[] = [
 
 const massage = (o: any[]) => o.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {});
 
+export const source = '/Users/bmcalindin/workspace/ui-builder/packages/ExampleApp';
 export const dataset = massage(datasetTable);
 export const queries = massage(queryTable);
 export const serverFunctions = massage(serverFunctionTable);

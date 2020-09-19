@@ -1,3 +1,0 @@
-{{=<% %>=}}
-const selector_<% name %> = (state) => state.<% type %>.<% name %>;
-export default selector_<% name %>;
