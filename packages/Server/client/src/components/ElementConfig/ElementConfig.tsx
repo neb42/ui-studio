@@ -4,6 +4,8 @@ import { makeGetSelectedElement } from 'selectors/element';
 import { TextField } from '@material-ui/core';
 import { updateElement, updateElementName } from 'actions/element';
 
+import { makeIsValidElementName } from '../../selectors/element';
+
 import * as Styles from './ElementConfig.styles';
 
 interface WidgetConfig {
@@ -19,7 +21,25 @@ const widgetConfigMap: { [key: string]: WidgetConfig[] } = {
 export const ElementConfig = (): JSX.Element => {
   const dispatch = useDispatch();
   const getSelectedElement = React.useMemo(makeGetSelectedElement, []);
+  const isValidElementName = useSelector(React.useMemo(makeIsValidElementName, []));
   const selectedElement = useSelector(getSelectedElement);
+  const [name, setName] = React.useState(selectedElement?.name);
+  React.useEffect(() => {
+    if (selectedElement && selectedElement.name !== name) {
+      setName(selectedElement.name);
+    }
+  }, [selectedElement?.name]);
+
+  const handleOnNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = event?.target?.value;
+    if (newName) {
+      setName(newName);
+
+      if (isValidElementName(newName) && selectedElement) {
+        dispatch(updateElementName(selectedElement.name, selectedElement.type, newName));
+      }
+    }
+  };
 
   if (selectedElement === null) {
     return <Styles.Container>No element selected</Styles.Container>;
@@ -37,7 +57,12 @@ export const ElementConfig = (): JSX.Element => {
             rowsMax={4}
             onChange={(e) =>
               dispatch(
-                updateElement(selectedElement.id, selectedElement.type, config.key, e.target.value),
+                updateElement(
+                  selectedElement.name,
+                  selectedElement.type,
+                  config.key,
+                  e.target.value,
+                ),
               )
             }
           />
@@ -54,11 +79,10 @@ export const ElementConfig = (): JSX.Element => {
         <TextField
           id="name"
           label="Name"
-          value={selectedElement.name}
+          value={name}
           required
-          onChange={(e) =>
-            dispatch(updateElementName(selectedElement.id, selectedElement.type, e.target.value))
-          }
+          onChange={handleOnNameChange}
+          error={isValidElementName(name || '')}
         />
         {selectedElement.type === 'widget' &&
           widgetConfigMap[selectedElement.component].map((c) => renderField(c))}

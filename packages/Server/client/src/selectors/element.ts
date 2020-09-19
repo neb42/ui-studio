@@ -34,7 +34,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
       const elementGraph = Graph();
       Object.keys({ ...pages, ...layouts, ...widgets }).forEach((k) => elementGraph.addNode(k));
       Object.values({ ...widgets, ...layouts }).forEach((v) =>
-        elementGraph.addEdge(v.parent, v.id),
+        elementGraph.addEdge(v.parent, v.name),
       );
 
       const buildTree = (node: string): ElementTreeNode => {
@@ -48,9 +48,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
         };
       };
 
-      const pageId = Object.values(pages).find((p) => p.name === pageName)?.id;
-      if (!pageId) return null;
-      const elementTree = buildTree(pageId);
+      const elementTree = buildTree(pageName);
       return elementTree;
     },
   );
@@ -81,4 +79,10 @@ export const makeGetElements = () =>
       serverFunctions: {},
       clientFunctions: {},
     };
+  });
+
+export const makeIsValidElementName = () =>
+  createSelector(getPages, getLayouts, getWidgets, (pages, layouts, widgets) => {
+    return (name: string) =>
+      ![...Object.keys(pages), ...Object.keys(layouts), ...Object.keys(widgets)].includes(name);
   });

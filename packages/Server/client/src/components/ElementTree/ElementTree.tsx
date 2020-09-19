@@ -17,7 +17,7 @@ interface Props {
 }
 
 const TreeNode = ({ node }: { node: ElementTreeNode }): JSX.Element => (
-  <TreeItem nodeId={node.id} label={node.name}>
+  <TreeItem nodeId={node.name} label={node.name}>
     {node.children.map((c) => (
       <TreeNode key={c.name} node={c} />
     ))}

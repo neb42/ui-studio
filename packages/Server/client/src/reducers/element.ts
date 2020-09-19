@@ -20,75 +20,71 @@ const ids = new Array(8).fill(1).map((_) => uuidv4());
 const initialState: Store$Element = {
   selectedElement: null,
   page: {
-    [ids[0]]: { id: ids[0], type: 'page', name: 'p_page1', props: {} },
+    p_page1: { id: ids[0], type: 'page', name: 'p_page1', props: {} },
   },
   widget: {
-    [ids[1]]: {
+    w_widget1: {
       type: 'widget',
       id: ids[1],
       name: 'w_widget1',
-      parent: ids[6],
+      parent: 'l_flex1',
       component: 'text',
       dependencies: emptyDeps,
       props: { children: '' },
     },
-    [ids[2]]: {
+    w_widget2: {
       id: ids[2],
       type: 'widget',
       name: 'w_widget2',
-      parent: ids[6],
+      parent: 'l_flex1',
       component: 'text',
       dependencies: emptyDeps,
       props: { children: '' },
     },
-    [ids[3]]: {
+    w_widget3: {
       id: ids[3],
       type: 'widget',
       name: 'w_widget3',
-      parent: ids[7],
+      parent: 'l_flex2',
       component: 'text',
-      dependencies: { ...emptyDeps, queries: ['q_query1'] },
+      dependencies: emptyDeps,
       props: { children: '' },
     },
-    [ids[4]]: {
+    w_widget4: {
       id: ids[4],
       type: 'widget',
       name: 'w_widget4',
-      parent: ids[5],
+      parent: 'l_grid1',
       component: 'text',
-      dependencies: {
-        ...emptyDeps,
-        clientFunctions: ['f_clientFunc2'],
-        serverFunctions: ['f_serverFunc1'],
-      },
+      dependencies: emptyDeps,
       props: { children: '' },
     },
   },
   layout: {
-    [ids[5]]: {
+    l_grid1: {
       id: ids[5],
       type: 'layout',
       layoutType: 'grid',
       name: 'l_grid1',
-      parent: ids[0],
+      parent: 'p_page1',
       dependencies: emptyDeps,
       props: {},
     },
-    [ids[6]]: {
+    l_flex1: {
       id: ids[6],
       type: 'layout',
       layoutType: 'flex',
       name: 'l_flex1',
-      parent: ids[5],
+      parent: 'l_grid1',
       dependencies: emptyDeps,
       props: {},
     },
-    [ids[7]]: {
+    l_flex2: {
       id: ids[7],
       type: 'layout',
       layoutType: 'flex',
       name: 'l_flex2',
-      parent: ids[5],
+      parent: 'l_grid1',
       dependencies: emptyDeps,
       props: {},
     },
@@ -137,15 +133,66 @@ const element = (state: Store$Element = initialState, action: Action$Element) =>
       };
     }
     case UPDATE_ELEMENT_NAME: {
+      const page = Object.keys(state.page).reduce((acc, cur) => {
+        if (cur === action.payload.id) return acc;
+        return { ...acc, [cur]: state.page[cur] };
+      }, {});
+
+      const layout = Object.keys(state.layout).reduce(
+        (acc, cur) => {
+          if (cur === action.payload.id) return acc;
+          if (state.layout[cur].parent === action.payload.id) {
+            return {
+              ...acc,
+              [cur]: {
+                ...state.layout[cur],
+                parent: action.payload.name,
+              },
+            };
+          }
+          return { ...acc, [cur]: state.layout[cur] };
+        },
+        action.payload.type === 'layout'
+          ? {
+              [action.payload.name]: {
+                ...state.layout[action.payload.id],
+                name: action.payload.name,
+              },
+            }
+          : {},
+      );
+
+      const widget = Object.keys(state.widget).reduce(
+        (acc, cur) => {
+          if (cur === action.payload.id) return acc;
+          if (state.widget[cur].parent === action.payload.id) {
+            return {
+              ...acc,
+              [cur]: {
+                ...state.widget[cur],
+                parent: action.payload.name,
+              },
+            };
+          }
+          return { ...acc, [cur]: state.widget[cur] };
+        },
+        action.payload.type === 'widget'
+          ? {
+              [action.payload.name]: {
+                ...state.widget[action.payload.id],
+                name: action.payload.name,
+              },
+            }
+          : {},
+      );
+
       return {
         ...state,
-        [action.payload.type]: {
-          ...state[action.payload.type],
-          [action.payload.id]: {
-            ...state[action.payload.type][action.payload.id],
-            name: action.payload.name,
-          },
-        },
+        selectedElement:
+          state.selectedElement === action.payload.id ? action.payload.name : state.selectedElement,
+        page,
+        layout,
+        widget,
       };
     }
     default:
