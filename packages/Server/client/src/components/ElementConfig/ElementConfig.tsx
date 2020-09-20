@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { makeGetSelectedElement } from 'selectors/element';
-import { TextField } from '@material-ui/core';
+import { Tab, Tabs, TextField } from '@material-ui/core';
+import { makeGetSelectedElement, makeIsValidElementName } from 'selectors/element';
 import { updateElement, updateElementName } from 'actions/element';
-
-import { makeIsValidElementName } from '../../selectors/element';
+import { GridLayoutConfig } from 'components/GridLayoutConfig/GridLayoutConfig';
 
 import * as Styles from './ElementConfig.styles';
 
@@ -24,6 +23,8 @@ export const ElementConfig = (): JSX.Element => {
   const isValidElementName = useSelector(React.useMemo(makeIsValidElementName, []));
   const selectedElement = useSelector(getSelectedElement);
   const [name, setName] = React.useState(selectedElement?.name);
+  const [tabIndex, setTabIndex] = React.useState(0);
+
   React.useEffect(() => {
     if (selectedElement && selectedElement.name !== name) {
       setName(selectedElement.name);
@@ -73,19 +74,55 @@ export const ElementConfig = (): JSX.Element => {
     }
   };
 
+  const componentName = (() => {
+    switch (selectedElement.type) {
+      case 'page':
+        return 'Page';
+      case 'layout': {
+        switch (selectedElement.layoutType) {
+          case 'grid':
+            return 'Grid layout';
+          case 'flex':
+            return 'Flex layout';
+          default:
+            return 'Unknown';
+        }
+      }
+      case 'widget': {
+        switch (selectedElement.component) {
+          case 'text':
+            return 'Text';
+          default:
+            return 'Unknown';
+        }
+      }
+      default:
+        return 'Unknown';
+    }
+  })();
+
   return (
     <Styles.Container>
-      <Styles.Field>
+      <Styles.Header>
+        <Styles.ComponentName>{componentName}</Styles.ComponentName>
         <TextField
           id="name"
-          label="Name"
           value={name}
           required
           onChange={handleOnNameChange}
           error={isValidElementName(name || '')}
         />
+      </Styles.Header>
+      <Tabs variant="fullWidth" value={tabIndex} onChange={(_, newIdx) => setTabIndex(newIdx)}>
+        <Tab label="Config" />
+        <Tab label="Style" />
+      </Tabs>
+      <Styles.Field>
         {selectedElement.type === 'widget' &&
           widgetConfigMap[selectedElement.component].map((c) => renderField(c))}
+        {selectedElement.type === 'layout' && selectedElement.layoutType === 'grid' && (
+          <GridLayoutConfig />
+        )}
       </Styles.Field>
     </Styles.Container>
   );

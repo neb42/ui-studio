@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createGlobalStyle } from 'styled-components';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { defaultTokens } from '@faculty/adler-tokens';
 
 import store from './store';
 import App from './App';
@@ -24,10 +26,14 @@ const GlobalStyles = createGlobalStyle`
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <GlobalStyles />
-      <App />
-    </Provider>
+    <ThemeProvider theme={defaultTokens}>
+      <Provider store={store}>
+        <GlobalStyles />
+        <Router>
+          <App />
+        </Router>
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

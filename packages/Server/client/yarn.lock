@@ -1547,20 +1547,20 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@faculty/adler-tokens@0.0.102", "@faculty/adler-tokens@^0.0.102":
-  version "0.0.102"
-  resolved "https://registry.yarnpkg.com/@faculty/adler-tokens/-/adler-tokens-0.0.102.tgz#b2b7810c158280a445b349fcc8dc92e2b7edebff"
-  integrity sha512-zNmhC+aipXjjqVBqmR7XqPS/vtkMTbMDDoiAUxZjkbEPAOdrjYCnrNiVk7yfufbORbMpQLXGuuQKlkUpQncwUw==
+"@faculty/adler-tokens@0.0.108", "@faculty/adler-tokens@^0.0.108":
+  version "0.0.108"
+  resolved "https://registry.yarnpkg.com/@faculty/adler-tokens/-/adler-tokens-0.0.108.tgz#6efeccde585976e5aac401b522fc1986f11d7560"
+  integrity sha512-B0lrfgFAxtsKajc2YfZ+lhUCkkwmIM6ZSfuWNrtmfPMls99KRT/I+ZrL0GtKBrfhRn08GQvgLhlFNDOWScP90g==
   dependencies:
     color "^3.1.1"
     lodash.merge "^4.6.1"
 
-"@faculty/adler-web-components@^0.0.102":
-  version "0.0.102"
-  resolved "https://registry.yarnpkg.com/@faculty/adler-web-components/-/adler-web-components-0.0.102.tgz#619f0b1201d2b68856197c9d46170a7e2f38793a"
-  integrity sha512-AR00tvt84qX10GED0vVPBx8XQPi/7lXhio4XlYH43w1h93YeYwiQRkIPTjUD1xECH6XU+1nA3PKz2HZVhwzVOg==
+"@faculty/adler-web-components@^0.0.108":
+  version "0.0.108"
+  resolved "https://registry.yarnpkg.com/@faculty/adler-web-components/-/adler-web-components-0.0.108.tgz#44b6227ea2ba7f0146f05b89deae6d5eeb72a6bb"
+  integrity sha512-w0z+zPQILQx9R7yYTqWUi0KSR9fTlgmB5d+LG4m3tp35F/h9duv1d8Tw5jZFTQlBwNztaiOcH3tTdo6XdfiY3A==
   dependencies:
-    "@faculty/adler-tokens" "0.0.102"
+    "@faculty/adler-tokens" "0.0.108"
     d3-array "^2.4.0"
     d3-dispatch "^1.0.6"
     d3-selection "^1.4.1"
@@ -1572,17 +1572,17 @@
     react-select "^3.0.4"
     styled-components "5.0.1"
 
-"@faculty/eslint-config-base@0.0.102":
-  version "0.0.102"
-  resolved "https://registry.yarnpkg.com/@faculty/eslint-config-base/-/eslint-config-base-0.0.102.tgz#9de304544876fd0920a4e47ace0bc42ab16cdfd7"
-  integrity sha512-awfoyM2VAaNa8OlBt8nWVH3t4TyeC2jY34YkJU28oLjoj/O4xOVqLwnPWHSN0gjhY1ZKGdgETt0GbY8k9JMehg==
+"@faculty/eslint-config-base@0.0.108":
+  version "0.0.108"
+  resolved "https://registry.yarnpkg.com/@faculty/eslint-config-base/-/eslint-config-base-0.0.108.tgz#25dc42a2fc228b1b862941f52e868a5c47c8f826"
+  integrity sha512-zIyfQVkCCI+VmQoSoZz6ukM1LmrR9n0ahR0J4du0r2Fmge5vzsOC7eKr4hY5MJ2arRotNbyTax2KpyCrfPBjsA==
 
-"@faculty/eslint-config-react@^0.0.102":
-  version "0.0.102"
-  resolved "https://registry.yarnpkg.com/@faculty/eslint-config-react/-/eslint-config-react-0.0.102.tgz#bdcccea2ba7620415dd4725192518e3dd74a7749"
-  integrity sha512-FqrRfzO+IIcGoA2uPIdG/46kuYmG96iyjf4mhNIpC71M4j3B7ynlUaGSM81o8P25zQ0Q/4uNda3XRlqnCt8naw==
+"@faculty/eslint-config-react@^0.0.108":
+  version "0.0.108"
+  resolved "https://registry.yarnpkg.com/@faculty/eslint-config-react/-/eslint-config-react-0.0.108.tgz#52611555e1571c44bd7956b9bc5816f84e0c799d"
+  integrity sha512-bqLljFfRQmyOjgAKMKp50Ztmd01LDlkDXNHJ64Fl172gJ86C6dheMeHaSP0dHiSCI0a3iWHKxRPe6zlqTDE5GQ==
   dependencies:
-    "@faculty/eslint-config-base" "0.0.102"
+    "@faculty/eslint-config-base" "0.0.108"
 
 "@hapi/address@2.x.x":
   version "2.1.4"
@@ -2075,10 +2075,24 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/color-name@^1.1.1":
+"@types/color-convert@*":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@types/color-convert/-/color-convert-1.9.0.tgz#bfa8203e41e7c65471e9841d7e306a7cd8b5172d"
+  integrity sha512-OKGEfULrvSL2VRbkl/gnjjgbbF7ycIlpSsX7Nkab4MOWi5XxmgBYvuiQ7lcCFY5cPDz7MUNaKgxte2VRmtr4Fg==
+  dependencies:
+    "@types/color-name" "*"
+
+"@types/color-name@*", "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
+
+"@types/color@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/color/-/color-3.0.1.tgz#2900490ed04da8116c5058cd5dba3572d5a25071"
+  integrity sha512-oeUWVaAwI+xINDUx+3F2vJkl/vVB03VChFF/Gl3iQCdbcakjuoJyMOba+3BXRtnBhxZ7uBYqQBi9EpLnvSoztA==
+  dependencies:
+    "@types/color-convert" "*"
 
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
@@ -3942,7 +3956,7 @@ color-string@^1.5.2:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color@^3.0.0, color@^3.1.1:
+color@^3.0.0, color@^3.1.1, color@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/color/-/color-3.1.2.tgz#68148e7f85d41ad7649c5fa8c8106f098d229e10"
   integrity sha512-vXTJhHebByxZn3lDvDJYw4lR5+uB3vuoHsuYA5AKuxRVn5wzzIfQKGLBmgdVRHKTJYeK5rvJcHnrd0Li49CFpg==

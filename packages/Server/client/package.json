@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@faculty/adler-tokens": "^0.0.102",
-    "@faculty/adler-web-components": "^0.0.102",
+    "@faculty/adler-tokens": "^0.0.108",
+    "@faculty/adler-web-components": "^0.0.108",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
@@ -16,6 +16,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "axios": "^0.19.2",
+    "color": "^3.1.2",
     "graph-data-structure": "^1.12.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -55,8 +56,9 @@
     ]
   },
   "devDependencies": {
-    "@faculty/eslint-config-react": "^0.0.102",
+    "@faculty/eslint-config-react": "^0.0.108",
     "@types/axios": "^0.14.0",
+    "@types/color": "^3.0.1",
     "@types/react-redux": "^7.1.9",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",

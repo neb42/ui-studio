@@ -1,0 +1,1 @@
+export { GridLayoutConfig } from './GridLayoutConfig';
