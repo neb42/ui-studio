@@ -121,7 +121,7 @@ export const ElementConfig = (): JSX.Element => {
         {selectedElement.type === 'widget' &&
           widgetConfigMap[selectedElement.component].map((c) => renderField(c))}
         {selectedElement.type === 'layout' && selectedElement.layoutType === 'grid' && (
-          <GridLayoutConfig />
+          <GridLayoutConfig element={selectedElement} />
         )}
       </Styles.Field>
     </Styles.Container>

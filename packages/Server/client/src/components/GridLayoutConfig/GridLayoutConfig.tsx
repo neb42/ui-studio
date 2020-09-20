@@ -1,6 +1,9 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { GridPreview } from 'components/GridPreview';
 import { GridTemplateControls } from 'components/GridTemplateControls';
+import { updateElement } from 'actions/element';
+import { Page, Layout, Widget } from 'types/element';
 
 import * as Styles from './GridLayoutConfig.styles';
 
@@ -12,9 +15,22 @@ interface IGridCell {
 
 const defaultCell: IGridCell = { value: 1, unit: 'fr' };
 
-export const GridLayoutConfig = (): JSX.Element => {
+interface IGridLayoutConfig {
+  element: Page | Layout | Widget;
+}
+
+export const GridLayoutConfig = ({ element }: IGridLayoutConfig): JSX.Element => {
+  const dispatch = useDispatch();
   const [columns, setColumns] = React.useState<IGridCell[]>([defaultCell]);
   const [rows, setRows] = React.useState<IGridCell[]>([defaultCell]);
+
+  React.useEffect(() => {
+    dispatch(updateElement(element.name, 'layout', 'columns', columns));
+  }, [JSON.stringify(columns)]);
+
+  React.useEffect(() => {
+    dispatch(updateElement(element.name, 'layout', 'rows', rows));
+  }, [JSON.stringify(rows)]);
 
   return (
     <Styles.Container>
