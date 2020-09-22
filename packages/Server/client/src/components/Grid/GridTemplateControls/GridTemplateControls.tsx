@@ -1,15 +1,9 @@
 import * as React from 'react';
 import { TextField, IconButton, Button, Select, MenuItem } from '@material-ui/core';
-import { Clear } from '@material-ui/icons';
+import { ClearSharp } from '@material-ui/icons';
+import { IGridCell, GridUnit } from 'types/grid';
 
 import * as Styles from './GridTemplateControls.styles';
-
-type Unit = 'fr' | '%' | 'px' | 'em' | 'mincontent' | 'maxcontent' | 'minmax';
-
-interface IGridCell {
-  value: number;
-  unit: Unit;
-}
 
 const units: ['fr', '%', 'px', 'em', 'mincontent', 'maxcontent', 'minmax'] = [
   'fr',
@@ -60,7 +54,7 @@ export const GridTemplateControls = ({
     updateConfig((prevState) =>
       prevState.map((r, i) => {
         if (i === idx) {
-          return { ...r, unit: value as Unit };
+          return { ...r, unit: value as GridUnit };
         }
         return r;
       }),
@@ -92,7 +86,7 @@ export const GridTemplateControls = ({
             ))}
           </Select>
           <IconButton aria-label="delete" onClick={handleRemove(i)} disabled={config.length === 1}>
-            <Clear />
+            <ClearSharp />
           </IconButton>
         </Styles.Cell>
       ))}

@@ -1,3 +1,7 @@
+import { GridLayout } from './grid';
+import { FlexLayout } from './flex';
+import { TStyle } from './style';
+
 export interface Dependencies {
   queries: string[];
   serverFunctions: string[];
@@ -13,17 +17,10 @@ export interface Widget {
   component: 'text';
   dependencies: Dependencies;
   props: { [key: string]: any };
+  style: TStyle;
 }
 
-export interface Layout {
-  id: string;
-  type: 'layout';
-  layoutType: 'grid' | 'flex';
-  name: string;
-  parent: string;
-  dependencies: Dependencies;
-  props: { [key: string]: any };
-}
+export type Layout = GridLayout | FlexLayout;
 
 export interface Page {
   id: string;

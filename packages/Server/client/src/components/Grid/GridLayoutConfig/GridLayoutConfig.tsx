@@ -1,17 +1,12 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import { GridPreview } from 'components/GridPreview';
-import { GridTemplateControls } from 'components/GridTemplateControls';
+import { GridPreview } from 'components/Grid/GridPreview';
+import { GridTemplateControls } from 'components/Grid/GridTemplateControls';
 import { updateElement } from 'actions/element';
 import { Page, Layout, Widget } from 'types/element';
+import { IGridCell } from 'types/grid';
 
 import * as Styles from './GridLayoutConfig.styles';
-
-type Unit = 'fr' | '%' | 'px' | 'em' | 'mincontent' | 'maxcontent' | 'minmax';
-interface IGridCell {
-  value: number;
-  unit: Unit;
-}
 
 const defaultCell: IGridCell = { value: 1, unit: 'fr' };
 
@@ -21,8 +16,10 @@ interface IGridLayoutConfig {
 
 export const GridLayoutConfig = ({ element }: IGridLayoutConfig): JSX.Element => {
   const dispatch = useDispatch();
-  const [columns, setColumns] = React.useState<IGridCell[]>([defaultCell]);
-  const [rows, setRows] = React.useState<IGridCell[]>([defaultCell]);
+  const [columns, setColumns] = React.useState<IGridCell[]>(
+    element?.props?.columns ?? [defaultCell],
+  );
+  const [rows, setRows] = React.useState<IGridCell[]>(element?.props?.rows ?? [defaultCell]);
 
   React.useEffect(() => {
     dispatch(updateElement(element.name, 'layout', 'columns', columns));

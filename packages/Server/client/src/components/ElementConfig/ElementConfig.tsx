@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tab, Tabs, TextField } from '@material-ui/core';
-import { makeGetSelectedElement, makeIsValidElementName } from 'selectors/element';
+import { GridOnSharp } from '@material-ui/icons';
+import { Store } from 'types/store';
+import { makeGetElement, makeGetSelectedElement, makeIsValidElementName } from 'selectors/element';
 import { updateElement, updateElementName } from 'actions/element';
-import { GridLayoutConfig } from 'components/GridLayoutConfig/GridLayoutConfig';
+import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig/GridLayoutConfig';
+import { GridParentStyle } from 'components/Grid/GridParentStyle';
 
 import * as Styles from './ElementConfig.styles';
 
@@ -19,11 +22,16 @@ const widgetConfigMap: { [key: string]: WidgetConfig[] } = {
 
 export const ElementConfig = (): JSX.Element => {
   const dispatch = useDispatch();
+  const getElement = React.useMemo(makeGetElement, []);
   const getSelectedElement = React.useMemo(makeGetSelectedElement, []);
   const isValidElementName = useSelector(React.useMemo(makeIsValidElementName, []));
   const selectedElement = useSelector(getSelectedElement);
   const [name, setName] = React.useState(selectedElement?.name);
   const [tabIndex, setTabIndex] = React.useState(0);
+
+  const parentName =
+    !selectedElement || selectedElement.type === 'page' ? null : selectedElement.parent;
+  const parentElement = useSelector((state: Store) => getElement(state, parentName));
 
   React.useEffect(() => {
     if (selectedElement && selectedElement.name !== name) {
@@ -47,6 +55,7 @@ export const ElementConfig = (): JSX.Element => {
   }
 
   const renderField = (config: WidgetConfig) => {
+    if (selectedElement.type !== 'widget') return null;
     switch (config.component) {
       case 'input': {
         return (
@@ -104,25 +113,36 @@ export const ElementConfig = (): JSX.Element => {
   return (
     <Styles.Container>
       <Styles.Header>
+        <GridOnSharp style={{ color: '#fff' }} />
         <Styles.ComponentName>{componentName}</Styles.ComponentName>
+      </Styles.Header>
+      <Styles.Name>
         <TextField
           id="name"
+          label="Name"
           value={name}
           required
           onChange={handleOnNameChange}
           error={isValidElementName(name || '')}
         />
-      </Styles.Header>
+      </Styles.Name>
       <Tabs variant="fullWidth" value={tabIndex} onChange={(_, newIdx) => setTabIndex(newIdx)}>
         <Tab label="Config" />
         <Tab label="Style" />
       </Tabs>
       <Styles.Field>
-        {selectedElement.type === 'widget' &&
+        {tabIndex === 0 &&
+          selectedElement.type === 'widget' &&
           widgetConfigMap[selectedElement.component].map((c) => renderField(c))}
-        {selectedElement.type === 'layout' && selectedElement.layoutType === 'grid' && (
-          <GridLayoutConfig element={selectedElement} />
-        )}
+        {tabIndex === 0 &&
+          selectedElement.type === 'layout' &&
+          selectedElement.layoutType === 'grid' && <GridLayoutConfig element={selectedElement} />}
+        {tabIndex === 1 &&
+          selectedElement?.type !== 'page' &&
+          parentElement?.type === 'layout' &&
+          parentElement?.layoutType === 'grid' && (
+            <GridParentStyle element={selectedElement} parent={parentElement} />
+          )}
       </Styles.Field>
     </Styles.Container>
   );

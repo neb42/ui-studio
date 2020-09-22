@@ -67,7 +67,6 @@ const initialState: Store$Element = {
       layoutType: 'grid',
       name: 'l_grid1',
       parent: 'p_page1',
-      dependencies: emptyDeps,
       props: {},
     },
     l_flex1: {
@@ -76,7 +75,6 @@ const initialState: Store$Element = {
       layoutType: 'flex',
       name: 'l_flex1',
       parent: 'l_grid1',
-      dependencies: emptyDeps,
       props: {},
     },
     l_flex2: {
@@ -85,7 +83,6 @@ const initialState: Store$Element = {
       layoutType: 'flex',
       name: 'l_flex2',
       parent: 'l_grid1',
-      dependencies: emptyDeps,
       props: {},
     },
   },

@@ -68,6 +68,21 @@ export const makeGetSelectedElement = () =>
     },
   );
 
+export const makeGetElement = () =>
+  createSelector(
+    (_: Store, elementId: string | null) => elementId,
+    getPages,
+    getLayouts,
+    getWidgets,
+    (elementId, pages, layouts, widgets) => {
+      if (!elementId) return null;
+      if (elementId in pages) return pages[elementId];
+      if (elementId in layouts) return layouts[elementId];
+      if (elementId in widgets) return widgets[elementId];
+      return null;
+    },
+  );
+
 export const makeGetElements = () =>
   createSelector(getPages, getLayouts, getWidgets, (pages, layouts, widgets) => {
     return {
@@ -86,3 +101,21 @@ export const makeIsValidElementName = () =>
     return (name: string) =>
       ![...Object.keys(pages), ...Object.keys(layouts), ...Object.keys(widgets)].includes(name);
   });
+
+export const makeGetGridStyleLayout = () =>
+  createSelector(
+    (_: Store, gridElementId: string) => gridElementId,
+    getLayouts,
+    getWidgets,
+    (gridElementId, layouts, widgets) => {
+      const grid = layouts[gridElementId];
+      return [...Object.values(layouts), ...Object.values(widgets)]
+        .filter((e) => e.parent === grid.name)
+        .map((e) => {
+          if (!e.style.type) return [];
+          if (e.style.type === 'grid') return e.style.layout;
+          return [];
+        });
+      // TODO flatten 1 level
+    },
+  );

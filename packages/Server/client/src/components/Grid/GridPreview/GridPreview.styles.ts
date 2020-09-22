@@ -46,6 +46,6 @@ export const Container = styled.div`
 `;
 
 export const Cell = styled.div`
-  background-color: ${({ theme }: ICell) => Color(theme.colors.brand500).alpha(0.4).hsl().string()};
+  background-color: ${({ theme }: ICell) => Color(theme.colors.brand500).alpha(0.2).hsl().string()};
   border: 1px solid ${({ theme }: ICell) => theme.colors.brand500};
 `;
