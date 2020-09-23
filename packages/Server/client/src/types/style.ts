@@ -5,7 +5,10 @@ export interface IGridStyle {
 
 export interface IFlexStyle {
   type: 'flex';
-  layout: [number, number][];
 }
 
-export type TStyle = IGridStyle | IFlexStyle;
+export interface IPageStyle {
+  type: 'page';
+}
+
+export type TStyle = IGridStyle | IFlexStyle | IPageStyle;

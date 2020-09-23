@@ -4,7 +4,7 @@ import { Tab, Tabs, TextField } from '@material-ui/core';
 import { GridOnSharp } from '@material-ui/icons';
 import { Store } from 'types/store';
 import { makeGetElement, makeGetSelectedElement, makeIsValidElementName } from 'selectors/element';
-import { updateElement, updateElementName } from 'actions/element';
+import { updateElementName } from 'actions/element';
 import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig/GridLayoutConfig';
 import { GridParentStyle } from 'components/Grid/GridParentStyle';
 
@@ -54,35 +54,6 @@ export const ElementConfig = (): JSX.Element => {
     return <Styles.Container>No element selected</Styles.Container>;
   }
 
-  const renderField = (config: WidgetConfig) => {
-    if (selectedElement.type !== 'widget') return null;
-    switch (config.component) {
-      case 'input': {
-        return (
-          <TextField
-            id={config.key}
-            label={config.label}
-            value={selectedElement.props[config.key] || ''}
-            multiline
-            rowsMax={4}
-            onChange={(e) =>
-              dispatch(
-                updateElement(
-                  selectedElement.name,
-                  selectedElement.type,
-                  config.key,
-                  e.target.value,
-                ),
-              )
-            }
-          />
-        );
-      }
-      default:
-        return null;
-    }
-  };
-
   const componentName = (() => {
     switch (selectedElement.type) {
       case 'page':
@@ -131,9 +102,6 @@ export const ElementConfig = (): JSX.Element => {
         <Tab label="Style" />
       </Tabs>
       <Styles.Field>
-        {tabIndex === 0 &&
-          selectedElement.type === 'widget' &&
-          widgetConfigMap[selectedElement.component].map((c) => renderField(c))}
         {tabIndex === 0 &&
           selectedElement.type === 'layout' &&
           selectedElement.layoutType === 'grid' && <GridLayoutConfig element={selectedElement} />}

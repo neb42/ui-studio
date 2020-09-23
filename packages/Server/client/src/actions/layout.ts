@@ -1,0 +1,132 @@
+import { Dispatch } from 'redux';
+import { makeGetElement, makeGenerateDefaultName } from 'selectors/element';
+import { Element, Layout } from 'types/element';
+import { TGetState, TThunkAction } from 'types/store';
+import { TStyle } from 'types/style';
+import { IGridCell } from 'types/grid';
+
+export const ADD_LAYOUT = 'ADD_LAYOUT';
+export const REMOVE_LAYOUT = 'REMOVE_LAYOUT';
+export const UPDATE_LAYOUT_CONFIG = 'UPDATE_LAYOUT_CONFIG';
+export const UPDATE_LAYOUT_STYLE = 'UPDATE_LAYOUT_STYLE';
+
+const getDefaultStyle = (parent: Element | null): TStyle => {
+  if (parent) {
+    if (parent.type === 'layout') {
+      if (parent.layoutType === 'grid') {
+        return {
+          type: 'grid',
+          layout: [],
+        };
+      }
+      if (parent.layoutType === 'flex') {
+        return {
+          type: 'flex',
+        };
+      }
+    }
+    if (parent.type === 'page') {
+      return {
+        type: 'page',
+      };
+    }
+  }
+  throw Error();
+};
+
+const defaultCell: IGridCell = { value: 1, unit: 'fr' };
+const getDefaultConfig = (layoutType: 'grid' | 'flex') => {
+  if (layoutType === 'grid') {
+    return {
+      layoutType,
+      props: {
+        rows: [defaultCell],
+        columns: [defaultCell],
+      },
+    };
+  }
+  if (layoutType === 'flex') {
+    return {
+      layoutType,
+      props: {},
+    };
+  }
+  throw Error();
+};
+
+interface IAddLayout {
+  type: 'ADD_LAYOUT';
+  payload: Layout;
+}
+
+export const addLayout = (
+  layoutType: 'grid' | 'flex',
+  parent: string,
+): TThunkAction<IAddLayout> => (dispatch: Dispatch<IAddLayout>, getState: TGetState) => {
+  const state = getState();
+  const parentElement = makeGetElement()(state, parent);
+  const name = makeGenerateDefaultName()(
+    state,
+    layoutType.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
+  );
+  const defaultConfig = getDefaultConfig(layoutType);
+  const defaultStyle = getDefaultStyle(parentElement);
+  const layout: Layout = {
+    id: '',
+    type: 'layout',
+    name,
+    parent,
+    style: defaultStyle,
+    ...defaultConfig,
+  };
+  return dispatch({
+    type: ADD_LAYOUT,
+    payload: layout,
+  });
+};
+
+interface IRemoveLayout {
+  type: 'REMOVE_LAYOUT';
+  payload: string;
+}
+
+export const removeLayout = (name: string): IRemoveLayout => ({
+  type: REMOVE_LAYOUT,
+  payload: name,
+});
+
+interface IUpdateLayoutConfig {
+  type: 'UPDATE_LAYOUT_CONFIG';
+  payload: {
+    name: string;
+    key: string;
+    value: any;
+  };
+}
+
+export const updateLayoutConfig = (name: string, key: string, value: any): IUpdateLayoutConfig => ({
+  type: UPDATE_LAYOUT_CONFIG,
+  payload: {
+    name,
+    key,
+    value,
+  },
+});
+
+interface IUpdateLayoutStyle {
+  type: 'UPDATE_LAYOUT_STYLE';
+  payload: {
+    name: string;
+    style: TStyle;
+  };
+}
+
+export const updateLayoutStyle = (name: string, style: TStyle): IUpdateLayoutStyle => ({
+  type: UPDATE_LAYOUT_STYLE,
+  payload: {
+    name,
+    style,
+  },
+});
+
+export type Action$Layout = IAddLayout | IRemoveLayout | IUpdateLayoutConfig | IUpdateLayoutStyle;

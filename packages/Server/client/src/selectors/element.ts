@@ -1,11 +1,11 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
 import Graph from 'graph-data-structure';
 import { ElementTreeNode } from 'types/element';
-import { Store, Store$Element$Page, Store$Element$Layout, Store$Element$Widget } from 'types/store';
+import { Store, Store$Page, Store$Layout, Store$Widget } from 'types/store';
 
-export const getPages = (state: Store): Store$Element$Page => state.element.page;
-export const getLayouts = (state: Store): Store$Element$Layout => state.element.layout;
-export const getWidgets = (state: Store): Store$Element$Widget => state.element.widget;
+export const getPages = (state: Store): Store$Page => state.page;
+export const getLayouts = (state: Store): Store$Layout => state.layout;
+export const getWidgets = (state: Store): Store$Widget => state.widget;
 export const getSelectedElementId = (state: Store): string | null => state.element.selectedElement;
 
 export const makeGetElementTree = (): OutputParametricSelector<
@@ -14,9 +14,9 @@ export const makeGetElementTree = (): OutputParametricSelector<
   ElementTreeNode | null,
   (
     pageName: string,
-    pages: Store$Element$Page,
-    layouts: Store$Element$Layout,
-    widgets: Store$Element$Widget,
+    pages: Store$Page,
+    layouts: Store$Layout,
+    widgets: Store$Widget,
   ) => ElementTreeNode | null
 > =>
   createSelector(
@@ -89,10 +89,6 @@ export const makeGetElements = () =>
       pages,
       layouts,
       widgets,
-      datasets: {},
-      queries: {},
-      serverFunctions: {},
-      clientFunctions: {},
     };
   });
 
@@ -117,5 +113,22 @@ export const makeGetGridStyleLayout = () =>
           return [];
         });
       // TODO flatten 1 level
+    },
+  );
+
+export const makeGenerateDefaultName = () =>
+  createSelector(
+    (_: Store, regex: string) => regex,
+    getPages,
+    getLayouts,
+    getWidgets,
+    (regex, pages, layouts, widgets) => {
+      const pattern = new RegExp(`${regex}([0-9]*)`);
+      const names = [...Object.keys(pages), ...Object.keys(layouts), ...Object.keys(widgets)];
+      const matchingNames = names.filter((n) => pattern.test(n));
+      const indicies = matchingNames.map((n) => pattern.exec(n)?.[1]).filter((n) => n);
+      return `${regex}${
+        indicies.length === 0 ? 1 : Math.max(...indicies.map((n) => Number(n))) + 1
+      }`;
     },
   );

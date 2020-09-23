@@ -1,0 +1,124 @@
+import { Dispatch } from 'redux';
+import { makeGetElement, makeGenerateDefaultName } from 'selectors/element';
+import { Element, Widget } from 'types/element';
+import { TGetState, TThunkAction } from 'types/store';
+import { TStyle } from 'types/style';
+
+export const ADD_WIDGET = 'ADD_WIDGET';
+export const REMOVE_WIDGET = 'REMOVE_WIDGET';
+export const UPDATE_WIDGET_PROPS = 'UPDATE_WIDGET_PROPS';
+export const UPDATE_WIDGET_STYLE = 'UPDATE_WIDGET_STYLE';
+
+const getDefaultStyle = (parent: Element | null): TStyle => {
+  if (parent) {
+    if (parent.type === 'layout') {
+      if (parent.layoutType === 'grid') {
+        return {
+          type: 'grid',
+          layout: [],
+        };
+      }
+      if (parent.layoutType === 'flex') {
+        return {
+          type: 'flex',
+        };
+      }
+    }
+    if (parent.type === 'page') {
+      return {
+        type: 'page',
+      };
+    }
+  }
+  throw Error();
+};
+
+const defaultPropsConfig = {
+  text: {
+    children: '',
+  },
+};
+
+interface IAddWidget {
+  type: 'ADD_WIDGET';
+  payload: Widget;
+}
+
+export const addWidget = (component: 'text', parent: string): TThunkAction<IAddWidget> => (
+  dispatch: Dispatch<IAddWidget>,
+  getState: TGetState,
+) => {
+  const state = getState();
+  const parentElement = makeGetElement()(state, parent);
+  const name = makeGenerateDefaultName()(
+    state,
+    component.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
+  );
+  const defaultProps = defaultPropsConfig[component];
+  const defaultStyle = getDefaultStyle(parentElement);
+  const widget: Widget = {
+    id: '',
+    type: 'widget',
+    name,
+    component,
+    parent,
+    props: defaultProps,
+    style: defaultStyle,
+    dependencies: {
+      queries: [],
+      serverFunctions: [],
+      clientFunctions: [],
+      widgets: [],
+    },
+  };
+  return dispatch({
+    type: ADD_WIDGET,
+    payload: widget,
+  });
+};
+
+interface IRemoveWidget {
+  type: 'REMOVE_WIDGET';
+  payload: string;
+}
+
+export const removeWidget = (name: string): IRemoveWidget => ({
+  type: REMOVE_WIDGET,
+  payload: name,
+});
+
+interface IUpdateWidgetProps {
+  type: 'UPDATE_WIDGET_PROPS';
+  payload: {
+    name: string;
+    key: string;
+    value: any;
+  };
+}
+
+export const updateWidgetProps = (name: string, key: string, value: any): IUpdateWidgetProps => ({
+  type: UPDATE_WIDGET_PROPS,
+  payload: {
+    name,
+    key,
+    value,
+  },
+});
+
+interface IUpdateWidgetStyle {
+  type: 'UPDATE_WIDGET_STYLE';
+  payload: {
+    name: string;
+    style: TStyle;
+  };
+}
+
+export const updateWidgetStyle = (name: string, style: TStyle): IUpdateWidgetStyle => ({
+  type: UPDATE_WIDGET_STYLE,
+  payload: {
+    name,
+    style,
+  },
+});
+
+export type Action$Widget = IAddWidget | IRemoveWidget | IUpdateWidgetProps | IUpdateWidgetStyle;

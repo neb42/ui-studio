@@ -29,6 +29,8 @@ export interface Page {
   props: { [key: string]: any };
 }
 
+export type Element = Page | Layout | Widget;
+
 export interface ElementTreeNode {
   id: string;
   name: string;

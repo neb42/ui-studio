@@ -1,20 +1,31 @@
+import { Action } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+
 import { Page, Layout, Widget } from './element';
 
 interface KeyedObject<T> {
   [key: string]: T;
 }
 
-export type Store$Element$Page = KeyedObject<Page>;
-export type Store$Element$Layout = KeyedObject<Layout>;
-export type Store$Element$Widget = KeyedObject<Widget>;
-
-export interface Store$Element {
+export type Store$Element = {
   selectedElement: string | null;
-  page: Store$Element$Page;
-  layout: Store$Element$Layout;
-  widget: Store$Element$Widget;
-}
+};
+export type Store$Page = KeyedObject<Page>;
+export type Store$Layout = KeyedObject<Layout>;
+export type Store$Widget = KeyedObject<Widget>;
 
 export interface Store {
   element: Store$Element;
+  page: Store$Page;
+  layout: Store$Layout;
+  widget: Store$Widget;
 }
+
+export type TGetState = () => Store;
+
+export type TThunkAction<ReturnType = void> = ThunkAction<
+  ReturnType,
+  Store,
+  unknown,
+  Action<string>
+>;

@@ -10,6 +10,8 @@ import { Store } from 'types/store';
 import { ElementTreeNode } from 'types/element';
 import { selectElement } from 'actions/element';
 
+import { AddElementButtons } from '../DEBUG/AddElementButtons';
+
 import * as Styles from './ElementTree.styles';
 
 interface Props {
@@ -46,6 +48,7 @@ export const ElementTree = ({ pageName }: Props): JSX.Element | null => {
 
   return (
     <Styles.Container>
+      <AddElementButtons />
       <TreeView
         className={classes.root}
         defaultCollapseIcon={<ExpandMoreIcon />}

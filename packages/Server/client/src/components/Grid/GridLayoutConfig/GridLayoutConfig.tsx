@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { GridPreview } from 'components/Grid/GridPreview';
 import { GridTemplateControls } from 'components/Grid/GridTemplateControls';
-import { updateElement } from 'actions/element';
+import { updateLayoutConfig } from 'actions/layout';
 import { Page, Layout, Widget } from 'types/element';
 import { IGridCell } from 'types/grid';
 
@@ -22,11 +22,11 @@ export const GridLayoutConfig = ({ element }: IGridLayoutConfig): JSX.Element =>
   const [rows, setRows] = React.useState<IGridCell[]>(element?.props?.rows ?? [defaultCell]);
 
   React.useEffect(() => {
-    dispatch(updateElement(element.name, 'layout', 'columns', columns));
+    dispatch(updateLayoutConfig(element.name, 'columns', columns));
   }, [JSON.stringify(columns)]);
 
   React.useEffect(() => {
-    dispatch(updateElement(element.name, 'layout', 'rows', rows));
+    dispatch(updateLayoutConfig(element.name, 'rows', rows));
   }, [JSON.stringify(rows)]);
 
   return (
