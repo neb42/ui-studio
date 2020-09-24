@@ -1,8 +1,7 @@
 import { Dispatch } from 'redux';
+import { TStyle, Element, Widget } from '@ui-builder/types';
 import { makeGetElement, makeGenerateDefaultName } from 'selectors/element';
-import { Element, Widget } from 'types/element';
 import { TGetState, TThunkAction } from 'types/store';
-import { TStyle } from 'types/style';
 
 export const ADD_WIDGET = 'ADD_WIDGET';
 export const REMOVE_WIDGET = 'REMOVE_WIDGET';

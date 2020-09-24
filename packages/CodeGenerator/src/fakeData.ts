@@ -1,15 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
-
-import {
-  Dependencies,
-  Dataset,
-  Query,
-  ServerFunction,
-  ClientFunction,
-  Widget,
-  Layout,
-  Page,
-} from './types';
+import { Dependencies, Widget, Layout, Page } from '@ui-builder/types';
 
 const emptyDeps: Dependencies = {
   queries: [],
@@ -18,24 +7,24 @@ const emptyDeps: Dependencies = {
   widgets: [],
 };
 
-const grid1ID = uuidv4();
-const flex1ID = uuidv4();
-const flex2ID = uuidv4();
-const query1ID = uuidv4();
-const server1ID = uuidv4();
-const server2ID = uuidv4();
-const clientFunc1ID = uuidv4();
-const clientFunc2ID = uuidv4();
-const widget1ID = uuidv4();
-const widget2ID = uuidv4();
-const widget3ID = uuidv4();
-const widget4ID = uuidv4();
+const grid1ID = '';
+const flex1ID = '';
+const flex2ID = '';
+const query1ID = '';
+const server1ID = '';
+const server2ID = '';
+const clientFunc1ID = '';
+const clientFunc2ID = '';
+const widget1ID = '';
+const widget2ID = '';
+const widget3ID = '';
+const widget4ID = '';
 
-const pageTable: Page[] = [{ id: uuidv4(), type: 'page', name: 'p_page1' }];
+const pageTable: Page[] = [{ id: '', type: 'page', name: 'p_page1', props: {} }];
 
-const datasetTable: Dataset[] = [
+const datasetTable = [
   {
-    id: uuidv4(),
+    id: '',
     type: 'dataset',
     name: 'd_dataset1',
     host: 'wyqk6x041tfxg39e.chr7pe7iynqr.eu-west-1.rds.amazonaws.com',
@@ -53,7 +42,17 @@ const layoutTable: Layout[] = [
     layoutType: 'grid',
     name: 'l_grid1',
     parent: 'p_page1',
-    dependencies: emptyDeps,
+    props: {
+      rows: [
+        { value: 1, unit: 'fr' },
+        { value: 1, unit: 'fr' },
+      ],
+      columns: [
+        { value: 1, unit: 'fr' },
+        { value: 1, unit: 'fr' },
+      ],
+    },
+    style: { type: 'page' },
   },
   {
     id: flex1ID,
@@ -61,7 +60,14 @@ const layoutTable: Layout[] = [
     layoutType: 'flex',
     name: 'l_flex1',
     parent: 'l_grid1',
-    dependencies: emptyDeps,
+    props: {},
+    style: {
+      type: 'grid',
+      layout: [
+        [0, 0],
+        [0, 1],
+      ],
+    },
   },
   {
     id: flex2ID,
@@ -69,11 +75,18 @@ const layoutTable: Layout[] = [
     layoutType: 'flex',
     name: 'l_flex2',
     parent: 'l_grid1',
-    dependencies: emptyDeps,
+    props: {},
+    style: {
+      type: 'grid',
+      layout: [
+        [1, 0],
+        [1, 1],
+      ],
+    },
   },
 ];
 
-const queryTable: Query[] = [
+const queryTable = [
   {
     id: query1ID,
     type: 'query',
@@ -84,7 +97,7 @@ const queryTable: Query[] = [
   },
 ];
 
-const serverFunctionTable: ServerFunction[] = [
+const serverFunctionTable = [
   {
     id: server1ID,
     type: 'serverFunction',
@@ -103,7 +116,7 @@ const serverFunctionTable: ServerFunction[] = [
   },
 ];
 
-const clientFunctionTable: ClientFunction[] = [
+const clientFunctionTable = [
   {
     id: clientFunc1ID,
     type: 'clientFunction',
@@ -129,6 +142,7 @@ const widgetTable: Widget[] = [
     component: 'text',
     dependencies: emptyDeps,
     props: { children: 'widget one' },
+    style: { type: 'flex' },
   },
   {
     id: widget2ID,
@@ -138,6 +152,7 @@ const widgetTable: Widget[] = [
     component: 'text',
     dependencies: emptyDeps,
     props: { children: 'widget two' },
+    style: { type: 'flex' },
   },
   {
     id: widget3ID,
@@ -147,6 +162,7 @@ const widgetTable: Widget[] = [
     component: 'text',
     dependencies: { ...emptyDeps, queries: ['q_query1'] },
     props: { children: 'widget three' },
+    style: { type: 'flex' },
   },
   {
     id: widget4ID,
@@ -160,6 +176,7 @@ const widgetTable: Widget[] = [
       serverFunctions: ['f_serverFunc1'],
     },
     props: { children: 'widget four' },
+    style: { type: 'flex' },
   },
 ];
 

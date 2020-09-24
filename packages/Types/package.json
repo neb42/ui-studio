@@ -1,0 +1,10 @@
+{
+  "name": "@ui-builder/types",
+  "version": "0.1.0",
+  "private": false,
+  "main": "src/index.ts",
+  "scripts": {
+    "clean": "rm -rf build/*",
+    "build": "yarn clean && tsc"
+  }
+}

@@ -1,11 +1,7 @@
 import * as React from 'react';
+import { IGridCell } from '@ui-builder/types';
 
 import * as Styles from './GridPreview.styles';
-
-interface IGridCell {
-  value: number;
-  unit: 'fr' | '%' | 'px' | 'em' | 'mincontent' | 'maxcontent' | 'minmax' | 'auto';
-}
 
 interface IGridPreview {
   columns: IGridCell[];

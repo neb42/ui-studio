@@ -1,4 +1,4 @@
-import { Widget, Layout, Page, ElementTree } from '../types';
+import { Widget, Layout, Page, ElementTreeNode } from '@ui-builder/types';
 
 import generateLayoutFiles from './layout';
 import generateReducerFiles from './reducers';
@@ -11,7 +11,7 @@ import generateCoreFiles from './core';
 import generateActionFiles from './actions';
 
 interface Args {
-  elementTree: ElementTree[];
+  elementTree: ElementTreeNode[];
   widgets: Widget[];
   pages: Page[];
   layouts: Layout[];

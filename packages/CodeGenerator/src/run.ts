@@ -2,8 +2,8 @@ import { promises as fs, existsSync } from 'fs';
 import path from 'path';
 
 import Graph from 'graph-data-structure';
+import { Widget, Layout, Page, ElementTreeNode } from '@ui-builder/types';
 
-import { Widget, Layout, Page, ElementTree } from './types';
 import generateServer from './ServerGenerator/generateServer';
 import generateClient from './ClientGenerator/generateClient';
 import * as FakeData from './fakeData';
@@ -35,7 +35,7 @@ const setupDirectory = async () => {
   console.info('Finished creating directories...');
 };
 
-const buildElementTree = (data: Data): ElementTree[] => {
+const buildElementTree = (data: Data): ElementTreeNode[] => {
   const { pages, layouts, widgets } = data;
   const all = { ...pages, ...layouts, ...widgets };
 
@@ -53,7 +53,7 @@ const buildElementTree = (data: Data): ElementTree[] => {
       children: children.map(buildTree),
     };
   };
-  const elementTree: ElementTree[] = Object.keys(pages).map(buildTree);
+  const elementTree: ElementTreeNode[] = Object.keys(pages).map(buildTree);
   return elementTree;
 };
 

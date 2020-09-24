@@ -5,9 +5,9 @@ import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
-import { makeGetElementTree } from 'selectors/element';
+import { ElementTreeNode } from '@ui-builder/types';
 import { Store } from 'types/store';
-import { ElementTreeNode } from 'types/element';
+import { makeGetElementTree } from 'selectors/element';
 import { selectElement } from 'actions/element';
 
 import { AddElementButtons } from '../DEBUG/AddElementButtons';

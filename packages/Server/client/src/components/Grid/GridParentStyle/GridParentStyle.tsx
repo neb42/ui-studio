@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Layout, Widget } from 'types/element';
-import { GridLayout } from 'types/grid';
+import { GridLayout, Layout, Widget } from '@ui-builder/types';
 import { GridPreview } from 'components/Grid/GridPreview';
 
 import * as Styles from './GridParentStyle.styles';

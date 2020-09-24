@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
+import { IGridCell, Page, Layout, Widget } from '@ui-builder/types';
 import { GridPreview } from 'components/Grid/GridPreview';
 import { GridTemplateControls } from 'components/Grid/GridTemplateControls';
 import { updateLayoutConfig } from 'actions/layout';
-import { Page, Layout, Widget } from 'types/element';
-import { IGridCell } from 'types/grid';
 
 import * as Styles from './GridLayoutConfig.styles';
 

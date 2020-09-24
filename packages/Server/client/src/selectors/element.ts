@@ -1,6 +1,6 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
 import Graph from 'graph-data-structure';
-import { ElementTreeNode } from 'types/element';
+import { ElementTreeNode } from '@ui-builder/types';
 import { Store, Store$Page, Store$Layout, Store$Widget } from 'types/store';
 
 export const getPages = (state: Store): Store$Page => state.page;

@@ -1,9 +1,7 @@
 import { Dispatch } from 'redux';
+import { TStyle, IGridCell, Element, Layout } from '@ui-builder/types';
 import { makeGetElement, makeGenerateDefaultName } from 'selectors/element';
-import { Element, Layout } from 'types/element';
 import { TGetState, TThunkAction } from 'types/store';
-import { TStyle } from 'types/style';
-import { IGridCell } from 'types/grid';
 
 export const ADD_LAYOUT = 'ADD_LAYOUT';
 export const REMOVE_LAYOUT = 'REMOVE_LAYOUT';

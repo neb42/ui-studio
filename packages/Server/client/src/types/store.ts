@@ -1,7 +1,6 @@
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-
-import { Page, Layout, Widget } from './element';
+import { Page, Layout, Widget } from '@ui-builder/types';
 
 interface KeyedObject<T> {
   [key: string]: T;

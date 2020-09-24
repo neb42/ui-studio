@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextField, IconButton, Button, Select, MenuItem } from '@material-ui/core';
 import { ClearSharp } from '@material-ui/icons';
-import { IGridCell, GridUnit } from 'types/grid';
+import { IGridCell, GridUnit } from '@ui-builder/types';
 
 import * as Styles from './GridTemplateControls.styles';
 

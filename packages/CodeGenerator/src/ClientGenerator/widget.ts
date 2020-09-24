@@ -2,8 +2,8 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 
 import * as Mustache from 'mustache';
+import { Widget } from '@ui-builder/types';
 
-import { Widget } from '../types';
 import { FilePaths } from '../FilePaths';
 
 const componentMap = {
@@ -29,7 +29,7 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
       })();
 
       const renderedFile = Mustache.render(data.toString(), {
-        name: w.name,
+        name: w.name.replace(' ', '_'),
         component: componentMap[w.component],
         dependencies: Object.values(w.dependencies).flat(),
         exposedProperties: [],

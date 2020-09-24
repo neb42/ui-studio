@@ -2,8 +2,8 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 
 import * as Mustache from 'mustache';
+import { Widget } from '@ui-builder/types';
 
-import { Widget } from '../types';
 import { FilePaths } from '../FilePaths';
 
 const generateFunctionsReducerFile = async (): Promise<void> => {

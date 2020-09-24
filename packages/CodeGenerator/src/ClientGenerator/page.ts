@@ -2,11 +2,11 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 
 import * as Mustache from 'mustache';
+import { ElementTreeNode } from '@ui-builder/types';
 
-import { ElementTree } from '../types';
 import { FilePaths } from '../FilePaths';
 
-const generatePageFiles = (elementTree: ElementTree[]): Promise<void[]> => {
+const generatePageFiles = (elementTree: ElementTreeNode[]): Promise<void[]> => {
   return Promise.all(
     elementTree.map(async (e) => {
       const [data, recursiveImport, recursiveElement] = await Promise.all([
@@ -17,7 +17,7 @@ const generatePageFiles = (elementTree: ElementTree[]): Promise<void[]> => {
       const renderedFile = Mustache.render(
         data.toString(),
         {
-          name: e.name,
+          name: e.name.replace(' ', '_'),
           type: e.type,
           children: e.children,
         },
