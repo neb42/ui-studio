@@ -1,9 +1,17 @@
-{{=<% %>=}}
 import React from 'react';
 import styled from 'styled-components';
 
-const layout_<% name %> = styled.div`
+const layout_{{{ name }}} = styled.div`
   display: grid;
+  grid-template-columns:{{ #columns }} {{ value }}{{ unit }}{{ /columns }};
+  grid-template-rows:{{ #rows }} {{ value }}{{ unit }}{{ /rows }};
+  grid-row-gap: 16px;
+  grid-column-gap: 16px;
+
+  {{ #grid }}
+  grid-row: {{grid.row.start}} / {{grid.row.end}};
+  grid-column: {{grid.column.start}} / {{grid.column.end}};
+  {{ /grid }}
 `;
 
-export default layout_<% name %>;
+export default layout_{{{ name }}};

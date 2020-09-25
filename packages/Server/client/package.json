@@ -2,6 +2,7 @@
   "name": "web-app-client",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3002",
   "dependencies": {
     "@faculty/adler-tokens": "^0.0.108",
     "@faculty/adler-web-components": "^0.0.108",

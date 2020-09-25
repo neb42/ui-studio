@@ -1,9 +1,9 @@
 import { TStyle } from './style';
 
-export type GridUnit = 'fr' | '%' | 'px' | 'em' | 'mincontent' | 'maxcontent' | 'minmax';
+export type GridUnit = 'fr' | '%' | 'px' | 'em' | 'mincontent' | 'maxcontent' | 'minmax' | 'auto';
 
 export interface IGridCell {
-  value: number;
+  value: number | null;
   unit: GridUnit;
 }
 

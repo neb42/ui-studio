@@ -14,7 +14,10 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
       if (parent.layoutType === 'grid') {
         return {
           type: 'grid',
-          layout: [],
+          layout: [
+            [0, 0],
+            [0, 0],
+          ],
         };
       }
       if (parent.layoutType === 'flex') {

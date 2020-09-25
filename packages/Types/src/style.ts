@@ -1,6 +1,8 @@
+export type TGridStyleLayout = [[number, number], [number, number]];
+
 export interface IGridStyle {
   type: 'grid';
-  layout: [number, number][];
+  layout: TGridStyleLayout;
 }
 
 export interface IFlexStyle {

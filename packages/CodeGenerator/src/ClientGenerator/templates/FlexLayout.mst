@@ -1,9 +1,13 @@
-{{=<% %>=}}
 import React from 'react';
 import styled from 'styled-components';
 
-const layout_<% name %> = styled.div`
-  display: grid;
+const layout_{{{ name }}} = styled.div`
+  display: flex;
+
+  {{ #grid }}
+  grid-row: {{grid.row.start}} / {{grid.row.end}};
+  grid-column: {{grid.column.start}} / {{grid.column.end}};
+  {{ /grid }}
 `;
 
-export default layout_<% name %>;
+export default layout_{{{ name }}};

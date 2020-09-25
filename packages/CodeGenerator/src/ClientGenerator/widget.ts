@@ -28,14 +28,31 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
         return null;
       })();
 
-      const renderedFile = Mustache.render(data.toString(), {
+      const renderConfig = {
         name: w.name.replace(' ', '_'),
         component: componentMap[w.component],
         dependencies: Object.values(w.dependencies).flat(),
         exposedProperties: [],
         props,
         children,
-      });
+        grid: null,
+        flex: null,
+      };
+
+      if (w.style.type === 'grid') {
+        renderConfig.grid = {
+          row: {
+            start: w.style.layout[0][0],
+            end: w.style.layout[1][0] + 1,
+          },
+          column: {
+            start: w.style.layout[0][1],
+            end: w.style.layout[1][1] + 1,
+          },
+        };
+      }
+
+      const renderedFile = Mustache.render(data.toString(), renderConfig);
       return fs.writeFile(path.join(FilePaths.components, `${w.name}.js`), renderedFile);
     }),
   );

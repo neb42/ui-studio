@@ -13,7 +13,7 @@ export const PageBuilder = ({ pageName }: Props): JSX.Element => {
   return (
     <Styles.Container>
       <ElementTree pageName={pageName} />
-      <Preview />
+      <Preview pageName={pageName} />
       <ElementConfig />
     </Styles.Container>
   );

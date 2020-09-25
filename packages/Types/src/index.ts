@@ -11,4 +11,4 @@ export { FlexLayout} from './flex';
 
 export { GridUnit, GridLayout, IGridCell } from './grid';
 
-export { IGridStyle, IFlexStyle, IPageStyle, TStyle } from './style';
+export { IGridStyle, IFlexStyle, IPageStyle, TStyle, TGridStyleLayout } from './style';

@@ -53,7 +53,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) =>  bindActionCreators({ updateWidget }, dispatch);
 
-const WidgetWrapper = styled.div``;
+const WidgetWrapper = styled.div`
+  {{ #grid }}
+  grid-row: {{grid.row.start}} / {{grid.row.end}};
+  grid-column: {{grid.column.start}} / {{grid.column.end}};
+  {{ /grid }}
+`;
 
 const Widget_{{{ name }}} = ({
   {{ #dependencies }}

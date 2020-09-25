@@ -44,11 +44,11 @@ const layoutTable: Layout[] = [
     parent: 'p_page1',
     props: {
       rows: [
-        { value: 1, unit: 'fr' },
+        { value: null, unit: 'auto' },
         { value: 1, unit: 'fr' },
       ],
       columns: [
-        { value: 1, unit: 'fr' },
+        { value: null, unit: 'auto' },
         { value: 1, unit: 'fr' },
       ],
     },
@@ -64,8 +64,8 @@ const layoutTable: Layout[] = [
     style: {
       type: 'grid',
       layout: [
-        [0, 0],
-        [0, 1],
+        [1, 1],
+        [2, 1],
       ],
     },
   },
@@ -79,8 +79,8 @@ const layoutTable: Layout[] = [
     style: {
       type: 'grid',
       layout: [
-        [1, 0],
-        [1, 1],
+        [1, 2],
+        [2, 2],
       ],
     },
   },

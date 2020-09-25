@@ -98,21 +98,23 @@ export const makeIsValidElementName = () =>
       ![...Object.keys(pages), ...Object.keys(layouts), ...Object.keys(widgets)].includes(name);
   });
 
-export const makeGetGridStyleLayout = () =>
+export const makeGetUsedGridSpace = () =>
   createSelector(
-    (_: Store, gridElementId: string) => gridElementId,
+    (_: Store, gridElementId: string, ignoreNames: string[]) => ({ gridElementId, ignoreNames }),
     getLayouts,
     getWidgets,
-    (gridElementId, layouts, widgets) => {
+    ({ gridElementId, ignoreNames }, layouts, widgets) => {
+      const notEmpty = <TValue>(value: TValue | null | undefined): value is TValue => {
+        return value !== null && value !== undefined;
+      };
       const grid = layouts[gridElementId];
       return [...Object.values(layouts), ...Object.values(widgets)]
-        .filter((e) => e.parent === grid.name)
+        .filter((e) => e.parent === grid.name && !ignoreNames.includes(e.name))
         .map((e) => {
-          if (!e.style.type) return [];
           if (e.style.type === 'grid') return e.style.layout;
-          return [];
-        });
-      // TODO flatten 1 level
+          return null;
+        })
+        .filter(notEmpty);
     },
   );
 

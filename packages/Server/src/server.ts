@@ -23,10 +23,11 @@ const run = async () => {
   io.origins(['http://localhost:3003']);
 
   io.on('connection', (socket) => {
-    console.log('A user connected');
+    socket.emit('set-server', { host: 'http://localhost', port: 3000 });
 
-    socket.on('elements-updated', (elements) => {
-      generateCode(elements, FUNCTIONS_PATH, true);
+    socket.on('elements-updated', async (elements) => {
+      await generateCode(elements, FUNCTIONS_PATH, true);
+      socket.emit('code-updated');
     });
   });
 
