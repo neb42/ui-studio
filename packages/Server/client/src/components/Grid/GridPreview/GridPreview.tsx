@@ -23,8 +23,16 @@ export const GridPreview = ({
   usedGridSpace,
   selectGrid,
 }: IGridPreview): JSX.Element => {
-  const [topLeft, setTopLeft] = React.useState<[number, number] | null>(null);
-  const [bottomRight, setBottomRight] = React.useState<[number, number] | null>(null);
+  const [anchorPoint, setAnchorPoint] = React.useState<{
+    row: number;
+    col: number;
+  } | null>(null);
+  const [dragGrid, setDragGrid] = React.useState<{
+    top: number;
+    left: number;
+    bottom: number;
+    right: number;
+  } | null>(null);
 
   const isDisabled = (row: number, col: number) =>
     usedGridSpace
@@ -55,9 +63,9 @@ export const GridPreview = ({
       : false;
 
   const isActive = (row: number, col: number) => {
-    if (topLeft && bottomRight) {
-      const rowMatch = row >= topLeft[0] && row <= bottomRight[0];
-      const colMatch = col >= topLeft[1] && col <= bottomRight[1];
+    if (dragGrid) {
+      const rowMatch = row >= dragGrid.top && row <= dragGrid.bottom;
+      const colMatch = col >= dragGrid.left && col <= dragGrid.right;
       return rowMatch && colMatch;
     }
     if (!selectedGrid) return false;
@@ -67,29 +75,39 @@ export const GridPreview = ({
   };
 
   const handleMouseUp = () => {
-    if (selectGrid && topLeft && bottomRight) {
-      selectGrid([topLeft, bottomRight]);
+    if (selectGrid && dragGrid) {
+      selectGrid([
+        [dragGrid.top, dragGrid.left],
+        [dragGrid.bottom, dragGrid.right],
+      ]);
     }
-    setTopLeft(null);
-    setBottomRight(null);
+    setAnchorPoint(null);
+    setDragGrid(null);
   };
 
   const handleMouseDown = (row: number, col: number) => () => {
     if (selectGrid) {
-      setTopLeft([row, col]);
-      setBottomRight([row, col]);
+      setAnchorPoint({ row, col });
+      setDragGrid({ top: row, left: col, bottom: row, right: col });
       document.addEventListener('mouseup', handleMouseUp);
     }
   };
 
   const handleMouseEnter = (row: number, col: number) => () => {
-    if (
-      selectGrid &&
-      topLeft &&
-      !isDisabled(row, col) &&
-      !checkGridOverlap([topLeft, [row, col]])
-    ) {
-      setBottomRight([row, col]);
+    if (selectGrid && anchorPoint && !isDisabled(row, col)) {
+      const top = Math.min(row, anchorPoint.row);
+      const left = Math.min(col, anchorPoint.col);
+      const bottom = Math.max(row, anchorPoint.row);
+      const right = Math.max(col, anchorPoint.col);
+
+      if (
+        !checkGridOverlap([
+          [top, left],
+          [bottom, right],
+        ])
+      ) {
+        setDragGrid({ top, left, bottom, right });
+      }
     }
   };
 
@@ -98,20 +116,23 @@ export const GridPreview = ({
   return (
     <Styles.Container>
       <Styles.Grid columns={columns} rows={rows}>
-        {new Array(rows.length).fill(1).map((_, r) =>
-          new Array(columns.length).fill(1).map((__, c) => (
-            <Styles.Cell
-              key={r * c}
-              onMouseDown={handleMouseDown(r + 1, c + 1)}
-              onMouseEnter={handleMouseEnter(r + 1, c + 1)}
-              onMouseUp={handleMouseUp}
-              readOnly={!selectGrid}
-              // onClick={handleOnClick(r + 1, c + 1)}
-              active={isActive(r + 1, c + 1)}
-              disabled={isDisabled(r + 1, c + 1)}
-            />
-          )),
-        )}
+        {new Array(rows.length)
+          .fill(1)
+          .map((_, r) =>
+            new Array(columns.length)
+              .fill(1)
+              .map((__, c) => (
+                <Styles.Cell
+                  key={r * c}
+                  onMouseDown={handleMouseDown(r + 1, c + 1)}
+                  onMouseEnter={handleMouseEnter(r + 1, c + 1)}
+                  onMouseUp={handleMouseUp}
+                  readOnly={!selectGrid}
+                  active={isActive(r + 1, c + 1)}
+                  disabled={isDisabled(r + 1, c + 1)}
+                />
+              )),
+          )}
       </Styles.Grid>
     </Styles.Container>
   );
