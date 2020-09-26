@@ -30,7 +30,10 @@ export const widget = (
           ...acc,
           [cur]: {
             ...current,
-            position: current.parent === removed.parent ? current.position - 1 : current.position,
+            position:
+              current.parent === removed.parent && current.position > removed.position
+                ? current.position - 1
+                : current.position,
           },
         };
       }, {});

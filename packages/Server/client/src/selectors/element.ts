@@ -45,6 +45,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
           name: element.name,
           type: element.type,
           position: element.type === 'page' ? 0 : element.position,
+          element,
           children: children.map(buildTree),
         };
       };

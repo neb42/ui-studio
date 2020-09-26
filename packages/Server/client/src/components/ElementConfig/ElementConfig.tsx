@@ -5,6 +5,7 @@ import { GridOnSharp } from '@material-ui/icons';
 import { Store } from 'types/store';
 import { makeGetElement, makeGetSelectedElement, makeIsValidElementName } from 'selectors/element';
 import { updateElementName } from 'actions/element';
+import { ElementIcon } from 'components/ElementIcon';
 import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig/GridLayoutConfig';
 import { GridParentStyle } from 'components/Grid/GridParentStyle';
 
@@ -84,7 +85,7 @@ export const ElementConfig = (): JSX.Element => {
   return (
     <Styles.Container>
       <Styles.Header>
-        <GridOnSharp style={{ color: '#fff' }} />
+        <ElementIcon element={selectedElement} color="#fff" />
         <Styles.ComponentName>{componentName}</Styles.ComponentName>
       </Styles.Header>
       <Styles.Name>

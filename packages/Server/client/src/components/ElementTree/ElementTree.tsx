@@ -2,28 +2,109 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import TreeView from '@material-ui/lab/TreeView';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { IconButton } from '@material-ui/core';
+import {
+  ExpandMoreSharp,
+  ChevronRightSharp,
+  ClearSharp,
+  ArrowDropDownSharp,
+  ArrowDropUpSharp,
+  AddSharp,
+} from '@material-ui/icons';
 import TreeItem from '@material-ui/lab/TreeItem';
-import { ElementTreeNode } from '@ui-builder/types';
+import { ElementTreeNode, Element } from '@ui-builder/types';
 import { Store } from 'types/store';
-import { makeGetElementTree } from 'selectors/element';
+import { makeGetElementTree, makeGetSelectedElement } from 'selectors/element';
 import { selectElement } from 'actions/element';
+import { removeLayout } from 'actions/layout';
+import { removeWidget } from 'actions/widget';
+import { ElementIcon } from 'components/ElementIcon';
 
 import { AddElementButtons } from '../DEBUG/AddElementButtons';
 
 import * as Styles from './ElementTree.styles';
 
-interface Props {
+interface IElementTree {
   pageName: string;
 }
 
-const TreeNode = ({ node }: { node: ElementTreeNode }): JSX.Element => (
-  <TreeItem nodeId={node.name} label={node.name}>
+interface ITreeItemLabel {
+  element: Element;
+  siblingCount: number;
+}
+
+interface ITreeNode {
+  node: ElementTreeNode;
+  siblingCount: number;
+}
+
+const TreeItemLabel = ({ element, siblingCount }: ITreeItemLabel): JSX.Element => {
+  const dispatch = useDispatch();
+  const getSelectedElement = React.useMemo(makeGetSelectedElement, []);
+  const selectedElement = useSelector(getSelectedElement);
+
+  const handleRemove = () => {
+    if (element.type === 'layout') {
+      dispatch(removeLayout(element.name));
+    }
+
+    if (element.type === 'widget') {
+      dispatch(removeWidget(element.name));
+    }
+  };
+
+  return (
+    <Styles.TreeItemLabel>
+      <ElementIcon element={element} color="#000" />
+      <span>{element.name}</span>
+      <Styles.TreeItemActions
+        selected={Boolean(selectedElement && selectedElement.name === element.name)}
+      >
+        {element.type === 'page' && (
+          <>
+            <div />
+            <div />
+            <div />
+          </>
+        )}
+        {element.type !== 'widget' ? (
+          <IconButton onClick={() => {}} size="small">
+            <AddSharp />
+          </IconButton>
+        ) : (
+          <div />
+        )}
+        {element.type !== 'page' && (
+          <>
+            <IconButton
+              onClick={() => {}}
+              size="small"
+              disabled={element.position === siblingCount - 1}
+            >
+              <ArrowDropDownSharp />
+            </IconButton>
+            <IconButton onClick={() => {}} size="small" disabled={element.position === 0}>
+              <ArrowDropUpSharp />
+            </IconButton>
+            <IconButton onClick={handleRemove} size="small">
+              <ClearSharp />
+            </IconButton>
+          </>
+        )}
+      </Styles.TreeItemActions>
+    </Styles.TreeItemLabel>
+  );
+};
+
+const TreeNode = ({ node, siblingCount }: ITreeNode): JSX.Element => (
+  <TreeItem
+    nodeId={node.name}
+    label={<TreeItemLabel element={node.element} siblingCount={siblingCount} />}
+  >
     {node.children
       .sort((a, b) => (a.position > b.position ? 1 : -1))
       .map((c) => (
-        <TreeNode key={c.name} node={c} />
+        <TreeNode key={c.name} node={c} siblingCount={node.children.length} />
       ))}
   </TreeItem>
 );
@@ -36,7 +117,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const ElementTree = ({ pageName }: Props): JSX.Element | null => {
+export const ElementTree = ({ pageName }: IElementTree): JSX.Element | null => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const getElementTree = React.useMemo(makeGetElementTree, []);
@@ -53,11 +134,11 @@ export const ElementTree = ({ pageName }: Props): JSX.Element | null => {
       <AddElementButtons />
       <TreeView
         className={classes.root}
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
+        defaultCollapseIcon={<ExpandMoreSharp />}
+        defaultExpandIcon={<ChevronRightSharp />}
         onNodeSelect={handleSelect}
       >
-        <TreeNode node={elementTree} />
+        <TreeNode node={elementTree} siblingCount={1} />
       </TreeView>
     </Styles.Container>
   );

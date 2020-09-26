@@ -17,6 +17,7 @@ export interface Widget {
   component: 'text';
   dependencies: Dependencies;
   props: { [key: string]: any };
+  position: number;
   style: TStyle;
 }
 
@@ -34,6 +35,8 @@ export type Element = Page | Layout | Widget;
 export interface ElementTreeNode {
   id: string;
   name: string;
+  position: number;
   type: 'page' | 'layout' | 'widget';
+  element: Element;
   children: ElementTreeNode[];
 }

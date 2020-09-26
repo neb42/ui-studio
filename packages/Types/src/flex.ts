@@ -7,5 +7,6 @@ export interface FlexLayout {
   name: string;
   parent: string;
   props: { [key: string]: any };
+  position: number;
   style: TStyle;
 }

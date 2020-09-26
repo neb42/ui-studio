@@ -13,6 +13,7 @@ export interface GridLayout {
   layoutType: 'grid';
   name: string;
   parent: string;
+  position: number;
   props: {
     columns?: IGridCell[];
     rows?: IGridCell[];
