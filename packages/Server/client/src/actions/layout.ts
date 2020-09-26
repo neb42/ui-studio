@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { TStyle, IGridCell, Element, Layout } from '@ui-builder/types';
-import { makeGetElement, makeGenerateDefaultName } from 'selectors/element';
+import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 
 export const ADD_LAYOUT = 'ADD_LAYOUT';
@@ -66,17 +66,20 @@ export const addLayout = (
 ): TThunkAction<IAddLayout> => (dispatch: Dispatch<IAddLayout>, getState: TGetState) => {
   const state = getState();
   const parentElement = makeGetElement()(state, parent);
+  if (!parentElement) throw Error();
   const name = makeGenerateDefaultName()(
     state,
     layoutType.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
   );
   const defaultConfig = getDefaultConfig(layoutType);
   const defaultStyle = getDefaultStyle(parentElement);
+  const position = makeGetNextPosition()(state, parentElement.name);
   const layout: Layout = {
     id: '',
     type: 'layout',
     name,
     parent,
+    position,
     style: defaultStyle,
     ...defaultConfig,
   };
@@ -86,7 +89,7 @@ export const addLayout = (
   });
 };
 
-interface IRemoveLayout {
+export interface IRemoveLayout {
   type: 'REMOVE_LAYOUT';
   payload: string;
 }

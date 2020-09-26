@@ -22,8 +22,18 @@ export const layout = (
       };
     }
     case REMOVE_LAYOUT: {
-      const { [action.payload]: _, ...remaining } = state;
-      return remaining;
+      const { [action.payload]: removed, ...remaining } = state;
+      return Object.keys(remaining).reduce((acc, cur) => {
+        const current = remaining[cur];
+        if (current.parent === removed.name) return acc;
+        return {
+          ...acc,
+          [cur]: {
+            ...current,
+            position: current.parent === removed.parent ? current.position - 1 : current.position,
+          },
+        };
+      }, {});
     }
     case UPDATE_LAYOUT_CONFIG: {
       return {

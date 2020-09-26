@@ -44,6 +44,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
           id: element.id,
           name: element.name,
           type: element.type,
+          position: element.type === 'page' ? 0 : element.position,
           children: children.map(buildTree),
         };
       };
@@ -132,5 +133,17 @@ export const makeGenerateDefaultName = () =>
       return `${regex}${
         indicies.length === 0 ? 1 : Math.max(...indicies.map((n) => Number(n))) + 1
       }`;
+    },
+  );
+
+export const makeGetNextPosition = () =>
+  createSelector(
+    (_: Store, parentName: string) => parentName,
+    getLayouts,
+    getWidgets,
+    (parentName, layouts, widgets) => {
+      return [...Object.values(layouts), ...Object.values(widgets)].filter(
+        (l) => l.parent === parentName,
+      ).length;
     },
   );

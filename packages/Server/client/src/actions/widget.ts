@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { TStyle, Element, Widget } from '@ui-builder/types';
-import { makeGetElement, makeGenerateDefaultName } from 'selectors/element';
+import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 
 export const ADD_WIDGET = 'ADD_WIDGET';
@@ -52,18 +52,21 @@ export const addWidget = (component: 'text', parent: string): TThunkAction<IAddW
 ) => {
   const state = getState();
   const parentElement = makeGetElement()(state, parent);
+  if (!parentElement) throw Error();
   const name = makeGenerateDefaultName()(
     state,
     component.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
   );
   const defaultProps = defaultPropsConfig[component];
   const defaultStyle = getDefaultStyle(parentElement);
+  const position = makeGetNextPosition()(state, parentElement.name);
   const widget: Widget = {
     id: '',
     type: 'widget',
     name,
     component,
     parent,
+    position,
     props: defaultProps,
     style: defaultStyle,
     dependencies: {

@@ -20,9 +20,11 @@ interface Props {
 
 const TreeNode = ({ node }: { node: ElementTreeNode }): JSX.Element => (
   <TreeItem nodeId={node.name} label={node.name}>
-    {node.children.map((c) => (
-      <TreeNode key={c.name} node={c} />
-    ))}
+    {node.children
+      .sort((a, b) => (a.position > b.position ? 1 : -1))
+      .map((c) => (
+        <TreeNode key={c.name} node={c} />
+      ))}
   </TreeItem>
 );
 

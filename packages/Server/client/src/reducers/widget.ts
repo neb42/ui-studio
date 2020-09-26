@@ -5,6 +5,7 @@ import {
   UPDATE_WIDGET_STYLE,
   Action$Widget,
 } from 'actions/widget';
+import { REMOVE_LAYOUT, IRemoveLayout } from 'actions/layout';
 import { UPDATE_ELEMENT_NAME, IUpdateElementName } from 'actions/element';
 import { Store$Widget } from 'types/store';
 
@@ -12,7 +13,7 @@ const initialState: Store$Widget = {};
 
 export const widget = (
   state: Store$Widget = initialState,
-  action: Action$Widget | IUpdateElementName,
+  action: Action$Widget | IUpdateElementName | IRemoveLayout,
 ): Store$Widget => {
   switch (action.type) {
     case ADD_WIDGET: {
@@ -22,8 +23,27 @@ export const widget = (
       };
     }
     case REMOVE_WIDGET: {
-      const { [action.payload]: _, ...remaining } = state;
-      return remaining;
+      const { [action.payload]: removed, ...remaining } = state;
+      return Object.keys(remaining).reduce((acc, cur) => {
+        const current = remaining[cur];
+        return {
+          ...acc,
+          [cur]: {
+            ...current,
+            position: current.parent === removed.parent ? current.position - 1 : current.position,
+          },
+        };
+      }, {});
+    }
+    case REMOVE_LAYOUT: {
+      return Object.keys(state).reduce((acc, cur) => {
+        const current = state[cur];
+        if (current.parent === action.payload) return acc;
+        return {
+          ...acc,
+          [cur]: current,
+        };
+      }, {});
     }
     case UPDATE_WIDGET_PROPS: {
       return {
