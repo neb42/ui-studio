@@ -1,5 +1,6 @@
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
 export const SELECT_ELEMENT = 'SELECT_ELEMENT';
+export const TOGGLE_ADD_ELEMENT_MODAL = 'TOGGLE_ADD_ELEMENT_MODAL';
 
 export interface IUpdateElementName {
   type: 'UPDATE_ELEMENT_NAME';
@@ -35,4 +36,12 @@ export const selectElement = (name: string): ISelectElement => ({
   payload: name,
 });
 
-export type Action$Element = ISelectElement | IUpdateElementName;
+interface IToggleAddElementModal {
+  type: 'TOGGLE_ADD_ELEMENT_MODAL';
+}
+
+export const toggleAddElementModal = (): IToggleAddElementModal => ({
+  type: TOGGLE_ADD_ELEMENT_MODAL,
+});
+
+export type Action$Element = ISelectElement | IUpdateElementName | IToggleAddElementModal;

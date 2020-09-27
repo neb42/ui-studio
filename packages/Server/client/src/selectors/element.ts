@@ -8,6 +8,9 @@ export const getLayouts = (state: Store): Store$Layout => state.layout;
 export const getWidgets = (state: Store): Store$Widget => state.widget;
 export const getSelectedElementId = (state: Store): string | null => state.element.selectedElement;
 
+export const getIsAddElementModalOpen = (state: Store): boolean =>
+  state.element.isAddElementModalOpen;
+
 export const makeGetElementTree = (): OutputParametricSelector<
   Store,
   string,

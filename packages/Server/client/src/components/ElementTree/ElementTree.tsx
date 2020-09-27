@@ -15,12 +15,10 @@ import TreeItem from '@material-ui/lab/TreeItem';
 import { ElementTreeNode, Element } from '@ui-builder/types';
 import { Store } from 'types/store';
 import { makeGetElementTree, makeGetSelectedElement } from 'selectors/element';
-import { selectElement } from 'actions/element';
+import { selectElement, toggleAddElementModal } from 'actions/element';
 import { removeLayout } from 'actions/layout';
 import { removeWidget } from 'actions/widget';
 import { ElementIcon } from 'components/ElementIcon';
-
-import { AddElementButtons } from '../DEBUG/AddElementButtons';
 
 import * as Styles from './ElementTree.styles';
 
@@ -42,6 +40,8 @@ const TreeItemLabel = ({ element, siblingCount }: ITreeItemLabel): JSX.Element =
   const dispatch = useDispatch();
   const getSelectedElement = React.useMemo(makeGetSelectedElement, []);
   const selectedElement = useSelector(getSelectedElement);
+
+  const handleAddClick = () => dispatch(toggleAddElementModal());
 
   const handleRemove = () => {
     if (element.type === 'layout') {
@@ -68,7 +68,7 @@ const TreeItemLabel = ({ element, siblingCount }: ITreeItemLabel): JSX.Element =
           </>
         )}
         {element.type !== 'widget' ? (
-          <IconButton onClick={() => {}} size="small">
+          <IconButton onClick={handleAddClick} size="small">
             <AddSharp />
           </IconButton>
         ) : (
@@ -131,7 +131,6 @@ export const ElementTree = ({ pageName }: IElementTree): JSX.Element | null => {
 
   return (
     <Styles.Container>
-      <AddElementButtons />
       <TreeView
         className={classes.root}
         defaultCollapseIcon={<ExpandMoreSharp />}

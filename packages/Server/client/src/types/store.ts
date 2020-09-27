@@ -8,6 +8,7 @@ interface KeyedObject<T> {
 
 export type Store$Element = {
   selectedElement: string | null;
+  isAddElementModalOpen: boolean;
 };
 export type Store$Page = KeyedObject<Page>;
 export type Store$Layout = KeyedObject<Layout>;

@@ -1,8 +1,14 @@
-import { SELECT_ELEMENT, UPDATE_ELEMENT_NAME, Action$Element } from 'actions/element';
+import {
+  SELECT_ELEMENT,
+  UPDATE_ELEMENT_NAME,
+  TOGGLE_ADD_ELEMENT_MODAL,
+  Action$Element,
+} from 'actions/element';
 import { Store$Element } from 'types/store';
 
 const initialState: Store$Element = {
   selectedElement: null,
+  isAddElementModalOpen: false,
 };
 
 export const element = (
@@ -24,6 +30,12 @@ export const element = (
         };
       }
       return state;
+    }
+    case TOGGLE_ADD_ELEMENT_MODAL: {
+      return {
+        ...state,
+        isAddElementModalOpen: !state.isAddElementModalOpen,
+      };
     }
     default:
       return state;
