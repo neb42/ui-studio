@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
-import { useSelector } from 'react-redux';
+import { TInitFunctions } from '@ui-builder/types';
+import { IComponent } from 'types/store';
 import { makeGetElements } from 'selectors/element';
+import { initComponents, initFunctions } from 'actions/element';
 
 import * as Styles from './Preview.styles';
 
@@ -14,20 +17,42 @@ interface IPreview {
  Instead we set a random key when
 */
 export const Preview = ({ pageName }: IPreview): JSX.Element => {
-  const [previewServer, setPreviewServer] = React.useState({ host: '', port: '' });
+  const dispatch = useDispatch();
+  const [previewServer, setPreviewServer] = React.useState<{ host: string; port: string } | null>(
+    null,
+  );
   const [random, setRandom] = React.useState(Math.random());
-  const socket = React.useMemo(() => io('/'), []);
+  const serverSocket = React.useMemo(() => io('/'), []);
+  const previewSocket = React.useMemo(() => {
+    if (previewServer) {
+      return io(`${previewServer.host}:${previewServer.port + 1}`);
+    }
+    return null;
+  }, [JSON.stringify(previewServer)]);
   const getElements = React.useMemo(makeGetElements, []);
   const elements = useSelector(getElements);
 
   React.useEffect(() => {
-    socket.on('set-server', setPreviewServer);
-    socket.on('code-updated', () => setRandom(Math.random()));
+    serverSocket.on('set-server', setPreviewServer);
+    serverSocket.on('code-updated', () => setRandom(Math.random()));
   }, []);
 
   React.useEffect(() => {
-    socket.emit('elements-updated', elements);
+    if (previewSocket) {
+      previewSocket.on('init-functions', (functions: TInitFunctions) =>
+        dispatch(initFunctions(functions)),
+      );
+      previewSocket.on('init-components', (components: IComponent[]) =>
+        dispatch(initComponents(components)),
+      );
+    }
+  }, [previewSocket]);
+
+  React.useEffect(() => {
+    serverSocket.emit('elements-updated', elements);
   }, [elements]);
+
+  if (!previewServer) return <div />;
 
   return (
     <Styles.Iframe key={random} src={`${previewServer.host}:${previewServer.port}/${pageName}`} />

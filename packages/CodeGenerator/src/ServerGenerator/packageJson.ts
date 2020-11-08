@@ -12,6 +12,7 @@ const baseDependencies = [
   { name: 'cookie-parser', version: 'latest', last: false },
   { name: 'express', version: 'latest', last: false },
   { name: 'mysql', version: 'latest', last: false },
+  { name: 'socket.io', version: '^2.3.0', last: false },
 ];
 
 const devDependencies = [

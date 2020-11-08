@@ -11,8 +11,13 @@
     "build": "rm -rf build/* && tsc",
     "start": "ui-builder --path /Users/bmcalindin/workspace/ui-builder/packages/ExampleApp"
   },
+  "dependencies": {
+    "@faculty/adler-web-components": "^0.0.113"
+  },
   "devDependencies": {
+    "@ui-builder/code-generator": "link:/Users/bmcalindin/workspace/ui-builder/packages/CodeGenerator",
     "@ui-builder/server": "link:/Users/bmcalindin/workspace/ui-builder/packages/Server",
-    "@ui-builder/code-generator": "link:/Users/bmcalindin/workspace/ui-builder/packages/CodeGenerator"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }

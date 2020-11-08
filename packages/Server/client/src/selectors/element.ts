@@ -1,7 +1,7 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
 import Graph from 'graph-data-structure';
 import { ElementTreeNode } from '@ui-builder/types';
-import { Store, Store$Page, Store$Layout, Store$Widget } from 'types/store';
+import { Store, Store$Page, Store$Layout, Store$Widget, IComponent } from 'types/store';
 
 export const getPages = (state: Store): Store$Page => state.page;
 export const getLayouts = (state: Store): Store$Layout => state.layout;
@@ -151,3 +151,5 @@ export const makeGetNextPosition = () =>
       ).length;
     },
   );
+
+export const makeGetComponents = () => (state: Store): IComponent[] => state.element.components;

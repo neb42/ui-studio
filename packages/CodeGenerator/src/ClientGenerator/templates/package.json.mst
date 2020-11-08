@@ -5,7 +5,7 @@
   "proxy": "http://localhost:3001",
   "dependencies": {
     {{ #dependencies }}
-    "{{{ name }}}": "{{ version }}"{{ ^last }}, {{ /last }}      
+    "{{{ name }}}": "{{{ version }}}"{{ ^last }}, {{ /last }}      
     {{ /dependencies }}
   },
   "scripts": {

@@ -41,6 +41,7 @@ const layoutTable: Layout[] = [
     type: 'layout',
     layoutType: 'grid',
     name: 'l_grid1',
+    position: 0,
     parent: 'p_page1',
     props: {
       rows: [
@@ -59,6 +60,7 @@ const layoutTable: Layout[] = [
     type: 'layout',
     layoutType: 'flex',
     name: 'l_flex1',
+    position: 1,
     parent: 'l_grid1',
     props: {},
     style: {
@@ -74,6 +76,7 @@ const layoutTable: Layout[] = [
     type: 'layout',
     layoutType: 'flex',
     name: 'l_flex2',
+    position: 2,
     parent: 'l_grid1',
     props: {},
     style: {
@@ -140,6 +143,8 @@ const widgetTable: Widget[] = [
     name: 'w_widget1',
     parent: 'l_flex1',
     component: 'text',
+    library: 'custom',
+    position: 0,
     dependencies: emptyDeps,
     props: { children: 'widget one' },
     style: { type: 'flex' },
@@ -149,6 +154,8 @@ const widgetTable: Widget[] = [
     type: 'widget',
     name: 'w_widget2',
     parent: 'l_flex1',
+    library: 'custom',
+    position: 1,
     component: 'text',
     dependencies: emptyDeps,
     props: { children: 'widget two' },
@@ -159,6 +166,8 @@ const widgetTable: Widget[] = [
     type: 'widget',
     name: 'w_widget3',
     parent: 'l_flex2',
+    library: 'custom',
+    position: 0,
     component: 'text',
     dependencies: { ...emptyDeps, queries: ['q_query1'] },
     props: { children: 'widget three' },
@@ -169,6 +178,8 @@ const widgetTable: Widget[] = [
     type: 'widget',
     name: 'w_widget4',
     parent: 'l_flex2',
+    library: 'custom',
+    position: 1,
     component: 'text',
     dependencies: {
       ...emptyDeps,

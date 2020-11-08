@@ -20,6 +20,8 @@ interface Args {
   widgets: Widget[];
   pages: Page[];
   layouts: Layout[];
+  source: string;
+  dev: boolean;
 }
 
 interface IRemoveExcessFiles {
@@ -46,7 +48,7 @@ const removeExcessFiles = async ({ widgets, layouts, pages }: IRemoveExcessFiles
   );
 };
 
-const generateClient = async ({ elementTree, widgets, pages, layouts }: Args) => {
+const generateClient = async ({ elementTree, widgets, pages, layouts, source, dev }: Args) => {
   return Promise.all([
     generateLayoutFiles(layouts),
     generatePageFiles(elementTree),
@@ -56,7 +58,7 @@ const generateClient = async ({ elementTree, widgets, pages, layouts }: Args) =>
     generateWidgetFiles(widgets),
     generateSelectorFiles(),
     generateActionFiles(),
-    generateCoreFiles(),
+    generateCoreFiles(source, dev),
     removeExcessFiles({ widgets, pages, layouts }),
   ]);
 };

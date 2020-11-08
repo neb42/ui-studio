@@ -2,10 +2,15 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Modal, Fade, Backdrop } from '@material-ui/core';
 import { ChevronRightSharp, GridOnSharp, ViewWeekSharp, TextFieldsSharp } from '@material-ui/icons';
-import { makeGetSelectedElement, getIsAddElementModalOpen } from 'selectors/element';
+import {
+  makeGetSelectedElement,
+  getIsAddElementModalOpen,
+  makeGetComponents,
+} from 'selectors/element';
 import { addWidget } from 'actions/widget';
 import { addLayout } from 'actions/layout';
 import { toggleAddElementModal } from 'actions/element';
+import { IComponent } from 'types/store';
 
 import * as Styles from './AddElementModal.styles';
 
@@ -15,62 +20,97 @@ const categories = [
   { key: 'controls', title: 'Controls', icon: ChevronRightSharp },
   { key: 'forms', title: 'Forms', icon: ChevronRightSharp },
   { key: 'typography', title: 'Typography', icon: ChevronRightSharp },
+  { key: 'custom', title: 'Custom', icon: ChevronRightSharp },
 ];
 
-const elements: {
+const makeElements = (
+  components: IComponent[],
+): {
   [key: string]: {
     title: string;
     description: string;
     type: 'layout' | 'widget';
     subtype: string;
+    library: string;
   }[];
-} = {
-  all: [],
-  layout: [
-    {
-      title: 'Grid layout',
-      description: 'fgff sgfsd gf gdfsgdfgs',
-      type: 'layout',
-      subtype: 'grid',
-    },
-    {
-      title: 'Flex layout',
-      description: 'fgff sgfsd gf gdfsgdfgs',
-      type: 'layout',
-      subtype: 'flex',
-    },
-    {
-      title: 'Conditional render',
-      description: 'Renders multiple children, each with their own condition to render',
-      type: 'layout',
-      subtype: 'conditional',
-    },
-  ],
-  controls: [],
-  forms: [],
-  typography: [
-    {
-      title: 'Text',
-      description: 'fgff sgfsd gf gdfsgdfgs',
+} => {
+  const elements: {
+    [key: string]: {
+      title: string;
+      description: string;
+      type: 'layout' | 'widget';
+      subtype: string;
+      library: string;
+    }[];
+  } = {
+    all: [],
+    layout: [
+      {
+        title: 'Grid layout',
+        description: 'fgff sgfsd gf gdfsgdfgs',
+        type: 'layout',
+        subtype: 'grid',
+        library: '',
+      },
+      {
+        title: 'Flex layout',
+        description: 'fgff sgfsd gf gdfsgdfgs',
+        type: 'layout',
+        subtype: 'flex',
+        library: '',
+      },
+      {
+        title: 'Conditional render',
+        description: 'Renders multiple children, each with their own condition to render',
+        type: 'layout',
+        subtype: 'conditional',
+        library: '',
+      },
+    ],
+    controls: [],
+    forms: [],
+    typography: [
+      {
+        title: 'Text',
+        description: 'fgff sgfsd gf gdfsgdfgs',
+        type: 'widget',
+        subtype: 'text',
+        library: '',
+      },
+    ],
+  };
+  elements.all = Object.values(elements).reduce((acc, cur) => [...acc, ...cur], []);
+
+  components.forEach(({ name, description, library }) => {
+    const existing = elements[library] || [];
+    existing.push({
+      title: name,
+      description,
       type: 'widget',
-      subtype: 'text',
-    },
-  ],
+      subtype: name,
+      library,
+    });
+    elements[library] = existing;
+  });
+
+  return elements;
 };
-elements.all = Object.values(elements).reduce((acc, cur) => [...acc, ...cur], []);
 
 export const AddElementModal = (): JSX.Element => {
   const dispatch = useDispatch();
   const [category, setCategory] = React.useState('all');
   const selectedElement = useSelector(React.useMemo(makeGetSelectedElement, []));
+  const components = useSelector(React.useMemo(makeGetComponents, []));
   const isOpen = useSelector(getIsAddElementModalOpen);
+
+  const elements = makeElements(components);
 
   const handleClose = () => {
     setCategory('all');
     dispatch(toggleAddElementModal());
   };
 
-  const handleAddElement = (type: 'layout' | 'widget', subtype: string) => () => {
+  const handleAddElement = (type: 'layout' | 'widget', subtype: string, library: string) => () => {
     if (selectedElement) {
       if (type === 'layout') {
         if (subtype === 'grid') {
@@ -83,10 +123,8 @@ export const AddElementModal = (): JSX.Element => {
         }
       }
       if (type === 'widget') {
-        if (subtype === 'text') {
-          dispatch(addWidget('text', selectedElement.name));
-          handleClose();
-        }
+        dispatch(addWidget(subtype, library, selectedElement.name));
+        handleClose();
       }
     }
   };
@@ -128,7 +166,10 @@ export const AddElementModal = (): JSX.Element => {
           </Styles.Categories>
           <Styles.ElementList>
             {(elements?.[category] ?? []).map((e) => (
-              <Styles.Element key={e.title} onClick={handleAddElement(e.type, e.subtype)}>
+              <Styles.Element
+                key={e.title}
+                onClick={handleAddElement(e.type, e.subtype, e.library)}
+              >
                 <Styles.ElementTitle>{e.title}</Styles.ElementTitle>
                 <Styles.ElementDescription>{e.description}</Styles.ElementDescription>
               </Styles.Element>

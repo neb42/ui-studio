@@ -30,11 +30,12 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
 
       const renderConfig = {
         name: w.name.replace(' ', '_'),
-        component: componentMap[w.component],
+        component: w.component,
         dependencies: Object.values(w.dependencies).flat(),
         exposedProperties: [],
         props,
         children,
+        library: w.library === 'custom' ? 'functions-pkg' : w.library,
         grid: null,
         flex: null,
       };

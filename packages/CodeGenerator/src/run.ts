@@ -50,7 +50,7 @@ const buildElementTree = (data: Data): ElementTreeNode[] => {
       id: element.id,
       name: element.name,
       type: element.type,
-      children: children.map(buildTree),
+      children: children.map(buildTree).sort((a, b) => (a.position > b.position ? 1 : -1)),
     };
   };
   const elementTree: ElementTreeNode[] = Object.keys(pages).map(buildTree);
@@ -68,6 +68,8 @@ export const run = async (_data: Data | null, source: string, dev: boolean): Pro
     widgets: Object.values(data.widgets),
     pages: Object.values(data.pages),
     layouts: Object.values(data.layouts),
+    source,
+    dev,
   });
 
   generateServer(source, dev);

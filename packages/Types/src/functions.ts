@@ -1,0 +1,1 @@
+export type TInitFunctions = { name: string, args: string[] }[]; 

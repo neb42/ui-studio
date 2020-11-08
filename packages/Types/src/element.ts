@@ -14,7 +14,8 @@ export interface Widget {
   type: 'widget';
   name: string;
   parent: string;
-  component: 'text';
+  component: string;
+  library: string;
   dependencies: Dependencies;
   props: { [key: string]: any };
   position: number;

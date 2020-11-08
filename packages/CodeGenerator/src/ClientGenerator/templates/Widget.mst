@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
+import { Components } from '{{{ library }}}';
 
 import { updateWidget } from '../actions';
 import { getFunction } from '../selectors';
@@ -84,7 +85,7 @@ const Widget_{{{ name }}} = ({
   return React.createElement(
     WidgetWrapper,
     {}, 
-    React.createElement({{{ component }}}, { ref: r => setRef(r) }, {{ #children }}{{{ children }}}{{ /children }}{{ ^children }}children{{ /children }}),
+    React.createElement(Components.{{{ component }}}.component, { ref: r => setRef(r) }, {{ #children }}{{{ children }}}{{ /children }}{{ ^children }}children{{ /children }}),
   );
 };
 

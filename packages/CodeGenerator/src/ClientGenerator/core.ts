@@ -12,7 +12,7 @@ const coreFiles = [
   { template: 'index.mst', fileName: path.join(FilePaths.clientSrc, 'index.js') },
 ];
 
-const dependencies = [
+const baseDependencies = [
   { name: 'axios', version: 'latest', last: false },
   { name: 'react', version: 'latest', last: false },
   { name: 'react-dom', version: 'latest', last: false },
@@ -26,12 +26,26 @@ const dependencies = [
   { name: '@faculty/adler-tokens', version: 'latest', last: false },
   { name: '@faculty/adler-web-components', version: 'latest', last: false },
 ];
-dependencies[dependencies.length - 1].last = true;
 
 const devDependencies = [];
 // devDependencies[devDependencies.length - 1 ].last = true;
 
-const generatePackageDotJsonFile = async (): Promise<void> => {
+const generatePackageDotJsonFile = async (source: string, dev: boolean): Promise<void> => {
+  const dependencies = [...baseDependencies];
+  if (dev) {
+    dependencies.push({
+      name: 'functions-pkg',
+      version: `link:${source}`,
+      last: true,
+    });
+  } else {
+    dependencies.push({
+      name: 'functions-pkg',
+      version: `https://github.com/ui-builder-function-packages/${source}`,
+      last: true,
+    });
+  }
+
   const data = await fs.readFile(path.join(__dirname, 'templates', 'package.json.mst'));
   const renderedFile = Mustache.render(data.toString(), {
     devDependencies,
@@ -48,9 +62,9 @@ const generateParameterlessFile = async (template: string, fileName: string): Pr
   return fs.writeFile(fileName, renderedFile);
 };
 
-const generateCoreFiles = (): Promise<void[]> => {
+const generateCoreFiles = (source: string, dev: boolean): Promise<void[]> => {
   return Promise.all([
-    generatePackageDotJsonFile(),
+    generatePackageDotJsonFile(source, dev),
     ...coreFiles.map((f) => generateParameterlessFile(f.template, f.fileName)),
   ]);
 };

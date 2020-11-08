@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tab, Tabs, TextField } from '@material-ui/core';
-import { GridOnSharp } from '@material-ui/icons';
 import { Store } from 'types/store';
 import { makeGetElement, makeGetSelectedElement, makeIsValidElementName } from 'selectors/element';
 import { updateElementName } from 'actions/element';
 import { ElementIcon } from 'components/ElementIcon';
 import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig/GridLayoutConfig';
 import { GridParentStyle } from 'components/Grid/GridParentStyle';
+import { WidgetConfig } from 'components/WidgetConfig';
 
 import * as Styles from './ElementConfig.styles';
 
@@ -16,10 +16,6 @@ interface WidgetConfig {
   key: string;
   label: string;
 }
-
-const widgetConfigMap: { [key: string]: WidgetConfig[] } = {
-  text: [{ component: 'input', key: 'children', label: 'Text' }],
-};
 
 export const ElementConfig = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -106,6 +102,9 @@ export const ElementConfig = (): JSX.Element => {
         {tabIndex === 0 &&
           selectedElement.type === 'layout' &&
           selectedElement.layoutType === 'grid' && <GridLayoutConfig element={selectedElement} />}
+        {tabIndex === 0 && selectedElement.type === 'widget' && (
+          <WidgetConfig widget={selectedElement} />
+        )}
         {tabIndex === 1 &&
           selectedElement?.type !== 'page' &&
           parentElement?.type === 'layout' &&

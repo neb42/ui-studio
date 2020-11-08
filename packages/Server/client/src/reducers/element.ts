@@ -2,6 +2,8 @@ import {
   SELECT_ELEMENT,
   UPDATE_ELEMENT_NAME,
   TOGGLE_ADD_ELEMENT_MODAL,
+  INIT_FUNCTIONS,
+  INIT_COMPONENTS,
   Action$Element,
 } from 'actions/element';
 import { Store$Element } from 'types/store';
@@ -9,6 +11,8 @@ import { Store$Element } from 'types/store';
 const initialState: Store$Element = {
   selectedElement: null,
   isAddElementModalOpen: false,
+  functions: [],
+  components: [],
 };
 
 export const element = (
@@ -35,6 +39,18 @@ export const element = (
       return {
         ...state,
         isAddElementModalOpen: !state.isAddElementModalOpen,
+      };
+    }
+    case INIT_FUNCTIONS: {
+      return {
+        ...state,
+        functions: action.payload,
+      };
+    }
+    case INIT_COMPONENTS: {
+      return {
+        ...state,
+        components: action.payload,
       };
     }
     default:

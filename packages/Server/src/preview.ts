@@ -37,7 +37,8 @@ export const initCode = async () => {
     devClient = exec('env BROWSER=none yarn start', { cwd: clientPath }, logError);
   });
 
-  fs.watch(FUNCTIONS_PATH, () => {
+  fs.watch(path.join(FUNCTIONS_PATH, 'src'), { recursive: true }, () => {
+    console.info('Building functions');
     exec('yarn build', { cwd: FUNCTIONS_PATH }, logError);
   });
 };

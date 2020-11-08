@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { defaultTokens } from '@faculty/adler-tokens';
 
 import App from './App';
@@ -11,9 +11,28 @@ import store from './store';
 import subscriber from './subscriber';
 
 const rootElement = document.getElementById('root');
+
+const GlobalStyles = createGlobalStyle`
+  body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+  }
+
+  #root {
+    height: 100vh;
+    width: 100vw;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+`;
+
 ReactDOM.render(
   <ThemeProvider theme={defaultTokens}>
     <Provider store={store}>
+      <GlobalStyles />
       <App />
     </Provider>
   </ThemeProvider>,

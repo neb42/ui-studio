@@ -35,7 +35,9 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
   throw Error();
 };
 
-const defaultPropsConfig = {
+const defaultPropsConfig: {
+  [key: string]: Object;
+} = {
   text: {
     children: '',
   },
@@ -46,10 +48,11 @@ interface IAddWidget {
   payload: Widget;
 }
 
-export const addWidget = (component: 'text', parent: string): TThunkAction<IAddWidget> => (
-  dispatch: Dispatch<IAddWidget>,
-  getState: TGetState,
-) => {
+export const addWidget = (
+  component: string,
+  library: string,
+  parent: string,
+): TThunkAction<IAddWidget> => (dispatch: Dispatch<IAddWidget>, getState: TGetState) => {
   const state = getState();
   const parentElement = makeGetElement()(state, parent);
   if (!parentElement) throw Error();
@@ -57,7 +60,7 @@ export const addWidget = (component: 'text', parent: string): TThunkAction<IAddW
     state,
     component.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
   );
-  const defaultProps = defaultPropsConfig[component];
+  const defaultProps = defaultPropsConfig?.[component] ?? {};
   const defaultStyle = getDefaultStyle(parentElement);
   const position = makeGetNextPosition()(state, parentElement.name);
   const widget: Widget = {
@@ -65,6 +68,7 @@ export const addWidget = (component: 'text', parent: string): TThunkAction<IAddW
     type: 'widget',
     name,
     component,
+    library,
     parent,
     position,
     props: defaultProps,

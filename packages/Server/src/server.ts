@@ -20,7 +20,7 @@ const run = async () => {
   const server = http.createServer(app);
 
   const io = socketio(server);
-  io.origins(['http://localhost:3003']);
+  io.origins('*:*');
 
   io.on('connection', (socket) => {
     socket.emit('set-server', { host: 'http://localhost', port: 3000 });
