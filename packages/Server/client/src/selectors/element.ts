@@ -1,12 +1,22 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
 import Graph from 'graph-data-structure';
 import { ElementTreeNode } from '@ui-builder/types';
-import { Store, Store$Page, Store$Layout, Store$Widget, IComponent } from 'types/store';
+import {
+  Store,
+  Store$Page,
+  Store$Layout,
+  Store$Widget,
+  IComponent,
+  Store$Overlay,
+} from 'types/store';
 
 export const getPages = (state: Store): Store$Page => state.page;
+export const getOverlays = (state: Store): Store$Overlay => state.overlay;
 export const getLayouts = (state: Store): Store$Layout => state.layout;
 export const getWidgets = (state: Store): Store$Widget => state.widget;
 export const getSelectedElementId = (state: Store): string | null => state.element.selectedElement;
+export const getSelectedPageId = (state: Store): string | null => state.element.selectedPage;
+export const getSelectedOverlayId = (state: Store): string | null => state.element.selectedOverlay;
 
 export const getIsAddElementModalOpen = (state: Store): boolean =>
   state.element.isAddElementModalOpen;

@@ -1,4 +1,5 @@
 import {
+  SELECT_PAGE,
   SELECT_ELEMENT,
   UPDATE_ELEMENT_NAME,
   TOGGLE_ADD_ELEMENT_MODAL,
@@ -9,6 +10,8 @@ import {
 import { Store$Element } from 'types/store';
 
 const initialState: Store$Element = {
+  selectedPage: 'Page1',
+  selectedOverlay: null,
   selectedElement: null,
   isAddElementModalOpen: false,
   functions: [],
@@ -20,6 +23,12 @@ export const element = (
   action: Action$Element,
 ): Store$Element => {
   switch (action.type) {
+    case SELECT_PAGE: {
+      return {
+        ...state,
+        selectedPage: action.payload,
+      };
+    }
     case SELECT_ELEMENT: {
       return {
         ...state,

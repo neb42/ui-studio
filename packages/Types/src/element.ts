@@ -31,7 +31,14 @@ export interface Page {
   props: { [key: string]: any };
 }
 
-export type Element = Page | Layout | Widget;
+export interface IOverlay {
+  id: string;
+  type: 'overlay';
+  overlayType: 'modal' | 'drawer';
+  name: string;
+}
+
+export type Element = Page | IOverlay | Layout | Widget;
 
 export interface ElementTreeNode {
   id: string;

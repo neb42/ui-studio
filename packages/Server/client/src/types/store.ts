@@ -1,8 +1,8 @@
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { Page, Layout, Widget, TInitFunctions } from '@ui-builder/types';
+import { Page, Layout, Widget, TInitFunctions, IOverlay } from '@ui-builder/types';
 
-interface KeyedObject<T> {
+export interface KeyedObject<T> {
   [key: string]: T;
 }
 
@@ -29,18 +29,22 @@ export interface IComponent {
 }
 
 export type Store$Element = {
+  selectedPage: string | null;
+  selectedOverlay: string | null;
   selectedElement: string | null;
   isAddElementModalOpen: boolean;
   functions: TInitFunctions;
   components: IComponent[];
 };
 export type Store$Page = KeyedObject<Page>;
+export type Store$Overlay = KeyedObject<IOverlay>;
 export type Store$Layout = KeyedObject<Layout>;
 export type Store$Widget = KeyedObject<Widget>;
 
 export interface Store {
   element: Store$Element;
   page: Store$Page;
+  overlay: Store$Overlay;
   layout: Store$Layout;
   widget: Store$Widget;
 }

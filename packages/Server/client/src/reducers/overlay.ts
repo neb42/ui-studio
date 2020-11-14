@@ -1,13 +1,12 @@
 import { UPDATE_ELEMENT_NAME, IUpdateElementName } from 'actions/element';
-import { Store$Page } from 'types/store';
+import { Store$Overlay } from 'types/store';
 
-const initialState: Store$Page = {
-  Page1: { id: '', type: 'page', name: 'Page1', props: {} },
-  Page2: { id: '', type: 'page', name: 'Page2', props: {} },
-  Page3: { id: '', type: 'page', name: 'Page3', props: {} },
-};
+const initialState: Store$Overlay = {};
 
-export const page = (state: Store$Page = initialState, action: IUpdateElementName): Store$Page => {
+export const overlay = (
+  state: Store$Overlay = initialState,
+  action: IUpdateElementName,
+): Store$Overlay => {
   switch (action.type) {
     case UPDATE_ELEMENT_NAME: {
       return Object.keys(state).reduce(
@@ -15,7 +14,7 @@ export const page = (state: Store$Page = initialState, action: IUpdateElementNam
           if (cur === action.payload.id) return acc;
           return { ...acc, [cur]: state[cur] };
         },
-        action.payload.type === 'page'
+        action.payload.type === 'overlay'
           ? {
               [action.payload.name]: {
                 ...state[action.payload.id],

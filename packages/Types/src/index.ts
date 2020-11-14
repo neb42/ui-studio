@@ -3,6 +3,7 @@ export {
   Widget,
   Layout,
   Page,
+  IOverlay,
   Element,
   ElementTreeNode,
 } from './element';
