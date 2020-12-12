@@ -35,6 +35,7 @@ const InputConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
         <TextField
           onChange={handleInputOnChange}
           value={widget?.props?.[config.key]?.value ?? ''}
+          style={{ width: '100%' }}
         />
       );
     case 'select':

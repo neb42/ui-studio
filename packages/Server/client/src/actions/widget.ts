@@ -71,7 +71,7 @@ export const addWidget = (
     library,
     parent,
     position,
-    props: defaultProps,
+    props: {},
     style: defaultStyle,
     dependencies: {
       queries: [],
