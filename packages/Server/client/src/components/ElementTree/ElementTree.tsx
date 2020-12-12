@@ -9,6 +9,7 @@ import { selectElement, toggleAddElementModal } from 'actions/element';
 import { removeLayout } from 'actions/layout';
 import { removeWidget } from 'actions/widget';
 import { ElementIcon } from 'components/ElementIcon';
+import { ElementTreeHeader } from 'components/ElementTreeHeader';
 
 import * as Styles from './ElementTree.styles';
 
@@ -125,7 +126,7 @@ export const ElementTree = ({ pageName }: IElementTree): JSX.Element | null => {
 
   return (
     <Styles.Container>
-      <Styles.Header>Element tree</Styles.Header>
+      <ElementTreeHeader />
       <Styles.Tree>
         <TreeNode node={elementTree} siblingCount={1} depth={0} handleSelect={handleSelect} />
       </Styles.Tree>
