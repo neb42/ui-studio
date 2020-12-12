@@ -69,15 +69,7 @@ const makeElements = (
     ],
     controls: [],
     forms: [],
-    typography: [
-      {
-        title: 'Text',
-        description: 'fgff sgfsd gf gdfsgdfgs',
-        type: 'widget',
-        subtype: 'text',
-        library: '',
-      },
-    ],
+    typography: [],
   };
   elements.all = Object.values(elements).reduce((acc, cur) => [...acc, ...cur], []);
 

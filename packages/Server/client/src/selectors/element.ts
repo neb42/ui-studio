@@ -1,6 +1,6 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
 import Graph from 'graph-data-structure';
-import { ElementTreeNode } from '@ui-builder/types';
+import { ElementTreeNode, TInitFunctions } from '@ui-builder/types';
 import {
   Store,
   Store$Page,
@@ -163,3 +163,5 @@ export const makeGetNextPosition = () =>
   );
 
 export const makeGetComponents = () => (state: Store): IComponent[] => state.element.components;
+
+export const makeGetFunctions = () => (state: Store): TInitFunctions => state.element.functions;

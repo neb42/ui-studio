@@ -101,15 +101,22 @@ interface IUpdateWidgetProps {
   payload: {
     name: string;
     key: string;
+    mode: 'input' | 'function' | 'widget';
     value: any;
   };
 }
 
-export const updateWidgetProps = (name: string, key: string, value: any): IUpdateWidgetProps => ({
+export const updateWidgetProps = (
+  name: string,
+  key: string,
+  mode: 'input' | 'function' | 'widget',
+  value: any,
+): IUpdateWidgetProps => ({
   type: UPDATE_WIDGET_PROPS,
   payload: {
     name,
     key,
+    mode,
     value,
   },
 });

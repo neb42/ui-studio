@@ -16,7 +16,7 @@ export interface IComponentConfig$Select {
   component: 'select';
   key: string;
   label: string;
-  options: any[];
+  options: { value: string; label: string }[];
 }
 
 export type TComponentConfig = IComponentConfig$Input | IComponentConfig$Select;

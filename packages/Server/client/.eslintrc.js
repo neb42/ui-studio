@@ -8,6 +8,7 @@ module.exports = {
       version: 'detect', // TODO: add in adler
     },
     'import/resolver': {
+      typescript: {},
       node: {
         paths: ['src'],
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -15,6 +16,9 @@ module.exports = {
     },
   },
   extends: [
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended',
     'prettier/@typescript-eslint',
     '@faculty/eslint-config-react',

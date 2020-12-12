@@ -17,7 +17,10 @@ export interface Widget {
   component: string;
   library: string;
   dependencies: Dependencies;
-  props: { [key: string]: any };
+  props: { [key: string]: {
+    mode: 'input' | 'function' | 'widget';
+    value: any;
+  }};
   position: number;
   style: TStyle;
 }

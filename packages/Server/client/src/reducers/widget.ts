@@ -55,7 +55,10 @@ export const widget = (
           ...state[action.payload.name],
           props: {
             ...state[action.payload.name].props,
-            [action.payload.key]: action.payload.value,
+            [action.payload.key]: {
+              mode: action.payload.mode,
+              value: action.payload.value,
+            },
           },
         },
       };
