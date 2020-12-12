@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Select, MenuItem, makeStyles } from '@material-ui/core';
+import { Menu, IconButton, Select, MenuItem, makeStyles } from '@material-ui/core';
+import { AddSharp } from '@material-ui/icons';
 import { selectPage } from 'actions/element';
 import { getOverlays, getPages, getSelectedPageId } from 'selectors/element';
 
@@ -32,6 +33,11 @@ export const ElementTreeHeader = (): JSX.Element => {
   const overlays = useSelector(getOverlays);
   // const components = {};
 
+  const [anchorEl, setAnchorEl] = React.useState<(EventTarget & HTMLButtonElement) | null>(null);
+  const handleOpenAddMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+    setAnchorEl(event.currentTarget);
+  const handleCloseAddMenu = () => setAnchorEl(null);
+
   // TODO: handle overlay and components
   const handleOnChange = (
     event: React.ChangeEvent<{
@@ -62,6 +68,14 @@ export const ElementTreeHeader = (): JSX.Element => {
           </MenuItem>
         ))} */}
       </Select>
+      <IconButton onClick={handleOpenAddMenu} size="small" style={{ color: '#fff' }}>
+        <AddSharp />
+      </IconButton>
+      <Menu keepMounted anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseAddMenu}>
+        <MenuItem onClick={() => {}}>Page</MenuItem>
+        <MenuItem onClick={() => {}}>Overlay</MenuItem>
+        <MenuItem onClick={() => {}}>Component</MenuItem>
+      </Menu>
     </Styles.Container>
   );
 };
