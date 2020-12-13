@@ -1,27 +1,25 @@
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
-import {
-  GridOnSharp,
-  HelpOutlineSharp,
-  TextFieldsSharp,
-  DashboardSharp,
-  ViewWeekSharp,
-} from '@material-ui/icons';
+import * as Icons from '@material-ui/icons';
 import { Element } from '@ui-builder/types';
+import { makeGetComponents } from 'selectors/element';
+import { IComponent } from 'types/store';
 
-const getIcon = (element: Element) => {
-  if (element.type === 'page') return DashboardSharp;
+const getIcon = (element: Element, components: IComponent[]) => {
+  if (element.type === 'page') return Icons.DashboardSharp;
 
   if (element.type === 'layout') {
-    if (element.layoutType === 'grid') return GridOnSharp;
-    if (element.layoutType === 'flex') return ViewWeekSharp;
+    if (element.layoutType === 'grid') return Icons.GridOnSharp;
+    if (element.layoutType === 'flex') return Icons.ViewWeekSharp;
   }
 
   if (element.type === 'widget') {
-    if (element.component === 'text') return TextFieldsSharp;
+    const icon = components.find(c => c.name === element.component)?.icon ?? '';
+    return (Icons as {[key: string]: Icons.SvgIconComponent })?.[icon] ?? Icons.HelpOutlineSharp;
   }
 
-  return HelpOutlineSharp;
+  return Icons.HelpOutlineSharp;
 };
 
 interface IElementIcon {
@@ -34,7 +32,8 @@ interface IElementIconButton extends IElementIcon {
 }
 
 export const ElementIcon = ({ element, color }: IElementIcon): JSX.Element => {
-  const Icon = getIcon(element);
+  const components = useSelector(React.useMemo(makeGetComponents, []));
+  const Icon = getIcon(element, components);
   return <Icon style={{ color }} fontSize="small" />;
 };
 

@@ -67,12 +67,7 @@ export const ElementConfig = (): JSX.Element => {
         }
       }
       case 'widget': {
-        switch (selectedElement.component) {
-          case 'text':
-            return 'Text';
-          default:
-            return 'Unknown';
-        }
+        return selectedElement.component;
       }
       default:
         return 'Unknown';

@@ -4,7 +4,6 @@ import { getSelectedPageId } from 'selectors/element';
 import { ElementTree } from 'components/ElementTree';
 import { ElementConfig } from 'components/ElementConfig';
 import { Preview } from 'components/Preview';
-import { AddElementModal } from 'components/AddElementModal';
 
 import * as Styles from './PageBuilder.styles';
 
@@ -24,7 +23,6 @@ export const PageBuilder = (): JSX.Element => {
           <ElementConfig />
         </Styles.ColRight>
       </Styles.Container>
-      <AddElementModal />
     </>
   );
 };

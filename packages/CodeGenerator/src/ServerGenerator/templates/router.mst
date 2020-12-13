@@ -76,6 +76,8 @@ io.on('connection', (socket) => {
   socket.emit('init-components', Object.values(Components).map(c => ({
     name: c.name,
     description: c.description,
+    category: c.category,
+    icon: c.icon,
     library: 'custom',
     config: c.config,
   })));

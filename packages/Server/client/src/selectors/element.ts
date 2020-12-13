@@ -18,9 +18,6 @@ export const getSelectedElementId = (state: Store): string | null => state.eleme
 export const getSelectedPageId = (state: Store): string | null => state.element.selectedPage;
 export const getSelectedOverlayId = (state: Store): string | null => state.element.selectedOverlay;
 
-export const getIsAddElementModalOpen = (state: Store): boolean =>
-  state.element.isAddElementModalOpen;
-
 export const makeGetElementTree = (): OutputParametricSelector<
   Store,
   string,

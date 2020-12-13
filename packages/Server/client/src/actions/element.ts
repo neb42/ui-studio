@@ -4,7 +4,6 @@ import { IComponent } from 'types/store';
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
 export const SELECT_PAGE = 'SELECT_PAGE';
 export const SELECT_ELEMENT = 'SELECT_ELEMENT';
-export const TOGGLE_ADD_ELEMENT_MODAL = 'TOGGLE_ADD_ELEMENT_MODAL';
 export const INIT_FUNCTIONS = 'INIT_FUNCTIONS';
 export const INIT_COMPONENTS = 'INIT_COMPONENTS';
 
@@ -52,14 +51,6 @@ export const selectElement = (name: string): ISelectElement => ({
   payload: name,
 });
 
-interface IToggleAddElementModal {
-  type: 'TOGGLE_ADD_ELEMENT_MODAL';
-}
-
-export const toggleAddElementModal = (): IToggleAddElementModal => ({
-  type: TOGGLE_ADD_ELEMENT_MODAL,
-});
-
 interface IInitFunctions {
   type: 'INIT_FUNCTIONS';
   payload: TInitFunctions;
@@ -84,6 +75,5 @@ export type Action$Element =
   | ISelectPage
   | ISelectElement
   | IUpdateElementName
-  | IToggleAddElementModal
   | IInitFunctions
   | IInitComponents;

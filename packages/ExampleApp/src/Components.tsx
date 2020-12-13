@@ -4,6 +4,8 @@ import Typography from '@faculty/adler-web-components/atoms/Typography';
 const Text = {
   name: 'Text',
   description: '',
+  category: 'Typography',
+  icon: 'TextFieldsSharp',
   defaultProps: {
     type: '',
     subtype: '',

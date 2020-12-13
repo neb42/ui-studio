@@ -24,7 +24,9 @@ export type TComponentConfig = IComponentConfig$Input | IComponentConfig$Select;
 export interface IComponent {
   name: string;
   description: string;
+  category: string;
   library: string;
+  icon: string;
   config: TComponentConfig[];
 }
 
@@ -32,7 +34,6 @@ export type Store$Element = {
   selectedPage: string | null;
   selectedOverlay: string | null;
   selectedElement: string | null;
-  isAddElementModalOpen: boolean;
   functions: TInitFunctions;
   components: IComponent[];
 };

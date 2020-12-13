@@ -2,7 +2,6 @@ import {
   SELECT_PAGE,
   SELECT_ELEMENT,
   UPDATE_ELEMENT_NAME,
-  TOGGLE_ADD_ELEMENT_MODAL,
   INIT_FUNCTIONS,
   INIT_COMPONENTS,
   Action$Element,
@@ -13,7 +12,6 @@ const initialState: Store$Element = {
   selectedPage: 'Page1',
   selectedOverlay: null,
   selectedElement: null,
-  isAddElementModalOpen: false,
   functions: [],
   components: [],
 };
@@ -43,12 +41,6 @@ export const element = (
         };
       }
       return state;
-    }
-    case TOGGLE_ADD_ELEMENT_MODAL: {
-      return {
-        ...state,
-        isAddElementModalOpen: !state.isAddElementModalOpen,
-      };
     }
     case INIT_FUNCTIONS: {
       return {
