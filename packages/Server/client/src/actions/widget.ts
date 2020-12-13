@@ -14,6 +14,7 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
       if (parent.layoutType === 'grid') {
         return {
           type: 'grid',
+          css: '',
           layout: [
             [0, 0],
             [0, 0],
@@ -23,24 +24,18 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
       if (parent.layoutType === 'flex') {
         return {
           type: 'flex',
+          css: '',
         };
       }
     }
     if (parent.type === 'page') {
       return {
         type: 'page',
+        css: '',
       };
     }
   }
   throw Error();
-};
-
-const defaultPropsConfig: {
-  [key: string]: Object;
-} = {
-  text: {
-    children: '',
-  },
 };
 
 interface IAddWidget {
@@ -60,7 +55,6 @@ export const addWidget = (
     state,
     component.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
   );
-  const defaultProps = defaultPropsConfig?.[component] ?? {};
   const defaultStyle = getDefaultStyle(parentElement);
   const position = makeGetNextPosition()(state, parentElement.name);
   const widget: Widget = {

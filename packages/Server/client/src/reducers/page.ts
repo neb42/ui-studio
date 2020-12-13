@@ -2,9 +2,9 @@ import { UPDATE_ELEMENT_NAME, IUpdateElementName } from 'actions/element';
 import { Store$Page } from 'types/store';
 
 const initialState: Store$Page = {
-  Page1: { id: '', type: 'page', name: 'Page1', props: {} },
-  Page2: { id: '', type: 'page', name: 'Page2', props: {} },
-  Page3: { id: '', type: 'page', name: 'Page3', props: {} },
+  Page1: { id: '', type: 'page', name: 'Page1', props: {}, style: { css: '' } },
+  Page2: { id: '', type: 'page', name: 'Page2', props: {}, style: { css: '' } },
+  Page3: { id: '', type: 'page', name: 'Page3', props: {}, style: { css: '' } },
 };
 
 export const page = (state: Store$Page = initialState, action: IUpdateElementName): Store$Page => {

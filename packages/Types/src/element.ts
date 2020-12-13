@@ -1,6 +1,6 @@
 import { GridLayout } from './grid';
 import { FlexLayout } from './flex';
-import { TStyle } from './style';
+import { TStyle, IRootStyle } from './style';
 
 export interface Dependencies {
   queries: string[];
@@ -32,6 +32,7 @@ export interface Page {
   type: 'page';
   name: string;
   props: { [key: string]: any };
+  style: IRootStyle;
 }
 
 export interface IOverlay {
@@ -39,6 +40,7 @@ export interface IOverlay {
   type: 'overlay';
   overlayType: 'modal' | 'drawer';
   name: string;
+  style: IRootStyle;
 }
 
 export type Element = Page | IOverlay | Layout | Widget;

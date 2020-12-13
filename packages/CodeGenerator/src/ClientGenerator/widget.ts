@@ -6,10 +6,6 @@ import { Widget } from '@ui-builder/types';
 
 import { FilePaths } from '../FilePaths';
 
-const componentMap = {
-  text: '"span"',
-};
-
 const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
   return Promise.all(
     widgets.map(async (w) => {
@@ -17,13 +13,13 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
 
       const props = Object.keys(w.props).reduce((acc, cur) => {
         if (cur === 'children') return acc;
-        return [...acc, { key: cur, value: w.props[cur] }];
+        return [...acc, { key: cur, value: w.props[cur].value }];
       }, []);
 
       const children = (() => {
-        if (w.props.children) {
-          if (typeof w.props.children === 'string') return `'${w.props.children}'`;
-          return w.props.children;
+        if (w?.props?.children?.value) {
+          if (typeof w.props.children.value === 'string') return `'${w.props.children.value}'`;
+          return w.props.children.value;
         }
         return null;
       })();

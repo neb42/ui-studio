@@ -20,7 +20,7 @@ const widget2ID = '';
 const widget3ID = '';
 const widget4ID = '';
 
-const pageTable: Page[] = [{ id: '', type: 'page', name: 'p_page1', props: {} }];
+const pageTable: Page[] = [{ id: '', type: 'page', name: 'p_page1', props: {}, style: { css: '' } }];
 
 const datasetTable = [
   {
@@ -53,7 +53,7 @@ const layoutTable: Layout[] = [
         { value: 1, unit: 'fr' },
       ],
     },
-    style: { type: 'page' },
+    style: { type: 'page', css: '' },
   },
   {
     id: flex1ID,
@@ -65,6 +65,7 @@ const layoutTable: Layout[] = [
     props: {},
     style: {
       type: 'grid',
+      css: '',
       layout: [
         [1, 1],
         [2, 1],
@@ -81,6 +82,7 @@ const layoutTable: Layout[] = [
     props: {},
     style: {
       type: 'grid',
+      css: '',
       layout: [
         [1, 2],
         [2, 2],
@@ -146,8 +148,8 @@ const widgetTable: Widget[] = [
     library: 'custom',
     position: 0,
     dependencies: emptyDeps,
-    props: { children: 'widget one' },
-    style: { type: 'flex' },
+    props: { children: { mode: 'input', value: 'widget one' } },
+    style: { type: 'flex', css: '' },
   },
   {
     id: widget2ID,
@@ -158,8 +160,8 @@ const widgetTable: Widget[] = [
     position: 1,
     component: 'text',
     dependencies: emptyDeps,
-    props: { children: 'widget two' },
-    style: { type: 'flex' },
+    props: { children: { mode: 'input', value: 'widget two' } },
+    style: { type: 'flex', css: '' },
   },
   {
     id: widget3ID,
@@ -170,8 +172,8 @@ const widgetTable: Widget[] = [
     position: 0,
     component: 'text',
     dependencies: { ...emptyDeps, queries: ['q_query1'] },
-    props: { children: 'widget three' },
-    style: { type: 'flex' },
+    props: { children: { mode: 'input', value: 'widget three' } },
+    style: { type: 'flex', css: '' },
   },
   {
     id: widget4ID,
@@ -186,8 +188,8 @@ const widgetTable: Widget[] = [
       clientFunctions: ['f_clientFunc1'],
       serverFunctions: ['f_serverFunc1'],
     },
-    props: { children: 'widget four' },
-    style: { type: 'flex' },
+    props: { children: { mode: 'input', value: 'widget four' } },
+    style: { type: 'flex', css: '' },
   },
 ];
 
