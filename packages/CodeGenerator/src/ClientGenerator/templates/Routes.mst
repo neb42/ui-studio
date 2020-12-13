@@ -10,7 +10,7 @@ const Routes = () => (
   <Router>
     <Switch>
       <% #pages %>
-      <Route path="/<% name %>" component={page_<% name %>} />
+      <Route path="/<% route %>" component={page_<% name %>} />
       <% /pages %>
     </Switch>
   </Router>

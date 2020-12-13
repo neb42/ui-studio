@@ -7,32 +7,17 @@ const emptyDeps: Dependencies = {
   widgets: [],
 };
 
-const grid1ID = '';
-const flex1ID = '';
-const flex2ID = '';
-const query1ID = '';
-const server1ID = '';
-const server2ID = '';
-const clientFunc1ID = '';
-const clientFunc2ID = '';
-const widget1ID = '';
-const widget2ID = '';
-const widget3ID = '';
-const widget4ID = '';
+const page1ID = '5388a8ec-a2ba-4691-a06e-e4c3046ada5e';
+const grid1ID = '48bb7463-6012-46f5-939d-36011d19a56e';
+const flex1ID = '378bf8cd-cb06-459d-86b5-cf96189d8b1a';
+const flex2ID = '780eb6cc-cbc3-4536-a8b0-9257fc9ce3f3';
+const widget1ID = '23d03543-28c9-4cae-b0c9-5507bddf999e';
+const widget2ID = 'e2945925-3572-423f-9012-78c32528ea10';
+const widget3ID = '86532f22-ce50-4966-9721-a7b02c3521dd';
+const widget4ID = '12c5968e-881f-4cfb-94b8-5b9eea59e9de';
 
-const pageTable: Page[] = [{ id: '', type: 'page', name: 'p_page1', props: {}, style: { css: '' } }];
-
-const datasetTable = [
-  {
-    id: '',
-    type: 'dataset',
-    name: 'd_dataset1',
-    host: 'wyqk6x041tfxg39e.chr7pe7iynqr.eu-west-1.rds.amazonaws.com',
-    port: 3306,
-    user: 'ijgu2hm7ysgtu42l',
-    password: 'pb8ra7vvrvolyifr',
-    database: 'yksyaelyn0at98gk',
-  },
+const pageTable: Page[] = [
+  { id: page1ID, type: 'page', name: 'p_page1', props: {}, style: { css: '' } },
 ];
 
 const layoutTable: Layout[] = [
@@ -42,7 +27,7 @@ const layoutTable: Layout[] = [
     layoutType: 'grid',
     name: 'l_grid1',
     position: 0,
-    parent: 'p_page1',
+    parent: page1ID,
     props: {
       rows: [
         { value: null, unit: 'auto' },
@@ -61,7 +46,7 @@ const layoutTable: Layout[] = [
     layoutType: 'flex',
     name: 'l_flex1',
     position: 1,
-    parent: 'l_grid1',
+    parent: grid1ID,
     props: {},
     style: {
       type: 'grid',
@@ -78,7 +63,7 @@ const layoutTable: Layout[] = [
     layoutType: 'flex',
     name: 'l_flex2',
     position: 2,
-    parent: 'l_grid1',
+    parent: grid1ID,
     props: {},
     style: {
       type: 'grid',
@@ -91,60 +76,13 @@ const layoutTable: Layout[] = [
   },
 ];
 
-const queryTable = [
-  {
-    id: query1ID,
-    type: 'query',
-    name: 'q_query1',
-    queryString: '{{ f_serverFunc1 }}',
-    dataset: datasetTable[0].name,
-    dependencies: { ...emptyDeps, serverFunctions: ['f_serverFunc1'] },
-  },
-];
-
-const serverFunctionTable = [
-  {
-    id: server1ID,
-    type: 'serverFunction',
-    name: 'f_serverFunc1',
-    functionString:
-      // eslint-disable-next-line no-template-curly-in-string
-      'const bar = {{ f_clientFunc1 }}; return `SELECT * FROM mydataset WHERE bar = "${bar}"`',
-    dependencies: { ...emptyDeps, clientFunctions: ['f_clientFunc1'] },
-  },
-  {
-    id: server2ID,
-    type: 'serverFunction',
-    name: 'f_serverFunc2',
-    functionString: 'return {{ q_query1 }}[0];',
-    dependencies: { ...emptyDeps, widgets: ['w_widget1'], queries: ['q_query1'] },
-  },
-];
-
-const clientFunctionTable = [
-  {
-    id: clientFunc1ID,
-    type: 'clientFunction',
-    name: 'f_clientFunc1',
-    functionString: 'console.log({{ w_widget2 }}); return "Hello";',
-    dependencies: { ...emptyDeps, widgets: ['w_widget2'] },
-  },
-  {
-    id: clientFunc2ID,
-    type: 'clientFunction',
-    name: 'f_clientFunc2',
-    functionString: 'return 10;',
-    dependencies: emptyDeps,
-  },
-];
-
 const widgetTable: Widget[] = [
   {
     id: widget1ID,
     type: 'widget',
     name: 'w_widget1',
-    parent: 'l_flex1',
-    component: 'text',
+    parent: flex1ID,
+    component: 'Text',
     library: 'custom',
     position: 0,
     dependencies: emptyDeps,
@@ -155,10 +93,10 @@ const widgetTable: Widget[] = [
     id: widget2ID,
     type: 'widget',
     name: 'w_widget2',
-    parent: 'l_flex1',
+    parent: flex1ID,
     library: 'custom',
     position: 1,
-    component: 'text',
+    component: 'Text',
     dependencies: emptyDeps,
     props: { children: { mode: 'input', value: 'widget two' } },
     style: { type: 'flex', css: '' },
@@ -167,10 +105,10 @@ const widgetTable: Widget[] = [
     id: widget3ID,
     type: 'widget',
     name: 'w_widget3',
-    parent: 'l_flex2',
+    parent: flex2ID,
     library: 'custom',
     position: 0,
-    component: 'text',
+    component: 'Text',
     dependencies: { ...emptyDeps, queries: ['q_query1'] },
     props: { children: { mode: 'input', value: 'widget three' } },
     style: { type: 'flex', css: '' },
@@ -179,10 +117,10 @@ const widgetTable: Widget[] = [
     id: widget4ID,
     type: 'widget',
     name: 'w_widget4',
-    parent: 'l_flex2',
+    parent: flex2ID,
     library: 'custom',
     position: 1,
-    component: 'text',
+    component: 'Text',
     dependencies: {
       ...emptyDeps,
       clientFunctions: ['f_clientFunc1'],
@@ -193,13 +131,9 @@ const widgetTable: Widget[] = [
   },
 ];
 
-const massage = (o: any[]) => o.reduce((acc, cur) => ({ ...acc, [cur.name]: cur }), {});
+const massage = (o: any[]) => o.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
 
 export const source = '/Users/bmcalindin/workspace/ui-builder/packages/ExampleApp';
-export const dataset = massage(datasetTable);
-export const queries = massage(queryTable);
-export const serverFunctions = massage(serverFunctionTable);
-export const clientFunctions = massage(clientFunctionTable);
 export const widgets = massage(widgetTable);
 export const layouts = massage(layoutTable);
 export const pages = massage(pageTable);

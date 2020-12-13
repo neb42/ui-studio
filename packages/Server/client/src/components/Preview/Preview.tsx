@@ -9,14 +9,14 @@ import { initComponents, initFunctions } from 'actions/element';
 import * as Styles from './Preview.styles';
 
 interface IPreview {
-  pageId: string;
+  pageName: string;
 }
 
 /*
  Hot reloading doesn't seem to work in iframes
  Instead we set a random key when
 */
-export const Preview = ({ pageId }: IPreview): JSX.Element => {
+export const Preview = ({ pageName }: IPreview): JSX.Element => {
   const dispatch = useDispatch();
   const [previewServer, setPreviewServer] = React.useState<{ host: string; port: string } | null>(
     null,
@@ -31,9 +31,6 @@ export const Preview = ({ pageId }: IPreview): JSX.Element => {
   }, [JSON.stringify(previewServer)]);
   const getElements = React.useMemo(makeGetElements, []);
   const elements = useSelector(getElements);
-
-  // TODO
-  const pageName = pageId;
 
   React.useEffect(() => {
     serverSocket.on('set-server', setPreviewServer);

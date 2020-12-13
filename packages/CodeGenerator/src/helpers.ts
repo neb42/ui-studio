@@ -43,3 +43,6 @@ export const buildServerTemplateParams = ({
     {},
   ),
 });
+
+export const makeName = (name: string, id: string, ext = false): string =>
+  `${name.replace(/ /g, '_')}_${id.replace(/-/g, '')}${ext ? '.js' : ''}`;

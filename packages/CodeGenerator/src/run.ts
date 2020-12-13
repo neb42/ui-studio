@@ -41,7 +41,7 @@ const buildElementTree = (data: Data): ElementTreeNode[] => {
 
   const elementGraph = Graph();
   Object.keys(all).forEach((k) => elementGraph.addNode(k));
-  Object.values({ ...widgets, ...layouts }).forEach((v) => elementGraph.addEdge(v.parent, v.name));
+  Object.values({ ...widgets, ...layouts }).forEach((v) => elementGraph.addEdge(v.parent, v.id));
 
   const buildTree = (node: string) => {
     const element = all[node];

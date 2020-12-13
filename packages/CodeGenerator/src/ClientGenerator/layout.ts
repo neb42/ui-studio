@@ -5,6 +5,7 @@ import * as Mustache from 'mustache';
 import { Layout } from '@ui-builder/types';
 
 import { FilePaths } from '../FilePaths';
+import { makeName } from '../helpers';
 
 const generateGridLayoutFiles = async (layouts: Layout[]): Promise<void[]> => {
   return Promise.all(
@@ -12,7 +13,7 @@ const generateGridLayoutFiles = async (layouts: Layout[]): Promise<void[]> => {
       const data = await fs.readFile(path.join(__dirname, 'templates', 'GridLayout.mst'));
 
       const renderConfig = {
-        name: l.name.replace(' ', '_'),
+        name: makeName(l.name, l.id),
         columns: l.props.columns,
         rows: l.props.rows,
         grid: null,
@@ -33,7 +34,10 @@ const generateGridLayoutFiles = async (layouts: Layout[]): Promise<void[]> => {
       }
 
       const renderedFile = Mustache.render(data.toString(), renderConfig);
-      return fs.writeFile(path.join(FilePaths.components, `${l.name}.js`), renderedFile);
+      return fs.writeFile(
+        path.join(FilePaths.components, makeName(l.name, l.id, true)),
+        renderedFile,
+      );
     }),
   );
 };
@@ -44,7 +48,7 @@ const generateFlexLayoutFiles = async (layouts: Layout[]): Promise<void[]> => {
       const data = await fs.readFile(path.join(__dirname, 'templates', 'FlexLayout.mst'));
 
       const renderConfig = {
-        name: l.name.replace(' ', '_'),
+        name: makeName(l.name, l.id),
         columns: l.props.columns,
         rows: l.props.rows,
         grid: null,
@@ -65,7 +69,10 @@ const generateFlexLayoutFiles = async (layouts: Layout[]): Promise<void[]> => {
       }
 
       const renderedFile = Mustache.render(data.toString(), renderConfig);
-      return fs.writeFile(path.join(FilePaths.components, `${l.name}.js`), renderedFile);
+      return fs.writeFile(
+        path.join(FilePaths.components, makeName(l.name, l.id, true)),
+        renderedFile,
+      );
     }),
   );
 };

@@ -5,6 +5,14 @@ import * as Mustache from 'mustache';
 import { ElementTreeNode } from '@ui-builder/types';
 
 import { FilePaths } from '../FilePaths';
+import { makeName } from '../helpers';
+
+const renameChildren = (children: ElementTreeNode[]): ElementTreeNode[] =>
+  children.map((c) => ({
+    ...c,
+    name: makeName(c.name, c.id),
+    children: renameChildren(c.children),
+  }));
 
 const generatePageFiles = (elementTree: ElementTreeNode[]): Promise<void[]> => {
   return Promise.all(
@@ -17,16 +25,16 @@ const generatePageFiles = (elementTree: ElementTreeNode[]): Promise<void[]> => {
       const renderedFile = Mustache.render(
         data.toString(),
         {
-          name: e.name.replace(' ', '_'),
+          name: makeName(e.name, e.id),
           type: e.type,
-          children: e.children,
+          children: renameChildren(e.children),
         },
         {
           recursive_import: recursiveImport.toString(),
           recursive_element: recursiveElement.toString(),
         },
       );
-      return fs.writeFile(path.join(FilePaths.pages, `${e.name}.js`), renderedFile);
+      return fs.writeFile(path.join(FilePaths.pages, makeName(e.name, e.id, true)), renderedFile);
     }),
   );
 };

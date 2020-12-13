@@ -5,6 +5,7 @@ import * as Mustache from 'mustache';
 import { Widget } from '@ui-builder/types';
 
 import { FilePaths } from '../FilePaths';
+import { makeName } from '../helpers';
 
 const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
   return Promise.all(
@@ -25,7 +26,7 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
       })();
 
       const renderConfig = {
-        name: w.name.replace(' ', '_'),
+        name: makeName(w.name, w.id),
         component: w.component,
         dependencies: Object.values(w.dependencies).flat(),
         exposedProperties: [],
@@ -50,7 +51,10 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
       }
 
       const renderedFile = Mustache.render(data.toString(), renderConfig);
-      return fs.writeFile(path.join(FilePaths.components, `${w.name}.js`), renderedFile);
+      return fs.writeFile(
+        path.join(FilePaths.components, makeName(w.name, w.id, true)),
+        renderedFile,
+      );
     }),
   );
 };

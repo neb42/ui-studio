@@ -21,13 +21,15 @@ export const PageBuilder = (): JSX.Element => {
 
   if (!pageId) return <div />;
 
+  const pageName = pages[pageId].name;
+
   return (
     <>
       <Styles.Container>
         <Styles.ColLeft>
           <ElementTree pageId={pageId} />
         </Styles.ColLeft>
-        <Preview pageId={pageId} />
+        <Preview pageName={pageName} />
         <Styles.ColRight>
           <ElementConfig />
         </Styles.ColRight>
