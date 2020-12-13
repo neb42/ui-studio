@@ -2,6 +2,7 @@ import { Dispatch } from 'redux';
 import { TStyle, IGridCell, Element, Layout } from '@ui-builder/types';
 import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
+import { selectElement, ISelectElement } from 'actions/element';
 
 export const ADD_LAYOUT = 'ADD_LAYOUT';
 export const REMOVE_LAYOUT = 'REMOVE_LAYOUT';
@@ -66,7 +67,7 @@ interface IAddLayout {
 export const addLayout = (
   layoutType: 'grid' | 'flex',
   parent: string,
-): TThunkAction<IAddLayout> => (dispatch: Dispatch<IAddLayout>, getState: TGetState) => {
+): TThunkAction<IAddLayout> => (dispatch: Dispatch<IAddLayout | ISelectElement>, getState: TGetState) => {
   const state = getState();
   const parentElement = makeGetElement()(state, parent);
   if (!parentElement) throw Error();
@@ -86,6 +87,9 @@ export const addLayout = (
     style: defaultStyle,
     ...defaultConfig,
   };
+
+  dispatch(selectElement(layout.name));
+
   return dispatch({
     type: ADD_LAYOUT,
     payload: layout,

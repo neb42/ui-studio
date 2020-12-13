@@ -41,7 +41,7 @@ export const selectPage = (name: string): ISelectPage => ({
   payload: name,
 });
 
-interface ISelectElement {
+export interface ISelectElement {
   type: 'SELECT_ELEMENT';
   payload: string;
 }

@@ -2,6 +2,7 @@ import { Dispatch } from 'redux';
 import { TStyle, Element, Widget } from '@ui-builder/types';
 import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
+import { selectElement, ISelectElement } from 'actions/element';
 
 export const ADD_WIDGET = 'ADD_WIDGET';
 export const REMOVE_WIDGET = 'REMOVE_WIDGET';
@@ -47,7 +48,7 @@ export const addWidget = (
   component: string,
   library: string,
   parent: string,
-): TThunkAction<IAddWidget> => (dispatch: Dispatch<IAddWidget>, getState: TGetState) => {
+): TThunkAction<IAddWidget> => (dispatch: Dispatch<IAddWidget | ISelectElement>, getState: TGetState) => {
   const state = getState();
   const parentElement = makeGetElement()(state, parent);
   if (!parentElement) throw Error();
@@ -74,6 +75,9 @@ export const addWidget = (
       widgets: [],
     },
   };
+
+  dispatch(selectElement(widget.name));
+
   return dispatch({
     type: ADD_WIDGET,
     payload: widget,
