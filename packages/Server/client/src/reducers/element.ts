@@ -9,7 +9,7 @@ import {
 import { Store$Element } from 'types/store';
 
 const initialState: Store$Element = {
-  selectedPage: 'Page1',
+  selectedPage: null,
   selectedOverlay: null,
   selectedElement: null,
   functions: [],
@@ -32,15 +32,6 @@ export const element = (
         ...state,
         selectedElement: action.payload,
       };
-    }
-    case UPDATE_ELEMENT_NAME: {
-      if (state.selectedElement === action.payload.id) {
-        return {
-          ...state,
-          selectedElement: action.payload.name,
-        };
-      }
-      return state;
     }
     case INIT_FUNCTIONS: {
       return {

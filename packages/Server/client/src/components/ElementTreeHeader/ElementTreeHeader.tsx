@@ -51,19 +51,19 @@ export const ElementTreeHeader = (): JSX.Element => {
       <Select value={selectedPageId} classes={classes} onChange={handleOnChange}>
         <MenuItem disabled>Pages</MenuItem>
         {Object.values(pages).map((p) => (
-          <MenuItem key={p.name} value={p.name}>
+          <MenuItem key={p.name} value={p.id}>
             {p.name}
           </MenuItem>
         ))}
         <MenuItem disabled>Overlays</MenuItem>
         {Object.values(overlays).map((o) => (
-          <MenuItem key={o.name} value={o.name}>
+          <MenuItem key={o.name} value={o.id}>
             {o.name}
           </MenuItem>
         ))}
         <MenuItem disabled>Components</MenuItem>
         {/* {Object.values(components).map((c) => (
-          <MenuItem key={c.name} value={c.name}>
+          <MenuItem key={c.name} value={c.id}>
             {c.name}
           </MenuItem>
         ))} */}

@@ -117,7 +117,7 @@ export const ConfigOption = ({ widget, config }: IConfigOption): JSX.Element => 
   const mode = widget?.props?.[config.key]?.mode ?? 'input';
 
   const handleOnChange = (m: 'input' | 'function' | 'widget') => (value: string) => {
-    dispatch(updateWidgetProps(widget.name, config.key, m, value));
+    dispatch(updateWidgetProps(widget.id, config.key, m, value));
   };
 
   const handleToggleMode = (m: 'input' | 'function' | 'widget') => () => {

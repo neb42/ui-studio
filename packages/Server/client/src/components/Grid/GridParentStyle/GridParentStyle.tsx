@@ -18,7 +18,7 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
   const dispatch = useDispatch();
   const getUsedGridSpace = React.useMemo(makeGetUsedGridSpace, []);
   const usedGridSpace = useSelector((state: Store) =>
-    getUsedGridSpace(state, parent.name, [element.name]),
+    getUsedGridSpace(state, parent.id, [element.id]),
   );
 
   const handleSelectGrid = (grid: TGridStyleLayout) => {
@@ -29,11 +29,11 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
     };
 
     if (element.type === 'widget') {
-      dispatch(updateWidgetStyle(element.name, style));
+      dispatch(updateWidgetStyle(element.id, style));
     }
 
     if (element.type === 'layout') {
-      dispatch(updateLayoutStyle(element.name, style));
+      dispatch(updateLayoutStyle(element.id, style));
     }
   };
 

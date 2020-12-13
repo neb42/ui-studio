@@ -15,7 +15,7 @@ import { AddElementMenu } from 'components/AddElementMenu';
 import * as Styles from './ElementTree.styles';
 
 interface IElementTree {
-  pageName: string;
+  pageId: string;
 }
 
 interface ITreeItemLabel {
@@ -25,29 +25,35 @@ interface ITreeItemLabel {
   handleOpenAddElementMenu: (anchor: HTMLElement) => void;
 }
 
-const TreeItemLabel = ({ element, siblingCount, onClick, handleOpenAddElementMenu }: ITreeItemLabel): JSX.Element => {
+const TreeItemLabel = ({
+  element,
+  siblingCount,
+  onClick,
+  handleOpenAddElementMenu,
+}: ITreeItemLabel): JSX.Element => {
   const dispatch = useDispatch();
   const getSelectedElement = React.useMemo(makeGetSelectedElement, []);
   const selectedElement = useSelector(getSelectedElement);
 
-  const handleOpenAddMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleOpenAddElementMenu(event.currentTarget);
+  const handleOpenAddMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+    handleOpenAddElementMenu(event.currentTarget);
 
   const handleRemove = () => {
     if (element.type === 'layout') {
-      dispatch(removeLayout(element.name));
+      dispatch(removeLayout(element.id));
     }
 
     if (element.type === 'widget') {
-      dispatch(removeWidget(element.name));
+      dispatch(removeWidget(element.id));
     }
   };
 
   return (
-    <Styles.TreeItemLabel onClick={onClick} active={element.name === selectedElement?.name}>
+    <Styles.TreeItemLabel onClick={onClick} active={element.id === selectedElement?.id}>
       <ElementIcon element={element} color="#000" />
       <span>{element.name}</span>
       <Styles.TreeItemActions
-        selected={Boolean(selectedElement && selectedElement.name === element.name)}
+        selected={Boolean(selectedElement && selectedElement.id === element.id)}
       >
         {(element.type === 'page' || element.type === 'overlay') && (
           <>
@@ -93,12 +99,18 @@ interface ITreeNode {
   handleOpenAddElementMenu: (anchor: HTMLElement) => void;
 }
 
-const TreeNode = ({ node, siblingCount, depth, handleSelect, handleOpenAddElementMenu }: ITreeNode): JSX.Element => (
+const TreeNode = ({
+  node,
+  siblingCount,
+  depth,
+  handleSelect,
+  handleOpenAddElementMenu,
+}: ITreeNode): JSX.Element => (
   <>
     <TreeItemLabel
       element={node.element}
       siblingCount={siblingCount}
-      onClick={handleSelect(node.name)}
+      onClick={handleSelect(node.id)}
       handleOpenAddElementMenu={handleOpenAddElementMenu}
     />
     <Styles.TreeNode depth={depth + 1}>
@@ -106,7 +118,7 @@ const TreeNode = ({ node, siblingCount, depth, handleSelect, handleOpenAddElemen
         .sort((a, b) => (a.position > b.position ? 1 : -1))
         .map((c) => (
           <TreeNode
-            key={c.name}
+            key={c.id}
             node={c}
             siblingCount={node.children.length}
             depth={depth + 1}
@@ -118,11 +130,11 @@ const TreeNode = ({ node, siblingCount, depth, handleSelect, handleOpenAddElemen
   </>
 );
 
-export const ElementTree = ({ pageName }: IElementTree): JSX.Element | null => {
+export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
   const dispatch = useDispatch();
   const [addElementMenuAnchor, setAddElementMenuAnchor] = React.useState<HTMLElement | null>(null);
   const getElementTree = React.useMemo(makeGetElementTree, []);
-  const elementTree = useSelector((state: Store) => getElementTree(state, pageName));
+  const elementTree = useSelector((state: Store) => getElementTree(state, pageId));
 
   const handleCloseAddElementMenu = () => setAddElementMenuAnchor(null);
 
@@ -136,7 +148,13 @@ export const ElementTree = ({ pageName }: IElementTree): JSX.Element | null => {
     <Styles.Container>
       <ElementTreeHeader />
       <Styles.Tree>
-        <TreeNode node={elementTree} siblingCount={1} depth={0} handleSelect={handleSelect} handleOpenAddElementMenu={setAddElementMenuAnchor} />
+        <TreeNode
+          node={elementTree}
+          siblingCount={1}
+          depth={0}
+          handleSelect={handleSelect}
+          handleOpenAddElementMenu={setAddElementMenuAnchor}
+        />
       </Styles.Tree>
       <AddElementMenu anchor={addElementMenuAnchor} onClose={handleCloseAddElementMenu} />
     </Styles.Container>

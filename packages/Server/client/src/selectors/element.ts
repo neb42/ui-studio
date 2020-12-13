@@ -23,18 +23,18 @@ export const makeGetElementTree = (): OutputParametricSelector<
   string,
   ElementTreeNode | null,
   (
-    pageName: string,
+    pageId: string,
     pages: Store$Page,
     layouts: Store$Layout,
     widgets: Store$Widget,
   ) => ElementTreeNode | null
 > =>
   createSelector(
-    (_: Store, pageName: string) => pageName,
+    (_: Store, pageId: string) => pageId,
     getPages,
     getLayouts,
     getWidgets,
-    (pageName, pages, layouts, widgets) => {
+    (pageId, pages, layouts, widgets) => {
       const all = {
         ...pages,
         ...layouts,
@@ -44,7 +44,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
       const elementGraph = Graph();
       Object.keys({ ...pages, ...layouts, ...widgets }).forEach((k) => elementGraph.addNode(k));
       Object.values({ ...widgets, ...layouts }).forEach((v) =>
-        elementGraph.addEdge(v.parent, v.name),
+        elementGraph.addEdge(v.parent, v.id),
       );
 
       const buildTree = (node: string): ElementTreeNode => {
@@ -60,7 +60,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
         };
       };
 
-      const elementTree = buildTree(pageName);
+      const elementTree = buildTree(pageId);
       return elementTree;
     },
   );
@@ -104,12 +104,6 @@ export const makeGetElements = () =>
     };
   });
 
-export const makeIsValidElementName = () =>
-  createSelector(getPages, getLayouts, getWidgets, (pages, layouts, widgets) => {
-    return (name: string) =>
-      ![...Object.keys(pages), ...Object.keys(layouts), ...Object.keys(widgets)].includes(name);
-  });
-
 export const makeGetUsedGridSpace = () =>
   createSelector(
     (_: Store, gridElementId: string, ignoreNames: string[]) => ({ gridElementId, ignoreNames }),
@@ -121,7 +115,7 @@ export const makeGetUsedGridSpace = () =>
       };
       const grid = layouts[gridElementId];
       return [...Object.values(layouts), ...Object.values(widgets)]
-        .filter((e) => e.parent === grid.name && !ignoreNames.includes(e.name))
+        .filter((e) => e.parent === grid.id && !ignoreNames.includes(e.id))
         .map((e) => {
           if (e.style.type === 'grid') return e.style.layout;
           return null;
@@ -138,7 +132,7 @@ export const makeGenerateDefaultName = () =>
     getWidgets,
     (regex, pages, layouts, widgets) => {
       const pattern = new RegExp(`${regex}([0-9]*)`);
-      const names = [...Object.keys(pages), ...Object.keys(layouts), ...Object.keys(widgets)];
+      const names = Object.values({ ...pages, ...layouts, ...widgets }).map((e) => e.name);
       const matchingNames = names.filter((n) => pattern.test(n));
       const indicies = matchingNames.map((n) => pattern.exec(n)?.[1]).filter((n) => n);
       return `${regex}${
@@ -149,12 +143,12 @@ export const makeGenerateDefaultName = () =>
 
 export const makeGetNextPosition = () =>
   createSelector(
-    (_: Store, parentName: string) => parentName,
+    (_: Store, parentId: string) => parentId,
     getLayouts,
     getWidgets,
-    (parentName, layouts, widgets) => {
+    (parentId, layouts, widgets) => {
       return [...Object.values(layouts), ...Object.values(widgets)].filter(
-        (l) => l.parent === parentName,
+        (l) => l.parent === parentId,
       ).length;
     },
   );

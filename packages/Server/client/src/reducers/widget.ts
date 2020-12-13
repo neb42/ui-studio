@@ -19,7 +19,7 @@ export const widget = (
     case ADD_WIDGET: {
       return {
         ...state,
-        [action.payload.name]: action.payload,
+        [action.payload.id]: action.payload,
       };
     }
     case REMOVE_WIDGET: {
@@ -51,10 +51,10 @@ export const widget = (
     case UPDATE_WIDGET_PROPS: {
       return {
         ...state,
-        [action.payload.name]: {
-          ...state[action.payload.name],
+        [action.payload.id]: {
+          ...state[action.payload.id],
           props: {
-            ...state[action.payload.name].props,
+            ...state[action.payload.id].props,
             [action.payload.key]: {
               mode: action.payload.mode,
               value: action.payload.value,
@@ -66,36 +66,23 @@ export const widget = (
     case UPDATE_WIDGET_STYLE: {
       return {
         ...state,
-        [action.payload.name]: {
-          ...state[action.payload.name],
+        [action.payload.id]: {
+          ...state[action.payload.id],
           style: action.payload.style,
         },
       };
     }
     case UPDATE_ELEMENT_NAME: {
-      return Object.keys(state).reduce(
-        (acc, cur) => {
-          if (cur === action.payload.id) return acc;
-          if (state[cur].parent === action.payload.id) {
-            return {
-              ...acc,
-              [cur]: {
-                ...state[cur],
-                parent: action.payload.name,
-              },
-            };
-          }
-          return { ...acc, [cur]: state[cur] };
-        },
-        action.payload.type === 'widget'
-          ? {
-              [action.payload.name]: {
-                ...state[action.payload.id],
-                name: action.payload.name,
-              },
-            }
-          : {},
-      );
+      if (Object.keys(state).includes(action.payload.id)) {
+        return {
+          ...state,
+          [action.payload.id]: {
+            ...state[action.payload.id],
+            name: action.payload.name,
+          },
+        };
+      }
+      return state;
     }
     default:
       return state;

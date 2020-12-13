@@ -21,11 +21,11 @@ export const GridLayoutConfig = ({ element }: IGridLayoutConfig): JSX.Element =>
   const [rows, setRows] = React.useState<IGridCell[]>(element?.props?.rows ?? [defaultCell]);
 
   React.useEffect(() => {
-    dispatch(updateLayoutConfig(element.name, 'columns', columns));
+    dispatch(updateLayoutConfig(element.id, 'columns', columns));
   }, [JSON.stringify(columns)]);
 
   React.useEffect(() => {
-    dispatch(updateLayoutConfig(element.name, 'rows', rows));
+    dispatch(updateLayoutConfig(element.id, 'rows', rows));
   }, [JSON.stringify(rows)]);
 
   return (

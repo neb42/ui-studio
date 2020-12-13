@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { v4 as uuidv4 } from 'uuid';
 import { TStyle, Element, Widget } from '@ui-builder/types';
 import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
@@ -48,7 +49,10 @@ export const addWidget = (
   component: string,
   library: string,
   parent: string,
-): TThunkAction<IAddWidget> => (dispatch: Dispatch<IAddWidget | ISelectElement>, getState: TGetState) => {
+): TThunkAction<IAddWidget> => (
+  dispatch: Dispatch<IAddWidget | ISelectElement>,
+  getState: TGetState,
+) => {
   const state = getState();
   const parentElement = makeGetElement()(state, parent);
   if (!parentElement) throw Error();
@@ -57,9 +61,9 @@ export const addWidget = (
     component.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
   );
   const defaultStyle = getDefaultStyle(parentElement);
-  const position = makeGetNextPosition()(state, parentElement.name);
+  const position = makeGetNextPosition()(state, parentElement.id);
   const widget: Widget = {
-    id: '',
+    id: uuidv4(),
     type: 'widget',
     name,
     component,
@@ -76,7 +80,7 @@ export const addWidget = (
     },
   };
 
-  dispatch(selectElement(widget.name));
+  dispatch(selectElement(widget.id));
 
   return dispatch({
     type: ADD_WIDGET,
@@ -89,15 +93,15 @@ interface IRemoveWidget {
   payload: string;
 }
 
-export const removeWidget = (name: string): IRemoveWidget => ({
+export const removeWidget = (id: string): IRemoveWidget => ({
   type: REMOVE_WIDGET,
-  payload: name,
+  payload: id,
 });
 
 interface IUpdateWidgetProps {
   type: 'UPDATE_WIDGET_PROPS';
   payload: {
-    name: string;
+    id: string;
     key: string;
     mode: 'input' | 'function' | 'widget';
     value: any;
@@ -105,14 +109,14 @@ interface IUpdateWidgetProps {
 }
 
 export const updateWidgetProps = (
-  name: string,
+  id: string,
   key: string,
   mode: 'input' | 'function' | 'widget',
   value: any,
 ): IUpdateWidgetProps => ({
   type: UPDATE_WIDGET_PROPS,
   payload: {
-    name,
+    id,
     key,
     mode,
     value,
@@ -122,15 +126,15 @@ export const updateWidgetProps = (
 interface IUpdateWidgetStyle {
   type: 'UPDATE_WIDGET_STYLE';
   payload: {
-    name: string;
+    id: string;
     style: TStyle;
   };
 }
 
-export const updateWidgetStyle = (name: string, style: TStyle): IUpdateWidgetStyle => ({
+export const updateWidgetStyle = (id: string, style: TStyle): IUpdateWidgetStyle => ({
   type: UPDATE_WIDGET_STYLE,
   payload: {
-    name,
+    id,
     style,
   },
 });

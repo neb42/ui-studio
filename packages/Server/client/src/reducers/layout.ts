@@ -18,14 +18,14 @@ export const layout = (
     case ADD_LAYOUT: {
       return {
         ...state,
-        [action.payload.name]: action.payload,
+        [action.payload.id]: action.payload,
       };
     }
     case REMOVE_LAYOUT: {
       const { [action.payload]: removed, ...remaining } = state;
       return Object.keys(remaining).reduce((acc, cur) => {
         const current = remaining[cur];
-        if (current.parent === removed.name) return acc;
+        if (current.parent === removed.id) return acc;
         return {
           ...acc,
           [cur]: {
@@ -41,10 +41,10 @@ export const layout = (
     case UPDATE_LAYOUT_CONFIG: {
       return {
         ...state,
-        [action.payload.name]: {
-          ...state[action.payload.name],
+        [action.payload.id]: {
+          ...state[action.payload.id],
           props: {
-            ...state[action.payload.name].props,
+            ...state[action.payload.id].props,
             [action.payload.key]: action.payload.value,
           },
         },
@@ -53,8 +53,8 @@ export const layout = (
     case UPDATE_LAYOUT_STYLE: {
       return {
         ...state,
-        [action.payload.name]: {
-          ...state[action.payload.name],
+        [action.payload.id]: {
+          ...state[action.payload.id],
           style: action.payload.style,
         },
       };
@@ -63,18 +63,9 @@ export const layout = (
       return Object.keys(state).reduce(
         (acc, cur) => {
           if (cur === action.payload.id) return acc;
-          if (state[cur].parent === action.payload.id) {
-            return {
-              ...acc,
-              [cur]: {
-                ...state[cur],
-                parent: action.payload.name,
-              },
-            };
-          }
           return { ...acc, [cur]: state[cur] };
         },
-        action.payload.type === 'layout'
+        action.payload.type === 'overlay'
           ? {
               [action.payload.name]: {
                 ...state[action.payload.id],

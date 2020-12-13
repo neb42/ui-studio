@@ -14,7 +14,7 @@ export const overlay = (
           if (cur === action.payload.id) return acc;
           return { ...acc, [cur]: state[cur] };
         },
-        action.payload.type === 'overlay'
+        action.payload.type === 'page'
           ? {
               [action.payload.name]: {
                 ...state[action.payload.id],

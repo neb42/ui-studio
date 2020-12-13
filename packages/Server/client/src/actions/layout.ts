@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { v4 as uuidv4 } from 'uuid';
 import { TStyle, IGridCell, Element, Layout } from '@ui-builder/types';
 import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
@@ -67,7 +68,10 @@ interface IAddLayout {
 export const addLayout = (
   layoutType: 'grid' | 'flex',
   parent: string,
-): TThunkAction<IAddLayout> => (dispatch: Dispatch<IAddLayout | ISelectElement>, getState: TGetState) => {
+): TThunkAction<IAddLayout> => (
+  dispatch: Dispatch<IAddLayout | ISelectElement>,
+  getState: TGetState,
+) => {
   const state = getState();
   const parentElement = makeGetElement()(state, parent);
   if (!parentElement) throw Error();
@@ -77,9 +81,9 @@ export const addLayout = (
   );
   const defaultConfig = getDefaultConfig(layoutType);
   const defaultStyle = getDefaultStyle(parentElement);
-  const position = makeGetNextPosition()(state, parentElement.name);
+  const position = makeGetNextPosition()(state, parentElement.id);
   const layout: Layout = {
-    id: '',
+    id: uuidv4(),
     type: 'layout',
     name,
     parent,
@@ -88,7 +92,7 @@ export const addLayout = (
     ...defaultConfig,
   };
 
-  dispatch(selectElement(layout.name));
+  dispatch(selectElement(layout.id));
 
   return dispatch({
     type: ADD_LAYOUT,
@@ -101,24 +105,24 @@ export interface IRemoveLayout {
   payload: string;
 }
 
-export const removeLayout = (name: string): IRemoveLayout => ({
+export const removeLayout = (id: string): IRemoveLayout => ({
   type: REMOVE_LAYOUT,
-  payload: name,
+  payload: id,
 });
 
 interface IUpdateLayoutConfig {
   type: 'UPDATE_LAYOUT_CONFIG';
   payload: {
-    name: string;
+    id: string;
     key: string;
     value: any;
   };
 }
 
-export const updateLayoutConfig = (name: string, key: string, value: any): IUpdateLayoutConfig => ({
+export const updateLayoutConfig = (id: string, key: string, value: any): IUpdateLayoutConfig => ({
   type: UPDATE_LAYOUT_CONFIG,
   payload: {
-    name,
+    id,
     key,
     value,
   },
@@ -127,15 +131,15 @@ export const updateLayoutConfig = (name: string, key: string, value: any): IUpda
 interface IUpdateLayoutStyle {
   type: 'UPDATE_LAYOUT_STYLE';
   payload: {
-    name: string;
+    id: string;
     style: TStyle;
   };
 }
 
-export const updateLayoutStyle = (name: string, style: TStyle): IUpdateLayoutStyle => ({
+export const updateLayoutStyle = (id: string, style: TStyle): IUpdateLayoutStyle => ({
   type: UPDATE_LAYOUT_STYLE,
   payload: {
-    name,
+    id,
     style,
   },
 });

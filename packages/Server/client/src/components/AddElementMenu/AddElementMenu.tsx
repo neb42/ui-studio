@@ -16,7 +16,7 @@ const makeElements = (
     type: 'layout' | 'widget';
     subtype: string;
     library: string;
-    icon: Icons.SvgIconComponent; 
+    icon: Icons.SvgIconComponent;
   }[];
 } => {
   const elements: {
@@ -26,7 +26,7 @@ const makeElements = (
       type: 'layout' | 'widget';
       subtype: string;
       library: string;
-      icon: Icons.SvgIconComponent; 
+      icon: Icons.SvgIconComponent;
     }[];
   } = {
     Layout: [
@@ -64,7 +64,7 @@ const makeElements = (
       type: 'widget',
       subtype: name,
       library: 'custom',
-      icon: (Icons as {[key: string]: Icons.SvgIconComponent })?.[icon] ?? Icons.HelpOutlineSharp,
+      icon: (Icons as { [key: string]: Icons.SvgIconComponent })?.[icon] ?? Icons.HelpOutlineSharp,
     });
     elements[category] = existing;
   });
@@ -90,14 +90,14 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
     if (selectedElement) {
       if (type === 'layout') {
         if (subtype === 'grid') {
-          dispatch(addLayout('grid', selectedElement.name));
+          dispatch(addLayout('grid', selectedElement.id));
         }
         if (subtype === 'flex') {
-          dispatch(addLayout('flex', selectedElement.name));
+          dispatch(addLayout('flex', selectedElement.id));
         }
       }
       if (type === 'widget') {
-        dispatch(addWidget(subtype, library, selectedElement.name));
+        dispatch(addWidget(subtype, library, selectedElement.id));
       }
       onClose();
       setCategory(null);
@@ -109,8 +109,10 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
   if (category === null) {
     return (
       <Menu keepMounted anchorEl={anchor} open={Boolean(anchor)} onClose={onClose}>
-        {categories.map(c => (
-          <MenuItem onClick={handleClickCategory(c)}>{c}</MenuItem>
+        {categories.map((c) => (
+          <MenuItem key={c} onClick={handleClickCategory(c)}>
+            {c}
+          </MenuItem>
         ))}
       </Menu>
     );
@@ -125,7 +127,7 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
         {category}
       </MenuItem>
       {(elements?.[category] ?? []).map((e) => (
-        <MenuItem onClick={handleAddElement(e.type, e.subtype, e.library)}>
+        <MenuItem key={e.title} onClick={handleAddElement(e.type, e.subtype, e.library)}>
           <ListItemIcon>
             <e.icon />
           </ListItemIcon>

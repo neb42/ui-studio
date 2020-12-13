@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tab, Tabs, TextField } from '@material-ui/core';
 import { Store } from 'types/store';
-import { makeGetElement, makeGetSelectedElement, makeIsValidElementName } from 'selectors/element';
+import { makeGetElement, makeGetSelectedElement } from 'selectors/element';
 import { updateElementName } from 'actions/element';
 import { ElementIcon } from 'components/ElementIcon';
 import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig/GridLayoutConfig';
@@ -22,9 +22,8 @@ export const ElementConfig = (): JSX.Element => {
   const dispatch = useDispatch();
   const getElement = React.useMemo(makeGetElement, []);
   const getSelectedElement = React.useMemo(makeGetSelectedElement, []);
-  const isValidElementName = useSelector(React.useMemo(makeIsValidElementName, []));
   const selectedElement = useSelector(getSelectedElement);
-  const [name, setName] = React.useState(selectedElement?.name);
+  const [name, setName] = React.useState(selectedElement?.name ?? '');
   const [tabIndex, setTabIndex] = React.useState(0);
 
   const parentName =
@@ -38,13 +37,13 @@ export const ElementConfig = (): JSX.Element => {
   }, [selectedElement?.name]);
 
   const handleOnNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newName = event?.target?.value;
-    if (newName) {
-      setName(newName);
+    const newName = event?.target?.value ?? '';
+    setName(newName);
+  };
 
-      if (isValidElementName(newName) && selectedElement) {
-        dispatch(updateElementName(selectedElement.name, selectedElement.type, newName));
-      }
+  const handleOnNameBlur = () => {
+    if (selectedElement) {
+      dispatch(updateElementName(selectedElement.id, selectedElement.type, name));
     }
   };
 
@@ -87,7 +86,8 @@ export const ElementConfig = (): JSX.Element => {
           value={name}
           required
           onChange={handleOnNameChange}
-          error={isValidElementName(name || '')}
+          onBlur={handleOnNameBlur}
+          error={name.length === 0}
         />
       </Styles.Name>
       <Tabs variant="fullWidth" value={tabIndex} onChange={(_, newIdx) => setTabIndex(newIdx)}>

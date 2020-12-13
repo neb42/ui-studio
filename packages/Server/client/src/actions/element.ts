@@ -36,9 +36,9 @@ interface ISelectPage {
   payload: string;
 }
 
-export const selectPage = (name: string): ISelectPage => ({
+export const selectPage = (id: string): ISelectPage => ({
   type: SELECT_PAGE,
-  payload: name,
+  payload: id,
 });
 
 export interface ISelectElement {
@@ -46,9 +46,9 @@ export interface ISelectElement {
   payload: string;
 }
 
-export const selectElement = (name: string): ISelectElement => ({
+export const selectElement = (id: string): ISelectElement => ({
   type: SELECT_ELEMENT,
-  payload: name,
+  payload: id,
 });
 
 interface IInitFunctions {
