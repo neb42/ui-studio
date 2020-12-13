@@ -1,5 +1,4 @@
 export {
-  Dependencies,
   Widget,
   Layout,
   Page,

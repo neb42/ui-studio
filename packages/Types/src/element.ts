@@ -2,13 +2,6 @@ import { GridLayout } from './grid';
 import { FlexLayout } from './flex';
 import { TStyle, IRootStyle } from './style';
 
-export interface Dependencies {
-  queries: string[];
-  serverFunctions: string[];
-  clientFunctions: string[];
-  widgets: string[];
-}
-
 export interface Widget {
   id: string;
   type: 'widget';
@@ -16,7 +9,6 @@ export interface Widget {
   parent: string;
   component: string;
   library: string;
-  dependencies: Dependencies;
   props: { [key: string]: {
     mode: 'input' | 'function' | 'widget';
     value: any;

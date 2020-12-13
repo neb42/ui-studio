@@ -5,13 +5,16 @@ import styled from 'styled-components';
 import { Components } from '{{{ library }}}';
 
 import { updateWidget } from '../actions';
-import { getFunction } from '../selectors';
+import { getFunction, getWidget } from '../selectors';
 
 const mapStateToProps = (state) => {
   const rawValues = {
-    {{ #dependencies }}
-    {{{ . }}}: getFunction(state)('{{{ . }}}'),
-    {{ /dependencies }}
+    {{ #functionProps }}
+    {{{ key }}}: getFunction(state)('{{{ value }}}'),
+    {{ /functionProps }}
+    {{ #widgetProps }}
+    {{{ key }}}: getWidget(state)('{{{ value }}}', 'default'),
+    {{ /widgetProps }}
   };
 
   const loading = Object.keys(rawValues).some(k => {
@@ -62,9 +65,12 @@ const WidgetWrapper = styled.div`
 `;
 
 const Widget_{{{ name }}} = ({
-  {{ #dependencies }}
-  {{{ . }}},
-  {{ /dependencies }}
+  {{ #functionProps }}
+  {{{ key }}},
+  {{ /functionProps }}
+  {{ #widgetProps }}
+  {{{ key }}},
+  {{ /widgetProps }}
   updateWidget,
   children,
 }) => {
@@ -85,7 +91,22 @@ const Widget_{{{ name }}} = ({
   return React.createElement(
     WidgetWrapper,
     {}, 
-    React.createElement(Components.{{{ component }}}.component, { ref: r => setRef(r) }, {{ #children }}{{{ children }}}{{ /children }}{{ ^children }}children{{ /children }}),
+    React.createElement(
+      Components.{{{ component }}}.component, 
+      {
+        ref: r => setRef(r),
+        {{ #functionProps }}
+        {{{ key }}},
+        {{ /functionProps }}
+        {{ #widgetProps }}
+        {{{ key }}},
+        {{ /widgetProps }}
+        {{ #inputProps }}
+        {{{ key }}}: '{{{ value }}}',
+        {{ /inputProps }}
+      },
+      {{ #children }}{{{ children }}}{{ /children }}{{ ^children }}children{{ /children }}
+    ),
   );
 };
 

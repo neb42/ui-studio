@@ -11,9 +11,9 @@ const Text = {
     children: '',
   },
   config: [
-    { component: 'input', key: 'children', label: 'Text' },
+    { component: 'input', key: 'text', label: 'Text' },
   ],
-  component: ({ children }) => <span>{children}</span>,
+  component: ({ text }) => <span>{text}</span>,
 };
 
 export default {

@@ -12,9 +12,13 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
     widgets.map(async (w) => {
       const data = await fs.readFile(path.join(__dirname, 'templates', 'Widget.mst'));
 
-      const props = Object.keys(w.props).reduce((acc, cur) => {
+      const props: {
+        key: string;
+        mode: 'function' | 'input' | 'widget';
+        value: any;
+      }[] = Object.keys(w.props).reduce((acc, cur) => {
         if (cur === 'children') return acc;
-        return [...acc, { key: cur, value: w.props[cur].value }];
+        return [...acc, { key: cur, ...w.props[cur] }];
       }, []);
 
       const children = (() => {
@@ -28,7 +32,9 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
       const renderConfig = {
         name: makeName(w.name, w.id),
         component: w.component,
-        dependencies: Object.values(w.dependencies).flat(),
+        inputProps: props.filter((p) => p.mode === 'input'),
+        functionProps: props.filter((p) => p.mode === 'function'),
+        widgetProps: props.filter((p) => p.mode === 'widget'),
         exposedProperties: [],
         props,
         children,

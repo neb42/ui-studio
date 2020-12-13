@@ -72,12 +72,6 @@ export const addWidget = (
     position,
     props: {},
     style: defaultStyle,
-    dependencies: {
-      queries: [],
-      serverFunctions: [],
-      clientFunctions: [],
-      widgets: [],
-    },
   };
 
   dispatch(selectElement(widget.id));

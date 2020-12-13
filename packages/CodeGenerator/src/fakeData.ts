@@ -1,11 +1,4 @@
-import { Dependencies, Widget, Layout, Page } from '@ui-builder/types';
-
-const emptyDeps: Dependencies = {
-  queries: [],
-  serverFunctions: [],
-  clientFunctions: [],
-  widgets: [],
-};
+import { Widget, Layout, Page } from '@ui-builder/types';
 
 const page1ID = '5388a8ec-a2ba-4691-a06e-e4c3046ada5e';
 const grid1ID = '48bb7463-6012-46f5-939d-36011d19a56e';
@@ -85,7 +78,6 @@ const widgetTable: Widget[] = [
     component: 'Text',
     library: 'custom',
     position: 0,
-    dependencies: emptyDeps,
     props: { children: { mode: 'input', value: 'widget one' } },
     style: { type: 'flex', css: '' },
   },
@@ -97,7 +89,6 @@ const widgetTable: Widget[] = [
     library: 'custom',
     position: 1,
     component: 'Text',
-    dependencies: emptyDeps,
     props: { children: { mode: 'input', value: 'widget two' } },
     style: { type: 'flex', css: '' },
   },
@@ -109,7 +100,6 @@ const widgetTable: Widget[] = [
     library: 'custom',
     position: 0,
     component: 'Text',
-    dependencies: { ...emptyDeps, queries: ['q_query1'] },
     props: { children: { mode: 'input', value: 'widget three' } },
     style: { type: 'flex', css: '' },
   },
@@ -121,11 +111,6 @@ const widgetTable: Widget[] = [
     library: 'custom',
     position: 1,
     component: 'Text',
-    dependencies: {
-      ...emptyDeps,
-      clientFunctions: ['f_clientFunc1'],
-      serverFunctions: ['f_serverFunc1'],
-    },
     props: { children: { mode: 'input', value: 'widget four' } },
     style: { type: 'flex', css: '' },
   },
