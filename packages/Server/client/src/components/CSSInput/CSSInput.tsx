@@ -7,7 +7,7 @@ import * as Styles from './CSSInput.styles';
 
 import 'ace-builds/src-noconflict/mode-css';
 import 'ace-builds/src-noconflict/worker-css';
-import 'ace-builds/src-noconflict/theme-solarized_light';
+import 'ace-builds/src-noconflict/theme-chrome';
 import 'ace-builds/src-noconflict/ext-language_tools';
 
 interface ICSSInput {
@@ -25,7 +25,7 @@ export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
       <AceEditor
         name={`${element.name}-css-editor`}
         mode="css"
-        theme="solarized_light"
+        theme="chrome"
         defaultValue={element.style.css}
         onChange={handleOnChange}
         editorProps={{ $blockScrolling: true }}
@@ -33,6 +33,7 @@ export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
         height="300px"
         tabSize={2}
         wrapEnabled
+        highlightActiveLine={false}
         showGutter={false}
         showPrintMargin={false}
         setOptions={{
@@ -43,7 +44,6 @@ export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
         style={{
           padding: '8px',
           fontFamily: 'Menlo, monospace',
-          border: '1px solid black',
         }}
       />
     </Styles.Container>

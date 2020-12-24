@@ -1,0 +1,1 @@
+export { StaticVariableConfig } from './StaticVariableConfig';

@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  margin-top: 24px;
-  border-top: 2px solid;
-  border-left: 2px solid;
-  padding: 4px 8px;
+  margin-top: 16px;
+  padding: 8px;
+  background-color: #e8e8e8;
+  border-radius: 8px;
+  height: fit-content;
 `;
 
 export const Header = styled.div`

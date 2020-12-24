@@ -10,9 +10,10 @@ export interface Widget {
   component: string;
   library: string;
   props: { [key: string]: {
-    mode: 'input' | 'function' | 'widget';
+    mode: 'static' | 'variable' | 'widget';
     value: any;
   }};
+  events: { [key: string]: { }};
   position: number;
   style: TStyle;
 }

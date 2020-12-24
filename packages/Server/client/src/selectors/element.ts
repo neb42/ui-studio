@@ -1,6 +1,6 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
 import Graph from 'graph-data-structure';
-import { ElementTreeNode, TInitFunctions } from '@ui-builder/types';
+import { ElementTreeNode, InitFunctions } from '@ui-builder/types';
 import {
   Store,
   Store$Page,
@@ -8,15 +8,19 @@ import {
   Store$Widget,
   IComponent,
   Store$Overlay,
+  Store$Variable,
 } from 'types/store';
 
 export const getPages = (state: Store): Store$Page => state.page;
 export const getOverlays = (state: Store): Store$Overlay => state.overlay;
 export const getLayouts = (state: Store): Store$Layout => state.layout;
 export const getWidgets = (state: Store): Store$Widget => state.widget;
+export const getVariables = (state: Store): Store$Variable => state.variable;
 export const getSelectedElementId = (state: Store): string | null => state.element.selectedElement;
 export const getSelectedPageId = (state: Store): string | null => state.element.selectedPage;
 export const getSelectedOverlayId = (state: Store): string | null => state.element.selectedOverlay;
+export const getSelectedVariableId = (state: Store): string | null =>
+  state.element.selectedVariable;
 
 export const makeGetElementTree = (): OutputParametricSelector<
   Store,
@@ -155,4 +159,9 @@ export const makeGetNextPosition = () =>
 
 export const makeGetComponents = () => (state: Store): IComponent[] => state.element.components;
 
-export const makeGetFunctions = () => (state: Store): TInitFunctions => state.element.functions;
+export const makeGetFunctions = () => (state: Store): InitFunctions[] => state.element.functions;
+
+export const makeGetSelectedVariable = () =>
+  createSelector(getSelectedVariableId, getVariables, (selectedVariableId, variables) =>
+    selectedVariableId ? variables[selectedVariableId] : null,
+  );

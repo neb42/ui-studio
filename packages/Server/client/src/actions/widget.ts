@@ -71,6 +71,7 @@ export const addWidget = (
     parent,
     position,
     props: {},
+    events: {},
     style: defaultStyle,
   };
 
@@ -97,7 +98,7 @@ interface IUpdateWidgetProps {
   payload: {
     id: string;
     key: string;
-    mode: 'input' | 'function' | 'widget';
+    mode: 'static' | 'variable' | 'widget';
     value: any;
   };
 }
@@ -105,7 +106,7 @@ interface IUpdateWidgetProps {
 export const updateWidgetProps = (
   id: string,
   key: string,
-  mode: 'input' | 'function' | 'widget',
+  mode: 'static' | 'variable' | 'widget',
   value: any,
 ): IUpdateWidgetProps => ({
   type: UPDATE_WIDGET_PROPS,

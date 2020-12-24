@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { Page, Layout, Widget, TInitFunctions, IOverlay } from '@ui-builder/types';
+import { Page, Layout, Widget, InitFunctions, IOverlay, Variable } from '@ui-builder/types';
 
 export interface KeyedObject<T> {
   [key: string]: T;
@@ -34,13 +34,15 @@ export type Store$Element = {
   selectedPage: string | null;
   selectedOverlay: string | null;
   selectedElement: string | null;
-  functions: TInitFunctions;
+  selectedVariable: string | null;
+  functions: InitFunctions[];
   components: IComponent[];
 };
 export type Store$Page = KeyedObject<Page>;
 export type Store$Overlay = KeyedObject<IOverlay>;
 export type Store$Layout = KeyedObject<Layout>;
 export type Store$Widget = KeyedObject<Widget>;
+export type Store$Variable = KeyedObject<Variable>;
 
 export interface Store {
   element: Store$Element;
@@ -48,6 +50,7 @@ export interface Store {
   overlay: Store$Overlay;
   layout: Store$Layout;
   widget: Store$Widget;
+  variable: Store$Variable;
 }
 
 export type TGetState = () => Store;

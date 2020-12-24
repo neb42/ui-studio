@@ -4,7 +4,7 @@ import { IconButton, Select, MenuItem, TextField } from '@material-ui/core';
 import { Edit, Functions, Widgets } from '@material-ui/icons';
 import { Widget } from '@ui-builder/types';
 import { updateWidgetProps } from 'actions/widget';
-import { getWidgets, makeGetFunctions } from 'selectors/element';
+import { getWidgets, getVariables } from 'selectors/element';
 import { TComponentConfig } from 'types/store';
 
 import * as Styles from './ConfigOption.styles';
@@ -21,7 +21,7 @@ type SelectEvent = React.ChangeEvent<{
   value: unknown;
 }>;
 
-const InputConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
+const StaticConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
   const handleInputOnChange = (event: InputEvent) => {
     onChange(event.target.value);
   };
@@ -60,12 +60,12 @@ const InputConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
   }
 };
 
-const FunctionConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
+const VariableConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
   const handleOnChange = (event: SelectEvent) => {
     onChange(event.target.value as string);
   };
 
-  const functions = useSelector(makeGetFunctions());
+  const variables = Object.values(useSelector(getVariables));
 
   return (
     <Select
@@ -73,9 +73,9 @@ const FunctionConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
       onChange={handleOnChange}
       style={{ width: '100%' }}
     >
-      {functions.map((f) => (
-        <MenuItem key={f.name} value={f.name}>
-          {f.name}
+      {variables.map((v) => (
+        <MenuItem key={v.id} value={v.id}>
+          {v.name}
         </MenuItem>
       ))}
     </Select>
@@ -111,43 +111,40 @@ interface IConfigOption {
 
 export const ConfigOption = ({ widget, config }: IConfigOption): JSX.Element => {
   const dispatch = useDispatch();
-  // const [mode, setMode] = React.useState<'input' | 'function' | 'widget'>(
-  //   widget?.props?.[config.key]?.mode ?? 'input',
-  // );
-  const mode = widget?.props?.[config.key]?.mode ?? 'input';
 
-  const handleOnChange = (m: 'input' | 'function' | 'widget') => (value: string) => {
+  const mode = widget?.props?.[config.key]?.mode ?? 'static';
+
+  const handleOnChange = (m: 'static' | 'variable' | 'widget') => (value: string) => {
     dispatch(updateWidgetProps(widget.id, config.key, m, value));
   };
 
-  const handleToggleMode = (m: 'input' | 'function' | 'widget') => () => {
-    // setMode(m)
+  const handleToggleMode = (m: 'static' | 'variable' | 'widget') => () => {
     handleOnChange(m)('');
   };
 
-  const getColor = (m: 'input' | 'function' | 'widget') => (mode === m ? '#fa7268' : '#9c9c9c');
+  const getColor = (m: 'static' | 'variable' | 'widget') => (mode === m ? '#fa7268' : '#9c9c9c');
 
   return (
     <Styles.Container>
       <Styles.Header>
         <Styles.Label>{config.label}</Styles.Label>
         <Styles.ModeButtons>
-          <IconButton onClick={handleToggleMode('input')} size="small">
-            <Edit style={{ color: getColor('input') }} />
+          <IconButton onClick={handleToggleMode('static')} size="small">
+            <Edit style={{ color: getColor('static') }} />
           </IconButton>
-          <IconButton onClick={handleToggleMode('function')} size="small">
-            <Functions style={{ color: getColor('function') }} />
+          <IconButton onClick={handleToggleMode('variable')} size="small">
+            <Functions style={{ color: getColor('variable') }} />
           </IconButton>
           <IconButton onClick={handleToggleMode('widget')} size="small">
             <Widgets style={{ color: getColor('widget') }} />
           </IconButton>
         </Styles.ModeButtons>
       </Styles.Header>
-      {mode === 'input' && (
-        <InputConfig widget={widget} config={config} onChange={handleOnChange('input')} />
+      {mode === 'static' && (
+        <StaticConfig widget={widget} config={config} onChange={handleOnChange('static')} />
       )}
-      {mode === 'function' && (
-        <FunctionConfig widget={widget} config={config} onChange={handleOnChange('function')} />
+      {mode === 'variable' && (
+        <VariableConfig widget={widget} config={config} onChange={handleOnChange('variable')} />
       )}
       {mode === 'widget' && (
         <WidgetConfig widget={widget} config={config} onChange={handleOnChange('widget')} />

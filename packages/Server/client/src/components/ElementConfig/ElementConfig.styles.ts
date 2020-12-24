@@ -32,5 +32,5 @@ export const Field = styled.div`
   display: grid;
   grid-template-columns: 100%;
   grid-row-gap: 16px;
-  padding: 24px;
+  padding: 16px;
 `;

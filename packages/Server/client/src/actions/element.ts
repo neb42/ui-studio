@@ -1,4 +1,4 @@
-import { TInitFunctions } from '@ui-builder/types';
+import { InitFunctions } from '@ui-builder/types';
 import { IComponent } from 'types/store';
 
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
@@ -53,10 +53,10 @@ export const selectElement = (id: string): ISelectElement => ({
 
 interface IInitFunctions {
   type: 'INIT_FUNCTIONS';
-  payload: TInitFunctions;
+  payload: InitFunctions[];
 }
 
-export const initFunctions = (functions: TInitFunctions): IInitFunctions => ({
+export const initFunctions = (functions: InitFunctions[]): IInitFunctions => ({
   type: INIT_FUNCTIONS,
   payload: functions,
 });

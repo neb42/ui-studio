@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
-import { TInitFunctions } from '@ui-builder/types';
+import { InitFunctions } from '@ui-builder/types';
 import { IComponent } from 'types/store';
 import { makeGetElements } from 'selectors/element';
 import { initComponents, initFunctions } from 'actions/element';
@@ -39,7 +39,7 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
 
   React.useEffect(() => {
     if (previewSocket) {
-      previewSocket.on('init-functions', (functions: TInitFunctions) =>
+      previewSocket.on('init-functions', (functions: InitFunctions[]) =>
         dispatch(initFunctions(functions)),
       );
       previewSocket.on('init-components', (components: IComponent[]) =>
@@ -49,7 +49,7 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
   }, [previewSocket]);
 
   React.useEffect(() => {
-    serverSocket.emit('elements-updated', elements);
+    serverSocket.emit('elements-updated', { ...elements, variables: {} });
   }, [elements]);
 
   if (!previewServer) return <div />;

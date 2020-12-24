@@ -1,1 +1,5 @@
-export type TInitFunctions = { name: string, args: string[] }[]; 
+export type InitFunctions = { 
+  name: string;
+  returnType: 'string' | 'number' | 'boolean';
+  args: { name: string, type: 'string' | 'number' | 'boolean' }[];
+}; 
