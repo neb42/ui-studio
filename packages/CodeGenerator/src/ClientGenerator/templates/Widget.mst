@@ -4,14 +4,14 @@ import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
 import { Components } from '{{{ library }}}';
 
-import { updateWidget } from '../actions';
-import { getFunction, getWidget } from '../selectors';
+import { updateWidget, updateStaticVariable, updateFunctionVariable } from '../actions';
+import { getWidget, getVariable } from '../selectors';
 
 const mapStateToProps = (state) => {
   const rawValues = {
-    {{ #functionProps }}
-    {{{ key }}}: getFunction(state)('{{{ value }}}'),
-    {{ /functionProps }}
+    {{ #variableProps }}
+    '{{{ key }}}': getVariable(state)('{{{ value }}}'),
+    {{ /variableProps }}
     {{ #widgetProps }}
     {{{ key }}}: getWidget(state)('{{{ value }}}', 'default'),
     {{ /widgetProps }}
@@ -55,7 +55,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) =>  bindActionCreators({ updateWidget }, dispatch);
+const mapDispatchToProps = (dispatch) =>  bindActionCreators({
+  updateWidget,
+  updateStaticVariable,
+  updateFunctionVariable,
+}, dispatch);
 
 const WidgetWrapper = styled.div`
   {{ #grid }}
@@ -65,9 +69,9 @@ const WidgetWrapper = styled.div`
 `;
 
 const Widget_{{{ name }}} = ({
-  {{ #functionProps }}
+  {{ #variableProps }}
   {{{ key }}},
-  {{ /functionProps }}
+  {{ /variableProps }}
   {{ #widgetProps }}
   {{{ key }}},
   {{ /widgetProps }}
@@ -95,15 +99,15 @@ const Widget_{{{ name }}} = ({
       Components.{{{ component }}}.component, 
       {
         ref: r => setRef(r),
-        {{ #functionProps }}
+        {{ #variableProps }}
         {{{ key }}},
-        {{ /functionProps }}
+        {{ /variableProps }}
         {{ #widgetProps }}
         {{{ key }}},
         {{ /widgetProps }}
-        {{ #inputProps }}
+        {{ #staticProps }}
         {{{ key }}}: '{{{ value }}}',
-        {{ /inputProps }}
+        {{ /staticProps }}
       },
       {{ #children }}{{{ children }}}{{ /children }}{{ ^children }}children{{ /children }}
     ),

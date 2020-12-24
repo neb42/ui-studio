@@ -1,4 +1,4 @@
-import { Widget, Layout, Page } from '@ui-builder/types';
+import { Widget, Layout, Page, Variable } from '@ui-builder/types';
 
 const page1ID = '5388a8ec-a2ba-4691-a06e-e4c3046ada5e';
 const grid1ID = '48bb7463-6012-46f5-939d-36011d19a56e';
@@ -8,12 +8,17 @@ const widget1ID = '23d03543-28c9-4cae-b0c9-5507bddf999e';
 const widget2ID = 'e2945925-3572-423f-9012-78c32528ea10';
 const widget3ID = '86532f22-ce50-4966-9721-a7b02c3521dd';
 const widget4ID = '12c5968e-881f-4cfb-94b8-5b9eea59e9de';
+const variable1ID = '6f217bb5-c3fd-4649-82b8-f52868c3e770';
+const variable2ID = '7153b954-5413-4d38-9149-8d786aeb58e2';
+const variable3ID = 'd75804bf-6e6c-474a-bdf3-7633138ecf54';
 
-const pageTable: Page[] = [
+const massage = (o: any[]) => o.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
+
+export const pages: { [key: string]: Page } = massage([
   { id: page1ID, type: 'page', name: 'p_page1', props: {}, style: { css: '' } },
-];
+]);
 
-const layoutTable: Layout[] = [
+export const layouts: { [key: string]: Layout } = massage([
   {
     id: grid1ID,
     type: 'layout',
@@ -67,9 +72,9 @@ const layoutTable: Layout[] = [
       ],
     },
   },
-];
+]);
 
-const widgetTable: Widget[] = [
+export const widgets: { [key: string]: Widget } = massage([
   {
     id: widget1ID,
     type: 'widget',
@@ -78,7 +83,8 @@ const widgetTable: Widget[] = [
     component: 'Text',
     library: 'custom',
     position: 0,
-    props: { children: { mode: 'input', value: 'widget one' } },
+    props: { children: { mode: 'static', value: 'widget one' } },
+    events: {},
     style: { type: 'flex', css: '' },
   },
   {
@@ -89,7 +95,8 @@ const widgetTable: Widget[] = [
     library: 'custom',
     position: 1,
     component: 'Text',
-    props: { children: { mode: 'input', value: 'widget two' } },
+    props: { children: { mode: 'static', value: 'widget two' } },
+    events: {},
     style: { type: 'flex', css: '' },
   },
   {
@@ -100,7 +107,8 @@ const widgetTable: Widget[] = [
     library: 'custom',
     position: 0,
     component: 'Text',
-    props: { children: { mode: 'input', value: 'widget three' } },
+    props: { children: { mode: 'static', value: 'widget three' } },
+    events: {},
     style: { type: 'flex', css: '' },
   },
   {
@@ -111,14 +119,43 @@ const widgetTable: Widget[] = [
     library: 'custom',
     position: 1,
     component: 'Text',
-    props: { children: { mode: 'input', value: 'widget four' } },
+    props: { children: { mode: 'static', value: 'widget four' } },
+    events: {},
     style: { type: 'flex', css: '' },
   },
-];
+]);
 
-const massage = (o: any[]) => o.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
+export const variables: { [key: string]: Variable } = massage([
+  {
+    id: variable1ID,
+    name: 'Variable 1',
+    type: 'static',
+    value: 'value 1',
+  },
+  {
+    id: variable2ID,
+    name: 'Variable 2',
+    type: 'function',
+    functionId: 'function-1',
+    trigger: 'auto',
+    args: [
+      { type: 'static', value: 'arg 1' },
+      { type: 'variable', variableId: variable1ID },
+      { type: 'widget', widgetId: widget1ID, property: 'widgetProperty' },
+    ],
+  },
+  {
+    id: variable3ID,
+    name: 'Variable 3',
+    type: 'function',
+    functionId: 'function-2',
+    trigger: 'event',
+    args: [
+      { type: 'static', value: 'arg 1' },
+      { type: 'variable', variableId: variable1ID },
+      { type: 'widget', widgetId: widget1ID, property: 'widgetProperty' },
+    ],
+  },
+]);
 
 export const source = '/Users/bmcalindin/workspace/ui-builder/packages/ExampleApp';
-export const widgets = massage(widgetTable);
-export const layouts = massage(layoutTable);
-export const pages = massage(pageTable);

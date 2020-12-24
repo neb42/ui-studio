@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 
-import { Widget, Layout, Page, ElementTreeNode } from '@ui-builder/types';
+import { Widget, Layout, Page, ElementTreeNode, Variable } from '@ui-builder/types';
 
 import { FilePaths } from '../FilePaths';
 import { makeName } from '../helpers';
@@ -21,6 +21,7 @@ interface Args {
   widgets: Widget[];
   pages: Page[];
   layouts: Layout[];
+  variables: Variable[];
   source: string;
   dev: boolean;
 }
@@ -52,11 +53,19 @@ const removeExcessFiles = async ({ widgets, layouts, pages }: IRemoveExcessFiles
   );
 };
 
-const generateClient = async ({ elementTree, widgets, pages, layouts, source, dev }: Args) => {
+const generateClient = async ({
+  elementTree,
+  widgets,
+  pages,
+  layouts,
+  variables,
+  source,
+  dev,
+}: Args): Promise<[void[], void[], void[], void, void, void[], void, void, void[], void]> => {
   return Promise.all([
     generateLayoutFiles(layouts),
     generatePageFiles(elementTree),
-    generateReducerFiles(widgets),
+    generateReducerFiles(widgets, variables),
     generateRoutesFile(pages),
     generateSubscriberFiles(),
     generateWidgetFiles(widgets),

@@ -1,23 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
-import { initFunctions } from './actions';
 import Routes from './routes';
 
-const mapStateToProps = state => ({ loading: state.functions.loading });
-const mapDispatchToProps = dispatch =>  bindActionCreators({ initFunctions }, dispatch);
-
-const App = ({ loading, initFunctions }) => {
-  React.useEffect(() => {
-    initFunctions();
-  }, []);
-
-  if (loading) {
-    return <div>loading...</div>;
-  }
-
+const App = () => {
   return <Routes />;
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

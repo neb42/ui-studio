@@ -14,12 +14,14 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
 
       const props: {
         key: string;
-        mode: 'function' | 'input' | 'widget';
+        mode: 'static' | 'variable' | 'widget';
         value: any;
       }[] = Object.keys(w.props).reduce((acc, cur) => {
         if (cur === 'children') return acc;
         return [...acc, { key: cur, ...w.props[cur] }];
       }, []);
+
+      const events = Object.keys(w.events).map((key) => ({ key, ...w.events[key] }));
 
       const children = (() => {
         if (w?.props?.children?.value) {
@@ -32,11 +34,11 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
       const renderConfig = {
         name: makeName(w.name, w.id),
         component: w.component,
-        inputProps: props.filter((p) => p.mode === 'input'),
-        functionProps: props.filter((p) => p.mode === 'function'),
+        staticProps: props.filter((p) => p.mode === 'static'),
+        variableProps: props.filter((p) => p.mode === 'variable'),
         widgetProps: props.filter((p) => p.mode === 'widget'),
+        events,
         exposedProperties: [],
-        props,
         children,
         library: w.library === 'custom' ? 'functions-pkg' : w.library,
         grid: null,

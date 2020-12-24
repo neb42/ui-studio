@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import store from './store';
-import { getWidget } from './selectors';
+import { getVariableDefinitions, getVariableArgs } from './selectors';
 
 let currentValue;
 
@@ -10,36 +10,39 @@ const handleChange = async () => {
 
   currentValue = store.getState();
 
-  const definitions = currentValue.functions.definitions;
+  const definitions = getVariableDefinitions(currentValue);
 
-  Object.keys(definitions).forEach(async name => {
-    const { args } = definitions[name];
-    const prev = args.map(a => getWidget(previousValue)(a[0], a[1]));
-    const current = args.map(a => getWidget(currentValue)(a[0], a[1]));
-    if (JSON.stringify(prev) !== JSON.stringify(current) || !previousValue) {
-      try {
-        store.dispatch({
-          type: 'FUNCTION_API_CALL_PENDING',
-          name: name,
-        });
+  Object.keys(definitions)
+    .filter(id => definitions[id].type === 'function' && definitions[id].trigger === 'auto')
+    .forEach(async id => {
+      const prev = getVariableArgs(previousValue)(id);
+      const current = getVariableArgs(currentValue)(id);
 
-        const { data: { data }, status } = await axios.post(`/api/function_${name}`, current);
+      if (JSON.stringify(prev) !== JSON.stringify(current) || !previousValue) {
+        try {
+          store.dispatch({
+            type: 'FUNCTION_API_CALL_PENDING',
+            id: id,
+          });
 
-        if (status !== 200) throw new Error(`Status code: ${status}`);
+          const functionId = definitions[id].functionId;
+          const { data: { data }, status } = await axios.post(`/api/function_${functionId}`, current);
 
-        store.dispatch({
-          type: 'FUNCTION_API_CALL_FULFILLED',
-          name: name,
-          payload: data,
-        });
-      } catch(error) {
-        store.dispatch({
-          type: 'FUNCTION_API_CALL_REJECTED',
-          name: name,
-        });
+          if (status !== 200) throw new Error(`Status code: ${status}`);
+
+          store.dispatch({
+            type: 'FUNCTION_API_CALL_FULFILLED',
+            id: id,
+            payload: data,
+          });
+        } catch(error) {
+          store.dispatch({
+            type: 'FUNCTION_API_CALL_REJECTED',
+            id: id,
+          });
+        }
       }
-    }
-  });
+    });
 };
 
 store.subscribe(handleChange);

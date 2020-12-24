@@ -1,15 +1,42 @@
 import axios from 'axios';
 
-export const updateWidget = (name, exposedProperties) => ({
-  type: 'UPDATE_WIDGET',
-  name,
-  payload: exposedProperties,
+import { getVariableDefinitions, getVariableArgs } from './selectors';
+
+export const updateStaticVariable = (id, value) => ({
+  type: 'UPDATE_STATIC_VARIABLE',
+  id,
+  value,
 });
 
-export const initFunctions = () => async (dispatch) => {
-  const { data: { data }, status } = await axios.get('/api/init-functions');
-  dispatch({
-    type: 'INIT_FUNCTIONS',
-    payload: data,
-  });
+export const updateFunctionVariable = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: 'FUNCTION_API_CALL_PENDING',
+      id: id,
+    });
+
+    const state = getState();
+    const functionId = getVariableDefinitions(state)[id].functionId;
+    const args = getVariableArgs(state)(id);
+    const { data: { data }, status } = await axios.post(`/api/function_${functionId}`, args);
+
+    if (status !== 200) throw new Error(`Status code: ${status}`);
+
+    dispatch({
+      type: 'FUNCTION_API_CALL_FULFILLED',
+      id: id,
+      payload: data,
+    });
+  } catch {
+    dispatch({
+      type: 'FUNCTION_API_CALL_REJECTED',
+      id: id,
+    });
+  }
 };
+
+export const updateWidget = (id, exposedProperties) => ({
+  type: 'UPDATE_WIDGET',
+  id,
+  payload: exposedProperties,
+});

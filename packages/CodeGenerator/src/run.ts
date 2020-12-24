@@ -2,7 +2,7 @@ import { promises as fs, existsSync } from 'fs';
 import path from 'path';
 
 import Graph from 'graph-data-structure';
-import { Widget, Layout, Page, ElementTreeNode } from '@ui-builder/types';
+import { Widget, Layout, Page, ElementTreeNode, Variable } from '@ui-builder/types';
 
 import generateServer from './ServerGenerator/generateServer';
 import generateClient from './ClientGenerator/generateClient';
@@ -13,6 +13,7 @@ type Data = {
   widgets: { [key: string]: Widget };
   layouts: { [key: string]: Layout };
   pages: { [key: string]: Page };
+  variables: { [key: string]: Variable };
 };
 
 const mkdir = async (p: string) => {
@@ -23,7 +24,13 @@ const mkdir = async (p: string) => {
 
 const readData = async (source: string) => {
   const file = await (await fs.readFile(path.join(source, 'client.json'))).toString();
-  return JSON.parse(file);
+  const client = JSON.parse(file);
+  return {
+    widgets: client.widgets || {},
+    layouts: client.layouts || {},
+    pages: client.pages || {},
+    variables: client.variables || {},
+  };
 };
 
 const setupDirectory = async () => {
@@ -68,6 +75,7 @@ export const run = async (_data: Data | null, source: string, dev: boolean): Pro
     widgets: Object.values(data.widgets),
     pages: Object.values(data.pages),
     layouts: Object.values(data.layouts),
+    variables: Object.values(data.variables),
     source,
     dev,
   });
@@ -82,6 +90,7 @@ if (typeof require !== 'undefined' && require.main === module) {
         widgets: FakeData.widgets,
         layouts: FakeData.layouts,
         pages: FakeData.pages,
+        variables: FakeData.variables,
       },
       FakeData.source,
       true,

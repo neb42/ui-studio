@@ -1,3 +1,23 @@
-export const getFunction = state => name => state.functions.results[name];
-
 export const getWidget = state => (widget, property) => state.widget[widget][property];
+
+export const getVariableDefinitions = state => state.variable.definitions;
+
+export const getVariable = state => id => state.variable.results[id];
+
+export const getVariableArgs = id => {
+  const args = getVariableDefinitions(state)[id].args;
+
+  return args.map(a => {
+    if (a.type === 'static') {
+      return a.value;
+    }
+
+    if (a.type === 'variable') {
+      return getVariable(state)(a.variableId);
+    }
+
+    if (a.type === 'widget') {
+      return getWidget(state)(a.widgetId, a.property);
+    }
+  });
+};
