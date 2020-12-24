@@ -12,12 +12,11 @@
     "start": "ui-builder --path /Users/bmcalindin/workspace/ui-builder/packages/ExampleApp"
   },
   "dependencies": {
-    "@faculty/adler-web-components": "^0.0.113"
+    "@faculty/adler-web-components": "^0.0.113",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@ui-builder/code-generator": "link:/Users/bmcalindin/workspace/ui-builder/packages/CodeGenerator",
-    "@ui-builder/server": "link:/Users/bmcalindin/workspace/ui-builder/packages/Server",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "@ui-builder/server": "link:/Users/bmcalindin/workspace/ui-builder/packages/Server"
   }
 }
