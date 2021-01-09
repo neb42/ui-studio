@@ -36,7 +36,7 @@ export class Functions {
   };
 
   @Function()
-  bar(w_widget1: number): string {
-    return 'Hello world';
+  bar(repeat: number): string {
+    return 'Hello world'.repeat(repeat);
   };
 }
