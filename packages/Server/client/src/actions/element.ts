@@ -4,6 +4,7 @@ import { IComponent } from 'types/store';
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
 export const SELECT_PAGE = 'SELECT_PAGE';
 export const SELECT_ELEMENT = 'SELECT_ELEMENT';
+export const SELECT_VIEW = 'SELECT_VIEW';
 export const INIT_FUNCTIONS = 'INIT_FUNCTIONS';
 export const INIT_COMPONENTS = 'INIT_COMPONENTS';
 
@@ -51,6 +52,16 @@ export const selectElement = (id: string): ISelectElement => ({
   payload: id,
 });
 
+export interface SelectView {
+  type: 'SELECT_VIEW';
+  payload: 'preview' | 'variable' | 'css';
+}
+
+export const selectView = (view: 'preview' | 'variable' | 'css'): SelectView => ({
+  type: SELECT_VIEW,
+  payload: view,
+});
+
 interface IInitFunctions {
   type: 'INIT_FUNCTIONS';
   payload: InitFunctions[];
@@ -74,6 +85,7 @@ export const initComponents = (components: IComponent[]): IInitComponents => ({
 export type Action$Element =
   | ISelectPage
   | ISelectElement
+  | SelectView
   | IUpdateElementName
   | IInitFunctions
   | IInitComponents;

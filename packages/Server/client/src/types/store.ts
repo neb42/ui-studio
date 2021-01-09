@@ -35,6 +35,7 @@ export type Store$Element = {
   selectedOverlay: string | null;
   selectedElement: string | null;
   selectedVariable: string | null;
+  selectedView: 'preview' | 'variable' | 'css';
   functions: InitFunctions[];
   components: IComponent[];
 };

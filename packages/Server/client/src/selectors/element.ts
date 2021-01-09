@@ -21,6 +21,8 @@ export const getSelectedPageId = (state: Store): string | null => state.element.
 export const getSelectedOverlayId = (state: Store): string | null => state.element.selectedOverlay;
 export const getSelectedVariableId = (state: Store): string | null =>
   state.element.selectedVariable;
+export const getSelectedView = (state: Store): 'preview' | 'variable' | 'css' =>
+  state.element.selectedView;
 
 export const makeGetElementTree = (): OutputParametricSelector<
   Store,

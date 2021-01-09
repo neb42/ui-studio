@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getPages, getSelectedPageId } from 'selectors/element';
 import { ElementTree } from 'components/ElementTree';
 import { ElementConfig } from 'components/ElementConfig';
+import { PopoverNavigation } from 'components/PopoverNavigation';
 import { Preview } from 'components/Preview';
 import { selectPage } from 'actions/element';
 
@@ -28,6 +29,7 @@ export const PageBuilder = (): JSX.Element => {
       <Styles.Container>
         <Styles.ColLeft>
           <ElementTree pageId={pageId} />
+          <PopoverNavigation />
         </Styles.ColLeft>
         <Preview pageName={pageName} />
         <Styles.ColRight>

@@ -11,7 +11,7 @@ export type StaticVariable = BaseVariable & {
   | { valueType: 'boolean'; value: boolean}
 );
 
-export type FunctionVariable$StaticArg {
+export type FunctionVariable$StaticArg = {
   type: 'static',
 } & (
   | { valueType: 'string'; value: string}
