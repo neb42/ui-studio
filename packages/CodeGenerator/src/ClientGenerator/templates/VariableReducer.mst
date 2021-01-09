@@ -25,6 +25,7 @@ const initialState = {
     '{{ id }}': {
       id: '{{ id }}',
       name: '{{ name }}',
+      type: '{{ type }}',
       functionId: '{{ functionId }}',
       trigger: '{{ trigger }}',
       args: [

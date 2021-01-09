@@ -9,16 +9,20 @@ import { FilePaths } from '../FilePaths';
 const generateVariablesReducerFile = async (variables: Variable[]): Promise<void> => {
   const staticVariables: StaticVariable[] = (variables.filter(
     (v) => v.type === 'static',
-  ) as StaticVariable[]).map((v) => ({
-    ...v,
-    value: typeof v.value === 'string' ? `'${v.value}'` : v.value,
-  }));
+  ) as StaticVariable[]).map((v) => {
+    if (v.valueType === 'string')
+      return {
+        ...v,
+        value: typeof v.value === 'string' ? `'${v.value}'` : v.value,
+      };
+    return v;
+  });
   const functionVariables: FunctionVariable[] = (variables.filter(
     (v) => v.type === 'function',
   ) as FunctionVariable[]).map((f) => ({
     ...f,
     args: f.args.map((a) =>
-      a.type === 'static'
+      a.type === 'static' && a.valueType === 'string'
         ? { ...a, value: typeof a.value === 'string' ? `'${a.value}'` : a.value }
         : a,
     ),

@@ -15,8 +15,8 @@ const handleChange = async () => {
   Object.keys(definitions)
     .filter(id => definitions[id].type === 'function' && definitions[id].trigger === 'auto')
     .forEach(async id => {
-      const prev = getVariableArgs(previousValue)(id);
-      const current = getVariableArgs(currentValue)(id);
+      const prev = previousValue ? getVariableArgs(previousValue)(id) : null;
+      const current = currentValue ? getVariableArgs(currentValue)(id) : null;
 
       if (JSON.stringify(prev) !== JSON.stringify(current) || !previousValue) {
         try {

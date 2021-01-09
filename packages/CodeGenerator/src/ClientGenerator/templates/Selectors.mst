@@ -4,7 +4,7 @@ export const getVariableDefinitions = state => state.variable.definitions;
 
 export const getVariable = state => id => state.variable.results[id];
 
-export const getVariableArgs = id => {
+export const getVariableArgs = state => id => {
   const args = getVariableDefinitions(state)[id].args;
 
   return args.map(a => {
