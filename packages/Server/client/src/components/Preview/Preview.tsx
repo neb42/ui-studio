@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import { InitFunctions } from '@ui-builder/types';
 import { IComponent } from 'types/store';
-import { makeGetElements } from 'selectors/element';
+import { makeGetElements, getVariables } from 'selectors/element';
 import { initComponents, initFunctions } from 'actions/element';
 
 import * as Styles from './Preview.styles';
@@ -29,8 +29,9 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
     }
     return null;
   }, [JSON.stringify(previewServer)]);
-  const getElements = React.useMemo(makeGetElements, []);
-  const elements = useSelector(getElements);
+
+  const elements = useSelector(React.useMemo(makeGetElements, []));
+  const variables = useSelector(getVariables);
 
   React.useEffect(() => {
     serverSocket.on('set-server', setPreviewServer);
@@ -49,8 +50,8 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
   }, [previewSocket]);
 
   React.useEffect(() => {
-    serverSocket.emit('elements-updated', { ...elements, variables: {} });
-  }, [elements]);
+    serverSocket.emit('elements-updated', { ...elements, variables });
+  }, [JSON.stringify(elements), JSON.stringify(variables)]);
 
   if (!previewServer) return <div />;
 
