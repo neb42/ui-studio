@@ -21,5 +21,6 @@ export interface Component {
   category: string;
   library: string;
   icon: string;
+  hasChildren: boolean;
   config: ComponentConfig[];
 }

@@ -36,6 +36,7 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
         css: '',
       };
     }
+    return { type: 'base', css: '' };
   }
   throw Error();
 };

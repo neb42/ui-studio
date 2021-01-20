@@ -35,4 +35,5 @@ export interface Widget {
   events: { [key: string]: { }};
   position: number;
   style: TStyle;
+  hasChildren: boolean;
 }

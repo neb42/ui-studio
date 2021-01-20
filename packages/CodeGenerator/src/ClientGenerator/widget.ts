@@ -48,6 +48,7 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
         variableProps,
         widgetProps,
         events,
+        css: w.style.css,
         exposedProperties: [],
         children,
         library: w.library === 'custom' ? 'functions-pkg' : w.library,

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { UPDATE_ELEMENT_NAME, IUpdateElementName } from 'actions/element';
+import { UPDATE_ELEMENT_NAME, UPDATE_ELEMENT_CSS, IUpdateElementName, UpdateElementCSS } from 'actions/element';
 import { Store$Page } from 'types/store';
 
 const ids = [uuidv4(), uuidv4(), uuidv4()];
@@ -10,7 +10,7 @@ const initialState: Store$Page = {
   [ids[2]]: { id: ids[2], type: 'page', name: 'Page3', props: {}, style: { css: '' } },
 };
 
-export const page = (state: Store$Page = initialState, action: IUpdateElementName): Store$Page => {
+export const page = (state: Store$Page = initialState, action: IUpdateElementName | UpdateElementCSS): Store$Page => {
   switch (action.type) {
     case UPDATE_ELEMENT_NAME: {
       if (Object.keys(state).includes(action.payload.id)) {
@@ -19,6 +19,21 @@ export const page = (state: Store$Page = initialState, action: IUpdateElementNam
           [action.payload.id]: {
             ...state[action.payload.id],
             name: action.payload.name,
+          },
+        };
+      }
+      return state;
+    }
+    case UPDATE_ELEMENT_CSS: {
+      if (Object.keys(state).includes(action.payload.id)) {
+        return {
+          ...state,
+          [action.payload.id]: {
+            ...state[action.payload.id],
+            style: {
+              ...state[action.payload.id].style,
+              css: action.payload.css,
+            },
           },
         };
       }

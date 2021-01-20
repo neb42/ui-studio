@@ -1,3 +1,8 @@
+export interface BaseStyle {
+  type: 'base';
+  css: string;
+}
+
 export type TGridStyleLayout = [[number, number], [number, number]];
 
 export interface IGridStyle {
@@ -20,4 +25,4 @@ export interface IRootStyle {
   css: string;
 }
 
-export type TStyle = IGridStyle | IFlexStyle | IPageStyle;
+export type TStyle = BaseStyle | IGridStyle | IFlexStyle | IPageStyle;

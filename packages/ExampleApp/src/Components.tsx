@@ -5,11 +5,7 @@ const Text = {
   description: '',
   category: 'Typography',
   icon: 'TextFieldsSharp',
-  defaultProps: {
-    type: '',
-    subtype: '',
-    children: '',
-  },
+  hasChildren: false,
   events: [
     { key: 'onClick', label: 'On text click' },
   ],
@@ -19,6 +15,20 @@ const Text = {
   component: ({ text }) => <span>{text}</span>,
 };
 
+const ChildRenderer = {
+  name: 'ChildRenderer',
+  description: '',
+  category: 'Layout',
+  icon: 'TextFieldsSharp',
+  hasChildren: true,
+  events: [
+    { key: 'onClick', label: 'On text click' },
+  ],
+  config: [],
+  component: ({ children }) => <div className="ChildRenderer">{children}</div>,
+};
+
 export default {
   Text,
+  ChildRenderer,
 };

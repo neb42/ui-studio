@@ -80,6 +80,7 @@ io.on('connection', (socket) => {
     icon: c.icon,
     library: 'custom',
     config: c.config,
+    hasChildren: c.hasChildren,
   })));
 });
 

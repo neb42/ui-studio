@@ -62,7 +62,7 @@ const TreeItemLabel = ({
             <div />
           </>
         )}
-        {element.type !== 'widget' ? (
+        {element.type !== 'widget' || element.hasChildren ? (
           <IconButton onClick={handleOpenAddMenu} size="small">
             <AddSharp />
           </IconButton>

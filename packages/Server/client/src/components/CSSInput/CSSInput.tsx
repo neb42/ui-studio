@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import AceEditor from 'react-ace';
 import { Element } from '@ui-builder/types';
+import { updateElementCSS } from 'actions/element';
 
 import * as Styles from './CSSInput.styles';
 
@@ -17,13 +18,13 @@ interface ICSSInput {
 export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
   const dispatch = useDispatch();
 
-  const handleOnChange = (value: string) => undefined;
+  const handleOnChange = (value: string) => dispatch(updateElementCSS(element.id, value));
 
   return (
     <Styles.Container>
       <Styles.Header>CSS</Styles.Header>
       <AceEditor
-        name={`${element.name}-css-editor`}
+        name={`${element.id}-css-editor`}
         mode="css"
         theme="chrome"
         defaultValue={element.style.css}
