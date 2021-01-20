@@ -6,11 +6,11 @@ import { ConfigOption } from 'components/ConfigOption';
 
 import * as Styles from './WidgetConfig.styles';
 
-interface IWidgetConfig {
+interface WidgetConfigProps {
   widget: Widget;
 }
 
-export const WidgetConfig = ({ widget }: IWidgetConfig): JSX.Element => {
+export const WidgetConfig = ({ widget }: WidgetConfigProps): JSX.Element => {
   const components = useSelector(makeGetComponents());
   const component = components.find((c) => c.name === widget.component);
 

@@ -4,8 +4,8 @@
   "private": true,
   "proxy": "http://localhost:3002",
   "dependencies": {
-    "@faculty/adler-tokens": "^0.0.108",
-    "@faculty/adler-web-components": "^0.0.108",
+    "@faculty/adler-tokens": "^0.0.117-dev.10",
+    "@faculty/adler-web-components": "^0.0.117-dev.10",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",

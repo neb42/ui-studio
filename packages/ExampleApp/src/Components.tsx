@@ -10,8 +10,11 @@ const Text = {
     subtype: '',
     children: '',
   },
+  events: [
+    { key: 'onClick', label: 'On text click' },
+  ],
   config: [
-    { component: 'input', key: 'text', label: 'Text' },
+    { component: 'input', key: 'text', label: 'Text', type: 'string' },
   ],
   component: ({ text }) => <span>{text}</span>,
 };

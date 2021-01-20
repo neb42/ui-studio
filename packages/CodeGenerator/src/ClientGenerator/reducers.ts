@@ -7,7 +7,7 @@ import { Widget, Variable, StaticVariable, FunctionVariable } from '@ui-builder/
 import { FilePaths } from '../FilePaths';
 
 const generateVariablesReducerFile = async (variables: Variable[]): Promise<void> => {
-  const staticVariables: StaticVariable[] = (variables.filter(
+  const staticVariables = (variables.filter(
     (v) => v.type === 'static',
   ) as StaticVariable[]).map((v) => {
     if (v.valueType === 'string')
@@ -15,9 +15,14 @@ const generateVariablesReducerFile = async (variables: Variable[]): Promise<void
         ...v,
         value: typeof v.value === 'string' ? `'${v.value}'` : v.value,
       };
+    if (v.valueType === 'object') 
+      return {
+        ...v,
+        value: JSON.parse(v.value),
+      };
     return v;
   });
-  const functionVariables: FunctionVariable[] = (variables.filter(
+  const functionVariables = (variables.filter(
     (v) => v.type === 'function',
   ) as FunctionVariable[]).map((f) => ({
     ...f,

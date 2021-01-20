@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
-import { InitFunctions } from '@ui-builder/types';
-import { IComponent } from 'types/store';
+import { InitFunctions, Component } from '@ui-builder/types';
 import { makeGetElements, getVariables } from 'selectors/element';
 import { initComponents, initFunctions } from 'actions/element';
 
@@ -43,7 +42,7 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
       previewSocket.on('init-functions', (functions: InitFunctions[]) =>
         dispatch(initFunctions(functions)),
       );
-      previewSocket.on('init-components', (components: IComponent[]) =>
+      previewSocket.on('init-components', (components: Component[]) =>
         dispatch(initComponents(components)),
       );
     }

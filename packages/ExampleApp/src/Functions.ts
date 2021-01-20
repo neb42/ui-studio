@@ -12,7 +12,7 @@ const Function = (): any => {
     const paramTypes = Reflect.getMetadata('design:paramtypes', target, propertyName)
     target.registered.push({
       name: propertyName,
-      returnType: returnType.name.toLowerCase(), 
+      returnType: returnType ? returnType.name.toLowerCase() : 'object', 
       args: paramTypes.map((p, i) => ({
         name: paramNames[i],
         type: p.name.toLowerCase(),
@@ -23,7 +23,7 @@ const Function = (): any => {
 
 interface IRegistered {
   name: string;
-  returnType: 'string' | 'number' | 'boolean';
+  returnType: 'string' | 'number' | 'boolean' | 'object';
   args: { name: string, type: 'string' | 'number' | 'boolean' }[];
 }
 
@@ -38,5 +38,14 @@ export class Functions {
   @Function()
   bar(repeat: number): string {
     return 'Hello world'.repeat(repeat);
+  };
+
+  @Function()
+  baz(repeat: number): { [key: string]: number } {
+    return {
+      a: 1,
+      b: 2,
+      c: 3,
+    };
   };
 }

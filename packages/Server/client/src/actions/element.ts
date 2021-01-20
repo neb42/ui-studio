@@ -1,5 +1,4 @@
-import { InitFunctions } from '@ui-builder/types';
-import { IComponent } from 'types/store';
+import { InitFunctions, Component } from '@ui-builder/types';
 
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
 export const SELECT_PAGE = 'SELECT_PAGE';
@@ -74,10 +73,10 @@ export const initFunctions = (functions: InitFunctions[]): IInitFunctions => ({
 
 interface IInitComponents {
   type: 'INIT_COMPONENTS';
-  payload: IComponent[];
+  payload: Component[];
 }
 
-export const initComponents = (components: IComponent[]): IInitComponents => ({
+export const initComponents = (components: Component[]): IInitComponents => ({
   type: INIT_COMPONENTS,
   payload: components,
 });

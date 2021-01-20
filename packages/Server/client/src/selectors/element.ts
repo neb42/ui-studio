@@ -1,12 +1,11 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
 import Graph from 'graph-data-structure';
-import { ElementTreeNode, InitFunctions } from '@ui-builder/types';
+import { ElementTreeNode, InitFunctions, Component } from '@ui-builder/types';
 import {
   Store,
   Store$Page,
   Store$Layout,
   Store$Widget,
-  IComponent,
   Store$Overlay,
   Store$Variable,
 } from 'types/store';
@@ -159,7 +158,7 @@ export const makeGetNextPosition = () =>
     },
   );
 
-export const makeGetComponents = () => (state: Store): IComponent[] => state.element.components;
+export const makeGetComponents = () => (state: Store): Component[] => state.element.components;
 
 export const makeGetFunctions = () => (state: Store): InitFunctions[] => state.element.functions;
 

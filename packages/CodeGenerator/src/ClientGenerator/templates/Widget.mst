@@ -10,10 +10,10 @@ import { getWidget, getVariable } from '../selectors';
 const mapStateToProps = (state) => {
   const rawValues = {
     {{ #variableProps }}
-    '{{{ key }}}': getVariable(state)('{{{ value }}}'),
+    '{{{ key }}}': getVariable(state)('{{{ variableId }}}', '{{{ lookup }}}'),
     {{ /variableProps }}
     {{ #widgetProps }}
-    {{{ key }}}: getWidget(state)('{{{ value }}}', 'default'),
+    {{{ key }}}: getWidget(state)('{{{ widgetId }}}', '{{{ lookup }}}'),
     {{ /widgetProps }}
   };
 

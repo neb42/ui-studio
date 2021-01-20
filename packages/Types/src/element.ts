@@ -1,24 +1,6 @@
-import { GridLayout } from './grid';
-import { FlexLayout } from './flex';
-import { TStyle, IRootStyle } from './style';
-
-export interface Widget {
-  id: string;
-  type: 'widget';
-  name: string;
-  parent: string;
-  component: string;
-  library: string;
-  props: { [key: string]: {
-    mode: 'static' | 'variable' | 'widget';
-    value: any;
-  }};
-  events: { [key: string]: { }};
-  position: number;
-  style: TStyle;
-}
-
-export type Layout = GridLayout | FlexLayout;
+import { IRootStyle } from './style';
+import { Layout } from './layout';
+import { Widget } from './widget';
 
 export interface Page {
   id: string;

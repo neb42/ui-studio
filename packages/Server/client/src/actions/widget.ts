@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
-import { TStyle, Element, Widget } from '@ui-builder/types';
+import { TStyle, Element, Widget, WidgetProp } from '@ui-builder/types';
 import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
@@ -98,23 +98,20 @@ interface IUpdateWidgetProps {
   payload: {
     id: string;
     key: string;
-    mode: 'static' | 'variable' | 'widget';
-    value: any;
+    prop: WidgetProp;
   };
 }
 
 export const updateWidgetProps = (
   id: string,
   key: string,
-  mode: 'static' | 'variable' | 'widget',
-  value: any,
+  prop: WidgetProp
 ): IUpdateWidgetProps => ({
   type: UPDATE_WIDGET_PROPS,
   payload: {
     id,
     key,
-    mode,
-    value,
+    prop,
   },
 });
 

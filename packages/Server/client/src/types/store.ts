@@ -1,33 +1,9 @@
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { Page, Layout, Widget, InitFunctions, IOverlay, Variable } from '@ui-builder/types';
+import { Page, Layout, Widget, InitFunctions, IOverlay, Variable, Component } from '@ui-builder/types';
 
 export interface KeyedObject<T> {
   [key: string]: T;
-}
-
-export interface IComponentConfig$Input {
-  component: 'input';
-  key: string;
-  label: string;
-}
-
-export interface IComponentConfig$Select {
-  component: 'select';
-  key: string;
-  label: string;
-  options: { value: string; label: string }[];
-}
-
-export type TComponentConfig = IComponentConfig$Input | IComponentConfig$Select;
-
-export interface IComponent {
-  name: string;
-  description: string;
-  category: string;
-  library: string;
-  icon: string;
-  config: TComponentConfig[];
 }
 
 export type Store$Element = {
@@ -37,7 +13,7 @@ export type Store$Element = {
   selectedVariable: string | null;
   selectedView: 'preview' | 'variable' | 'css';
   functions: InitFunctions[];
-  components: IComponent[];
+  components: Component[];
 };
 export type Store$Page = KeyedObject<Page>;
 export type Store$Overlay = KeyedObject<IOverlay>;

@@ -12,31 +12,41 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
     widgets.map(async (w) => {
       const data = await fs.readFile(path.join(__dirname, 'templates', 'Widget.mst'));
 
-      const props: {
-        key: string;
-        mode: 'static' | 'variable' | 'widget';
-        value: any;
-      }[] = Object.keys(w.props).reduce((acc, cur) => {
-        if (cur === 'children') return acc;
-        return [...acc, { key: cur, ...w.props[cur] }];
+      const staticProps = Object.keys(w.props).reduce((acc, cur) => {
+        const p = w.props[cur];
+        if (p.mode !== 'static') return acc;
+        return [...acc, { key: cur, ...p }];
+      }, []);
+
+      const variableProps = Object.keys(w.props).reduce((acc, cur) => {
+        const p = w.props[cur];
+        if (p.mode !== 'variable') return acc;
+        return [...acc, { key: cur, ...p }];
+      }, []);
+
+      const widgetProps = Object.keys(w.props).reduce((acc, cur) => {
+        const p = w.props[cur];
+        if (p.mode !== 'widget') return acc;
+        return [...acc, { key: cur, ...p }];
       }, []);
 
       const events = Object.keys(w.events).map((key) => ({ key, ...w.events[key] }));
 
-      const children = (() => {
-        if (w?.props?.children?.value) {
-          if (typeof w.props.children.value === 'string') return `'${w.props.children.value}'`;
-          return w.props.children.value;
-        }
-        return null;
-      })();
+      // const children = (() => {
+      //   if (w?.props?.children?.value) {
+      //     if (typeof w.props.children.value === 'string') return `'${w.props.children.value}'`;
+      //     return w.props.children.value;
+      //   }
+      //   return null;
+      // })();
+      const children = null;
 
       const renderConfig = {
         name: makeName(w.name, w.id),
         component: w.component,
-        staticProps: props.filter((p) => p.mode === 'static'),
-        variableProps: props.filter((p) => p.mode === 'variable'),
-        widgetProps: props.filter((p) => p.mode === 'widget'),
+        staticProps,
+        variableProps,
+        widgetProps,
         events,
         exposedProperties: [],
         children,

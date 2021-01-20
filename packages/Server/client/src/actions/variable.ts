@@ -129,6 +129,11 @@ export function updateStaticVariable(
   valueType: 'boolean',
   value: boolean,
 ): UpdateStaticVariable$Boolean;
+export function updateStaticVariable(
+  id: string,
+  valueType: 'object',
+  value: string,
+): UpdateStaticVariable$Boolean;
 export function updateStaticVariable(id: string, valueType: any, value: any): any {
   return {
     type: UPDATE_STATIC_VARIABLE,
@@ -145,7 +150,7 @@ interface UpdateFunctionVariable {
   payload: {
     id: string;
     functionId: string;
-    valueType: 'string' | 'number' | 'boolean';
+    valueType: 'string' | 'number' | 'boolean' | 'object';
     trigger: 'auto' | 'event';
     args: FunctionVariableArg[];
   };
@@ -156,7 +161,7 @@ export const UPDATE_FUNCTION_VARIABLE = 'UPDATE_FUNCTION_VARIABLE';
 export const updateFunctionVariable = (
   id: string,
   functionId: string,
-  valueType: 'string' | 'number' | 'boolean',
+  valueType: 'string' | 'number' | 'boolean' | 'object',
   trigger: 'auto' | 'event',
   args: FunctionVariableArg[],
 ): UpdateFunctionVariable => ({

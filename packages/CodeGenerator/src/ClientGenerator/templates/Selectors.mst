@@ -2,7 +2,29 @@ export const getWidget = state => (widget, property) => state.widget[widget][pro
 
 export const getVariableDefinitions = state => state.variable.definitions;
 
-export const getVariable = state => id => state.variable.results[id];
+const parseLookup = (variable, lookup) => lookup.split('.').reduce((acc, cur) => cur.length > 0 ? acc[cur] : acc, variable);
+
+export const getVariable = state => (id, lookup) =>{
+  const variable = state.variable.results[id];
+  if (lookup && lookup.length > 0) {
+    if (JSON.stringify(Object.keys(variable).sort()) === JSON.stringify(['error', 'loading', 'value'].sort())) {
+      try {
+        return {
+          ...variable,
+          value: parseLookup(variable.value, lookup),
+        };
+      } catch {
+        return { ...variable, error: true, value: null };
+      }
+    }
+    try {
+      return parseLookup(variable, lookup);
+    } catch {
+      return null;
+    }
+  }
+  return variable;
+};
 
 export const getVariableArgs = state => id => {
   const args = getVariableDefinitions(state)[id].args;
@@ -13,7 +35,7 @@ export const getVariableArgs = state => id => {
     }
 
     if (a.type === 'variable') {
-      return getVariable(state)(a.variableId);
+      return getVariable(state)(a.variableId, null);
     }
 
     if (a.type === 'widget') {

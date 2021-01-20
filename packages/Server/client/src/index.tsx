@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { createGlobalStyle, ThemeProvider } from 'styled-components';
-import { defaultTokens } from '@faculty/adler-tokens';
+import { createGlobalStyle } from 'styled-components';
+import { defaultTokens, ThemeProvider } from '@faculty/adler-tokens';
 
 import store from './store';
 import App from './App';

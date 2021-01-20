@@ -9,7 +9,14 @@ export type StaticVariable = BaseVariable & {
   | { valueType: 'string'; value: string}
   | { valueType: 'number'; value: number }
   | { valueType: 'boolean'; value: boolean}
+  | { valueType: 'object'; value: string }
 );
+
+// export type LookupVariable = BaseVariable & {
+//   type: 'lookup';
+//   variableId: string;
+//   value: string;
+// };
 
 export type FunctionVariable$StaticArg = {
   type: 'static',
@@ -35,7 +42,7 @@ export type FunctionVariableArg = FunctionVariable$StaticArg | FunctionVariable$
 export interface FunctionVariable extends BaseVariable {
   type: 'function';
   functionId: string;
-  valueType: 'string' | 'number' | 'boolean';
+  valueType: 'string' | 'number' | 'boolean' | 'object';
   trigger: 'auto' | 'event';
   args: FunctionVariableArg[],
 }

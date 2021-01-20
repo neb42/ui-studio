@@ -2,11 +2,10 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
-import { Element } from '@ui-builder/types';
+import { Element, Component } from '@ui-builder/types';
 import { makeGetComponents } from 'selectors/element';
-import { IComponent } from 'types/store';
 
-const getIcon = (element: Element, components: IComponent[]) => {
+const getIcon = (element: Element, components: Component[]) => {
   if (element.type === 'page') return Icons.DashboardSharp;
 
   if (element.type === 'layout') {

@@ -20,3 +20,16 @@ export interface GridLayout {
   };
   style: TStyle;
 }
+
+export interface FlexLayout {
+  id: string;
+  type: 'layout';
+  layoutType: 'flex';
+  name: string;
+  parent: string;
+  props: { [key: string]: any };
+  position: number;
+  style: TStyle;
+}
+
+export type Layout = GridLayout | FlexLayout;

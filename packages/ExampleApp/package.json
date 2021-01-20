@@ -12,7 +12,6 @@
     "start": "ui-builder --path /Users/bmcalindin/workspace/ui-builder/packages/ExampleApp"
   },
   "dependencies": {
-    "@faculty/adler-web-components": "^0.0.113",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
