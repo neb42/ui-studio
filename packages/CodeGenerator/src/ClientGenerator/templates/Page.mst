@@ -5,8 +5,13 @@ import styled from 'styled-components';
 
 <% >recursive_import %>
 
+const Page = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+
 const <% type %>_<% name %> = () => {
-  return React.createElement('div', {}, [<% >recursive_element %>]);
+  return React.createElement(Page, {}, [<% >recursive_element %>]);
 };
 
 export default <% type %>_<% name %>;
