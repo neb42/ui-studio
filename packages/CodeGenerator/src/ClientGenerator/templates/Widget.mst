@@ -111,7 +111,7 @@ const Widget_{{{ name }}} = ({
         {{{ key }}}: '{{{ value }}}',
         {{ /staticProps }}
       },
-      {{ #children }}{{{ children }}}{{ /children }}{{ ^children }}children{{ /children }}
+      null 
     ),
   );
 };

@@ -32,15 +32,6 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
 
       const events = Object.keys(w.events).map((key) => ({ key, ...w.events[key] }));
 
-      // const children = (() => {
-      //   if (w?.props?.children?.value) {
-      //     if (typeof w.props.children.value === 'string') return `'${w.props.children.value}'`;
-      //     return w.props.children.value;
-      //   }
-      //   return null;
-      // })();
-      const children = null;
-
       const renderConfig = {
         name: makeName(w.name, w.id),
         component: w.component,
@@ -50,7 +41,6 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
         events,
         css: w.style.css,
         exposedProperties: [],
-        children,
         library: w.library === 'custom' ? 'functions-pkg' : w.library,
         grid: null,
         flex: null,
