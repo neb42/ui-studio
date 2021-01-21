@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Menu, IconButton, Select, MenuItem, makeStyles } from '@material-ui/core';
-import { AddSharp } from '@material-ui/icons';
+import { AddSharp, ClearSharp } from '@material-ui/icons';
 import { selectPage } from 'actions/element';
+import { addPage, removePage } from 'actions/page';
 import { getOverlays, getPages, getSelectedPageId } from 'selectors/element';
 
 import * as Styles from './ElementTreeHeader.styles';
@@ -46,6 +47,16 @@ export const ElementTreeHeader = (): JSX.Element => {
     }>,
   ) => dispatch(selectPage(event.target.value as string));
 
+  const handleAddPage = () => {
+    dispatch(addPage());
+    setAnchorEl(null);
+  };
+
+  // TODO handle overlay and components
+  const handleRemovePage = () => {
+    if (selectedPageId) dispatch(removePage(selectedPageId));
+  };
+
   return (
     <Styles.Container>
       <Select value={selectedPageId} classes={classes} onChange={handleOnChange}>
@@ -71,8 +82,16 @@ export const ElementTreeHeader = (): JSX.Element => {
       <IconButton onClick={handleOpenAddMenu} size="small" style={{ color: '#fff' }}>
         <AddSharp />
       </IconButton>
+      <IconButton
+        onClick={handleRemovePage}
+        disabled={Object.keys(pages).length === 1}
+        size="small"
+        style={{ color: '#fff' }}
+      >
+        <ClearSharp />
+      </IconButton>
       <Menu keepMounted anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseAddMenu}>
-        <MenuItem onClick={() => {}}>Page</MenuItem>
+        <MenuItem onClick={handleAddPage}>Page</MenuItem>
         <MenuItem onClick={() => {}}>Overlay</MenuItem>
         <MenuItem onClick={() => {}}>Component</MenuItem>
       </Menu>

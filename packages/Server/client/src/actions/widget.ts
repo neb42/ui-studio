@@ -6,6 +6,7 @@ import {
   makeGenerateDefaultName,
   makeGetNextPosition,
   makeGetComponents,
+  getParentElement,
 } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
@@ -96,14 +97,24 @@ export const addWidget = (
   });
 };
 
-interface IRemoveWidget {
+export interface IRemoveWidget {
   type: 'REMOVE_WIDGET';
-  payload: string;
+  payload: {
+    id: string;
+    parent: string;
+    position: number;
+    delete: boolean;
+  };
 }
 
-export const removeWidget = (id: string): IRemoveWidget => ({
+export const removeWidget = (widget: Widget, del = false): IRemoveWidget => ({
   type: REMOVE_WIDGET,
-  payload: id,
+  payload: {
+    id: widget.id,
+    parent: widget.parent,
+    position: widget.position,
+    delete: del,
+  },
 });
 
 interface IUpdateWidgetProps {

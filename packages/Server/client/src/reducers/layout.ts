@@ -13,13 +13,21 @@ import {
   UpdateElementCSS,
   UpdateElementClassNames,
 } from 'actions/element';
+import { REMOVE_PAGE, RemovePage } from 'actions/page';
+import { REMOVE_WIDGET, IRemoveWidget } from 'actions/widget';
 import { Store$Layout } from 'types/store';
 
 const initialState: Store$Layout = {};
 
 export const layout = (
   state: Store$Layout = initialState,
-  action: Action$Layout | IUpdateElementName | UpdateElementCSS | UpdateElementClassNames,
+  action:
+    | Action$Layout
+    | IUpdateElementName
+    | UpdateElementCSS
+    | UpdateElementClassNames
+    | RemovePage
+    | IRemoveWidget,
 ): Store$Layout => {
   switch (action.type) {
     case ADD_LAYOUT: {
@@ -28,21 +36,57 @@ export const layout = (
         [action.payload.id]: action.payload,
       };
     }
+    case REMOVE_WIDGET:
     case REMOVE_LAYOUT: {
-      const { [action.payload]: removed, ...remaining } = state;
-      return Object.keys(remaining).reduce((acc, cur) => {
-        const current = remaining[cur];
-        if (current.parent === removed.id) return acc;
+      return Object.keys(state).reduce((acc, cur) => {
+        const current = state[cur];
+        if (current.id === action.payload.id) {
+          if (action.payload.delete) return acc;
+          return {
+            ...acc,
+            [cur]: {
+              ...current,
+              position: null,
+              parent: null,
+            },
+          };
+        }
+        if (current.parent === action.payload.id) {
+          return {
+            ...acc,
+            [cur]: {
+              ...current,
+              position: null,
+              parent: null,
+            },
+          };
+        }
         return {
           ...acc,
           [cur]: {
             ...current,
             position:
-              current.parent === removed.parent && current.position > removed.position
+              current.parent === action.payload.parent && current.position > action.payload.position
                 ? current.position - 1
                 : current.position,
           },
         };
+      }, {});
+    }
+    case REMOVE_PAGE: {
+      return Object.keys(state).reduce((acc, cur) => {
+        const current = state[cur];
+        if (current.parent === action.payload) {
+          return {
+            ...acc,
+            [cur]: {
+              ...current,
+              position: null,
+              parent: null,
+            },
+          };
+        }
+        return acc;
       }, {});
     }
     case UPDATE_LAYOUT_CONFIG: {

@@ -5,6 +5,8 @@ import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'se
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
 
+import { getParentElement } from '../selectors/element';
+
 export const ADD_LAYOUT = 'ADD_LAYOUT';
 export const REMOVE_LAYOUT = 'REMOVE_LAYOUT';
 export const UPDATE_LAYOUT_CONFIG = 'UPDATE_LAYOUT_CONFIG';
@@ -106,12 +108,22 @@ export const addLayout = (
 
 export interface IRemoveLayout {
   type: 'REMOVE_LAYOUT';
-  payload: string;
+  payload: {
+    id: string;
+    parent: string;
+    position: number;
+    delete: boolean;
+  };
 }
 
-export const removeLayout = (id: string): IRemoveLayout => ({
+export const removeLayout = (layout: Layout, del = false): IRemoveLayout => ({
   type: REMOVE_LAYOUT,
-  payload: id,
+  payload: {
+    id: layout.id,
+    parent: layout.parent,
+    position: layout.position,
+    delete: del,
+  },
 });
 
 interface IUpdateLayoutConfig {

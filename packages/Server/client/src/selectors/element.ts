@@ -166,3 +166,21 @@ export const makeGetSelectedVariable = () =>
   createSelector(getSelectedVariableId, getVariables, (selectedVariableId, variables) =>
     selectedVariableId ? variables[selectedVariableId] : null,
   );
+
+export const getParentElement = createSelector(
+  (_: Store, elementId: string) => elementId,
+  getPages,
+  getLayouts,
+  getWidgets,
+  (elementId, pages, layouts, widgets) => {
+    const getElement = (id: string) => {
+      if (id in pages) return pages[id];
+      if (id in layouts) return layouts[id];
+      if (id in widgets) return widgets[id];
+      return null;
+    };
+    const element = getElement(elementId);
+    if (!element || element.type === 'page') return null;
+    return getElement(element.parent);
+  },
+);

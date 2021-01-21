@@ -72,7 +72,7 @@ export const updateElementClassNames = (
   };
 };
 
-interface ISelectPage {
+export interface ISelectPage {
   type: 'SELECT_PAGE';
   payload: string;
 }

@@ -40,11 +40,11 @@ const TreeItemLabel = ({
 
   const handleRemove = () => {
     if (element.type === 'layout') {
-      dispatch(removeLayout(element.id));
+      dispatch(removeLayout(element));
     }
 
     if (element.type === 'widget') {
-      dispatch(removeWidget(element.id));
+      dispatch(removeWidget(element));
     }
   };
 

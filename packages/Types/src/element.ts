@@ -1,4 +1,4 @@
-import { IRootStyle } from './style';
+import { BaseStyle } from './style';
 import { Layout } from './layout';
 import { Widget } from './widget';
 
@@ -7,7 +7,7 @@ export interface Page {
   type: 'page';
   name: string;
   props: { [key: string]: any };
-  style: IRootStyle;
+  style: BaseStyle;
 }
 
 export interface IOverlay {
@@ -15,7 +15,7 @@ export interface IOverlay {
   type: 'overlay';
   overlayType: 'modal' | 'drawer';
   name: string;
-  style: IRootStyle;
+  style: BaseStyle;
 }
 
 export type Element = Page | IOverlay | Layout | Widget;

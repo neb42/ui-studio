@@ -6,6 +6,7 @@ import {
   Action$Widget,
 } from 'actions/widget';
 import { REMOVE_LAYOUT, IRemoveLayout } from 'actions/layout';
+import { REMOVE_PAGE, RemovePage } from 'actions/page';
 import {
   UPDATE_ELEMENT_NAME,
   UPDATE_ELEMENT_CSS,
@@ -25,7 +26,8 @@ export const widget = (
     | IUpdateElementName
     | IRemoveLayout
     | UpdateElementCSS
-    | UpdateElementClassNames,
+    | UpdateElementClassNames
+    | RemovePage,
 ): Store$Widget => {
   switch (action.type) {
     case ADD_WIDGET: {
@@ -34,30 +36,57 @@ export const widget = (
         [action.payload.id]: action.payload,
       };
     }
+    case REMOVE_LAYOUT:
     case REMOVE_WIDGET: {
-      const { [action.payload]: removed, ...remaining } = state;
-      return Object.keys(remaining).reduce((acc, cur) => {
-        const current = remaining[cur];
+      return Object.keys(state).reduce((acc, cur) => {
+        const current = state[cur];
+        if (current.id === action.payload.id) {
+          if (action.payload.delete) return acc;
+          return {
+            ...acc,
+            [cur]: {
+              ...current,
+              position: null,
+              parent: null,
+            },
+          };
+        }
+        if (current.parent === action.payload.id) {
+          return {
+            ...acc,
+            [cur]: {
+              ...current,
+              position: null,
+              parent: null,
+            },
+          };
+        }
         return {
           ...acc,
           [cur]: {
             ...current,
             position:
-              current.parent === removed.parent && current.position > removed.position
+              current.parent === action.payload.parent && current.position > action.payload.position
                 ? current.position - 1
                 : current.position,
           },
         };
       }, {});
     }
-    case REMOVE_LAYOUT: {
+    case REMOVE_PAGE: {
       return Object.keys(state).reduce((acc, cur) => {
         const current = state[cur];
-        if (current.parent === action.payload) return acc;
-        return {
-          ...acc,
-          [cur]: current,
-        };
+        if (current.parent === action.payload) {
+          return {
+            ...acc,
+            [cur]: {
+              ...current,
+              position: null,
+              parent: null,
+            },
+          };
+        }
+        return acc;
       }, {});
     }
     case UPDATE_WIDGET_PROPS: {

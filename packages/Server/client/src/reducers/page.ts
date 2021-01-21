@@ -7,6 +7,7 @@ import {
   UpdateElementCSS,
   UpdateElementClassNames,
 } from 'actions/element';
+import { ADD_PAGE, REMOVE_PAGE, Action$Page } from 'actions/page';
 import { Store$Page } from 'types/store';
 
 const ids = [uuidv4(), uuidv4(), uuidv4()];
@@ -17,29 +18,39 @@ const initialState: Store$Page = {
     type: 'page',
     name: 'Page1',
     props: {},
-    style: { css: '', classNames: '' },
+    style: { type: 'base', css: '', classNames: '' },
   },
   [ids[1]]: {
     id: ids[1],
     type: 'page',
     name: 'Page2',
     props: {},
-    style: { css: '', classNames: '' },
+    style: { type: 'base', css: '', classNames: '' },
   },
   [ids[2]]: {
     id: ids[2],
     type: 'page',
     name: 'Page3',
     props: {},
-    style: { css: '', classNames: '' },
+    style: { type: 'base', css: '', classNames: '' },
   },
 };
 
 export const page = (
   state: Store$Page = initialState,
-  action: IUpdateElementName | UpdateElementCSS | UpdateElementClassNames,
+  action: Action$Page | IUpdateElementName | UpdateElementCSS | UpdateElementClassNames,
 ): Store$Page => {
   switch (action.type) {
+    case ADD_PAGE: {
+      return {
+        ...state,
+        [action.payload.id]: action.payload,
+      };
+    }
+    case REMOVE_PAGE: {
+      const { [action.payload]: _, ...remaining } = state;
+      return remaining;
+    }
     case UPDATE_ELEMENT_NAME: {
       if (Object.keys(state).includes(action.payload.id)) {
         return {
