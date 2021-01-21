@@ -1,7 +1,12 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
 import { TStyle, Element, Widget, WidgetProp } from '@ui-builder/types';
-import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition, makeGetComponents } from 'selectors/element';
+import {
+  makeGetElement,
+  makeGenerateDefaultName,
+  makeGetNextPosition,
+  makeGetComponents,
+} from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
 
@@ -17,6 +22,7 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
         return {
           type: 'grid',
           css: '',
+          classNames: '',
           layout: [
             [0, 0],
             [0, 0],
@@ -27,6 +33,7 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
         return {
           type: 'flex',
           css: '',
+          classNames: '',
         };
       }
     }
@@ -34,9 +41,10 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
       return {
         type: 'page',
         css: '',
+        classNames: '',
       };
     }
-    return { type: 'base', css: '' };
+    return { type: 'base', css: '', classNames: '' };
   }
   throw Error();
 };
@@ -63,7 +71,9 @@ export const addWidget = (
   );
   const defaultStyle = getDefaultStyle(parentElement);
   const position = makeGetNextPosition()(state, parentElement.id);
-  const hasChildren = Boolean(makeGetComponents()(state).find(c => c.name === component)?.hasChildren);
+  const hasChildren = Boolean(
+    makeGetComponents()(state).find((c) => c.name === component)?.hasChildren,
+  );
   const widget: Widget = {
     id: uuidv4(),
     type: 'widget',
@@ -108,7 +118,7 @@ interface IUpdateWidgetProps {
 export const updateWidgetProps = (
   id: string,
   key: string,
-  prop: WidgetProp
+  prop: WidgetProp,
 ): IUpdateWidgetProps => ({
   type: UPDATE_WIDGET_PROPS,
   payload: {

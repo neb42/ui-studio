@@ -6,14 +6,26 @@ import {
   Action$Widget,
 } from 'actions/widget';
 import { REMOVE_LAYOUT, IRemoveLayout } from 'actions/layout';
-import { UPDATE_ELEMENT_NAME, UPDATE_ELEMENT_CSS, IUpdateElementName, UpdateElementCSS } from 'actions/element';
+import {
+  UPDATE_ELEMENT_NAME,
+  UPDATE_ELEMENT_CSS,
+  UPDATE_ELEMENT_CLASS_NAMES,
+  IUpdateElementName,
+  UpdateElementCSS,
+  UpdateElementClassNames,
+} from 'actions/element';
 import { Store$Widget } from 'types/store';
 
 const initialState: Store$Widget = {};
 
 export const widget = (
   state: Store$Widget = initialState,
-  action: Action$Widget | IUpdateElementName | IRemoveLayout | UpdateElementCSS,
+  action:
+    | Action$Widget
+    | IUpdateElementName
+    | IRemoveLayout
+    | UpdateElementCSS
+    | UpdateElementClassNames,
 ): Store$Widget => {
   switch (action.type) {
     case ADD_WIDGET: {
@@ -90,6 +102,21 @@ export const widget = (
             style: {
               ...state[action.payload.id].style,
               css: action.payload.css,
+            },
+          },
+        };
+      }
+      return state;
+    }
+    case UPDATE_ELEMENT_CLASS_NAMES: {
+      if (Object.keys(state).includes(action.payload.id)) {
+        return {
+          ...state,
+          [action.payload.id]: {
+            ...state[action.payload.id],
+            style: {
+              ...state[action.payload.id].style,
+              classNames: action.payload.classNames,
             },
           },
         };

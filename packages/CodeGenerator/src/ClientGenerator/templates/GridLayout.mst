@@ -1,7 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const layout_{{{ name }}} = styled.div`
+const Grid = styled.div`
+  height: 100%;
+  width: 100%;
+
   display: grid;
   grid-template-columns:{{ #columns }} {{ value }}{{ unit }}{{ /columns }};
   grid-template-rows:{{ #rows }} {{ value }}{{ unit }}{{ /rows }};
@@ -12,6 +15,10 @@ const layout_{{{ name }}} = styled.div`
   grid-row: {{grid.row.start}} / {{grid.row.end}};
   grid-column: {{grid.column.start}} / {{grid.column.end}};
   {{ /grid }}
+
+  {{{ css }}}
 `;
+
+const layout_{{{ name }}} = ({ children }) => React.createElement(Grid, { className: '{{{ classNames }}}' }, children);  
 
 export default layout_{{{ name }}};

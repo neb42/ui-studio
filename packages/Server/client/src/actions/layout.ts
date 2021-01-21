@@ -17,6 +17,7 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
         return {
           type: 'grid',
           css: '',
+          classNames: '',
           layout: [
             [0, 0],
             [0, 0],
@@ -27,6 +28,7 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
         return {
           type: 'flex',
           css: '',
+          classNames: '',
         };
       }
     }
@@ -34,9 +36,10 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
       return {
         type: 'page',
         css: '',
+        classNames: '',
       };
     }
-    return { type: 'base', css: '' };
+    return { type: 'base', css: '', classNames: '' };
   }
   throw Error();
 };

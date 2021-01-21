@@ -2,7 +2,14 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IconButton, Select, MenuItem, TextField } from '@material-ui/core';
 import { Edit, Functions, Widgets } from '@material-ui/icons';
-import { Widget, ComponentConfig, WidgetProp, WidgetProp$Static, WidgetProp$Variable, WidgetProp$Widget } from '@ui-builder/types';
+import {
+  Widget,
+  ComponentConfig,
+  WidgetProp,
+  WidgetProp$Static,
+  WidgetProp$Variable,
+  WidgetProp$Widget,
+} from '@ui-builder/types';
 import { updateWidgetProps } from 'actions/widget';
 import { getWidgets, getVariables } from 'selectors/element';
 
@@ -21,7 +28,7 @@ type SelectEvent = React.ChangeEvent<{
 }>;
 
 const StaticConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
-  const widgetProp = widget.props[config.key]; 
+  const widgetProp = widget.props[config.key];
 
   if (widgetProp.mode !== 'static')
     throw Error(`Trying to render static config editor for ${widgetProp.mode} prop`);
@@ -60,11 +67,7 @@ const StaticConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
       );
     case 'select':
       return (
-        <Select
-          value={widgetProp.value}
-          onChange={handleSelectOnChange}
-          style={{ width: '100%' }}
-        >
+        <Select value={widgetProp.value} onChange={handleSelectOnChange} style={{ width: '100%' }}>
           {config.options.map((o) => (
             <MenuItem key={o.label} value={o.value}>
               {o.label}
@@ -81,18 +84,22 @@ const StaticConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
 };
 
 const VariableConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
-  const widgetProp = widget.props[config.key]; 
+  const widgetProp = widget.props[config.key];
 
   if (widgetProp.mode !== 'variable')
     throw Error(`Trying to render variable config editor for ${widgetProp.mode} prop`);
 
-  const buildVariableWidgetProps = (variableId: string, type: 'string' | 'number' | 'boolean' | 'object', lookup?: string): WidgetProp$Variable => {
+  const buildVariableWidgetProps = (
+    variableId: string,
+    type: 'string' | 'number' | 'boolean' | 'object',
+    lookup?: string,
+  ): WidgetProp$Variable => {
     if (type === 'object')
       return {
         mode: 'variable',
         type: 'object',
         variableId,
-        lookup: lookup || '', 
+        lookup: lookup || '',
       };
 
     return {
@@ -142,7 +149,7 @@ const VariableConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
 };
 
 const WidgetConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
-  const widgetProp = widget.props[config.key]; 
+  const widgetProp = widget.props[config.key];
 
   if (widgetProp.mode !== 'widget')
     throw Error(`Trying to render widget config editor for ${widgetProp.mode} prop`);
@@ -165,11 +172,7 @@ const WidgetConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
 
   return (
     <>
-      <Select
-        value={widgetProp.widgetId}
-        onChange={handleIdChange}
-        style={{ width: '100%' }}
-      >
+      <Select value={widgetProp.widgetId} onChange={handleIdChange} style={{ width: '100%' }}>
         {widgets.map((w) => (
           <MenuItem key={w.name} value={w.name}>
             {w.name}
@@ -229,7 +232,7 @@ export const ConfigOption = ({ widget, config }: ConfigOptionProps): JSX.Element
     handleOnChange(defaultProp);
   };
 
-  const widgetProp = widget.props[config.key]; 
+  const widgetProp = widget.props[config.key];
 
   if (!widgetProp) {
     handleToggleMode('static')();

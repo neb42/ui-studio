@@ -9,6 +9,7 @@ import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig/GridLayoutCon
 import { GridParentStyle } from 'components/Grid/GridParentStyle';
 import { WidgetConfig } from 'components/WidgetConfig';
 import { CSSInput } from 'components/CSSInput';
+import { ClassNamesInput } from 'components/ClassNamesInput';
 
 import * as Styles from './ElementConfig.styles';
 
@@ -107,6 +108,7 @@ export const ElementConfig = (): JSX.Element => {
           parentElement?.layoutType === 'grid' && (
             <GridParentStyle element={selectedElement} parent={parentElement} />
           )}
+        {tabIndex === 1 && <ClassNamesInput element={selectedElement} />}
         {tabIndex === 1 && <CSSInput element={selectedElement} />}
       </Styles.Field>
     </Styles.Container>

@@ -1,4 +1,4 @@
-import { access, promises as fs } from 'fs';
+import { promises as fs } from 'fs';
 import * as path from 'path';
 
 import * as Mustache from 'mustache';
@@ -7,21 +7,21 @@ import { Widget, Variable, StaticVariable, FunctionVariable } from '@ui-builder/
 import { FilePaths } from '../FilePaths';
 
 const generateVariablesReducerFile = async (variables: Variable[]): Promise<void> => {
-  const staticVariables = (variables.filter(
-    (v) => v.type === 'static',
-  ) as StaticVariable[]).map((v) => {
-    if (v.valueType === 'string')
-      return {
-        ...v,
-        value: typeof v.value === 'string' ? `'${v.value}'` : v.value,
-      };
-    if (v.valueType === 'object') 
-      return {
-        ...v,
-        value: JSON.parse(v.value),
-      };
-    return v;
-  });
+  const staticVariables = (variables.filter((v) => v.type === 'static') as StaticVariable[]).map(
+    (v) => {
+      if (v.valueType === 'string')
+        return {
+          ...v,
+          value: typeof v.value === 'string' ? `'${v.value}'` : v.value,
+        };
+      if (v.valueType === 'object')
+        return {
+          ...v,
+          value: JSON.parse(v.value),
+        };
+      return v;
+    },
+  );
   const functionVariables = (variables.filter(
     (v) => v.type === 'function',
   ) as FunctionVariable[]).map((f) => ({

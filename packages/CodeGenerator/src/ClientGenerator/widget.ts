@@ -40,6 +40,7 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
         widgetProps,
         events,
         css: w.style.css,
+        classNames: w.style.classNames,
         exposedProperties: [],
         library: w.library === 'custom' ? 'functions-pkg' : w.library,
         grid: null,

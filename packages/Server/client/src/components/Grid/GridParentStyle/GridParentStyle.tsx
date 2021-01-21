@@ -26,6 +26,7 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
       type: 'grid',
       layout: grid,
       css: element.style.css,
+      classNames: element.style.classNames,
     };
 
     if (element.type === 'widget') {

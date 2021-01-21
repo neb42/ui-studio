@@ -5,14 +5,21 @@ import {
   UPDATE_LAYOUT_STYLE,
   Action$Layout,
 } from 'actions/layout';
-import { UPDATE_ELEMENT_NAME, UPDATE_ELEMENT_CSS, IUpdateElementName, UpdateElementCSS } from 'actions/element';
+import {
+  UPDATE_ELEMENT_NAME,
+  UPDATE_ELEMENT_CSS,
+  UPDATE_ELEMENT_CLASS_NAMES,
+  IUpdateElementName,
+  UpdateElementCSS,
+  UpdateElementClassNames,
+} from 'actions/element';
 import { Store$Layout } from 'types/store';
 
 const initialState: Store$Layout = {};
 
 export const layout = (
   state: Store$Layout = initialState,
-  action: Action$Layout | IUpdateElementName | UpdateElementCSS,
+  action: Action$Layout | IUpdateElementName | UpdateElementCSS | UpdateElementClassNames,
 ): Store$Layout => {
   switch (action.type) {
     case ADD_LAYOUT: {
@@ -84,6 +91,21 @@ export const layout = (
             style: {
               ...state[action.payload.id].style,
               css: action.payload.css,
+            },
+          },
+        };
+      }
+      return state;
+    }
+    case UPDATE_ELEMENT_CLASS_NAMES: {
+      if (Object.keys(state).includes(action.payload.id)) {
+        return {
+          ...state,
+          [action.payload.id]: {
+            ...state[action.payload.id],
+            style: {
+              ...state[action.payload.id].style,
+              classNames: action.payload.classNames,
             },
           },
         };

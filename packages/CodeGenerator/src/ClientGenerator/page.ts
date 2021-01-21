@@ -16,26 +16,28 @@ const renameChildren = (children: ElementTreeNode[]): ElementTreeNode[] =>
 
 const generatePageFiles = (elementTree: ElementTreeNode[]): Promise<void[]> => {
   return Promise.all(
-    elementTree.map(async (e) => {
-      const [data, recursiveImport, recursiveElement] = await Promise.all([
-        fs.readFile(path.join(__dirname, 'templates', 'Page.mst')),
-        fs.readFile(path.join(__dirname, 'templates', 'RecursiveImport.mst')),
-        fs.readFile(path.join(__dirname, 'templates', 'RecursiveElement.mst')),
-      ]);
-      const renderedFile = Mustache.render(
-        data.toString(),
-        {
-          name: makeName(e.name, e.id),
-          type: e.type,
-          children: renameChildren(e.children),
-        },
-        {
-          recursive_import: recursiveImport.toString(),
-          recursive_element: recursiveElement.toString(),
-        },
-      );
-      return fs.writeFile(path.join(FilePaths.pages, makeName(e.name, e.id, true)), renderedFile);
-    }),
+    elementTree
+      .filter((e) => e.type === 'page')
+      .map(async (e) => {
+        const [data, recursiveImport, recursiveElement] = await Promise.all([
+          fs.readFile(path.join(__dirname, 'templates', 'Page.mst')),
+          fs.readFile(path.join(__dirname, 'templates', 'RecursiveImport.mst')),
+          fs.readFile(path.join(__dirname, 'templates', 'RecursiveElement.mst')),
+        ]);
+        const renderedFile = Mustache.render(
+          data.toString(),
+          {
+            name: makeName(e.name, e.id),
+            type: e.type,
+            children: renameChildren(e.children),
+          },
+          {
+            recursive_import: recursiveImport.toString(),
+            recursive_element: recursiveElement.toString(),
+          },
+        );
+        return fs.writeFile(path.join(FilePaths.pages, makeName(e.name, e.id, true)), renderedFile);
+      }),
   );
 };
 

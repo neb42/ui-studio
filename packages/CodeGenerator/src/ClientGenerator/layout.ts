@@ -14,6 +14,8 @@ const generateGridLayoutFiles = async (layouts: Layout[]): Promise<void[]> => {
 
       const renderConfig = {
         name: makeName(l.name, l.id),
+        css: l.style.css,
+        classNames: l.style.classNames,
         columns: l.props.columns,
         rows: l.props.rows,
         grid: null,
@@ -49,6 +51,8 @@ const generateFlexLayoutFiles = async (layouts: Layout[]): Promise<void[]> => {
 
       const renderConfig = {
         name: makeName(l.name, l.id),
+        css: l.style.css,
+        classNames: l.style.classNames,
         columns: l.props.columns,
         rows: l.props.rows,
         grid: null,

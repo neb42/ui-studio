@@ -2,6 +2,7 @@ import { InitFunctions, Component } from '@ui-builder/types';
 
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
 export const UPDATE_ELEMENT_CSS = 'UPDATE_ELEMENT_CSS';
+export const UPDATE_ELEMENT_CLASS_NAMES = 'UPDATE_ELEMENT_CLASS_NAMES';
 export const SELECT_PAGE = 'SELECT_PAGE';
 export const SELECT_ELEMENT = 'SELECT_ELEMENT';
 export const SELECT_VIEW = 'SELECT_VIEW';
@@ -40,15 +41,33 @@ export interface UpdateElementCSS {
   };
 }
 
-export const updateElementCSS= (
-  id: string,
-  css: string,
-): UpdateElementCSS => {
+export const updateElementCSS = (id: string, css: string): UpdateElementCSS => {
   return {
     type: UPDATE_ELEMENT_CSS,
     payload: {
       id,
       css,
+    },
+  };
+};
+
+export interface UpdateElementClassNames {
+  type: 'UPDATE_ELEMENT_CLASS_NAMES';
+  payload: {
+    id: string;
+    classNames: string;
+  };
+}
+
+export const updateElementClassNames = (
+  id: string,
+  classNames: string,
+): UpdateElementClassNames => {
+  return {
+    type: UPDATE_ELEMENT_CLASS_NAMES,
+    payload: {
+      id,
+      classNames,
     },
   };
 };
