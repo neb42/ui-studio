@@ -1,3 +1,4 @@
+import { ArrowRightSharp } from '@material-ui/icons';
 import { Variable, StaticVariable, FunctionVariable } from '@ui-builder/types';
 import {
   Action$Variable,
@@ -24,8 +25,28 @@ export const variable = (
       };
     }
     case REMOVE_VARIABLE: {
-      const { [action.payload]: _, ...remaining } = state;
-      return remaining;
+      return Object.keys(state).reduce((acc, cur) => {
+        if (cur === action.payload) return acc;
+        const current = state[cur];
+        if (current.type === 'function') {
+          return {
+            ...acc,
+            [cur]: {
+              ...current,
+              args: current.args.map((a) => {
+                if (a.type === 'variable' && a.variableId === action.payload) {
+                  return { type: 'static', valueType: 'string', value: '' };
+                }
+                return a;
+              }),
+            },
+          };
+        }
+        return {
+          ...acc,
+          [cur]: current,
+        };
+      }, {});
     }
     case UPDATE_VARIABLE_NAME: {
       return {

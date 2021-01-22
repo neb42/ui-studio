@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
 import { Variable, FunctionVariableArg } from '@ui-builder/types';
-import { TGetState, TThunkAction } from 'types/store';
+import { TThunkAction } from 'types/store';
 
 export interface SelectVariable {
   type: 'SELECT_VARIABLE';
@@ -41,7 +41,7 @@ export const addVariable = (): TThunkAction<AddVariable> => (
   });
 };
 
-interface RemoveVariable {
+export interface RemoveVariable {
   type: 'REMOVE_VARIABLE';
   payload: string;
 }

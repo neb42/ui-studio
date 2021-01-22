@@ -7,6 +7,7 @@ import {
 } from 'actions/widget';
 import { REMOVE_LAYOUT, IRemoveLayout } from 'actions/layout';
 import { REMOVE_PAGE, RemovePage } from 'actions/page';
+import { REMOVE_VARIABLE, RemoveVariable } from 'actions/variable';
 import {
   UPDATE_ELEMENT_NAME,
   UPDATE_ELEMENT_CSS,
@@ -27,7 +28,8 @@ export const widget = (
     | IRemoveLayout
     | UpdateElementCSS
     | UpdateElementClassNames
-    | RemovePage,
+    | RemovePage
+    | RemoveVariable,
 ): Store$Widget => {
   switch (action.type) {
     case ADD_WIDGET: {
@@ -87,6 +89,28 @@ export const widget = (
           };
         }
         return acc;
+      }, {});
+    }
+    case REMOVE_VARIABLE: {
+      return Object.keys(state).reduce((acc, cur) => {
+        const current = state[cur];
+        return {
+          ...acc,
+          [cur]: {
+            ...current,
+            props: Object.keys(current.props).reduce((a, c) => {
+              const currentProp = current.props[c];
+              if (currentProp.mode === 'variable' && currentProp.variableId === action.payload) {
+                return {
+                  mode: 'static',
+                  type: 'string',
+                  value: '',
+                };
+              }
+              return { ...acc, [c]: currentProp };
+            }, {}),
+          },
+        };
       }, {});
     }
     case UPDATE_WIDGET_PROPS: {

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Select, MenuItem } from '@material-ui/core';
-import { updateVariableName, updateVariableType } from 'actions/variable';
+import { TextField, Select, MenuItem, IconButton } from '@material-ui/core';
+import { DeleteSharp } from '@material-ui/icons';
+import { updateVariableName, updateVariableType, removeVariable } from 'actions/variable';
 import { makeGetSelectedVariable } from 'selectors/element';
 import { StaticVariableConfig } from 'components/Variables/StaticVariableConfig';
 import { FunctionVariableConfig } from 'components/Variables/FunctionVariableConfig';
@@ -43,10 +44,19 @@ export const VariableConfig = () => {
     }
   };
 
+  const handleRemoveVariable = () => {
+    if (selectedVariable) {
+      dispatch(removeVariable(selectedVariable.id));
+    }
+  };
+
   if (!selectedVariable) return <div>empty state</div>;
 
   return (
     <Styles.Container>
+      <IconButton onClick={handleRemoveVariable} size="small">
+        <DeleteSharp />
+      </IconButton>
       <Styles.Name>
         <TextField
           id="name"
