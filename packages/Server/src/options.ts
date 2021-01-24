@@ -1,4 +1,5 @@
 import yargs from 'yargs';
+import getPort from 'get-port';
 
 const { argv } = yargs
   .option('path', {
@@ -17,8 +18,24 @@ const { argv } = yargs
     description: 'Path to build generated code at',
   });
 
-export const PORT = argv.port || process.env.PORT || 3002;
-export const FUNCTIONS_PATH = argv.path || process.env.FUNCTIONS_PATH || '';
-export const GENERATED_CODE_PATH =
-  argv.generated || process.env.GENERATED_PATH || '/tmp/GeneratedCode';
-if (FUNCTIONS_PATH === '') throw Error('No functions path specified');
+let PREVIEW_CLIENT_PORT, PREVIEW_SERVER_PORT, SERVER_PORT; 
+export const getOptions = async () => {
+  if (!PREVIEW_CLIENT_PORT)
+    PREVIEW_CLIENT_PORT = await getPort({ port: argv.port || Number(process.env.PREVIEW_CLIENT_PORT) || 3000 });
+  if (!PREVIEW_SERVER_PORT)
+    PREVIEW_SERVER_PORT = await getPort({ port: argv.port || Number(process.env.PREVIEW_SERVER_PORT) || 3001 });
+  if (!SERVER_PORT)
+    SERVER_PORT = await getPort({ port: argv.port || Number(process.env.SERVER_PORT) || 3002 });
+  const GENERATED_CODE_PATH = argv.generated || process.env.GENERATED_PATH || '/tmp/GeneratedCode';
+  const FUNCTIONS_PATH = argv.path || process.env.FUNCTIONS_PATH || '';
+  if (FUNCTIONS_PATH === '') throw Error('No functions path specified');
+
+  return {
+    PREVIEW_CLIENT_PORT,
+    PREVIEW_SERVER_PORT,
+    SERVER_PORT,
+    GENERATED_CODE_PATH,
+    FUNCTIONS_PATH,
+  };
+};  
+

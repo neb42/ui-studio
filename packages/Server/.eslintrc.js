@@ -16,6 +16,7 @@ module.exports = {
     '@faculty/eslint-config-base',
   ],
   rules: {
+    'no-console': 0,
     'flowtype/no-types-missing-file-annotation': 0,
     'import/prefer-default-export': 0,
     'import/extensions': [

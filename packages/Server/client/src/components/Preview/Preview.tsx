@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import { InitFunctions, Component } from '@ui-builder/types';
-import { makeGetElements, getVariables } from 'selectors/element';
+import { makeGetElements, getVariables, getPages } from 'selectors/element';
 import { initComponents, initFunctions, selectPage } from 'actions/element';
 
 import * as Styles from './Preview.styles';
@@ -17,17 +17,15 @@ interface IPreview {
 */
 export const Preview = ({ pageName }: IPreview): JSX.Element => {
   const dispatch = useDispatch();
-  const [previewServer, setPreviewServer] = React.useState<{ host: string; port: string } | null>(
+  const pages = Object.values(useSelector(getPages));
+  const [previewServer, setPreviewServer] = React.useState<{ host: string; clientPort: number; serverPort: number } | null>(
     null,
   );
   const [random, setRandom] = React.useState(Math.random());
-  // TODO set properly
-  const serverSocket = React.useMemo(() => io('http://localhost:3002'), []);
+  const serverSocket = React.useMemo(() => io('/'), []);
   const previewSocket = React.useMemo(() => {
     if (previewServer) {
-      // TODO set properly
-      // return io(`${previewServer.host}:${previewServer.port + 1}`);
-      return io('http://localhost:3001');
+      return io(`${previewServer.host}:${previewServer.serverPort}`);
     }
     return null;
   }, [JSON.stringify(previewServer)]);
@@ -49,9 +47,10 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
         dispatch(initComponents(components)),
       );
       previewSocket.on('navigate-page', (response: { url: string }) => {
-        const url = response.url.replace('/', '');
-        if (url !== pageName) {
-          dispatch(selectPage(url));
+        const newPageName = response.url.replace('/', '');
+        if (newPageName !== pageName) {
+          const newPageId = pages.find(p => p.name === newPageName)?.id 
+          if (newPageId) dispatch(selectPage(newPageId));;
         }
       });
     }
@@ -64,6 +63,6 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
   if (!previewServer) return <div />;
 
   return (
-    <Styles.Iframe key={random} src={`${previewServer.host}:${previewServer.port}/${pageName}`} />
+    <Styles.Iframe key={random} src={`${previewServer.host}:${previewServer.clientPort}/${pageName}`} />
   );
 };

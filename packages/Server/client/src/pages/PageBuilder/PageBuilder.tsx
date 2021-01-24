@@ -31,7 +31,7 @@ export const PageBuilder = (): JSX.Element => {
           <ElementTree pageId={pageId} />
           <PopoverNavigation />
         </Styles.ColLeft>
-        <Preview pageName={pageId} />
+        <Preview pageName={pageName} />
         <Styles.ColRight>
           <ElementConfig />
         </Styles.ColRight>

@@ -8,10 +8,11 @@ import express from 'express';
 import socketio from 'socket.io';
 import { run as generateCode } from '@ui-builder/code-generator';
 
-import { PORT, FUNCTIONS_PATH } from './options';
+import { getOptions } from './options';
 import { initCode } from './preview';
 
 const run = async () => {
+  const { SERVER_PORT, FUNCTIONS_PATH, PREVIEW_CLIENT_PORT, PREVIEW_SERVER_PORT } = await getOptions();
   await initCode();
 
   const app = express();
@@ -23,7 +24,7 @@ const run = async () => {
   io.origins('*:*');
 
   io.on('connection', (socket) => {
-    socket.emit('set-server', { host: 'http://localhost', port: 3000 });
+    socket.emit('set-server', { host: 'http://localhost', serverPort: PREVIEW_SERVER_PORT, clientPort: PREVIEW_CLIENT_PORT });
 
     socket.on('elements-updated', async (elements) => {
       await generateCode(elements, FUNCTIONS_PATH, true);
@@ -36,8 +37,8 @@ const run = async () => {
     res.sendFile(path.join(__dirname, 'client', 'index.html'));
   });
 
-  server.listen(PORT, () => {
-    console.log(`listening on *:${PORT}`);
+  server.listen(SERVER_PORT, () => {
+    console.log(`listening on *:${SERVER_PORT}`);
   });
 };
 

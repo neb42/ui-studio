@@ -57,15 +57,14 @@ router.get('/init-functions', async (request, response, next) => {
 
 const app = express();
 app.use(cookieParser());
-{{! app.use(cors({ origin: true })); }}
-app.use(cors());
+app.use(cors({ origin: true }));
 app.use('/api', router);
 
 app.get('*', (request, response) => {
   response.sendFile(path.join(__dirname + '/index.html'));
 });
 
-const port = 3001;
+const port = process.env.PORT;
 
 {{! if (require.main === module) {
   app.listen(port, error => {

@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 
 import { run as generateCode } from '@ui-builder/code-generator';
 
-import { GENERATED_CODE_PATH, FUNCTIONS_PATH } from './options';
+import { getOptions } from './options';
 
-const clientPath = path.join(GENERATED_CODE_PATH, 'client');
-const severPath = path.join(GENERATED_CODE_PATH, 'server');
+export const initCode = async (): Promise<void> => {
+  const { GENERATED_CODE_PATH, FUNCTIONS_PATH, PREVIEW_SERVER_PORT, PREVIEW_CLIENT_PORT } = await getOptions();
 
-export const initCode = async () => {
+  const clientPath = path.join(GENERATED_CODE_PATH, 'client');
+  const severPath = path.join(GENERATED_CODE_PATH, 'server');
+
   await generateCode(null, FUNCTIONS_PATH, true);
 
   const logError = (error, stdout, stderr) => {
@@ -19,26 +21,36 @@ export const initCode = async () => {
       console.error(`exec error: ${error}`);
       return;
     }
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
+    if (stdout) console.log(`stdout: ${stdout}`);
+    if (stderr) console.error(`stderr: ${stderr}`);
   };
 
-  let devServer;
-  exec('yarn', { cwd: severPath }, logError).on('exit', (code) => {
-    devServer = exec(
-      `nodemon -w ${path.join(FUNCTIONS_PATH, 'build')} -x "yarn dev"`,
-      { cwd: severPath },
-      logError,
-    );
-  });
+  const startPreviewServer = () => {
+    exec(`nodemon -w ${path.join(FUNCTIONS_PATH, 'build')} -x "env PORT=${PREVIEW_SERVER_PORT} yarn dev"`, {
+      cwd: severPath,
+    });
+  };
 
-  let devClient;
-  exec('yarn', { cwd: clientPath }, logError).on('exit', (code) => {
-    devClient = exec('env BROWSER=none yarn start', { cwd: clientPath }, logError);
-  });
+  const startPreviewClient = () => {
+    exec(`env BROWSER=none PORT=${PREVIEW_CLIENT_PORT} yarn start`, { cwd: clientPath }, logError);
+  };
 
-  fs.watch(path.join(FUNCTIONS_PATH, 'src'), { recursive: true }, () => {
-    console.info('Building functions');
-    exec('yarn build', { cwd: FUNCTIONS_PATH }, logError);
+  const buildFunctions = () => {
+    execSync('yarn build', { cwd: FUNCTIONS_PATH });
+  };
+
+  const installPackages = () => {
+    exec('yarn', { cwd: clientPath }, logError);
+  };
+
+  installPackages();
+  buildFunctions();
+  startPreviewServer();
+  startPreviewClient();
+
+  fs.watch(path.join(FUNCTIONS_PATH, 'package.json'), { recursive: true }, () => {
+    installPackages();
+    buildFunctions();
   });
+  fs.watch(path.join(FUNCTIONS_PATH, 'src'), { recursive: true }, buildFunctions);
 };
