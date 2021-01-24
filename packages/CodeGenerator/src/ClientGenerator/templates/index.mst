@@ -1,12 +1,15 @@
-{{=<% %>=}}
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { defaultTokens } from '@faculty/adler-tokens';
 
 import App from './App';
 import store from './store';
+{{ #dev }}
+import DevCommunicator from './DevCommunicator';
+{{ /dev }}
 
 import subscriber from './subscriber';
 
@@ -32,8 +35,13 @@ const GlobalStyles = createGlobalStyle`
 ReactDOM.render(
   <ThemeProvider theme={defaultTokens}>
     <Provider store={store}>
-      <GlobalStyles />
-      <App />
+      <Router>
+        <GlobalStyles />
+        <App />
+        {{ #dev }}
+        <DevCommunicator />
+        {{ /dev }}
+      </Router>
     </Provider>
   </ThemeProvider>,
   rootElement,

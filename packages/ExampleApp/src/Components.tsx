@@ -12,7 +12,7 @@ const Text = {
   config: [
     { component: 'input', key: 'text', label: 'Text', type: 'string' },
   ],
-  component: ({ text }) => <span>{text}</span>,
+  component: ({ text, onClick }) => <span onClick={onClick}>{text}</span>,
 };
 
 const ChildRenderer = {

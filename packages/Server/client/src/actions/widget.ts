@@ -1,12 +1,11 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
-import { TStyle, Element, Widget, WidgetProp } from '@ui-builder/types';
+import { TStyle, Element, Widget, WidgetProp, Event } from '@ui-builder/types';
 import {
   makeGetElement,
   makeGenerateDefaultName,
   makeGetNextPosition,
   makeGetComponents,
-  getParentElement,
 } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
@@ -64,17 +63,39 @@ export const addWidget = (
   getState: TGetState,
 ) => {
   const state = getState();
+
   const parentElement = makeGetElement()(state, parent);
   if (!parentElement) throw Error();
+
+  const componentConfig = makeGetComponents()(state).find((c) => c.name === component);
+  if (!componentConfig) throw Error();
+
   const name = makeGenerateDefaultName()(
     state,
     component.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
   );
   const defaultStyle = getDefaultStyle(parentElement);
   const position = makeGetNextPosition()(state, parentElement.id);
-  const hasChildren = Boolean(
-    makeGetComponents()(state).find((c) => c.name === component)?.hasChildren,
-  );
+  const hasChildren = Boolean(componentConfig.hasChildren);
+  const events = componentConfig.events.reduce((acc, cur) => ({ ...acc, [cur.key]: [] }), {});
+  const props = componentConfig.config.reduce((acc, cur) => {
+    const defaultProp = (() => {
+      switch (cur.type) {
+        case 'string':
+          return { mode: 'static', type: 'string', value: '' };
+        case 'number':
+          return { mode: 'static', type: 'number', value: 0 };
+        case 'boolean':
+          return { mode: 'static', type: 'boolean', value: true };
+        case 'object':
+          return { mode: 'static', type: 'object', value: '' };
+        default:
+          throw Error();
+      }
+    })();
+    return { ...acc, [cur.key]: defaultProp };
+  }, {});
+
   const widget: Widget = {
     id: uuidv4(),
     type: 'widget',
@@ -84,8 +105,8 @@ export const addWidget = (
     parent,
     position,
     hasChildren,
-    props: {},
-    events: {},
+    props,
+    events,
     style: defaultStyle,
   };
 
@@ -155,4 +176,82 @@ export const updateWidgetStyle = (id: string, style: TStyle): IUpdateWidgetStyle
   },
 });
 
-export type Action$Widget = IAddWidget | IRemoveWidget | IUpdateWidgetProps | IUpdateWidgetStyle;
+interface AddWidgetEvent {
+  type: 'ADD_WIDGET_EVENT';
+  payload: {
+    id: string;
+    eventKey: string;
+    event: Event;
+  };
+}
+
+export const ADD_WIDGET_EVENT = 'ADD_WIDGET_EVENT';
+
+export const addWidgetEvent = (id: string, eventKey: string, event: Event): AddWidgetEvent => ({
+  type: ADD_WIDGET_EVENT,
+  payload: {
+    id,
+    eventKey,
+    event,
+  },
+});
+
+interface UpdateWidgetEvent {
+  type: 'UPDATE_WIDGET_EVENT';
+  payload: {
+    id: string;
+    eventKey: string;
+    index: number;
+    event: Event;
+  };
+}
+
+export const UPDATE_WIDGET_EVENT = 'UPDATE_WIDGET_EVENT';
+
+export const updateWidgetEvent = (
+  id: string,
+  eventKey: string,
+  index: number,
+  event: Event,
+): UpdateWidgetEvent => ({
+  type: UPDATE_WIDGET_EVENT,
+  payload: {
+    id,
+    eventKey,
+    index,
+    event,
+  },
+});
+
+interface RemoveWidgetEvent {
+  type: 'REMOVE_WIDGET_EVENT';
+  payload: {
+    id: string;
+    eventKey: string;
+    index: number;
+  };
+}
+
+export const REMOVE_WIDGET_EVENT = 'REMOVE_WIDGET_EVENT';
+
+export const removeWidgetEvent = (
+  id: string,
+  eventKey: string,
+  index: number,
+): RemoveWidgetEvent => ({
+  type: REMOVE_WIDGET_EVENT,
+  payload: {
+    id,
+    eventKey,
+    index,
+  },
+});
+
+export type Action$Widget =
+  | IAddWidget
+  | IRemoveWidget
+  | IUpdateWidgetProps
+  | IUpdateWidgetStyle
+  | AddWidgetEvent
+  | UpdateWidgetEvent
+  | RemoveWidgetEvent;

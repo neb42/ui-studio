@@ -10,6 +10,7 @@ import { GridParentStyle } from 'components/Grid/GridParentStyle';
 import { WidgetConfig } from 'components/WidgetConfig';
 import { CSSInput } from 'components/CSSInput';
 import { ClassNamesInput } from 'components/ClassNamesInput';
+import { EventConfig } from 'components/EventConfig';
 
 import * as Styles from './ElementConfig.styles';
 
@@ -94,6 +95,7 @@ export const ElementConfig = (): JSX.Element => {
       <Tabs variant="fullWidth" value={tabIndex} onChange={(_, newIdx) => setTabIndex(newIdx)}>
         <Tab label="Config" />
         <Tab label="Style" />
+        {selectedElement.type === 'widget' && <Tab label="Events" />}
       </Tabs>
       <Styles.Field>
         {tabIndex === 0 &&
@@ -110,6 +112,9 @@ export const ElementConfig = (): JSX.Element => {
           )}
         {tabIndex === 1 && <ClassNamesInput element={selectedElement} />}
         {tabIndex === 1 && <CSSInput element={selectedElement} />}
+        {selectedElement.type === 'widget' && tabIndex === 2 && (
+          <EventConfig widget={selectedElement} />
+        )}
       </Styles.Field>
     </Styles.Container>
   );

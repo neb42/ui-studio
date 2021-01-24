@@ -42,8 +42,18 @@ const generateVariablesReducerFile = async (variables: Variable[]): Promise<void
 };
 
 const generateWidgetReducerFile = async (widgets: Widget[]): Promise<void> => {
+  const parsedWidgets = widgets.map((w) => ({
+    ...w,
+    events: Object.keys(w.events).map((e) => ({
+      key: e,
+      updateVariable: w.events[e].filter((ev) => ev.type === 'update-variable'),
+      triggerAction: w.events[e].filter((ev) => ev.type === 'trigger-action'),
+      navigatePage: w.events[e].filter((ev) => ev.type === 'navigate-page'),
+    })),
+  }));
+
   const data = await fs.readFile(path.join(__dirname, 'templates', 'WidgetReducer.mst'));
-  const renderedFile = Mustache.render(data.toString(), { widgets });
+  const renderedFile = Mustache.render(data.toString(), { widgets: parsedWidgets });
   return fs.writeFile(path.join(FilePaths.reducers, 'widget.js'), renderedFile);
 };
 

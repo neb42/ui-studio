@@ -1,4 +1,5 @@
 import { TStyle } from './style';
+import { Event } from './event';
 
 export type WidgetProp$Static = {
   mode: 'static'
@@ -32,7 +33,9 @@ export interface Widget {
   component: string;
   library: string;
   props: { [key: string]: WidgetProp };
-  events: { [key: string]: { }};
+  events: {
+    [key: string]: Event[];
+  };
   position: number;
   style: TStyle;
   hasChildren: boolean;

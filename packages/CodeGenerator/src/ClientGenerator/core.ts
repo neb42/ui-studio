@@ -6,14 +6,20 @@ import * as Mustache from 'mustache';
 import { FilePaths } from '../FilePaths';
 
 const coreFiles = [
-  { template: 'index.html.mst', fileName: path.join(FilePaths.public, 'index.html') },
-  { template: 'Store.mst', fileName: path.join(FilePaths.clientSrc, 'store.js') },
-  { template: 'App.mst', fileName: path.join(FilePaths.clientSrc, 'App.js') },
-  { template: 'index.mst', fileName: path.join(FilePaths.clientSrc, 'index.js') },
+  { template: 'index.html.mst', fileName: path.join(FilePaths.public, 'index.html'), dev: false },
+  { template: 'Store.mst', fileName: path.join(FilePaths.clientSrc, 'store.js'), dev: false },
+  { template: 'App.mst', fileName: path.join(FilePaths.clientSrc, 'App.js'), dev: false },
+  { template: 'index.mst', fileName: path.join(FilePaths.clientSrc, 'index.js'), dev: false },
+  {
+    template: 'DevCommunicator.mst',
+    fileName: path.join(FilePaths.clientSrc, 'DevCommunicator.js'),
+    dev: true,
+  },
 ];
 
 const baseDependencies = [
   { name: 'axios', version: 'latest', last: false },
+  { name: 'socket.io-client', version: '^2.3.0', last: false },
   { name: 'react', version: 'latest', last: false },
   { name: 'react-dom', version: 'latest', last: false },
   { name: 'react-scripts', version: 'latest', last: false },
@@ -56,16 +62,22 @@ const generatePackageDotJsonFile = async (source: string, dev: boolean): Promise
   return fs.writeFile(path.join(FilePaths.client, 'package.json'), renderedFile);
 };
 
-const generateParameterlessFile = async (template: string, fileName: string): Promise<void> => {
+const generateParameterlessFile = async (
+  template: string,
+  fileName: string,
+  dev: boolean,
+): Promise<void> => {
   const data = await fs.readFile(path.join(__dirname, 'templates', template));
-  const renderedFile = Mustache.render(data.toString(), {});
+  const renderedFile = Mustache.render(data.toString(), { dev });
   return fs.writeFile(fileName, renderedFile);
 };
 
 const generateCoreFiles = (source: string, dev: boolean): Promise<void[]> => {
   return Promise.all([
     generatePackageDotJsonFile(source, dev),
-    ...coreFiles.map((f) => generateParameterlessFile(f.template, f.fileName)),
+    ...coreFiles
+      .filter((f) => !f.dev || dev)
+      .map((f) => generateParameterlessFile(f.template, f.fileName, dev)),
   ]);
 };
 

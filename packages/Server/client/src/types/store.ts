@@ -1,6 +1,15 @@
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { Page, Layout, Widget, InitFunctions, IOverlay, Variable, Component } from '@ui-builder/types';
+import {
+  Page,
+  Layout,
+  Widget,
+  FunctionDefinition,
+  ActionDefinition,
+  IOverlay,
+  Variable,
+  Component,
+} from '@ui-builder/types';
 
 export interface KeyedObject<T> {
   [key: string]: T;
@@ -12,7 +21,8 @@ export type Store$Element = {
   selectedElement: string | null;
   selectedVariable: string | null;
   selectedView: 'preview' | 'variable' | 'css';
-  functions: InitFunctions[];
+  functions: FunctionDefinition[];
+  actions: ActionDefinition[];
   components: Component[];
 };
 export type Store$Page = KeyedObject<Page>;

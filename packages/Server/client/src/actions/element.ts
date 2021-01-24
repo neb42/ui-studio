@@ -104,10 +104,10 @@ export const selectView = (view: 'preview' | 'variable' | 'css'): SelectView => 
 
 interface IInitFunctions {
   type: 'INIT_FUNCTIONS';
-  payload: InitFunctions[];
+  payload: InitFunctions;
 }
 
-export const initFunctions = (functions: InitFunctions[]): IInitFunctions => ({
+export const initFunctions = (functions: InitFunctions): IInitFunctions => ({
   type: INIT_FUNCTIONS,
   payload: functions,
 });

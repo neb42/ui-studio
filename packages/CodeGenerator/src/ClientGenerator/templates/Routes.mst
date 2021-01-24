@@ -1,19 +1,17 @@
 {{=<% %>=}}
 import React from 'react';
-import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 <% #pages %>
 import page_<% name %> from './pages/<% name %>';
 <% /pages %>
 
 const Routes = () => (
-  <Router>
-    <Switch>
-      <% #pages %>
-      <Route path="/<% route %>" component={page_<% name %>} />
-      <% /pages %>
-    </Switch>
-  </Router>
+  <Switch>
+    <% #pages %>
+    <Route path="/<% route %>" component={page_<% name %>} />
+    <% /pages %>
+  </Switch>
 );
 
 export default Routes;

@@ -99,6 +99,7 @@ const variable = (state = initialState, action) => {
       return {
         ...state,
         results: {
+          ...state.results,
           [action.id]: action.value,
         },
      }; 

@@ -3,6 +3,9 @@ import {
   REMOVE_WIDGET,
   UPDATE_WIDGET_PROPS,
   UPDATE_WIDGET_STYLE,
+  ADD_WIDGET_EVENT,
+  UPDATE_WIDGET_EVENT,
+  REMOVE_WIDGET_EVENT,
   Action$Widget,
 } from 'actions/widget';
 import { REMOVE_LAYOUT, IRemoveLayout } from 'actions/layout';
@@ -175,6 +178,49 @@ export const widget = (
         };
       }
       return state;
+    }
+    case ADD_WIDGET_EVENT: {
+      return {
+        ...state,
+        [action.payload.id]: {
+          ...state[action.payload.id],
+          events: {
+            ...state[action.payload.id].events,
+            [action.payload.eventKey]: [
+              ...state[action.payload.id].events[action.payload.eventKey],
+              action.payload.event,
+            ],
+          },
+        },
+      };
+    }
+    case UPDATE_WIDGET_EVENT: {
+      const events = state[action.payload.id].events[action.payload.eventKey];
+      events[action.payload.index] = action.payload.event;
+      return {
+        ...state,
+        [action.payload.id]: {
+          ...state[action.payload.id],
+          events: {
+            ...state[action.payload.id].events,
+            [action.payload.eventKey]: events,
+          },
+        },
+      };
+    }
+    case REMOVE_WIDGET_EVENT: {
+      const events = state[action.payload.id].events[action.payload.eventKey];
+      events.splice(action.payload.index, 1);
+      return {
+        ...state,
+        [action.payload.id]: {
+          ...state[action.payload.id],
+          events: {
+            ...state[action.payload.id].events,
+            [action.payload.eventKey]: events,
+          },
+        },
+      };
     }
     default:
       return state;

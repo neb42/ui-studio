@@ -30,9 +30,10 @@ const generateWidgetFiles = async (widgets: Widget[]): Promise<void[]> => {
         return [...acc, { key: cur, ...p }];
       }, []);
 
-      const events = Object.keys(w.events).map((key) => ({ key, ...w.events[key] }));
+      const events = Object.keys(w.events);
 
       const renderConfig = {
+        id: w.id,
         name: makeName(w.name, w.id),
         component: w.component,
         staticProps,

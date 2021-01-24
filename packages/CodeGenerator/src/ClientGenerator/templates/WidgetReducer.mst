@@ -1,9 +1,60 @@
 const initialState = {
   {{ #widgets }}
   '{{ id }}': {
-  {{ #properties }}
-    '{{ id }}': {{{ defaultValue }}},
-  {{ /properties }}
+    properties: {
+      {{ #properties }}
+      '{{ id }}': {{{ defaultValue }}},
+      {{ /properties }}
+    },
+    events: {
+      {{ #events }}
+      '{{ key }}': [
+        {{ #updateVariable }}
+        {
+          type: '{{{ type }}}',
+          variableId: '{{{ variableId }}}',
+        },
+        {{ /updateVariable }}
+        {{ #resetVariable}}
+        {
+          type: '{{{ type }}}',
+          variableId: '{{{ variableId }}}',
+        },
+        {{ /resetVariable}}
+        {{ #triggerAction}}
+        {
+          type: '{{{ type }}}',
+          actionId: '{{{ actionId }}}',
+          args: [
+            {{ #args }}
+            {
+              type: '{{ type }}',
+              {{ #value }}
+              value: {{{ value }}},
+              {{ /value }}
+              {{ #variableId }}
+              variableId: '{{ variableId }}',
+              {{ /variableId }}
+              {{ #widgetId }}
+              widgetId: '{{ widgetId }}',
+              {{ /widgetId }}
+              {{ #property }}
+              property: '{{{ property }}}',
+              {{ /property }}
+            },
+            {{ /args }}
+          ],
+        },
+        {{ /triggerAction}}
+        {{ #navigatePage}}
+        {
+          type: '{{{ type }}}',
+          pageId: '{{{ pageId }}}',
+        },
+        {{ /navigatePage}}
+      ],
+      {{ /events }}
+    },
   },
   {{ /widgets }}
 };

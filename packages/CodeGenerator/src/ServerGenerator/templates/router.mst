@@ -19,9 +19,22 @@ router.use(
 );
 
 const functions = new Functions();
-functions.registered.forEach(f => {
+functions.registered.functions.forEach(f => {
   router.post(
     `/function_${f.name}`,
+    async (request, response, next) => {
+      try {
+        const data = await functions[f.name](request.body);
+        response.status(200).send({ data });
+      } catch (error) {
+        next(error);
+      };
+    },
+  );
+});
+functions.registered.actions.forEach(f => {
+  router.post(
+    `/action_${f.name}`,
     async (request, response, next) => {
       try {
         const data = await functions[f.name](request.body);
@@ -44,7 +57,8 @@ router.get('/init-functions', async (request, response, next) => {
 
 const app = express();
 app.use(cookieParser());
-app.use(cors({ origin: true }));
+{{! app.use(cors({ origin: true })); }}
+app.use(cors());
 app.use('/api', router);
 
 app.get('*', (request, response) => {
@@ -80,8 +94,12 @@ io.on('connection', (socket) => {
     icon: c.icon,
     library: 'custom',
     config: c.config,
+    events: c.events,
     hasChildren: c.hasChildren,
   })));
+  socket.on('navigate-page', (url) => {
+    socket.broadcast.emit('navigate-page', url);
+  });
 });
 
 if (require.main === module) {

@@ -1,6 +1,11 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
 import Graph from 'graph-data-structure';
-import { ElementTreeNode, InitFunctions, Component } from '@ui-builder/types';
+import {
+  ElementTreeNode,
+  Component,
+  FunctionDefinition,
+  ActionDefinition,
+} from '@ui-builder/types';
 import {
   Store,
   Store$Page,
@@ -160,7 +165,10 @@ export const makeGetNextPosition = () =>
 
 export const makeGetComponents = () => (state: Store): Component[] => state.element.components;
 
-export const makeGetFunctions = () => (state: Store): InitFunctions[] => state.element.functions;
+export const makeGetFunctions = () => (state: Store): FunctionDefinition[] =>
+  state.element.functions;
+
+export const makeGetActions = () => (state: Store): ActionDefinition[] => state.element.actions;
 
 export const makeGetSelectedVariable = () =>
   createSelector(getSelectedVariableId, getVariables, (selectedVariableId, variables) =>

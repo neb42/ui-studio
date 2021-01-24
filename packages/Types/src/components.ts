@@ -15,6 +15,11 @@ export interface ComponentConfig$Select extends BaseComponentConfig {
 
 export type ComponentConfig = ComponentConfig$Input | ComponentConfig$Select;
 
+export type Component$Event = {
+  key: string;
+  label: string;
+};
+
 export interface Component {
   name: string;
   description: string;
@@ -22,5 +27,6 @@ export interface Component {
   library: string;
   icon: string;
   hasChildren: boolean;
+  events: Component$Event[];
   config: ComponentConfig[];
 }

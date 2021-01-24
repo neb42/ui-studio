@@ -16,6 +16,7 @@ const initialState: Store$Element = {
   selectedVariable: null,
   selectedView: 'preview',
   functions: [],
+  actions: [],
   components: [],
 };
 
@@ -52,7 +53,8 @@ export const element = (
     case INIT_FUNCTIONS: {
       return {
         ...state,
-        functions: action.payload,
+        functions: action.payload.functions,
+        actions: action.payload.actions,
       };
     }
     case INIT_COMPONENTS: {

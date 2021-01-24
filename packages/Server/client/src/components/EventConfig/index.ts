@@ -1,0 +1,1 @@
+export { EventConfig } from './EventConfig';
