@@ -4,12 +4,13 @@ import { exec, execSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 
+import open from 'open';
 import { run as generateCode } from '@ui-builder/code-generator';
 
 import { getOptions } from './options';
 
 export const initCode = async (): Promise<void> => {
-  const { GENERATED_CODE_PATH, FUNCTIONS_PATH, PREVIEW_SERVER_PORT, PREVIEW_CLIENT_PORT } = await getOptions();
+  const { GENERATED_CODE_PATH, FUNCTIONS_PATH, PREVIEW_SERVER_PORT, PREVIEW_CLIENT_PORT, SERVER_PORT } = await getOptions();
 
   const clientPath = path.join(GENERATED_CODE_PATH, 'client');
   const severPath = path.join(GENERATED_CODE_PATH, 'server');
@@ -47,6 +48,8 @@ export const initCode = async (): Promise<void> => {
   buildFunctions();
   startPreviewServer();
   startPreviewClient();
+
+  open(`http://localhost:${SERVER_PORT}`)
 
   fs.watch(path.join(FUNCTIONS_PATH, 'package.json'), { recursive: true }, () => {
     installPackages();
