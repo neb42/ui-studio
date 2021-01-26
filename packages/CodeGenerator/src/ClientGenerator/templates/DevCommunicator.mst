@@ -3,11 +3,11 @@ import io from 'socket.io-client';
 import { useLocation } from 'react-router-dom';
 
 const DevCommunicator = () => {
-  const serverSocket = React.useMemo(() => io('/'), []);
+  const socket = React.useMemo(() => io('/'), []);
   const location = useLocation();
   
   React.useEffect(() => {
-    serverSocket.emit('navigate-page', { url: location.pathname });
+    socket.emit('navigate-page', { url: location.pathname });
   }, [location.pathname]);
 
   return null;
