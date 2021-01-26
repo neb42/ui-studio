@@ -88,7 +88,7 @@ const Widget_{{{ name }}} = ({
   const [ref, setRef] = React.useState();
 
   React.useEffect(() => {
-    updateWidget('{{{ name }}}', {
+    updateWidget('{{{ id }}}', {
       {{ #exposedProperties }}
       {{{ . }}}: ref.{{{ . }}},
       {{ /exposedProperties }}
