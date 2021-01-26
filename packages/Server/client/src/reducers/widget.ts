@@ -15,9 +15,11 @@ import {
   UPDATE_ELEMENT_NAME,
   UPDATE_ELEMENT_CSS,
   UPDATE_ELEMENT_CLASS_NAMES,
+  INIT_CLIENT,
   IUpdateElementName,
   UpdateElementCSS,
   UpdateElementClassNames,
+  InitClient,
 } from 'actions/element';
 import { Store$Widget } from 'types/store';
 
@@ -32,7 +34,8 @@ export const widget = (
     | UpdateElementCSS
     | UpdateElementClassNames
     | RemovePage
-    | RemoveVariable,
+    | RemoveVariable
+    | InitClient,
 ): Store$Widget => {
   switch (action.type) {
     case ADD_WIDGET: {
@@ -221,6 +224,9 @@ export const widget = (
           },
         },
       };
+    }
+    case INIT_CLIENT: {
+      return action.payload.widgets;
     }
     default:
       return state;

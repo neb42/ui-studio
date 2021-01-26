@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { readFileSync } from 'fs';
 import { exec, execSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -10,12 +11,21 @@ import { run as generateCode } from '@ui-builder/code-generator';
 import { getOptions } from './options';
 
 export const initCode = async (): Promise<void> => {
-  const { GENERATED_CODE_PATH, FUNCTIONS_PATH, PREVIEW_SERVER_PORT, PREVIEW_CLIENT_PORT, SERVER_PORT } = await getOptions();
+  const {
+    GENERATED_CODE_PATH,
+    FUNCTIONS_PATH,
+    PREVIEW_SERVER_PORT,
+    PREVIEW_CLIENT_PORT,
+    SERVER_PORT,
+  } = await getOptions();
 
   const clientPath = path.join(GENERATED_CODE_PATH, 'client');
   const severPath = path.join(GENERATED_CODE_PATH, 'server');
 
-  await generateCode(null, FUNCTIONS_PATH, true);
+  const clientJsonPath = path.join(FUNCTIONS_PATH, 'client.json');
+  const clientJson = JSON.parse(readFileSync(clientJsonPath).toString());
+
+  await generateCode(clientJson, FUNCTIONS_PATH, true);
 
   const logError = (error, stdout, stderr) => {
     if (error) {
@@ -27,9 +37,15 @@ export const initCode = async (): Promise<void> => {
   };
 
   const startPreviewServer = () => {
-    exec(`nodemon -w ${path.join(FUNCTIONS_PATH, 'build')} -x "env PORT=${PREVIEW_SERVER_PORT} yarn dev"`, {
-      cwd: severPath,
-    });
+    exec(
+      `nodemon -w ${path.join(
+        FUNCTIONS_PATH,
+        'build',
+      )} -x "env PORT=${PREVIEW_SERVER_PORT} yarn dev"`,
+      {
+        cwd: severPath,
+      },
+    );
   };
 
   const startPreviewClient = () => {
@@ -49,7 +65,7 @@ export const initCode = async (): Promise<void> => {
   startPreviewServer();
   startPreviewClient();
 
-  open(`http://localhost:${SERVER_PORT}`)
+  open(`http://localhost:${SERVER_PORT}`);
 
   fs.watch(path.join(FUNCTIONS_PATH, 'package.json'), { recursive: true }, () => {
     installPackages();

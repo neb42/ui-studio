@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import { InitFunctions, Component } from '@ui-builder/types';
+import { Store$Page, Store$Layout, Store$Widget, Store$Variable } from 'types/store';
 import { makeGetElements, getVariables, getPages } from 'selectors/element';
-import { initComponents, initFunctions, selectPage } from 'actions/element';
+import { initComponents, initFunctions, initClient, selectPage } from 'actions/element';
 
 import * as Styles from './Preview.styles';
 
@@ -18,9 +19,12 @@ interface IPreview {
 export const Preview = ({ pageName }: IPreview): JSX.Element => {
   const dispatch = useDispatch();
   const pages = Object.values(useSelector(getPages));
-  const [previewServer, setPreviewServer] = React.useState<{ host: string; clientPort: number; serverPort: number } | null>(
-    null,
-  );
+  const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
+  const [previewServer, setPreviewServer] = React.useState<{
+    host: string;
+    clientPort: number;
+    serverPort: number;
+  } | null>(null);
   const [random, setRandom] = React.useState(Math.random());
   const serverSocket = React.useMemo(() => io('/'), []);
   const previewSocket = React.useMemo(() => {
@@ -34,6 +38,18 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
   const variables = useSelector(getVariables);
 
   React.useEffect(() => {
+    serverSocket.on(
+      'init-client',
+      async (client: {
+        pages: Store$Page;
+        layouts: Store$Layout;
+        widgets: Store$Widget;
+        variables: Store$Variable;
+      }) => {
+        await dispatch(initClient(client));
+        setIsLoaded(true);
+      },
+    );
     serverSocket.on('set-server', setPreviewServer);
     serverSocket.on('code-updated', () => setRandom(Math.random()));
   }, []);
@@ -49,20 +65,23 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
       previewSocket.on('navigate-page', (response: { url: string }) => {
         const newPageName = response.url.replace('/', '');
         if (newPageName !== pageName) {
-          const newPageId = pages.find(p => p.name === newPageName)?.id 
-          if (newPageId) dispatch(selectPage(newPageId));;
+          const newPageId = pages.find((p) => p.name === newPageName)?.id;
+          if (newPageId) dispatch(selectPage(newPageId));
         }
       });
     }
   }, [previewSocket]);
 
   React.useEffect(() => {
-    serverSocket.emit('elements-updated', { ...elements, variables });
+    if (isLoaded) serverSocket.emit('elements-updated', { ...elements, variables });
   }, [JSON.stringify(elements), JSON.stringify(variables)]);
 
   if (!previewServer) return <div />;
 
   return (
-    <Styles.Iframe key={random} src={`${previewServer.host}:${previewServer.clientPort}/${pageName}`} />
+    <Styles.Iframe
+      key={random}
+      src={`${previewServer.host}:${previewServer.clientPort}/${pageName}`}
+    />
   );
 };

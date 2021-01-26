@@ -1,4 +1,5 @@
 import { InitFunctions, Component } from '@ui-builder/types';
+import { Store$Page, Store$Widget, Store$Layout, Store$Variable } from 'types/store';
 
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
 export const UPDATE_ELEMENT_CSS = 'UPDATE_ELEMENT_CSS';
@@ -122,10 +123,33 @@ export const initComponents = (components: Component[]): IInitComponents => ({
   payload: components,
 });
 
+export interface InitClient {
+  type: 'INIT_CLIENT';
+  payload: {
+    pages: Store$Page;
+    layouts: Store$Layout;
+    widgets: Store$Widget;
+    variables: Store$Variable;
+  };
+}
+
+export const INIT_CLIENT = 'INIT_CLIENT';
+
+export const initClient = (client: {
+  pages: Store$Page;
+  layouts: Store$Layout;
+  widgets: Store$Widget;
+  variables: Store$Variable;
+}): InitClient => ({
+  type: INIT_CLIENT,
+  payload: client,
+});
+
 export type Action$Element =
   | ISelectPage
   | ISelectElement
   | SelectView
   | IUpdateElementName
   | IInitFunctions
-  | IInitComponents;
+  | IInitComponents
+  | InitClient;

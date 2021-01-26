@@ -9,13 +9,14 @@ import {
   UPDATE_STATIC_VARIABLE,
   UPDATE_FUNCTION_VARIABLE,
 } from 'actions/variable';
+import { INIT_CLIENT, InitClient } from 'actions/element';
 import { Store$Variable } from 'types/store';
 
 const initialState: Store$Variable = {};
 
 export const variable = (
   state: Store$Variable = initialState,
-  action: Action$Variable,
+  action: Action$Variable | InitClient,
 ): Store$Variable => {
   switch (action.type) {
     case ADD_VARIABLE: {
@@ -111,6 +112,9 @@ export const variable = (
           ...action.payload,
         } as FunctionVariable,
       };
+    }
+    case INIT_CLIENT: {
+      return action.payload.variables;
     }
     default:
       return state;

@@ -3,9 +3,11 @@ import {
   UPDATE_ELEMENT_NAME,
   UPDATE_ELEMENT_CSS,
   UPDATE_ELEMENT_CLASS_NAMES,
+  INIT_CLIENT,
   IUpdateElementName,
   UpdateElementCSS,
   UpdateElementClassNames,
+  InitClient,
 } from 'actions/element';
 import { ADD_PAGE, REMOVE_PAGE, Action$Page } from 'actions/page';
 import { Store$Page } from 'types/store';
@@ -38,7 +40,12 @@ const initialState: Store$Page = {
 
 export const page = (
   state: Store$Page = initialState,
-  action: Action$Page | IUpdateElementName | UpdateElementCSS | UpdateElementClassNames,
+  action:
+    | Action$Page
+    | IUpdateElementName
+    | UpdateElementCSS
+    | UpdateElementClassNames
+    | InitClient,
 ): Store$Page => {
   switch (action.type) {
     case ADD_PAGE: {
@@ -92,6 +99,9 @@ export const page = (
         };
       }
       return state;
+    }
+    case INIT_CLIENT: {
+      return action.payload.pages;
     }
     default:
       return state;

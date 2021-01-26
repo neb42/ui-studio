@@ -9,9 +9,11 @@ import {
   UPDATE_ELEMENT_NAME,
   UPDATE_ELEMENT_CSS,
   UPDATE_ELEMENT_CLASS_NAMES,
+  INIT_CLIENT,
   IUpdateElementName,
   UpdateElementCSS,
   UpdateElementClassNames,
+  InitClient,
 } from 'actions/element';
 import { REMOVE_PAGE, RemovePage } from 'actions/page';
 import { REMOVE_WIDGET, IRemoveWidget } from 'actions/widget';
@@ -27,7 +29,8 @@ export const layout = (
     | UpdateElementCSS
     | UpdateElementClassNames
     | RemovePage
-    | IRemoveWidget,
+    | IRemoveWidget
+    | InitClient,
 ): Store$Layout => {
   switch (action.type) {
     case ADD_LAYOUT: {
@@ -155,6 +158,9 @@ export const layout = (
         };
       }
       return state;
+    }
+    case INIT_CLIENT: {
+      return action.payload.layouts;
     }
     default:
       return state;

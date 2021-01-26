@@ -4,6 +4,7 @@ import {
   SELECT_VIEW,
   INIT_FUNCTIONS,
   INIT_COMPONENTS,
+  INIT_CLIENT,
   Action$Element,
 } from 'actions/element';
 import { SELECT_VARIABLE, SelectVariable } from 'actions/variable';
@@ -61,6 +62,13 @@ export const element = (
       return {
         ...state,
         components: action.payload,
+      };
+    }
+    case INIT_CLIENT: {
+      return {
+        ...state,
+        selectedPage: Object.values(action.payload.pages)[0].id,
+        selectedElement: Object.values(action.payload.pages)[0].id,
       };
     }
     default:
