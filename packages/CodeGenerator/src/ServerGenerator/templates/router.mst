@@ -8,7 +8,10 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import socketio from 'socket.io';
-import { Functions, Components } from 'functions-pkg';
+import * as Custom from 'functions-pkg';
+{{ #componentPackages }}
+import * as {{ name }} from '{{ package }}';
+{{ /componentPackages }}
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -18,7 +21,8 @@ router.use(
   }),
 );
 
-const functions = new Functions();
+const functions = new Custom.Functions();
+
 functions.registered.functions.forEach(f => {
   router.post(
     `/function_${f.name}`,
@@ -32,6 +36,7 @@ functions.registered.functions.forEach(f => {
     },
   );
 });
+
 functions.registered.actions.forEach(f => {
   router.post(
     `/action_${f.name}`,
@@ -46,10 +51,9 @@ functions.registered.actions.forEach(f => {
   );
 });
 
-router.get('/init-functions', async (request, response, next) => {
+router.get('/healthz', async (request, response, next) => {
   try {
-    const data = functions.registered;
-    response.status(200).send({ data });
+    response.sendStatus(200);
   } catch (error) {
     next(error);
   };
@@ -66,36 +70,22 @@ app.get('*', (request, response) => {
 
 const port = process.env.PORT;
 
-{{! if (require.main === module) {
-  app.listen(port, error => {
-    if (error) {
-      console.error(error);
-    } else {
-      console.info(`Running with NODE_ENV=${process.env.NODE_ENV}`);
-      console.info('==> 🌎  Listening on http://localhost:%s/', port);
-    }
-  });
-} else {
-  module.exports = app;
-} }}
-
 const server = http.createServer(app);
 
 const io = socketio(server);
 io.origins('*:*');
 
+const customComponents = Object.values(Custom.Components).map(({ component: _, ...c }) => ({ ...c, library: 'custom' }));
+
+const packagedComponents = Object.values({
+  {{ #customComponents }}
+  ...{{ name }}.Components,
+  {{ /customComponents }}
+}).map(({ component: _, ...c }) => c);
+
 io.on('connection', (socket) => {
   socket.emit('init-functions', functions.registered);
-  socket.emit('init-components', Object.values(Components).map(c => ({
-    name: c.name,
-    description: c.description,
-    category: c.category,
-    icon: c.icon,
-    library: 'custom',
-    config: c.config,
-    events: c.events,
-    hasChildren: c.hasChildren,
-  })));
+  socket.emit('init-components', [...packagedComponents, ...customComponents]); 
   socket.on('navigate-page', (url) => {
     socket.broadcast.emit('navigate-page', url);
   });

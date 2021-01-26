@@ -1,6 +1,7 @@
 import { promises as fs, existsSync } from 'fs';
 import path from 'path';
 
+import readPkg from 'read-pkg';
 import Graph from 'graph-data-structure';
 import { Widget, Layout, Page, ElementTreeNode, Variable } from '@ui-builder/types';
 
@@ -70,6 +71,14 @@ export const run = async (_data: Data | null, source: string, dev: boolean): Pro
   await setupDirectory();
   const elementTree = buildElementTree(data);
 
+  const pkgJson = readPkg.sync(source);
+  const deps = Object.keys(pkgJson.dependencies || {});
+  const componentPackages: string[] =  pkgJson.componentPackages || [];
+
+  componentPackages.forEach(c => {
+    if (!deps.includes(c)) throw Error('Component package is not includes in dependencies');
+  });
+
   generateClient({
     elementTree,
     widgets: Object.values(data.widgets),
@@ -80,7 +89,7 @@ export const run = async (_data: Data | null, source: string, dev: boolean): Pro
     dev,
   });
 
-  generateServer(source, dev);
+  generateServer(componentPackages, source, dev);
 };
 
 if (typeof require !== 'undefined' && require.main === module) {

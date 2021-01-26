@@ -18,8 +18,8 @@
     "build": "rm -rf build/* && tsc && yarn copy-templates"
   },
   "dependencies": {
-    "eslint-plugin-flowtype": "^5.2.0",
     "graph-data-structure": "^1.12.1",
-    "mustache": "^4.0.1"
+    "mustache": "^4.0.1",
+    "read-pkg": "^5.2.0"
   }
 }

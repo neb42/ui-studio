@@ -5,9 +5,11 @@ import * as Mustache from 'mustache';
 
 import { FilePaths } from '../FilePaths';
 
-const generateRouterFile = async (): Promise<void> => {
+const generateRouterFile = async (componentPackages: string[]): Promise<void> => {
   const data = await fs.readFile(path.join(__dirname, 'templates', 'router.mst'));
-  const renderedFile = Mustache.render(data.toString(), {});
+  const renderedFile = Mustache.render(data.toString(), {
+    componentPackages: componentPackages.map((c) => ({ name: c, package: c })),
+  });
   return fs.writeFile(path.join(FilePaths.serverSrc, 'router.js'), renderedFile);
 };
 
