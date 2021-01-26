@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": ["es2020"],
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "outDir": "build",
+    "sourceMap": true,
+    "target": "es6",
+    "experimentalDecorators": true,
+    "esModuleInterop": true
+  },
+  "compileOnSave": true,
+  "include": [
+    "src"
+  ]
+}

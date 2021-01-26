@@ -12,7 +12,7 @@
     "start": "ui-builder --path /Users/bmcalindin/workspace/ui-builder/packages/ExampleApp"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.13"
+    "@ui-builder/typescript": "link:/Users/bmcalindin/workspace/ui-builder/packages/Typescript"
   },
   "devDependencies": {
     "@ui-builder/code-generator": "link:/Users/bmcalindin/workspace/ui-builder/packages/CodeGenerator",

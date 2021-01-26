@@ -1,0 +1,20 @@
+{
+  "name": "@ui-builder/typescript",
+  "version": "0.1.0",
+  "description": "> TODO: description",
+  "author": "Ben McAlindin <bmcalindin@faculty.ai>",
+  "homepage": "https://github.com/neb42/ui-builder#readme",
+  "license": "MIT",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neb42/ui-builder.git"
+  },
+  "scripts": {
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "build": "rm -rf build/* && tsc"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  }
+}
