@@ -26,13 +26,13 @@ interface Args {
   dev: boolean;
 }
 
-interface IRemoveExcessFiles {
+interface RemoveExcessFiles {
   widgets: Widget[];
   pages: Page[];
   layouts: Layout[];
 }
 
-const removeExcessFiles = async ({ widgets, layouts, pages }: IRemoveExcessFiles) => {
+const removeExcessFiles = async ({ widgets, layouts, pages }: RemoveExcessFiles): Promise<void> => {
   const componentNames = [
     ...widgets.map((w) => makeName(w.name, w.id, true)),
     ...layouts.map((l) => makeName(l.name, l.id, true)),
