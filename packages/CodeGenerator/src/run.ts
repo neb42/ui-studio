@@ -4,7 +4,6 @@ import readPkg from 'read-pkg';
 
 import generateServer from './ServerGenerator/generateServer';
 import generateClient from './ClientGenerator/generateClient';
-import * as FakeData from './fakeData';
 import { FilePaths } from './FilePaths';
 
 const mkdir = async (p: string) => {
@@ -42,7 +41,7 @@ export const run = async (source: string, dev: boolean): Promise<void> => {
 
 if (typeof require !== 'undefined' && require.main === module) {
   try {
-    run(FakeData.source, true);
+    run('/Users/bmcalindin/workspace/ui-builder/packages/ExampleApp', true);
   } catch (error) {
     console.log(error);
   }
