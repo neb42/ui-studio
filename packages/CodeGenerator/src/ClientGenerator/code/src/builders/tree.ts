@@ -3,9 +3,15 @@ import Graph from 'graph-data-structure';
 
 import { Store } from '../types/store';
 import { TreeNode } from '../types/tree';
+
 import { buildPage } from './page';
 
-export const useBuildTree = () => {
+export const useBuildTree = (): {
+  id: string;
+  name: string;
+  default: boolean;
+  component: React.FC<any>;
+}[] => {
   const { widgets, pages, layouts } = useSelector((state: Store) => ({
     widgets: state.widget.config,
     pages: state.page.config,

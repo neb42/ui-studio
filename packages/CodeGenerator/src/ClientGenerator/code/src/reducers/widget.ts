@@ -7,13 +7,17 @@ const initialState: Store$Widget = {
   value: {},
 };
 
-export const widget = (state: Store$Widget = initialState, action: UpdateWidget | UpdateTree) => {
+export const widget = (
+  state: Store$Widget = initialState,
+  action: UpdateWidget | UpdateTree,
+): Store$Widget => {
   switch (action.type) {
     case UPDATE_WIDGET: {
       return {
         ...state,
-        [action.payload.id]: {
-          ...action.payload,
+        value: {
+          ...state.value,
+          [action.payload.id]: action.payload.exposedProperties,
         },
       };
     }
@@ -21,8 +25,8 @@ export const widget = (state: Store$Widget = initialState, action: UpdateWidget 
       const { widgets: config } = action.payload;
       const value = Object.keys(config).reduce((acc, cur) => {
         if (JSON.stringify(config[cur]) !== JSON.stringify(state.config[cur])) {
-          // TODO
-          return { ...acc, [cur]: state.value[cur] };
+          // TODO populate exposed properties
+          return { ...acc, [cur]: {} };
         }
         return { ...acc, [cur]: state.value[cur] };
       }, {});

@@ -18,38 +18,40 @@ const handleChange = async () => {
 
   const definitions = getVariableDefinitions(currentValue);
 
-  Object.keys(definitions)
-    .forEach(async id => {
-      const def = definitions[id];
-      if (def.type === 'function' && def.trigger === 'auto') {
-        const prev = previousValue ? getVariableArgs(previousValue)(id) : null;
-        const current = currentValue ? getVariableArgs(currentValue)(id) : null;
+  Object.keys(definitions).forEach(async (id) => {
+    const def = definitions[id];
+    if (def.type === 'function' && def.trigger === 'auto') {
+      const prev = previousValue ? getVariableArgs(previousValue)(id) : null;
+      const current = currentValue ? getVariableArgs(currentValue)(id) : null;
 
-        if (JSON.stringify(prev) !== JSON.stringify(current) || !previousValue) {
-          try {
-            store.dispatch({
-              type: FUNCTION_API_CALL_PENDING,
-              payload: { id },
-            });
+      if (JSON.stringify(prev) !== JSON.stringify(current) || !previousValue) {
+        try {
+          store.dispatch({
+            type: FUNCTION_API_CALL_PENDING,
+            payload: { id },
+          });
 
-            const functionId = def.functionId;
-            const { data: { data }, status } = await axios.post(`/api/function_${functionId}`, current);
+          const { functionId } = def;
+          const {
+            data: { data },
+            status,
+          } = await axios.post(`/api/function_${functionId}`, current);
 
-            if (status !== 200) throw new Error(`Status code: ${status}`);
+          if (status !== 200) throw new Error(`Status code: ${status}`);
 
-            store.dispatch({
-              type: FUNCTION_API_CALL_FULFILLED,
-              payload: { id, data },
-            });
-          } catch(error) {
-            store.dispatch({
-              type: FUNCTION_API_CALL_REJECTED,
-              payload: { id },
-            });
-          }
+          store.dispatch({
+            type: FUNCTION_API_CALL_FULFILLED,
+            payload: { id, data },
+          });
+        } catch (error) {
+          store.dispatch({
+            type: FUNCTION_API_CALL_REJECTED,
+            payload: { id },
+          });
         }
       }
-    });
+    }
+  });
 };
 
 store.subscribe(handleChange);

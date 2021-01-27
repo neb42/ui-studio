@@ -6,10 +6,15 @@ export interface UpdateWidget {
   };
 }
 
-export const UPDATE_WIDGET = 'UPDATE_WIDGET'; 
+export const UPDATE_WIDGET = 'UPDATE_WIDGET';
 
-export const updateWidget = (id: string, exposedProperties: any) => ({
+export const updateWidget = (
+  id: string,
+  exposedProperties: { [key: string]: any },
+): UpdateWidget => ({
   type: UPDATE_WIDGET,
-  id,
-  payload: exposedProperties,
+  payload: {
+    id,
+    exposedProperties,
+  },
 });

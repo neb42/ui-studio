@@ -8,10 +8,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import socketio from 'socket.io';
-import * as Custom from 'functions-pkg';
-{{ #componentPackages }}
-import * as {{ name }} from '{{ package }}';
-{{ /componentPackages }}
+import { Functions } from 'functions-pkg';
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -21,7 +18,7 @@ router.use(
   }),
 );
 
-const functions = new Custom.Functions();
+const functions = new Functions();
 
 functions.registered.functions.forEach(f => {
   router.post(

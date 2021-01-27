@@ -1,15 +1,20 @@
 import { Store } from './types/store';
 
-export const getWidgetPropertyValue = (state: Store) => (widgetId: string, property: string) => state.widget.value[widgetId][property];
+export const getWidgetPropertyValue = (state: Store) => (widgetId: string, property: string) =>
+  state.widget.value?.[widgetId]?.[property] ?? null;
 
 export const getVariableDefinitions = (state: Store) => state.variable.config;
 
-const parseLookup = (variable: any, lookup: string) => lookup.split('.').reduce((acc, cur) => cur.length > 0 ? acc[cur] : acc, variable);
+const parseLookup = (variable: any, lookup: string) =>
+  lookup.split('.').reduce((acc, cur) => (cur.length > 0 ? acc[cur] : acc), variable);
 
-export const getVariableValue = (state: Store) => (variableId: string, lookup: string | null) =>{
+export const getVariableValue = (state: Store) => (variableId: string, lookup: string | null) => {
   const variable = state.variable.value[variableId];
   if (lookup && lookup.length > 0) {
-    if (JSON.stringify(Object.keys(variable).sort()) === JSON.stringify(['error', 'loading', 'value'].sort())) {
+    if (
+      JSON.stringify(Object.keys(variable).sort()) ===
+      JSON.stringify(['error', 'loading', 'value'].sort())
+    ) {
       try {
         return {
           ...variable,
@@ -30,9 +35,9 @@ export const getVariableValue = (state: Store) => (variableId: string, lookup: s
 
 export const getVariableArgs = (state: Store) => (variableId: string) => {
   const variable = getVariableDefinitions(state)[variableId];
-  if (variable.type !== 'function') throw Error();
+  if (variable.type !== 'function') return [];
 
-  return variable.args.map(a => {
+  return variable.args.map((a) => {
     if (a.type === 'static') {
       return a.value;
     }
@@ -45,6 +50,6 @@ export const getVariableArgs = (state: Store) => (variableId: string) => {
       return getVariableValue(state)(a.widgetId, a.property);
     }
 
-    throw Error();
+    return null;
   });
 };

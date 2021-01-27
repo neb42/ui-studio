@@ -5,7 +5,7 @@ import * as {{ name }} from '{{ package }}';
 {{ /components }}
 
 export const Components: {
-  [library: string]: { [component: string]: Component & { component: React.FC }},
+  [library: string]: { [component: string]: Component & { component: React.FC<any> }},
 } = {
   'custom': FunctionsPkg.Components,
   'functions-pkg': FunctionsPkg.Components,

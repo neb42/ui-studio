@@ -27,13 +27,17 @@ export interface UpdateFunctionVariable$Rejected {
 }
 
 export const FUNCTION_API_CALL_PENDING = 'FUNCTION_API_CALL_PENDING';
-export const FUNCTION_API_CALL_FULFILLED = 'FUNCTION_API_CALL_FULFILLED'; 
+export const FUNCTION_API_CALL_FULFILLED = 'FUNCTION_API_CALL_FULFILLED';
 export const FUNCTION_API_CALL_REJECTED = 'FUNCTION_API_CALL_REJECTED';
 
 export const updateFunctionVariable = (id: string) => async (
-  dispatch: Dispatch<UpdateFunctionVariable$Pending | UpdateFunctionVariable$Fulfilled | UpdateFunctionVariable$Rejected>,
+  dispatch: Dispatch<
+    | UpdateFunctionVariable$Pending
+    | UpdateFunctionVariable$Fulfilled
+    | UpdateFunctionVariable$Rejected
+  >,
   getState: GetState,
-) => {
+): Promise<void> => {
   try {
     dispatch({
       type: FUNCTION_API_CALL_PENDING,
@@ -47,9 +51,12 @@ export const updateFunctionVariable = (id: string) => async (
       throw Error();
     }
 
-    const functionId = variableDef.functionId;
+    const { functionId } = variableDef;
     const args = getVariableArgs(state)(id);
-    const { data: { data }, status } = await axios.post(`/api/function_${functionId}`, args);
+    const {
+      data: { data },
+      status,
+    } = await axios.post(`/api/function_${functionId}`, args);
 
     if (status !== 200) throw new Error(`Status code: ${status}`);
 

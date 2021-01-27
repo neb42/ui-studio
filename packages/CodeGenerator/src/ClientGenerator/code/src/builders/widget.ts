@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router';
 import styled from 'styled-components';
@@ -45,7 +45,7 @@ export const buildWidget = (widget: Widget) => {
       return acc;
     }, {});
 
-    const loading = Object.keys(rawValues).some(k => {
+    const loading = Object.keys(rawValues).some((k) => {
       const v = rawValues[k];
       if (v && typeof v === 'object' && Object.keys(v).includes('loading')) {
         if (v.loading) {
@@ -55,7 +55,7 @@ export const buildWidget = (widget: Widget) => {
       return false;
     });
 
-    const error = Object.keys(rawValues).some(k => {
+    const error = Object.keys(rawValues).some((k) => {
       const v = rawValues[k];
       if (v && typeof v === 'object' && Object.keys(v).includes('error')) {
         if (v.error) {
@@ -70,7 +70,7 @@ export const buildWidget = (widget: Widget) => {
       if (v && typeof v === 'object' && Object.keys(v).includes('value')) {
         return {
           ...acc,
-          [cur]: v.value, 
+          [cur]: v.value,
         };
       }
       return { ...acc, [cur]: v };
@@ -83,12 +83,16 @@ export const buildWidget = (widget: Widget) => {
     };
   };
 
-  const mapDispatchToProps = (dispatch: any) =>  bindActionCreators({
-    updateWidget,
-    handleEvent,
-  }, dispatch);
+  const mapDispatchToProps = (dispatch: any) =>
+    bindActionCreators(
+      {
+        updateWidget,
+        handleEvent,
+      },
+      dispatch,
+    );
 
-  const Widget: React.FC<any> = (props: any) => {
+  const W: React.FC<any> = (props: any) => {
     const eventHandlers = Object.keys(widget.events).reduce((acc, cur) => {
       return {
         ...acc,
@@ -100,26 +104,38 @@ export const buildWidget = (widget: Widget) => {
       height: 100%;
       width: 100%;
 
-      ${widget.style.type === 'grid' ? `
+      ${widget.style.type === 'grid'
+        ? `
         grid-row: ${widget.style.layout[0][0]} / ${widget.style.layout[1][0] + 1};
         grid-column: ${widget.style.layout[0][1]} / ${widget.style.layout[1][1] + 1};
-      ` : ''}
+      `
+        : ''}
 
       ${widget.style.css}
     `;
+
+    const handleExposedPropetyUpdate = (exposedProperties: { [key: string]: any }) => {
+      props.updateWidget(widget.id, exposedProperties);
+    };
 
     return React.createElement(
       WidgetWrapper,
       { className: widget.style.classNames },
       React.createElement(
         Components[widget.library][widget.component].component,
-        Object.keys(widget.props).reduce((acc, cur) => {
-          return { ...acc, [cur]: props[cur] };
-        }, eventHandlers),
+        Object.keys(widget.props).reduce(
+          (acc, cur) => {
+            return { ...acc, [cur]: props[cur] };
+          },
+          {
+            ...eventHandlers,
+            onExposedPropertiesChange: handleExposedPropetyUpdate,
+          },
+        ),
         props.children,
       ),
     );
   };
 
-  return connect(mapStateToProps, mapDispatchToProps)(withRouter(Widget));
+  return connect(mapStateToProps, mapDispatchToProps)(withRouter(W));
 };

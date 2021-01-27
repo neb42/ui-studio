@@ -5,7 +5,7 @@ const initialState: Store$Layout = {
   config: {},
 };
 
-export const layout = (state: Store$Layout = initialState, action: UpdateTree) => {
+export const layout = (state: Store$Layout = initialState, action: UpdateTree): Store$Layout => {
   switch (action.type) {
     case UPDATE_TREE: {
       return {

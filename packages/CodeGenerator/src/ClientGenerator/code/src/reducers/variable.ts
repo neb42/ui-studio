@@ -1,16 +1,16 @@
 import { Store$Variable } from '../types/store';
-import { 
+import {
   UpdateFunctionVariable$Pending,
   UpdateFunctionVariable$Fulfilled,
   UpdateFunctionVariable$Rejected,
   FUNCTION_API_CALL_PENDING,
   FUNCTION_API_CALL_FULFILLED,
-  FUNCTION_API_CALL_REJECTED, 
+  FUNCTION_API_CALL_REJECTED,
 } from '../actions/updateFunctionVariable';
 import { UpdateStaticVariable, UPDATE_STATIC_VARIABLE } from '../actions/updateStaticVariable';
 import { UpdateTree, UPDATE_TREE } from '../actions/updateTree';
 
-type Action$Variable = 
+type Action$Variable =
   | UpdateFunctionVariable$Pending
   | UpdateFunctionVariable$Fulfilled
   | UpdateFunctionVariable$Rejected
@@ -22,7 +22,10 @@ const initialState: Store$Variable = {
   value: {},
 };
 
-export const variable = (state: Store$Variable = initialState, action: Action$Variable) => {
+export const variable = (
+  state: Store$Variable = initialState,
+  action: Action$Variable,
+): Store$Variable => {
   switch (action.type) {
     case FUNCTION_API_CALL_PENDING: {
       return {
@@ -40,11 +43,11 @@ export const variable = (state: Store$Variable = initialState, action: Action$Va
     case FUNCTION_API_CALL_FULFILLED: {
       return {
         ...state,
-        results: {
-          ...state.config,
+        value: {
+          ...state.value,
           [action.payload.id]: {
-            ...state.config[action.payload.id],
-            value: action.payload,
+            ...state.value[action.payload.id],
+            value: action.payload.data,
             loading: false,
             error: false,
           },
@@ -54,10 +57,10 @@ export const variable = (state: Store$Variable = initialState, action: Action$Va
     case FUNCTION_API_CALL_REJECTED: {
       return {
         ...state,
-        results: {
-          ...state.config,
+        value: {
+          ...state.value,
           [action.payload.id]: {
-            ...state.config[action.payload.id],
+            ...state.value[action.payload.id],
             loading: false,
             error: true,
           },
@@ -67,17 +70,30 @@ export const variable = (state: Store$Variable = initialState, action: Action$Va
     case UPDATE_STATIC_VARIABLE: {
       return {
         ...state,
-        results: {
-          ...state.config,
+        value: {
+          ...state.value,
           [action.payload.id]: action.payload.value,
         },
-     }; 
+      };
     }
     case UPDATE_TREE: {
       const { variables: config } = action.payload;
       const value = Object.keys(config).reduce((acc, cur) => {
-        if (JSON.stringify(config[cur]) !== JSON.stringify(state.config[cur])) {
-          // TODO
+        const newConfig = config[cur];
+        if (JSON.stringify(newConfig) !== JSON.stringify(state.config[cur])) {
+          if (newConfig.type === 'static') {
+            return { ...acc, [cur]: newConfig.value };
+          }
+          if (newConfig.type === 'function') {
+            return {
+              ...acc,
+              [cur]: {
+                value: null,
+                loading: false,
+                error: false,
+              },
+            };
+          }
           return { ...acc, [cur]: state.value[cur] };
         }
         return { ...acc, [cur]: state.value[cur] };

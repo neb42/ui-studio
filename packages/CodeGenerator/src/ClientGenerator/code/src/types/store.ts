@@ -20,7 +20,7 @@ export interface Store$Page {
   config: KeyedObject<Page>;
 }
 
-export interface Store$Layout{
+export interface Store$Layout {
   config: KeyedObject<Layout>;
 }
 
@@ -29,13 +29,8 @@ export interface Store {
   variable: Store$Variable;
   page: Store$Page;
   layout: Store$Layout;
-};
+}
 
 export type GetState = () => Store;
 
-export type ThunkAction<ReturnType = void> = TA<
-  ReturnType,
-  Store,
-  unknown,
-  Action<string>
->;
+export type ThunkAction<ReturnType = void> = TA<ReturnType, Store, unknown, Action<string>>;

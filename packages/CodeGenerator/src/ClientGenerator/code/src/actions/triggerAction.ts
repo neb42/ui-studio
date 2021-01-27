@@ -22,13 +22,13 @@ export interface TriggerAction$Rejected {
   };
 }
 
-export const ACTION_API_CALL_PENDING = 'ACTION_API_CALL_PENDING'; 
-export const ACTION_API_CALL_FULFILLED = 'ACTION_API_CALL_FULFILLED'; 
+export const ACTION_API_CALL_PENDING = 'ACTION_API_CALL_PENDING';
+export const ACTION_API_CALL_FULFILLED = 'ACTION_API_CALL_FULFILLED';
 export const ACTION_API_CALL_REJECTED = 'ACTION_API_CALL_REJECTED';
 
 export const triggerAction = (id: string, args: any) => async (
   dispatch: Dispatch<TriggerAction$Pending | TriggerAction$Fulfilled | TriggerAction$Rejected>,
-) => {
+): Promise<void> => {
   try {
     dispatch({
       type: ACTION_API_CALL_PENDING,

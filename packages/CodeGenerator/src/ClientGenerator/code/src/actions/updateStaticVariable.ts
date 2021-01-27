@@ -1,5 +1,5 @@
 export interface UpdateStaticVariable {
-  type: 'UPDATE_STATIC_VARIABLE',
+  type: 'UPDATE_STATIC_VARIABLE';
   payload: {
     id: string;
     value: any;
