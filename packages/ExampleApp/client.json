@@ -197,9 +197,9 @@
                     }
                 },
                 "text": {
-                    "mode": "static",
+                    "mode": "variable",
                     "type": "string",
-                    "value": "Page 1"
+                    "variableId": "9679ec2b-9ddd-4edb-8ca4-e117e6aa2c73"
                 }
             },
             "events": {
@@ -247,5 +247,32 @@
             }
         }
     },
-    "variables": {}
+    "variables": {
+        "9679ec2b-9ddd-4edb-8ca4-e117e6aa2c73": {
+            "id": "9679ec2b-9ddd-4edb-8ca4-e117e6aa2c73",
+            "name": "Static var",
+            "type": "static",
+            "valueType": "string",
+            "value": "Foobar"
+        },
+        "1c8594be-441f-47e9-b3e6-1d565914533b": {
+            "id": "1c8594be-441f-47e9-b3e6-1d565914533b",
+            "name": "Function var",
+            "type": "function",
+            "functionId": "foo",
+            "valueType": "number",
+            "trigger": "auto",
+            "args": [
+                {
+                    "type": "static",
+                    "valueType": "boolean",
+                    "value": true
+                },
+                {
+                    "type": "variable",
+                    "variableId": "9679ec2b-9ddd-4edb-8ca4-e117e6aa2c73"
+                }
+            ]
+        }
+    }
 }
