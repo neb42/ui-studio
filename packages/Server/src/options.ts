@@ -18,12 +18,18 @@ const { argv } = yargs
     description: 'Path to build generated code at',
   });
 
-let PREVIEW_CLIENT_PORT, PREVIEW_SERVER_PORT, SERVER_PORT; 
+let PREVIEW_CLIENT_PORT;
+let PREVIEW_SERVER_PORT;
+let SERVER_PORT;
 export const getOptions = async () => {
   if (!PREVIEW_CLIENT_PORT)
-    PREVIEW_CLIENT_PORT = await getPort({ port: argv.port || Number(process.env.PREVIEW_CLIENT_PORT) || 3000 });
+    PREVIEW_CLIENT_PORT = await getPort({
+      port: argv.port || Number(process.env.PREVIEW_CLIENT_PORT) || 3000,
+    });
   if (!PREVIEW_SERVER_PORT)
-    PREVIEW_SERVER_PORT = await getPort({ port: argv.port || Number(process.env.PREVIEW_SERVER_PORT) || 3001 });
+    PREVIEW_SERVER_PORT = await getPort({
+      port: argv.port || Number(process.env.PREVIEW_SERVER_PORT) || 3001,
+    });
   if (!SERVER_PORT)
     SERVER_PORT = await getPort({ port: argv.port || Number(process.env.SERVER_PORT) || 3002 });
   const GENERATED_CODE_PATH = argv.generated || process.env.GENERATED_PATH || '/tmp/GeneratedCode';
@@ -37,5 +43,4 @@ export const getOptions = async () => {
     GENERATED_CODE_PATH,
     FUNCTIONS_PATH,
   };
-};  
-
+};
