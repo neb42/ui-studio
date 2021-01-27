@@ -42,10 +42,17 @@ const run = async (): Promise<void> => {
       clientPort: PREVIEW_CLIENT_PORT,
     });
 
+    socket.on('init-builder', (foo) => {
+      socket.broadcast.emit('init-builder', foo);
+    });
+
     socket.on('elements-updated', async (elements) => {
-      await generateCode(elements, FUNCTIONS_PATH, true);
-      socket.emit('code-updated');
+      socket.broadcast.emit('update-tree', elements);
       writeFileSync(clientJsonPath, JSON.stringify(elements, null, 4));
+    });
+
+    socket.on('navigate-page', (url) => {
+      socket.broadcast.emit('navigate-page', url);
     });
   });
 

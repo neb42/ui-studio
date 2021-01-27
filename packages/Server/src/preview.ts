@@ -22,10 +22,7 @@ export const initCode = async (): Promise<void> => {
   const clientPath = path.join(GENERATED_CODE_PATH, 'client');
   const severPath = path.join(GENERATED_CODE_PATH, 'server');
 
-  const clientJsonPath = path.join(FUNCTIONS_PATH, 'client.json');
-  const clientJson = JSON.parse(readFileSync(clientJsonPath).toString());
-
-  await generateCode(clientJson, FUNCTIONS_PATH, true);
+  await generateCode(FUNCTIONS_PATH, true);
 
   const logError = (error, stdout, stderr) => {
     if (error) {

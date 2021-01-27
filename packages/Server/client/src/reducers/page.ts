@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import {
   UPDATE_ELEMENT_NAME,
   UPDATE_ELEMENT_CSS,
@@ -12,31 +11,7 @@ import {
 import { ADD_PAGE, REMOVE_PAGE, Action$Page } from 'actions/page';
 import { Store$Page } from 'types/store';
 
-const ids = [uuidv4(), uuidv4(), uuidv4()];
-
-const initialState: Store$Page = {
-  [ids[0]]: {
-    id: ids[0],
-    type: 'page',
-    name: 'Page1',
-    props: {},
-    style: { type: 'base', css: '', classNames: '' },
-  },
-  [ids[1]]: {
-    id: ids[1],
-    type: 'page',
-    name: 'Page2',
-    props: {},
-    style: { type: 'base', css: '', classNames: '' },
-  },
-  [ids[2]]: {
-    id: ids[2],
-    type: 'page',
-    name: 'Page3',
-    props: {},
-    style: { type: 'base', css: '', classNames: '' },
-  },
-};
+const initialState: Store$Page = {};
 
 export const page = (
   state: Store$Page = initialState,

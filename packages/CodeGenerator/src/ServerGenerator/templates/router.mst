@@ -72,25 +72,6 @@ const port = process.env.PORT;
 
 const server = http.createServer(app);
 
-const io = socketio(server);
-io.origins('*:*');
-
-const customComponents = Object.values(Custom.Components).map(({ component: _, ...c }) => ({ ...c, library: 'custom' }));
-
-const packagedComponents = Object.values({
-  {{ #customComponents }}
-  ...{{ name }}.Components,
-  {{ /customComponents }}
-}).map(({ component: _, ...c }) => c);
-
-io.on('connection', (socket) => {
-  socket.emit('init-functions', functions.registered);
-  socket.emit('init-components', [...packagedComponents, ...customComponents]); 
-  socket.on('navigate-page', (url) => {
-    socket.broadcast.emit('navigate-page', url);
-  });
-});
-
 if (require.main === module) {
   server.listen(port, () => {
     console.log(`listening on *:${port}`);

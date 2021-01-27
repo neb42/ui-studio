@@ -20,15 +20,13 @@ export const PageBuilder = (): JSX.Element => {
     }
   }, [pageId]);
 
-  if (!pageId) return <div />;
-
-  const pageName = pages[pageId].name;
+  const pageName = pageId ? pages[pageId].name : '';
 
   return (
     <>
       <Styles.Container>
         <Styles.ColLeft>
-          <ElementTree pageId={pageId} />
+          {pageId && <ElementTree pageId={pageId} />}
           <PopoverNavigation />
         </Styles.ColLeft>
         <Preview pageName={pageName} />

@@ -12,5 +12,10 @@
   "compileOnSave": true,
   "include": [
     "src"
+  ],
+  "exclude": [
+    "src/ClientGenerator/code",
+    "src/DEPRECATED_ClientGenerator",
+    "src/DEPRECATED_run.ts"
   ]
 }

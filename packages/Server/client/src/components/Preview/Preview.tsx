@@ -25,20 +25,14 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
     clientPort: number;
     serverPort: number;
   } | null>(null);
-  const [random, setRandom] = React.useState(Math.random());
-  const serverSocket = React.useMemo(() => io('/'), []);
-  const previewSocket = React.useMemo(() => {
-    if (previewServer) {
-      return io(`${previewServer.host}:${previewServer.serverPort}`);
-    }
-    return null;
-  }, [JSON.stringify(previewServer)]);
+
+  const socket = React.useMemo(() => io('/'), []);
 
   const elements = useSelector(React.useMemo(makeGetElements, []));
   const variables = useSelector(getVariables);
 
   React.useEffect(() => {
-    serverSocket.on(
+    socket.on(
       'init-client',
       async (client: {
         pages: Store$Page;
@@ -50,38 +44,37 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
         setIsLoaded(true);
       },
     );
-    serverSocket.on('set-server', setPreviewServer);
-    serverSocket.on('code-updated', () => setRandom(Math.random()));
+
+    socket.on('set-server', setPreviewServer);
+
+    socket.on(
+      'init-builder',
+      ({ functions, components }: { functions: InitFunctions; components: Component[] }) => {
+        dispatch(initFunctions(functions));
+        dispatch(initComponents(components));
+      },
+    );
   }, []);
 
   React.useEffect(() => {
-    if (previewSocket) {
-      previewSocket.on('init-functions', (functions: InitFunctions) =>
-        dispatch(initFunctions(functions)),
-      );
-      previewSocket.on('init-components', (components: Component[]) =>
-        dispatch(initComponents(components)),
-      );
-      previewSocket.on('navigate-page', (response: { url: string }) => {
-        const newPageName = response.url.replace('/', '');
-        if (newPageName !== pageName) {
-          const newPageId = pages.find((p) => p.name === newPageName)?.id;
-          if (newPageId) dispatch(selectPage(newPageId));
-        }
-      });
-    }
-  }, [previewSocket]);
+    socket.on('navigate-page', (response: { url: string }) => {
+      const newPageName = response.url.replace('/', '');
+      if (newPageName !== pageName) {
+        const newPageId = pages.find((p) => p.name === newPageName)?.id;
+        if (newPageId) dispatch(selectPage(newPageId));
+      }
+    });
+  }, [JSON.stringify(pages), pageName]);
 
   React.useEffect(() => {
-    if (isLoaded) serverSocket.emit('elements-updated', { ...elements, variables });
+    if (isLoaded) socket.emit('elements-updated', { ...elements, variables });
   }, [JSON.stringify(elements), JSON.stringify(variables)]);
+
+  React.useEffect(() => {
+    socket.emit('navigate-page', { url: pageName });
+  }, [pageName]);
 
   if (!previewServer) return <div />;
 
-  return (
-    <Styles.Iframe
-      key={random}
-      src={`${previewServer.host}:${previewServer.clientPort}/${pageName}`}
-    />
-  );
+  return <Styles.Iframe src={`${previewServer.host}:${previewServer.clientPort}`} />;
 };

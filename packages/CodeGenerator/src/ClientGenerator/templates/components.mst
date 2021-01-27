@@ -1,0 +1,15 @@
+import { Component } from '@ui-builder/types';
+import * as FunctionsPkg from 'functions-pkg';
+{{ #components }}
+import * as {{ name }} from '{{ package }}';
+{{ /components }}
+
+export const Components: {
+  [library: string]: { [component: string]: Component & { component: React.FC }},
+} = {
+  'custom': FunctionsPkg.Components,
+  'functions-pkg': FunctionsPkg.Components,
+  {{ #components }}
+  '{{ package }}': {{ name }}.Components,
+  {{ /components }}
+};

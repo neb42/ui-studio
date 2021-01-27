@@ -12,13 +12,14 @@
   },
   "scripts": {
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "copy-templates": "yarn copy-templates:server && yarn copy-templates:client",
+    "copy-templates": "yarn copy-templates:server && yarn copy-templates:client && yarn copy-templates:client-code",
     "copy-templates:server": "cp -r src/ServerGenerator/templates build/ServerGenerator/templates",
     "copy-templates:client": "cp -r src/ClientGenerator/templates build/ClientGenerator/templates",
+    "copy-templates:client-code": "cp -r src/ClientGenerator/code build/ClientGenerator/code",
     "build": "rm -rf build/* && tsc && yarn copy-templates"
   },
   "dependencies": {
-    "graph-data-structure": "^1.12.1",
+    "fs-extra": "^9.1.0",
     "mustache": "^4.0.1",
     "read-pkg": "^5.2.0"
   }
