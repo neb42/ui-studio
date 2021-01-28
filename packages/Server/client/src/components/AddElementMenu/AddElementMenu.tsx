@@ -56,14 +56,14 @@ const makeElements = (
     ],
   };
 
-  components.forEach(({ name, description, category, icon }) => {
+  components.forEach(({ name, description, category, icon, library }) => {
     const existing = elements[category] || [];
     existing.push({
       title: name,
       description,
       type: 'widget',
       subtype: name,
-      library: 'custom',
+      library,
       icon: (Icons as { [key: string]: Icons.SvgIconComponent })?.[icon] ?? Icons.HelpOutlineSharp,
     });
     elements[category] = existing;
