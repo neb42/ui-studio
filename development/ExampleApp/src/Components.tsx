@@ -1,5 +1,13 @@
 import * as React from 'react';
 
+const T: React.FunctionComponent<any> = () => {
+  const [a, setA] = React.useState(false);
+  React.useEffect(() => {
+    setTimeout(() => setA(true), 5000);
+  }, []);
+  return React.createElement('div', null, a ? 'aaa' : 'bbb');
+};
+
 const Text = {
   name: 'Text',
   description: '',
@@ -12,7 +20,11 @@ const Text = {
   config: [
     { component: 'input', key: 'text', label: 'Text', type: 'string' },
   ],
-  component: ({ text, onClick }) => <span onClick={onClick}>{text}</span>,
+  component: ({ text, onClick }) => {
+    const [t, setT] = React.useState('foo')
+    return <span onClick={onClick}>{text} {t}</span>;
+  },
+  // component: T,
 };
 
 const ChildRenderer = {

@@ -1,0 +1,21 @@
+{
+  "name": "example-app",
+  "private": true,
+  "version": "0.1.0",
+  "description": "> TODO: description",
+  "author": "Ben McAlindin <bmcalindin@faculty.ai>",
+  "license": "MIT",
+  "main": "build/index.js",
+  "scripts": {
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "build": "rm -rf build/* && tsc",
+    "start": "ui-builder --path /Users/bmcalindin/workspace/ui-builder/development/ExampleApp"
+  },
+  "dependencies": {
+    "@ui-builder/typescript": "/Users/bmcalindin/workspace/ui-builder/packages/Typescript"
+  },
+  "devDependencies": {
+    "@ui-builder/code-generator": "/Users/bmcalindin/workspace/ui-builder/packages/CodeGenerator",
+    "@ui-builder/server": "/Users/bmcalindin/workspace/ui-builder/packages/Server"
+  }
+}
