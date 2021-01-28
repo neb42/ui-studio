@@ -19,7 +19,7 @@
     "build:client": "cd client && yarn build && cp -r build/ ../build/client",
     "build": "yarn build:server && yarn build:client",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "dev": "yarn build:server && yarn start",
+    "dev": "yarn build:server && yarn start --path /Users/bmcalindin/workspace/ExampleApp",
     "start": "node ."
   },
   "dependencies": {
