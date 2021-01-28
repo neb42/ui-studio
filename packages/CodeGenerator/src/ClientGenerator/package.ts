@@ -34,30 +34,44 @@ const devDependencies = [
   { name: '@types/redux', version: '^3.6.0', last: false },
   { name: '@types/redux-thunk', version: '^2.1.0', last: false },
   { name: '@types/socket.io-client', version: '^1.4.35', last: false },
-  { name: '@types/styled-components', version: '^5.1.7', last: false },
+  { name: '@types/styled-components', version: '^5.1.4', last: false },
   {
     name: '@ui-builder/types',
-    version: 'link:/Users/bmcalindin/workspace/ui-builder/packages/Types',
+    version: '/Users/bmcalindin/workspace/ui-builder/packages/Types',
     last: false,
   },
 ];
 devDependencies[devDependencies.length - 1].last = true;
 
-const generatePackageFile = async (source: string, dev: boolean): Promise<void> => {
+const generatePackageFile = async (
+  componentPackages: { name: string; version: string }[],
+  source: string,
+  dev: boolean,
+): Promise<void> => {
   const dependencies = [...baseDependencies];
   if (dev) {
     dependencies.push({
       name: 'functions-pkg',
       version: `link:${source}`,
-      last: true,
+      last: false,
     });
   } else {
     dependencies.push({
       name: 'functions-pkg',
       version: `https://github.com/ui-builder-function-packages/${source}`,
-      last: true,
+      last: false,
     });
   }
+
+  componentPackages.forEach((p) => {
+    dependencies.push({
+      name: p.name,
+      version: p.version,
+      last: false,
+    });
+  });
+
+  dependencies[dependencies.length - 1].last = true;
 
   const data = await fs.readFile(path.join(__dirname, 'templates', 'package.mst'));
   const renderedFile = Mustache.render(data.toString(), {

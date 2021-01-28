@@ -5,39 +5,48 @@ import { Page, Widget, Layout } from '@ui-builder/types';
 import { KeyedObject } from '../types/store';
 import { TreeNode } from '../types/tree';
 
-import { buildWidget } from './widget';
-import { buildLayout } from './layout';
+import { WidgetBuilder } from './widget';
+import { LayoutBuilder } from './layout';
 
-export const buildPage = (
-  page: Page,
-  widgets: KeyedObject<Widget>,
-  layouts: KeyedObject<Layout>,
-  pageNode: TreeNode,
-): React.FC<any> => {
+export const PageBuilder = ({
+  page,
+  widgets,
+  layouts,
+  pageNode,
+}: {
+  page: Page;
+  widgets: KeyedObject<Widget>;
+  layouts: KeyedObject<Layout>;
+  pageNode: TreeNode;
+}): React.ReactElement<any> => {
   const makeElement = (node: TreeNode): React.ReactNode => {
-    const element = (() => {
-      if (node.type === 'widget') return buildWidget(widgets[node.id]);
-      if (node.type === 'layout') return buildLayout(layouts[node.id]);
-      throw Error();
-    })();
+    if (node.type === 'widget')
+      return React.createElement(
+        WidgetBuilder,
+        { widget: widgets[node.id] },
+        node.children.map(makeElement),
+      );
 
-    return React.createElement(element, {}, node.children.map(makeElement));
+    if (node.type === 'layout')
+      return React.createElement(
+        LayoutBuilder,
+        { layout: layouts[node.id] },
+        node.children.map(makeElement),
+      );
+
+    throw Error();
   };
 
-  const P: React.FC = () => {
-    const PageWrapper = styled.div`
-      height: 100%;
-      width: 100%;
+  const PageWrapper = styled.div`
+    height: 100%;
+    width: 100%;
 
-      ${page.style.css}
-    `;
+    ${page.style.css}
+  `;
 
-    return React.createElement(
-      PageWrapper,
-      { className: page.style.classNames },
-      pageNode.children.map(makeElement),
-    );
-  };
-
-  return P;
+  return React.createElement(
+    PageWrapper,
+    { className: page.style.classNames },
+    pageNode.children.map(makeElement),
+  );
 };

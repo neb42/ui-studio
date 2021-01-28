@@ -1,0 +1,4 @@
+declare module 'functions-pkg';
+{{ #componentPackages }}
+declare module '{{{ name }}}';
+{{ /componentPackages }}

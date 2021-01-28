@@ -1,6 +1,5 @@
-import { promises as fs, existsSync } from 'fs';
-
-import readPkg from 'read-pkg';
+import { promises as fs, existsSync, readFileSync } from 'fs';
+import * as path from 'path';
 
 import generateServer from './ServerGenerator/generateServer';
 import generateClient from './ClientGenerator/generateClient';
@@ -22,12 +21,14 @@ const setupDirectory = async () => {
 export const run = async (source: string, dev: boolean): Promise<void> => {
   await setupDirectory();
 
-  const pkgJson = readPkg.sync({ cwd: source });
-  const deps = Object.keys(pkgJson.dependencies || {});
-  const componentPackages: string[] = pkgJson.componentPackages || [];
-
-  componentPackages.forEach((c) => {
-    if (!deps.includes(c)) throw Error('Component package is not includes in dependencies');
+  const pkgJson = JSON.parse(readFileSync(path.join(source, 'package.json')).toString());
+  const deps = pkgJson.dependencies || {};
+  const componentPackages: { name: string; version: string }[] = (
+    pkgJson.componentPackages || []
+  ).map((p) => {
+    if (!Object.keys(deps).includes(p))
+      throw Error('Component package is not includes in dependencies');
+    return { name: p, version: deps[p] };
   });
 
   generateClient({
@@ -36,7 +37,7 @@ export const run = async (source: string, dev: boolean): Promise<void> => {
     dev,
   });
 
-  generateServer(componentPackages, source, dev);
+  generateServer(source, dev);
 };
 
 if (typeof require !== 'undefined' && require.main === module) {

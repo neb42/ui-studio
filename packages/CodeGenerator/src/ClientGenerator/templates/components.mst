@@ -1,7 +1,7 @@
 import { Component } from '@ui-builder/types';
 import * as FunctionsPkg from 'functions-pkg';
 {{ #components }}
-import * as {{ name }} from '{{ package }}';
+import * as {{{ name }}} from '{{{ package }}}';
 {{ /components }}
 
 export const Components: {
@@ -10,6 +10,6 @@ export const Components: {
   'custom': FunctionsPkg.Components,
   'functions-pkg': FunctionsPkg.Components,
   {{ #components }}
-  '{{ package }}': {{ name }}.Components,
+  '{{{ package }}}': {{{ name }}}.Components,
   {{ /components }}
 };

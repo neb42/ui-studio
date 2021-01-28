@@ -11,7 +11,13 @@ import { updateWidget } from '../actions/updateWidget';
 import { Store } from '../types/store';
 import { Components } from '../Components';
 
-export const buildWidget = (widget: Widget) => {
+export const WidgetBuilder = ({
+  widget,
+  children,
+}: {
+  children?: React.ReactNode;
+  widget: Widget;
+}): React.FunctionComponentElement<any> => {
   const mapStateToProps = (state: Store) => {
     const rawValues: { [key: string]: any } = Object.keys(widget.props).reduce((acc, cur) => {
       const prop = widget.props[cur];
@@ -137,5 +143,9 @@ export const buildWidget = (widget: Widget) => {
     );
   };
 
-  return connect(mapStateToProps, mapDispatchToProps)(withRouter(W));
+  return React.createElement(
+    connect(mapStateToProps, mapDispatchToProps)(withRouter(W)),
+    null,
+    children,
+  );
 };

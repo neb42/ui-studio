@@ -4,14 +4,7 @@ import Graph from 'graph-data-structure';
 import { Store } from '../types/store';
 import { TreeNode } from '../types/tree';
 
-import { buildPage } from './page';
-
-export const useBuildTree = (): {
-  id: string;
-  name: string;
-  default: boolean;
-  component: React.FC<any>;
-}[] => {
+export const useBuildTree = (): TreeNode[] => {
   const { widgets, pages, layouts } = useSelector((state: Store) => ({
     widgets: state.widget.config,
     pages: state.page.config,
@@ -38,10 +31,14 @@ export const useBuildTree = (): {
 
   const elementTree: TreeNode[] = Object.keys(pages).map(buildTree);
 
-  return elementTree.map((node, idx) => ({
-    id: node.id,
-    name: pages[node.id].name,
-    default: idx === 0,
-    component: buildPage(pages[node.id], widgets, layouts, node),
-  }));
+  return elementTree;
+
+  // return elementTree.map((node, idx) => ({
+  //   id: node.id,
+  //   name: pages[node.id].name,
+  //   default: idx === 0,
+  //   component: React.createElement(
+  //     PageBuilder,
+  //     pages[node.id], widgets, layouts, node),
+  // }));
 };
