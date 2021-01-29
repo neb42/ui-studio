@@ -1,5 +1,6 @@
-import { copySync } from 'fs-extra';
 import * as path from 'path';
+
+import { copySync } from 'fs-extra';
 
 import { FilePaths } from '../FilePaths';
 

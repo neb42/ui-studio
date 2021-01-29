@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux';
 import Graph from 'graph-data-structure';
+import { ElementTreeNode } from '@ui-builder/types';
 
 import { Store } from '../types/store';
-import { TreeNode } from '../types/tree';
 
-export const useBuildTree = (): TreeNode[] => {
+export const useBuildTree = (): ElementTreeNode[] => {
   const { widgets, pages, layouts } = useSelector((state: Store) => ({
     widgets: state.widget.config,
     pages: state.page.config,
@@ -17,7 +17,7 @@ export const useBuildTree = (): TreeNode[] => {
   Object.keys(all).forEach((k) => elementGraph.addNode(k));
   Object.values({ ...widgets, ...layouts }).forEach((v) => elementGraph.addEdge(v.parent, v.id));
 
-  const buildTree = (node: string): TreeNode => {
+  const buildTree = (node: string): ElementTreeNode => {
     const element = all[node];
     const children = elementGraph.adjacent(node);
     return {
@@ -26,19 +26,11 @@ export const useBuildTree = (): TreeNode[] => {
       type: element.type,
       position: element.type === 'page' ? 0 : element.position,
       children: children.map(buildTree).sort((a, b) => (a.position > b.position ? 1 : -1)),
+      element,
     };
   };
 
-  const elementTree: TreeNode[] = Object.keys(pages).map(buildTree);
+  const elementTree: ElementTreeNode[] = Object.keys(pages).map(buildTree);
 
   return elementTree;
-
-  // return elementTree.map((node, idx) => ({
-  //   id: node.id,
-  //   name: pages[node.id].name,
-  //   default: idx === 0,
-  //   component: React.createElement(
-  //     PageBuilder,
-  //     pages[node.id], widgets, layouts, node),
-  // }));
 };
