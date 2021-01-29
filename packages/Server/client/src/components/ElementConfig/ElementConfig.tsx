@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Tab, Tabs, TextField } from '@material-ui/core';
+import { useTheme } from 'styled-components';
+import Tabs from '@faculty/adler-web-components/atoms/Tabs';
+import Input from '@faculty/adler-web-components/atoms/Input';
+import Button from '@faculty/adler-web-components/atoms/Button';
 import { Store } from 'types/store';
 import { makeGetElement, makeGetSelectedElement } from 'selectors/element';
 import { updateElementName } from 'actions/element';
@@ -11,6 +14,7 @@ import { WidgetConfig } from 'components/WidgetConfig';
 import { CSSInput } from 'components/CSSInput';
 import { ClassNamesInput } from 'components/ClassNamesInput';
 import { EventConfig } from 'components/EventConfig';
+import { FormatListNumberedRtl } from '@material-ui/icons';
 
 import * as Styles from './ElementConfig.styles';
 
@@ -21,12 +25,14 @@ interface WidgetConfig {
 }
 
 export const ElementConfig = (): JSX.Element => {
+  const theme = useTheme();
   const dispatch = useDispatch();
   const getElement = React.useMemo(makeGetElement, []);
   const getSelectedElement = React.useMemo(makeGetSelectedElement, []);
   const selectedElement = useSelector(getSelectedElement);
   const [name, setName] = React.useState(selectedElement?.name ?? '');
   const [tabIndex, setTabIndex] = React.useState(0);
+  const [edit, setEdit] = React.useState(false);
 
   const parentName =
     !selectedElement || selectedElement.type === 'page' ? null : selectedElement.parent;
@@ -38,9 +44,8 @@ export const ElementConfig = (): JSX.Element => {
     }
   }, [selectedElement?.name]);
 
-  const handleOnNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newName = event?.target?.value ?? '';
-    setName(newName);
+  const handleOnNameChange = (value: string) => {
+    setName(value || '');
   };
 
   const handleOnNameBlur = () => {
@@ -75,29 +80,36 @@ export const ElementConfig = (): JSX.Element => {
     }
   })();
 
+  const tabHeaders = [{ content: 'Config' }, { content: 'Styles' }];
+  if (selectedElement.type === 'widget') {
+    tabHeaders.push({ content: 'Events' });
+  }
+
   return (
     <Styles.Container>
       <Styles.Header>
-        <ElementIcon element={selectedElement} color="#fff" />
-        <Styles.ComponentName>{componentName}</Styles.ComponentName>
-      </Styles.Header>
-      <Styles.Name>
-        <TextField
-          id="name"
-          label="Name"
-          value={name}
-          required
-          onChange={handleOnNameChange}
-          onBlur={handleOnNameBlur}
-          error={name.length === 0}
+        <ElementIcon element={selectedElement} color={theme.colors.text.secondary} />
+        {edit ? (
+          <Input
+            value={name}
+            onChange={handleOnNameChange}
+            onBlur={handleOnNameBlur}
+            error={name.length === 0 ? 'Required' : undefined}
+          />
+        ) : (
+          <Styles.ComponentName>{name}</Styles.ComponentName>
+        )}
+        <div />
+        <Button
+          icon="edit"
+          style={Button.styles.naked}
+          color={edit ? Button.colors.brand : Button.colors.secondary}
+          size={Button.sizes.medium}
+          onClick={() => setEdit(!edit)}
         />
-      </Styles.Name>
-      <Tabs variant="fullWidth" value={tabIndex} onChange={(_, newIdx) => setTabIndex(newIdx)}>
-        <Tab label="Config" />
-        <Tab label="Style" />
-        {selectedElement.type === 'widget' && <Tab label="Events" />}
-      </Tabs>
-      <Styles.Field>
+        <Tabs tabHeaders={tabHeaders} onTabChange={(_, idx: number) => setTabIndex(idx)} />
+      </Styles.Header>
+      <Styles.Body>
         {tabIndex === 0 &&
           selectedElement.type === 'layout' &&
           selectedElement.layoutType === 'grid' && <GridLayoutConfig element={selectedElement} />}
@@ -115,7 +127,7 @@ export const ElementConfig = (): JSX.Element => {
         {selectedElement.type === 'widget' && tabIndex === 2 && (
           <EventConfig widget={selectedElement} />
         )}
-      </Styles.Field>
+      </Styles.Body>
     </Styles.Container>
   );
 };

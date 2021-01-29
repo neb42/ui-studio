@@ -1,36 +1,17 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useTheme } from 'styled-components';
-import { TextField, Menu, IconButton, Select, MenuItem, makeStyles } from '@material-ui/core';
-import { AddSharp, EditSharp, DeleteSharp } from '@material-ui/icons';
+import { Menu, MenuItem } from '@material-ui/core';
 import { selectPage, updateElementName } from 'actions/element';
 import { addPage, removePage } from 'actions/page';
 import { getOverlays, getPages, getSelectedPageId } from 'selectors/element';
+import Select from '@faculty/adler-web-components/atoms/Select';
+import Button from '@faculty/adler-web-components/atoms/Button';
+import Input from '@faculty/adler-web-components/atoms/Input';
 
 import * as Styles from './ElementTreeHeader.styles';
 
-const useStyles = makeStyles({
-  input: {
-    borderColor: '#fff',
-    '&:before': {
-      borderColor: '#fff',
-    },
-    '&:after': {
-      borderColor: '#fff',
-    },
-  },
-  select: {
-    color: '#fff',
-  },
-  icon: {
-    fill: '#fff',
-  },
-});
-
 export const ElementTreeHeader = (): JSX.Element => {
-  const theme = useTheme();
   const dispatch = useDispatch();
-  const classes = useStyles();
   const selectedPageId = useSelector(getSelectedPageId);
   const pages = useSelector(getPages);
   const overlays = useSelector(getOverlays);
@@ -44,12 +25,9 @@ export const ElementTreeHeader = (): JSX.Element => {
   const handleCloseAddMenu = () => setAnchorEl(null);
 
   // TODO: handle overlay and components
-  const handleOnChange = (
-    event: React.ChangeEvent<{
-      name?: string | undefined;
-      value: unknown;
-    }>,
-  ) => dispatch(selectPage(event.target.value as string));
+  const handleOnChange = ({ value }: any) => {
+    dispatch(selectPage(value as string));
+  };
 
   const handleAddPage = () => {
     dispatch(addPage());
@@ -63,8 +41,8 @@ export const ElementTreeHeader = (): JSX.Element => {
 
   const handleToggleEditName = () => setEdit(!edit);
 
-  const handleEditName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (selectedPageId) dispatch(updateElementName(selectedPageId, 'page', event.target.value));
+  const handleEditName = (value: string) => {
+    if (selectedPageId) dispatch(updateElementName(selectedPageId, 'page', value));
   };
 
   // TODO handle overlay and components
@@ -76,47 +54,46 @@ export const ElementTreeHeader = (): JSX.Element => {
   return (
     <Styles.Container>
       {!edit && (
-        <Select value={selectedPageId} classes={classes} onChange={handleOnChange}>
-          <MenuItem disabled>Pages</MenuItem>
-          {Object.values(pages).map((p) => (
-            <MenuItem key={p.name} value={p.id}>
-              {p.name}
-            </MenuItem>
-          ))}
-          <MenuItem disabled>Overlays</MenuItem>
-          {Object.values(overlays).map((o) => (
-            <MenuItem key={o.name} value={o.id}>
-              {o.name}
-            </MenuItem>
-          ))}
-          <MenuItem disabled>Components</MenuItem>
-          {/* {Object.values(components).map((c) => (
-          <MenuItem key={c.name} value={c.id}>
-            {c.name}
-          </MenuItem>
-        ))} */}
-        </Select>
+        <Select
+          value={{ label: element.name, value: element.id }}
+          onChange={handleOnChange}
+          options={[
+            {
+              label: 'Pages',
+              options: Object.values(pages).map((p) => ({ value: p.id, label: p.name })),
+            },
+            {
+              label: 'Overlays',
+              options: Object.values(overlays).map((o) => ({ value: o.id, label: o.name })),
+            },
+            { label: 'Components', options: [] },
+          ]}
+        />
       )}
-      {edit && <TextField onChange={handleEditName} value={element.name} />}
+      {edit && <Input onChange={handleEditName} value={element.name} />}
       <div />
-      <IconButton onClick={handleOpenAddMenu} size="small" style={{ color: '#fff' }}>
-        <AddSharp />
-      </IconButton>
-      <IconButton
+      <Button
+        icon="add"
+        style={Button.styles.naked}
+        color={Button.colors.secondary}
+        size={Button.sizes.medium}
+        onClick={handleOpenAddMenu}
+      />
+      <Button
+        icon="edit"
+        style={Button.styles.naked}
+        color={edit ? Button.colors.brand : Button.colors.secondary}
+        size={Button.sizes.medium}
         onClick={handleToggleEditName}
-        size="small"
-        style={{ color: edit ? theme.colors.brand500 : '#fff' }}
-      >
-        <EditSharp />
-      </IconButton>
-      <IconButton
+      />
+      <Button
+        icon="delete"
+        style={Button.styles.naked}
+        color={Button.colors.secondary}
+        size={Button.sizes.medium}
         onClick={handleRemovePage}
         disabled={Object.keys(pages).length === 1}
-        size="small"
-        style={{ color: '#fff' }}
-      >
-        <DeleteSharp />
-      </IconButton>
+      />
       <Menu keepMounted anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseAddMenu}>
         <MenuItem onClick={handleAddPage}>Page</MenuItem>
         <MenuItem onClick={() => {}}>Overlay</MenuItem>

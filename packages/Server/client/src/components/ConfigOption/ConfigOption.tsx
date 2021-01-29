@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton, Select, MenuItem, TextField } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { Edit, Functions, Widgets } from '@material-ui/icons';
+import Input from '@faculty/adler-web-components/atoms/Input';
+import Select from '@faculty/adler-web-components/atoms/Select';
 import {
   Widget,
   ComponentConfig,
@@ -21,7 +23,6 @@ interface IFoo {
   onChange: (value: WidgetProp) => void;
 }
 
-type InputEvent = React.ChangeEvent<HTMLInputElement>;
 type SelectEvent = React.ChangeEvent<{
   name?: string | undefined;
   value: unknown;
@@ -48,33 +49,37 @@ const StaticConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
     }
   };
 
-  const handleInputOnChange = (event: InputEvent) => {
-    onChange(buildStaticWidgetProp(event.target.value));
+  const handleInputOnChange = (value: string) => {
+    onChange(buildStaticWidgetProp(value));
   };
-  const handleSelectOnChange = (event: SelectEvent) => {
-    onChange(buildStaticWidgetProp(event.target.value as string));
+  const handleSelectOnChange = ({ value }: any) => {
+    onChange(buildStaticWidgetProp(value as string));
   };
 
   switch (config.component) {
     case 'input':
+      switch (config.type) {
+        case 'string':
+        case 'number': {
+          if (typeof widgetProp.value === 'boolean') throw Error();
+          return <Input label="value" onChange={handleInputOnChange} value={widgetProp.value} />;
+        }
+        case 'boolean':
+          return <div>Not implemented</div>;
+        default:
+          throw Error();
+      }
+    case 'select': {
+      const v = config.options.find((o) => o.key === widgetProp.value);
       return (
-        <TextField
-          onChange={handleInputOnChange}
-          value={widgetProp.value}
-          style={{ width: '100%' }}
-          // TODO add type validation function
+        <Select
+          label="Value"
+          value={v ? { value: v.key, label: v.label } : null}
+          onChange={handleSelectOnChange}
+          options={config.options.map((o) => ({ value: o.key, label: o.label }))}
         />
       );
-    case 'select':
-      return (
-        <Select value={widgetProp.value} onChange={handleSelectOnChange} style={{ width: '100%' }}>
-          {config.options.map((o) => (
-            <MenuItem key={o.key} value={o.key}>
-              {o.label}
-            </MenuItem>
-          ))}
-        </Select>
-      );
+    }
     // case 'checkbox':
     // case 'slider':
     // case 'multislider':
@@ -114,34 +119,38 @@ const VariableConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
   );
 
   const selectedVariableId = widgetProp.variableId;
+  const selectedVariable = variables.find((v) => v.id === selectedVariableId);
 
-  const handleIdChange = (event: SelectEvent) => {
-    const newVariableId = event.target.value as string;
+  const handleIdChange = ({ value }: any) => {
+    const newVariableId = value as string;
     const newVariable = variables.find((v) => v.id === newVariableId);
     if (newVariable === undefined) return;
     onChange(buildVariableWidgetProps(newVariableId, newVariable.valueType, ''));
   };
 
-  const handleLookupChange = (event: InputEvent) => {
-    onChange(buildVariableWidgetProps(selectedVariableId, 'object', event.target.value));
+  const handleLookupChange = (value: string) => {
+    onChange(buildVariableWidgetProps(selectedVariableId, 'object', value));
   };
 
   return (
     <>
-      <Select value={selectedVariableId} onChange={handleIdChange} style={{ width: '100%' }}>
-        {variables.map((v) => (
-          <MenuItem key={v.id} value={v.id}>
-            {v.name}
-          </MenuItem>
-        ))}
-      </Select>
+      <Select
+        label="Variable"
+        value={
+          selectedVariable ? { value: selectedVariable.id, label: selectedVariable.name } : null
+        }
+        onChange={handleIdChange}
+        options={variables.map((v) => ({ value: v.id, label: v.name }))}
+      />
       {widgetProp.type === 'object' && (
-        <TextField
+        <Input
+          label="Object property"
           onChange={handleLookupChange}
           value={widgetProp.lookup}
-          style={{ width: '100%' }}
           // TODO add validation function
-          required={config.type !== 'object'}
+          error={
+            config.type !== 'object' && widgetProp.lookup.length === 0 ? 'Required' : undefined
+          }
         />
       )}
     </>
@@ -160,31 +169,30 @@ const WidgetConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
     lookup,
   });
 
-  const handleIdChange = (event: SelectEvent) => {
-    onChange(buildWidgetWidgetProps(event.target.value as string, widgetProp.lookup));
+  const handleIdChange = ({ value }: any) => {
+    onChange(buildWidgetWidgetProps(value as string, widgetProp.lookup));
   };
 
-  const handleLookupChange = (event: InputEvent) => {
-    onChange(buildWidgetWidgetProps(widgetProp.widgetId, event.target.value));
+  const handleLookupChange = (value: string) => {
+    onChange(buildWidgetWidgetProps(widgetProp.widgetId, value));
   };
 
   const widgets = Object.values(useSelector(getWidgets));
+  const selectedWidget = widgets.find((w) => w.id === widgetProp.widgetId);
 
   return (
     <>
-      <Select value={widgetProp.widgetId} onChange={handleIdChange} style={{ width: '100%' }}>
-        {widgets.map((w) => (
-          <MenuItem key={w.name} value={w.name}>
-            {w.name}
-          </MenuItem>
-        ))}
-      </Select>
-      <TextField
+      <Select
+        label="Widget"
+        value={selectedWidget ? { value: selectedWidget.id, label: selectedWidget.name } : null}
+        onChange={handleIdChange}
+        options={widgets.map((w) => ({ value: w.id, label: w.name }))}
+      />
+      <Input
+        label="Widget property"
         onChange={handleLookupChange}
         value={widgetProp.lookup}
-        style={{ width: '100%' }}
-        // TODO add validation function
-        required
+        error={widgetProp.lookup.length === 0 ? 'Required' : undefined}
       />
     </>
   );

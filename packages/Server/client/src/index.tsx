@@ -23,6 +23,10 @@ const GlobalStyles = createGlobalStyle`
   * {
     box-sizing: border-box;
   }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 ReactDOM.render(

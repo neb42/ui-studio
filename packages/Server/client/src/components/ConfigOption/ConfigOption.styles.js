@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  margin-bottom: 16px;
-  padding: 8px;
-  background-color: #e8e8e8;
-  border-radius: 8px;
+  display: grid;
+  grid-template-columns: auto;
+  row-gap: 8px;
 `;
 
 export const Header = styled.div`

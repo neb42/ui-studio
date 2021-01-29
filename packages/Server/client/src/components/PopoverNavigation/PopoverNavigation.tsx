@@ -15,9 +15,15 @@ export const PopoverNavigation = (): JSX.Element => {
   return (
     <>
       <Styles.Container>
-        <Styles.NavItem onClick={handleSelectView('preview')}>Preview</Styles.NavItem>
-        <Styles.NavItem onClick={handleSelectView('variable')}>Variables</Styles.NavItem>
-        <Styles.NavItem onClick={handleSelectView('css')}>CSS</Styles.NavItem>
+        <Styles.NavItem active={view === 'preview'} onClick={handleSelectView('preview')}>
+          Preview
+        </Styles.NavItem>
+        <Styles.NavItem active={view === 'variable'} onClick={handleSelectView('variable')}>
+          Variables
+        </Styles.NavItem>
+        <Styles.NavItem active={view === 'css'} onClick={handleSelectView('css')}>
+          CSS
+        </Styles.NavItem>
       </Styles.Container>
       {view === 'variable' && (
         <Styles.PopoverContainer>

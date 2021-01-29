@@ -2,8 +2,14 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: 25% 50% 25%;
+  grid-template-rows: auto 1fr;
   height: 100%;
+  width: 100%;
+`;
+
+export const Body = styled.div`
+  display: grid;
+  grid-template-columns: 25% 50% 25%;
 `;
 
 export const ColLeft = styled.div`

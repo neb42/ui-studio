@@ -4,9 +4,16 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: auto 1fr auto auto auto;
   align-items: center;
-  padding: 8px 16px;
-  background-color: #1c1c1c;
-  color: #fff;
-  font-weight: 600;
-  font-size: 16px;
+  height: 55px;
+  padding: ${({ theme }) => theme.spacing.px.small}px ${({ theme }) => theme.spacing.px.regular}px;
+  background-color: ${({ theme }) => theme.header.background.color};
+  box-shadow: 0 5px 10px 0 ${({ theme }) => theme.header.boxshadow.color};
+
+  & .Select {
+    min-width: 100px;
+  }
+
+  & button {
+    padding: ${({ theme }) => theme.spacing.px.small}px;
+  }
 `;

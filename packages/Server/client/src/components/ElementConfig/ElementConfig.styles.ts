@@ -1,29 +1,41 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr;
   height: 100%;
-  overflow: hidden;
 `;
 
 export const Header = styled.div`
   display: grid;
-  grid-template-columns: auto 1fr;
-  grid-column-gap: 16px;
+  grid-template-columns: auto auto 1fr auto;
+  grid-column-gap: ${({ theme }) => theme.spacing.px.small}px;
   align-items: center;
-  padding: 8px 16px;
-  background-color: #1c1c1c;
+  padding: ${({ theme }) => theme.spacing.px.small}px ${({ theme }) => theme.spacing.px.regular}px;
+  padding-bottom: 0;
+  background-color: ${({ theme }) => theme.header.background.color};
+  box-shadow: 0 5px 10px 0 ${({ theme }) => theme.header.boxshadow.color};
+
+  & > *:last-child {
+    grid-column: 1/-1;
+  }
+
+  & button {
+    padding: ${({ theme }) => theme.spacing.px.small}px;
+  }
 `;
 
 export const ComponentName = styled.span`
-  color: #fff;
+  color: ${({ theme }) => theme.colors.text.secondary};
   font-weight: 600;
   font-size: 16px;
 `;
 
-export const Name = styled.div`
+export const Body = styled.div`
+  display: flex;
+  flex-direction: column;
   padding: 16px 24px;
+  height: 100%;
 `;
 
 export const Field = styled.div`
