@@ -10,7 +10,7 @@ export interface ComponentConfig$Input extends BaseComponentConfig {
 
 export interface ComponentConfig$Select extends BaseComponentConfig {
   component: 'select';
-  options: { value: string; label: string }[];
+  options: { key: string; label: string }[];
 }
 
 export type ComponentConfig = ComponentConfig$Input | ComponentConfig$Select;
