@@ -69,7 +69,7 @@ const StaticConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
       return (
         <Select value={widgetProp.value} onChange={handleSelectOnChange} style={{ width: '100%' }}>
           {config.options.map((o) => (
-            <MenuItem key={o.label} value={o.value}>
+            <MenuItem key={o.key} value={o.key}>
               {o.label}
             </MenuItem>
           ))}
