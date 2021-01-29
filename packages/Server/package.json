@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@types/yargs": "^15.0.5",
-    "@ui-builder/code-generator": "*",
+    "@ui-builder/code-generator": "/Users/bmcalindin/workspace/ui-builder/packages/CodeGenerator",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "get-port": "^5.1.1",
