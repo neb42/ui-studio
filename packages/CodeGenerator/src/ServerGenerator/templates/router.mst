@@ -7,7 +7,6 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import socketio from 'socket.io';
 import { Functions } from 'functions-pkg';
 
 const router = express.Router();
