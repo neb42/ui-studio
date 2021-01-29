@@ -33,7 +33,7 @@ export const initCode = async (): Promise<void> => {
   };
 
   const startPreviewServer = () => {
-    console.log('Starting server...');
+    console.log(`Starting server at ${FUNCTIONS_PATH}...`);
     exec(
       `nodemon -w ${path.join(
         FUNCTIONS_PATH,
@@ -46,20 +46,20 @@ export const initCode = async (): Promise<void> => {
   };
 
   const startPreviewClient = () => {
-    console.log('Starting client...');
+    console.log(`Starting client as ${clientPath}...`);
     exec(`env BROWSER=none PORT=${PREVIEW_CLIENT_PORT} yarn start`, { cwd: clientPath }, logError);
   };
 
   const buildFunctions = () => {
-    console.log('Building functions...');
-    execSync('yarn build', { cwd: FUNCTIONS_PATH });
+    console.log(`Building functions at ${FUNCTIONS_PATH}...`);
+    execSync('yarn build', { cwd: FUNCTIONS_PATH, stdio: 'inherit' });
   };
 
   const installPackages = () => {
-    console.log('Installing client packages...');
-    execSync('yarn', { cwd: clientPath });
-    console.log('Installing server packages...');
-    execSync('yarn', { cwd: serverPath });
+    console.log(`Installing client packages as ${clientPath}...`);
+    execSync('yarn', { cwd: clientPath, stdio: 'inherit' });
+    console.log(`Installing server packages at ${serverPath}...`);
+    execSync('yarn', { cwd: serverPath, stdio: 'inherit' });
   };
 
   installPackages();
@@ -67,7 +67,7 @@ export const initCode = async (): Promise<void> => {
   startPreviewServer();
   startPreviewClient();
 
-  open(`http://localhost:${SERVER_PORT}`);
+  // open(`http://localhost:${SERVER_PORT}`);
 
   fs.watch(path.join(FUNCTIONS_PATH, 'package.json'), { recursive: true }, () => {
     installPackages();
