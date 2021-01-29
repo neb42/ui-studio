@@ -16,8 +16,8 @@ export const LayoutBuilder = ({
     ${layout.layoutType === 'grid'
       ? `
         display: grid;
-        grid-template-columns:{{ #columns }} {{ value }}{{ unit }}{{ /columns }};
-        grid-template-rows:{{ #rows }} {{ value }}{{ unit }}{{ /rows }};
+        grid-template-columns: ${layout.props.columns?.map((l) => `${l.value}${l.unit}`).join(' ')};
+        grid-template-rows: ${layout.props.rows?.map((l) => `${l.value}${l.unit}`).join(' ')};
         grid-row-gap: 16px;
         grid-column-gap: 16px;
       `
