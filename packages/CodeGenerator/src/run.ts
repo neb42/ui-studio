@@ -31,13 +31,13 @@ export const run = async (source: string, dev: boolean): Promise<void> => {
     return { name: p, version: deps[p] };
   });
 
-  generateClient({
+  await generateClient({
     componentPackages,
     source,
     dev,
   });
 
-  generateServer(source, dev);
+  await generateServer(source, dev);
 };
 
 if (typeof require !== 'undefined' && require.main === module) {
