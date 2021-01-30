@@ -1,19 +1,22 @@
 import * as React from 'react';
-import { TextField, IconButton, Button, Select, MenuItem } from '@material-ui/core';
-import { ClearSharp } from '@material-ui/icons';
+import Button from '@faculty/adler-web-components/atoms/Button';
+import Input from '@faculty/adler-web-components/atoms/Input';
+import Select from '@faculty/adler-web-components/atoms/Select';
 import { IGridCell, GridUnit } from '@ui-builder/types';
 
 import * as Styles from './GridTemplateControls.styles';
 
-const units: ['fr', '%', 'px', 'em', 'mincontent', 'maxcontent', 'minmax'] = [
-  'fr',
-  '%',
-  'px',
-  'em',
-  'mincontent',
-  'maxcontent',
-  'minmax',
-];
+const units = ['fr', '%', 'px', 'em', 'auto', 'mincontent', 'maxcontent', 'minmax'] as const;
+const initialUnitValues = {
+  fr: 1,
+  '%': 100,
+  px: 100,
+  em: 1,
+  auto: null,
+  mincontent: null,
+  maxcontent: null,
+  minmax: null,
+} as const;
 
 const defaultCell: IGridCell = { value: 1, unit: 'fr' };
 
@@ -37,8 +40,7 @@ export const GridTemplateControls = ({
     updateConfig((prevState) => prevState.filter((_, i) => i !== idx));
   };
 
-  const handleValueChange = (idx: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
+  const handleValueChange = (idx: number) => (value: string) => {
     updateConfig((prevState) =>
       prevState.map((r, i) => {
         if (i === idx) {
@@ -49,12 +51,12 @@ export const GridTemplateControls = ({
     );
   };
 
-  const handleUnitChange = (idx: number) => (event: React.ChangeEvent<{ value: unknown }>) => {
-    const { value } = event.target;
+  const handleUnitChange = (idx: number) => ({ value }: any) => {
+    const v = value as GridUnit;
     updateConfig((prevState) =>
       prevState.map((r, i) => {
         if (i === idx) {
-          return { ...r, unit: value as GridUnit };
+          return { ...r, unit: value, value: initialUnitValues[v] };
         }
         return r;
       }),
@@ -64,30 +66,36 @@ export const GridTemplateControls = ({
   return (
     <Styles.Container>
       <Styles.Header>
-        <Styles.Name>{name}</Styles.Name>
+        <Styles.Name>{name}s</Styles.Name>
         <Button
+          icon="add"
           onClick={handleAdd}
-          variant="contained"
-          color="primary"
-          size="small"
-          disableElevation
-        >
-          Add {name}
-        </Button>
+          style={Button.styles.naked}
+          color={Button.colors.secondary}
+          size={Button.sizes.medium}
+        />
       </Styles.Header>
       {config.map((c, i) => (
         <Styles.Cell key={i}>
-          <TextField type="number" value={c.value} onChange={handleValueChange(i)} />
-          <Select value={c.unit} onChange={handleUnitChange(i)}>
-            {units.map((u) => (
-              <MenuItem key={u} value={u}>
-                {u}
-              </MenuItem>
-            ))}
-          </Select>
-          <IconButton aria-label="delete" onClick={handleRemove(i)} disabled={config.length === 1}>
-            <ClearSharp />
-          </IconButton>
+          <Input
+            type="number"
+            value={c.value || ''}
+            onChange={handleValueChange(i)}
+            disabled={c.value === null}
+          />
+          <Select
+            value={{ value: c.unit, label: c.unit }}
+            onChange={handleUnitChange(i)}
+            options={units.map((u) => ({ value: u, label: u }))}
+          />
+          <Button
+            icon="delete"
+            onClick={handleRemove(i)}
+            style={Button.styles.naked}
+            color={Button.colors.secondary}
+            size={Button.sizes.medium}
+            disabled={config.length === 1}
+          />
         </Styles.Cell>
       ))}
     </Styles.Container>

@@ -9,12 +9,19 @@ export const Header = styled.div`
   margin: 16px 0;
 `;
 
-export const Name = styled.span``;
+export const Name = styled.span`
+  font-weight: 500;
+  text-transform: capitalize;
+`;
 
 export const Cell = styled.div`
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr 1fr auto;
   grid-column-gap: 8px;
-  align-items: center;
+  align-items: end;
   margin-bottom: 8px;
+
+  & *:last-child {
+    align-self: center;
+  }
 `;
