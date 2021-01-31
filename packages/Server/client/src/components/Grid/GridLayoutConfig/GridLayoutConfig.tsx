@@ -1,62 +1,60 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import { Alignment, IGridCell, Page, Layout, Widget } from '@ui-builder/types';
+import { GridAlignment, IGridCell, Layout } from '@ui-builder/types';
 import { updateLayoutConfig } from 'actions/layout';
 import { GridPreview } from 'components/Grid/GridPreview';
 import { GridTemplateControls } from 'components/Grid/GridTemplateControls';
 import { GridGap } from 'components/Grid/GridGap';
-import { AlignmentConfig } from 'components/AlignmentConfig';
+import { GridAlignmentConfig } from 'components/Grid/GridAlignmentConfig';
 
 import * as Styles from './GridLayoutConfig.styles';
 
 interface IGridLayoutConfig {
-  element: Page | Layout | Widget;
+  layout: Layout;
 }
 
-export const GridLayoutConfig = ({ element }: IGridLayoutConfig): JSX.Element => {
+export const GridLayoutConfig = ({ layout }: IGridLayoutConfig): JSX.Element => {
   const dispatch = useDispatch();
 
+  if (layout.layoutType !== 'grid') throw Error();
+
   const handleUpdateRows = (rows: IGridCell[]) =>
-    dispatch(updateLayoutConfig(element.id, 'rows', rows));
+    dispatch(updateLayoutConfig(layout.id, 'rows', rows));
 
   const handleUpdateColumns = (columns: IGridCell[]) =>
-    dispatch(updateLayoutConfig(element.id, 'columns', columns));
+    dispatch(updateLayoutConfig(layout.id, 'columns', columns));
 
   const handleUpdateColumnGap = (gap: number) =>
-    dispatch(updateLayoutConfig(element.id, 'columnGap', gap));
+    dispatch(updateLayoutConfig(layout.id, 'columnGap', gap));
 
   const handleUpdateRowGap = (gap: number) =>
-    dispatch(updateLayoutConfig(element.id, 'rowGap', gap));
+    dispatch(updateLayoutConfig(layout.id, 'rowGap', gap));
 
-  const handleUpdateColumnAlignment = (alignment: Alignment) =>
-    dispatch(updateLayoutConfig(element.id, 'columnAlignment', alignment));
+  const handleUpdateColumnAlignment = (alignment: GridAlignment) =>
+    dispatch(updateLayoutConfig(layout.id, 'columnAlignment', alignment));
 
-  const handleUpdateRowAlignment = (alignment: Alignment) =>
-    dispatch(updateLayoutConfig(element.id, 'rowAlignment', alignment));
+  const handleUpdateRowAlignment = (alignment: GridAlignment) =>
+    dispatch(updateLayoutConfig(layout.id, 'rowAlignment', alignment));
 
   return (
     <Styles.Container>
-      <GridPreview columns={element.props.columns} rows={element.props.rows} />
+      <GridPreview columns={layout.props.columns} rows={layout.props.rows} />
       <GridTemplateControls
         name="column"
-        config={element.props.columns}
+        config={layout.props.columns}
         updateConfig={handleUpdateColumns}
       />
-      <GridTemplateControls
-        name="row"
-        config={element.props.rows}
-        updateConfig={handleUpdateRows}
-      />
-      <GridGap name="column" gap={element.props.columnGap} updateGap={handleUpdateColumnGap} />
-      <GridGap name="row" gap={element.props.rowGap} updateGap={handleUpdateRowGap} />
-      <AlignmentConfig
+      <GridTemplateControls name="row" config={layout.props.rows} updateConfig={handleUpdateRows} />
+      <GridGap name="column" gap={layout.props.columnGap} updateGap={handleUpdateColumnGap} />
+      <GridGap name="row" gap={layout.props.rowGap} updateGap={handleUpdateRowGap} />
+      <GridAlignmentConfig
         name="column"
-        alignment={element.props.columnAlignment}
+        alignment={layout.props.columnAlignment}
         updateAlignment={handleUpdateColumnAlignment}
       />
-      <AlignmentConfig
+      <GridAlignmentConfig
         name="row"
-        alignment={element.props.rowAlignment}
+        alignment={layout.props.rowAlignment}
         updateAlignment={handleUpdateRowAlignment}
       />
     </Styles.Container>

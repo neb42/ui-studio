@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import { Alignment } from '@ui-builder/types';
+import { GridAlignment } from '@ui-builder/types';
 
-import * as Styles from './AlignmentConfig.styles';
+import * as Styles from './GridAlignmentConfig.styles';
 
 const alignmentOptions = [
   { value: 'start', label: 'Start' },
@@ -11,18 +11,18 @@ const alignmentOptions = [
   { value: 'stretch', label: 'Stretch' },
 ];
 
-interface AlignmentConfigProps {
+interface GridAlignmentConfigProps {
   name: string;
-  alignment: Alignment;
-  updateAlignment: (a: Alignment) => any;
+  alignment: GridAlignment;
+  updateAlignment: (a: GridAlignment) => any;
 }
 
-export const AlignmentConfig = ({
+export const GridAlignmentConfig = ({
   name,
   alignment,
   updateAlignment,
-}: AlignmentConfigProps): JSX.Element => {
-  const handleOnChange = ({ value }: any) => updateAlignment(value as Alignment);
+}: GridAlignmentConfigProps): JSX.Element => {
+  const handleOnChange = ({ value }: any) => updateAlignment(value as GridAlignment);
 
   return (
     <Styles.Container>

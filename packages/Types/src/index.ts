@@ -9,7 +9,7 @@ export type { Widget, WidgetProp, WidgetProp$Static, WidgetProp$Variable, Widget
 
 export type { Layout, FlexLayout, GridLayout, GridUnit, IGridCell } from './layout';
 
-export type { Alignment, IGridStyle, IFlexStyle, IPageStyle, TStyle, TGridStyleLayout, IRootStyle } from './style';
+export type { GridAlignment, IGridStyle, IFlexStyle, IPageStyle, TStyle, TGridStyleLayout, IRootStyle } from './style';
 
 export type { InitFunctions, FunctionDefinition, ActionDefinition } from './functions';
 

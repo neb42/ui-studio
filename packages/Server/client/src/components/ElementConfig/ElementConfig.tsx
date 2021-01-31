@@ -14,7 +14,6 @@ import { WidgetConfig } from 'components/WidgetConfig';
 import { CSSInput } from 'components/CSSInput';
 import { ClassNamesInput } from 'components/ClassNamesInput';
 import { EventConfig } from 'components/EventConfig';
-import { FormatListNumberedRtl } from '@material-ui/icons';
 
 import * as Styles from './ElementConfig.styles';
 
@@ -112,7 +111,7 @@ export const ElementConfig = (): JSX.Element => {
       <Styles.Body>
         {tabIndex === 0 &&
           selectedElement.type === 'layout' &&
-          selectedElement.layoutType === 'grid' && <GridLayoutConfig element={selectedElement} />}
+          selectedElement.layoutType === 'grid' && <GridLayoutConfig layout={selectedElement} />}
         {tabIndex === 0 && selectedElement.type === 'widget' && (
           <WidgetConfig widget={selectedElement} />
         )}

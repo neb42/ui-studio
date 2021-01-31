@@ -1,4 +1,4 @@
-export type Alignment = 'start' | 'end' | 'center' | 'stretch';
+export type GridAlignment = 'start' | 'end' | 'center' | 'stretch';
 
 export interface BaseStyle {
   type: 'base';
@@ -11,8 +11,8 @@ export type TGridStyleLayout = [[number, number], [number, number]];
 export interface IGridStyle {
   type: 'grid';
   layout: TGridStyleLayout;
-  rowAlignment: Alignment;
-  columnAlignment: Alignment;
+  rowAlignment: GridAlignment;
+  columnAlignment: GridAlignment;
   css: string;
   classNames: string;
 }

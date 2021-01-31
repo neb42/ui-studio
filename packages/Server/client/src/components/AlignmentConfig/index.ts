@@ -1,1 +1,0 @@
-export { AlignmentConfig } from './AlignmentConfig';

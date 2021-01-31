@@ -6,14 +6,14 @@ import {
   Widget,
   IGridStyle,
   TGridStyleLayout,
-  Alignment,
+  GridAlignment,
 } from '@ui-builder/types';
 import { Store } from 'types/store';
 import { makeGetUsedGridSpace } from 'selectors/element';
 import { GridPreview } from 'components/Grid/GridPreview';
 import { updateLayoutStyle } from 'actions/layout';
 import { updateWidgetStyle } from 'actions/widget';
-import { AlignmentConfig } from 'components/AlignmentConfig';
+import { GridAlignmentConfig } from 'components/Grid/GridAlignmentConfig';
 
 import * as Styles from './GridParentStyle.styles';
 
@@ -48,7 +48,7 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
     }
   };
 
-  const handleUpdateRowAlignment = (alignment: Alignment) => {
+  const handleUpdateRowAlignment = (alignment: GridAlignment) => {
     if (element.style.type !== 'grid') throw Error();
 
     const style: IGridStyle = {
@@ -65,7 +65,7 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
     }
   };
 
-  const handleUpdateColumnAlignment = (alignment: Alignment) => {
+  const handleUpdateColumnAlignment = (alignment: GridAlignment) => {
     if (element.style.type !== 'grid') throw Error();
 
     const style: IGridStyle = {
@@ -91,12 +91,12 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
         selectGrid={handleSelectGrid}
         usedGridSpace={usedGridSpace}
       />
-      <AlignmentConfig
+      <GridAlignmentConfig
         name="row"
         alignment={element.style.rowAlignment}
         updateAlignment={handleUpdateRowAlignment}
       />
-      <AlignmentConfig
+      <GridAlignmentConfig
         name="column"
         alignment={element.style.columnAlignment}
         updateAlignment={handleUpdateColumnAlignment}
