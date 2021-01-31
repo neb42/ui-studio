@@ -1,4 +1,4 @@
-import { TStyle } from './style';
+import { Alignment, TStyle } from './style';
 
 export type GridUnit = 'fr' | '%' | 'px' | 'em' | 'mincontent' | 'maxcontent' | 'minmax' | 'auto';
 
@@ -15,8 +15,12 @@ export interface GridLayout {
   parent: string;
   position: number;
   props: {
-    columns?: IGridCell[];
-    rows?: IGridCell[];
+    columns: IGridCell[];
+    rows: IGridCell[];
+    columnGap: number;
+    rowGap: number;
+    rowAlignment: Alignment;
+    columnAlignment: Alignment;
   };
   style: TStyle;
 }

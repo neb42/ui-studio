@@ -5,8 +5,6 @@ import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'se
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
 
-import { getParentElement } from '../selectors/element';
-
 export const ADD_LAYOUT = 'ADD_LAYOUT';
 export const REMOVE_LAYOUT = 'REMOVE_LAYOUT';
 export const UPDATE_LAYOUT_CONFIG = 'UPDATE_LAYOUT_CONFIG';
@@ -24,6 +22,8 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
             [0, 0],
             [0, 0],
           ],
+          rowAlignment: 'stretch',
+          columnAlignment: 'stretch',
         };
       }
       if (parent.layoutType === 'flex') {
@@ -54,6 +54,10 @@ const getDefaultConfig = (layoutType: 'grid' | 'flex') => {
       props: {
         rows: [defaultCell],
         columns: [defaultCell],
+        columnGap: 0,
+        rowGap: 0,
+        rowAlignment: 'stretch' as const,
+        columnAlignment: 'stretch' as const,
       },
     };
   }

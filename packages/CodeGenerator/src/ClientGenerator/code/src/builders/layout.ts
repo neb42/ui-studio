@@ -17,11 +17,13 @@ export const LayoutBuilder = ({
       ? `
         display: grid;
         grid-template-columns: ${layout.props.columns
-          ?.map((l) => `${l.value || ''}${l.unit}`)
+          .map((l) => `${l.value || ''}${l.unit}`)
           .join(' ')};
-        grid-template-rows: ${layout.props.rows?.map((l) => `${l.value || ''}${l.unit}`).join(' ')};
-        grid-row-gap: 16px;
-        grid-column-gap: 16px;
+        grid-template-rows: ${layout.props.rows.map((l) => `${l.value || ''}${l.unit}`).join(' ')};
+        grid-column-gap: ${layout.props.columnGap}px;
+        grid-row-gap: ${layout.props.rowGap}px;
+        align-items: ${layout.props.rowAlignment};
+        justify-content: ${layout.props.columnAlignment};
       `
       : ''}
 
@@ -37,6 +39,8 @@ export const LayoutBuilder = ({
         grid-column: ${layout.style.layout[0][1]} / ${layout.style.layout[1][1] + 1};
       `
       : ''}
+
+      ${layout.style.type === 'flex' ? '' : ''}
 
       ${layout.style.css}
   `;

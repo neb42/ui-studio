@@ -1,11 +1,19 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { GridLayout, Layout, Widget, IGridStyle, TGridStyleLayout } from '@ui-builder/types';
+import {
+  GridLayout,
+  Layout,
+  Widget,
+  IGridStyle,
+  TGridStyleLayout,
+  Alignment,
+} from '@ui-builder/types';
 import { Store } from 'types/store';
 import { makeGetUsedGridSpace } from 'selectors/element';
 import { GridPreview } from 'components/Grid/GridPreview';
 import { updateLayoutStyle } from 'actions/layout';
 import { updateWidgetStyle } from 'actions/widget';
+import { AlignmentConfig } from 'components/AlignmentConfig';
 
 import * as Styles from './GridParentStyle.styles';
 
@@ -21,12 +29,48 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
     getUsedGridSpace(state, parent.id, [element.id]),
   );
 
+  if (element.style.type !== 'grid') throw Error();
+
   const handleSelectGrid = (grid: TGridStyleLayout) => {
+    if (element.style.type !== 'grid') throw Error();
+
     const style: IGridStyle = {
-      type: 'grid',
+      ...element.style,
       layout: grid,
-      css: element.style.css,
-      classNames: element.style.classNames,
+    };
+
+    if (element.type === 'widget') {
+      dispatch(updateWidgetStyle(element.id, style));
+    }
+
+    if (element.type === 'layout') {
+      dispatch(updateLayoutStyle(element.id, style));
+    }
+  };
+
+  const handleUpdateRowAlignment = (alignment: Alignment) => {
+    if (element.style.type !== 'grid') throw Error();
+
+    const style: IGridStyle = {
+      ...element.style,
+      rowAlignment: alignment,
+    };
+
+    if (element.type === 'widget') {
+      dispatch(updateWidgetStyle(element.id, style));
+    }
+
+    if (element.type === 'layout') {
+      dispatch(updateLayoutStyle(element.id, style));
+    }
+  };
+
+  const handleUpdateColumnAlignment = (alignment: Alignment) => {
+    if (element.style.type !== 'grid') throw Error();
+
+    const style: IGridStyle = {
+      ...element.style,
+      columnAlignment: alignment,
     };
 
     if (element.type === 'widget') {
@@ -46,6 +90,16 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
         selectedGrid={element.style.type === 'grid' ? element.style.layout : undefined}
         selectGrid={handleSelectGrid}
         usedGridSpace={usedGridSpace}
+      />
+      <AlignmentConfig
+        name="row"
+        alignment={element.style.rowAlignment}
+        updateAlignment={handleUpdateRowAlignment}
+      />
+      <AlignmentConfig
+        name="column"
+        alignment={element.style.columnAlignment}
+        updateAlignment={handleUpdateColumnAlignment}
       />
     </Styles.Container>
   );

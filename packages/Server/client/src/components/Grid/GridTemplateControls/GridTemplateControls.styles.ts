@@ -6,7 +6,7 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 16px 0;
+  margin-bottom: 16px;
 `;
 
 export const Name = styled.span`

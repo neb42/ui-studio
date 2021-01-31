@@ -114,8 +114,12 @@ export const WidgetBuilder = ({
         ? `
         grid-row: ${widget.style.layout[0][0]} / ${widget.style.layout[1][0] + 1};
         grid-column: ${widget.style.layout[0][1]} / ${widget.style.layout[1][1] + 1};
+        align-self: ${widget.style.rowAlignment};
+        justify-self: ${widget.style.columnAlignment};
       `
         : ''}
+
+      ${widget.style.type === 'flex' ? '' : ''}
 
       ${widget.style.css}
     `;

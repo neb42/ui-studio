@@ -20,11 +20,10 @@ const initialUnitValues = {
 
 const defaultCell: IGridCell = { value: 1, unit: 'fr' };
 
-type StateFunction = (config: IGridCell[]) => IGridCell[];
 interface IGridLayoutConfig {
   name: string;
   config: IGridCell[];
-  updateConfig: (f: StateFunction) => void;
+  updateConfig: (c: IGridCell[]) => any;
 }
 
 export const GridTemplateControls = ({
@@ -33,16 +32,16 @@ export const GridTemplateControls = ({
   updateConfig,
 }: IGridLayoutConfig): JSX.Element => {
   const handleAdd = () => {
-    updateConfig((prevState) => [...prevState, defaultCell]);
+    updateConfig([...config, defaultCell]);
   };
 
   const handleRemove = (idx: number) => () => {
-    updateConfig((prevState) => prevState.filter((_, i) => i !== idx));
+    updateConfig(config.filter((_, i) => i !== idx));
   };
 
   const handleValueChange = (idx: number) => (value: string) => {
-    updateConfig((prevState) =>
-      prevState.map((r, i) => {
+    updateConfig(
+      config.map((r, i) => {
         if (i === idx) {
           return { ...r, value: Number(value) };
         }
@@ -53,8 +52,8 @@ export const GridTemplateControls = ({
 
   const handleUnitChange = (idx: number) => ({ value }: any) => {
     const v = value as GridUnit;
-    updateConfig((prevState) =>
-      prevState.map((r, i) => {
+    updateConfig(
+      config.map((r, i) => {
         if (i === idx) {
           return { ...r, unit: value, value: initialUnitValues[v] };
         }

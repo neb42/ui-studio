@@ -27,6 +27,8 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
             [0, 0],
             [0, 0],
           ],
+          rowAlignment: 'stretch',
+          columnAlignment: 'stretch',
         };
       }
       if (parent.layoutType === 'flex') {
