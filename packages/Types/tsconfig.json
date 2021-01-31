@@ -8,6 +8,7 @@
     "outDir": "build",
     "sourceMap": true,
     "target": "es6",
+    "skipLibCheck": true,
     "esModuleInterop": true
   },
   "compileOnSave": true,
