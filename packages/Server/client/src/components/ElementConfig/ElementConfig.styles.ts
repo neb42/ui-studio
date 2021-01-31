@@ -4,6 +4,9 @@ export const Container = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100%;
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 1px 1px rgba(16, 22, 26, 0.2),
+    0 2px 6px rgba(16, 22, 26, 0.2);
+  overflow: hidden;
 `;
 
 export const Header = styled.div`
@@ -32,17 +35,9 @@ export const ComponentName = styled.span`
 `;
 
 export const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 16px 24px;
-  height: 100%;
-`;
-
-export const Field = styled.div`
-  flex-grow: 1;
-  overflow: auto;
   display: grid;
-  grid-template-columns: 100%;
-  grid-row-gap: 16px;
-  padding: 16px;
+  grid-auto-rows: min-content;
+  row-gap: 24px;
+  padding: 16px 24px;
+  overflow: auto;
 `;

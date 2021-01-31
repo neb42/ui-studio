@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import { TextField } from '@material-ui/core';
+import Input from '@faculty/adler-web-components/atoms/Input';
 import { Element } from '@ui-builder/types';
 import { updateElementClassNames } from 'actions/element';
 
@@ -13,18 +13,12 @@ interface ClassNamesInputProps {
 export const ClassNamesInput = ({ element }: ClassNamesInputProps): JSX.Element => {
   const dispatch = useDispatch();
 
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    dispatch(updateElementClassNames(element.id, event.target.value));
+  const handleOnChange = (value: string) => dispatch(updateElementClassNames(element.id, value));
 
   return (
     <Styles.Container>
       <Styles.Header>Class names</Styles.Header>
-      <TextField
-        onChange={handleOnChange}
-        value={element.style.classNames}
-        style={{ width: '100%' }}
-        // TODO add type validation function
-      />
+      <Input onChange={handleOnChange} value={element.style.classNames} />
     </Styles.Container>
   );
 };

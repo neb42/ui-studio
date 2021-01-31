@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import AceEditor from 'react-ace';
+import { useTheme } from 'styled-components';
 import { Element } from '@ui-builder/types';
 import { updateElementCSS } from 'actions/element';
 
@@ -17,6 +18,8 @@ interface ICSSInput {
 
 export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const [hasFocus, setHasFocus] = React.useState(false);
 
   const handleOnChange = (value: string) => dispatch(updateElementCSS(element.id, value));
 
@@ -34,6 +37,8 @@ export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
         height="300px"
         tabSize={2}
         wrapEnabled
+        onFocus={() => setHasFocus(true)}
+        onBlur={() => setHasFocus(false)}
         highlightActiveLine={false}
         showGutter={false}
         showPrintMargin={false}
@@ -44,7 +49,11 @@ export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
         }}
         style={{
           padding: '8px',
+          border: `1px solid ${
+            hasFocus ? theme.input.border.color.focused : theme.input.border.color.default
+          }`,
           fontFamily: 'Menlo, monospace',
+          transition: 'border 300ms ease-in-out',
         }}
       />
     </Styles.Container>

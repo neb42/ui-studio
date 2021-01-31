@@ -33,9 +33,7 @@ export const PageBuilder = (): JSX.Element => {
           <PopoverNavigation />
         </Styles.ColLeft>
         <Preview pageName={pageName} />
-        <Styles.ColRight>
-          <ElementConfig key={elementId} />
-        </Styles.ColRight>
+        <ElementConfig key={elementId} />
       </Styles.Body>
     </Styles.Container>
   );
