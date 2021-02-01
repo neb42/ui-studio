@@ -9,6 +9,7 @@ import { updateWidgetStyle } from 'actions/widget';
 import * as Styles from './FlexParentStyle.styles';
 
 const alignmentOptions = [
+  { value: 'auto', label: 'Auto' },
   { value: 'flex-start', label: 'Start' },
   { value: 'flex-end', label: 'End' },
   { value: 'center', label: 'Center' },
@@ -17,6 +18,7 @@ const alignmentOptions = [
 ];
 
 const justificationOptions = [
+  { value: 'auto', label: 'Auto' },
   { value: 'flex-start', label: 'Start' },
   { value: 'flex-end', label: 'End' },
   { value: 'center', label: 'Center' },

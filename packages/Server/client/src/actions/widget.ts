@@ -34,8 +34,8 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
       if (parent.layoutType === 'flex') {
         return {
           type: 'flex',
-          align: 'flex-start',
-          justify: 'flex-start',
+          align: 'auto',
+          justify: 'auto',
           grow: 0,
           css: '',
           classNames: '',

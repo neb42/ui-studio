@@ -10,9 +10,6 @@ export const LayoutBuilder = ({
   layout: Layout;
 }): React.FunctionComponentElement<any> => {
   const LayoutWrapper: React.FC<any> = styled.div`
-    height: 100%;
-    width: 100%;
-
     ${layout.layoutType === 'grid'
       ? `
         display: grid;

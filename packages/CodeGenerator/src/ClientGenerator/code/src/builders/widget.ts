@@ -107,9 +107,6 @@ export const WidgetBuilder = ({
     }, {});
 
     const WidgetWrapper = styled.div`
-      height: 100%;
-      width: 100%;
-
       ${widget.style.type === 'grid'
         ? `
         grid-row: ${widget.style.layout[0][0]} / ${widget.style.layout[1][0] + 1};
