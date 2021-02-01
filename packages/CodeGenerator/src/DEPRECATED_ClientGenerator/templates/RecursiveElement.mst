@@ -1,6 +1,0 @@
-{{=<% %>=}}
-<% #children %>
-React.createElement(<% type %>_<% name %>, {}, [
-  <% >recursive_element %>
-]),
-<% /children %>
