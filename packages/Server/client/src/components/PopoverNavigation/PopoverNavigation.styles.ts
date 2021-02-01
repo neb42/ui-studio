@@ -19,7 +19,7 @@ export const NavItem = styled.div<{ active: boolean }>`
 `;
 
 export const PopoverContainer = styled.div`
-  height: 100vh;
+  height: calc(100vh - 55px);
   width: 50vw;
   position: fixed;
   bottom: 0;

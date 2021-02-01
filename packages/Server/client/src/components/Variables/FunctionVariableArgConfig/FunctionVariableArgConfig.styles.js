@@ -1,20 +1,14 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  margin-bottom: 16px;
-  padding: 8px;
-  background-color: #e8e8e8;
-  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 24px;
+  row-gap: 8px;
 `;
 
-export const Header = styled.div`
-  display: flex;
-  align-items: center;
+export const ModeButtons = styled.div`
+  grid-row: 1;
+  grid-column: 2;
+  align-self: end;
 `;
-
-export const Label = styled.div`
-  flex: 1;
-  font-weight: 500;
-`;
-
-export const ModeButtons = styled.div``;

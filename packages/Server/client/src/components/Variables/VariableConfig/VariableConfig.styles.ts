@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
-export const Container = styled.div``;
-
-export const Name = styled.div``;
-
-export const Type = styled.div``;
+export const Container = styled.div`
+  display: grid;
+  grid-auto-rows: min-content;
+  row-gap: 16px;
+  padding: 16px;
+  padding-right: 36px;
+`;

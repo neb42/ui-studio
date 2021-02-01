@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Select, MenuItem } from '@material-ui/core';
+import Select from '@faculty/adler-web-components/atoms/Select';
 import {
   FunctionVariable,
   FunctionVariableArg,
@@ -8,10 +8,14 @@ import {
 } from '@ui-builder/types';
 import { makeGetFunctions } from 'selectors/element';
 import { updateFunctionVariable } from 'actions/variable';
-
-import { FunctionVariableArgConfig } from '../FunctionVariableArgConfig';
+import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';
 
 import * as Styles from './FunctionVariableConfig.styles';
+
+const triggerOptions = [
+  { value: 'auto', label: 'Auto' },
+  { value: 'event', label: 'Event' },
+];
 
 interface Props {
   variable: FunctionVariable;
@@ -23,29 +27,19 @@ export const FunctionVariableConfig = ({ variable }: Props) => {
 
   const selectedFunction = functions.find((f) => f.name === variable.functionId);
 
-  const handleTriggerChange = (
-    event: React.ChangeEvent<{
-      name?: string | undefined;
-      value: unknown;
-    }>,
-  ) =>
+  const handleTriggerChange = ({ value }: any) =>
     dispatch(
       updateFunctionVariable(
         variable.id,
         variable.functionId,
         variable.valueType,
-        event.target.value as 'auto' | 'event',
+        value as 'auto' | 'event',
         variable.args,
       ),
     );
 
-  const handleFunctionIdChange = (
-    event: React.ChangeEvent<{
-      name?: string | undefined;
-      value: unknown;
-    }>,
-  ) => {
-    const functionId = event.target.value as string;
+  const handleFunctionIdChange = ({ value }: any) => {
+    const functionId = value as string;
     const func = functions.find((f) => f.name === functionId);
     if (!func) return;
     const defaultArgs: FunctionVariable$StaticArg[] = func.args.map((a) => {
@@ -94,29 +88,36 @@ export const FunctionVariableConfig = ({ variable }: Props) => {
     );
   };
 
+  const functionIdOptions = functions.map((f) => ({ value: f.name, label: f.name }));
+
   return (
-    <Styles.Container>
-      <Select value={variable.trigger} onChange={handleTriggerChange}>
-        <MenuItem value="auto">Auto</MenuItem>
-        <MenuItem value="event">Event</MenuItem>
-      </Select>
-      <Select value={variable.functionId} onChange={handleFunctionIdChange}>
-        {functions.map((f) => (
-          <MenuItem key={f.name} value={f.name}>
-            {f.name}
-          </MenuItem>
-        ))}
-      </Select>
-      {selectedFunction &&
-        selectedFunction.args.map((a, i) => (
-          <FunctionVariableArgConfig
-            key={a.name}
-            onChange={handleArgChange(i)}
-            name={a.name}
-            valueType={a.type}
-            arg={variable.args[i]}
-          />
-        ))}
-    </Styles.Container>
+    <>
+      <Select
+        label="Trigger"
+        value={triggerOptions.find((o) => o.value === variable.trigger)}
+        onChange={handleTriggerChange}
+        options={triggerOptions}
+      />
+      <Select
+        label="Function"
+        value={functionIdOptions.find((o) => o.value === variable.functionId)}
+        onChange={handleFunctionIdChange}
+        options={functionIdOptions}
+      />
+      {selectedFunction && (
+        <Styles.Args>
+          <Styles.ArgsHeader>Function arguments</Styles.ArgsHeader>
+          {selectedFunction.args.map((a, i) => (
+            <FunctionVariableArgConfig
+              key={a.name}
+              onChange={handleArgChange(i)}
+              name={a.name}
+              valueType={a.type}
+              arg={variable.args[i]}
+            />
+          ))}
+        </Styles.Args>
+      )}
+    </>
   );
 };

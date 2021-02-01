@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { IconButton, Select, MenuItem, TextField } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { Edit, Functions, Widgets } from '@material-ui/icons';
+import Input from '@faculty/adler-web-components/atoms/Input';
+import Select from '@faculty/adler-web-components/atoms/Select';
 import {
   FunctionVariableArg,
   FunctionVariable$StaticArg,
@@ -12,106 +14,101 @@ import { getWidgets, getVariables } from 'selectors/element';
 
 import * as Styles from './FunctionVariableArgConfig.styles';
 
+const booleanOptions = [
+  { value: true, label: 'True' },
+  { value: false, label: 'False' },
+];
+
 interface IFoo<T extends FunctionVariableArg> {
+  name: string;
   arg: T;
   onChange: (arg: FunctionVariableArg) => void;
   valueType: 'string' | 'number' | 'boolean';
 }
 
-type InputEvent = React.ChangeEvent<HTMLInputElement>;
-type SelectEvent = React.ChangeEvent<{
-  name?: string | undefined;
-  value: unknown;
-}>;
-
 const InputConfig = ({
+  name,
   valueType,
   arg,
   onChange,
 }: IFoo<FunctionVariable$StaticArg>): JSX.Element => {
-  const handleStringValueChange = (event: InputEvent) =>
-    onChange({ type: 'static', valueType: 'string', value: event.target.value as string });
+  const handleStringValueChange = (value: string) =>
+    onChange({ type: 'static', valueType: 'string', value });
 
-  const handleNumberValueChange = (event: InputEvent) =>
-    onChange({ type: 'static', valueType: 'number', value: Number(event.target.value) });
+  const handleNumberValueChange = (value: number) =>
+    onChange({ type: 'static', valueType: 'number', value });
 
-  const handleBooleanValueChange = (event: SelectEvent) =>
-    onChange({ type: 'static', valueType: 'boolean', value: (event.target.value as 1 | 0) === 1 });
+  const handleBooleanValueChange = ({ value }: any) =>
+    onChange({ type: 'static', valueType: 'boolean', value: value as boolean });
 
   return (
     <>
-      {valueType === 'string' && (
-        <TextField id="value" label="Value" value={arg.value} onChange={handleStringValueChange} />
+      {valueType === 'string' && typeof arg.value !== 'boolean' && (
+        <Input label={name} value={arg.value} onChange={handleStringValueChange} />
       )}
-      {valueType === 'number' && (
-        <TextField
-          id="value"
-          label="Value"
-          type="number"
-          value={arg.value}
-          onChange={handleNumberValueChange}
-        />
+      {valueType === 'number' && typeof arg.value !== 'boolean' && (
+        <Input label={name} type="number" value={arg.value} onChange={handleNumberValueChange} />
       )}
       {valueType === 'boolean' && (
-        <Select value={arg.value ? 1 : 0} onChange={handleBooleanValueChange}>
-          <MenuItem value={1}>True</MenuItem>
-          <MenuItem value={0}>False</MenuItem>
-        </Select>
+        <Select
+          label={name}
+          value={booleanOptions.find((o) => o.value === arg.value)}
+          onChange={handleBooleanValueChange}
+          options={booleanOptions}
+        />
       )}
     </>
   );
 };
 
 const VariableConfig = ({
+  name,
   arg,
   valueType,
   onChange,
 }: IFoo<FunctionVariable$VariableArg>): JSX.Element => {
-  const handleOnChange = (event: SelectEvent) => {
-    onChange({ type: 'variable', variableId: event.target.value as string });
+  const handleOnChange = ({ value }: any) => {
+    onChange({ type: 'variable', variableId: value as string });
   };
 
   const variables = Object.values(useSelector(getVariables)).filter(
     (v) => v.type === 'static' && v.valueType === valueType,
   );
 
+  const options = variables.map((v) => ({ value: v.id, label: v.name }));
+
   return (
-    <Select value={arg.variableId} onChange={handleOnChange} style={{ width: '100%' }}>
-      {variables.map((v) => (
-        <MenuItem key={v.id} value={v.id}>
-          {v.name}
-        </MenuItem>
-      ))}
-    </Select>
+    <Select
+      label={name}
+      value={options.find((o) => o.value === arg.variableId)}
+      onChange={handleOnChange}
+      options={options}
+    />
   );
 };
 
-const WidgetConfig = ({ arg, onChange }: IFoo<FunctionVariable$WidgetArg>): JSX.Element => {
-  const handleWidgetIdChange = (event: SelectEvent) => {
-    onChange({ type: 'widget', widgetId: event.target.value as string, property: arg.property });
+const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>): JSX.Element => {
+  const handleWidgetIdChange = ({ value }: any) => {
+    onChange({ type: 'widget', widgetId: value as string, property: arg.property });
   };
 
-  const handlePropertyChange = (event: SelectEvent) => {
-    onChange({ type: 'widget', widgetId: arg.widgetId, property: event.target.value as string });
+  const handlePropertyChange = (value: string) => {
+    onChange({ type: 'widget', widgetId: arg.widgetId, property: value as string });
   };
 
   const widgets = Object.values(useSelector(getWidgets));
 
+  const options = widgets.map((w) => ({ label: w.name, value: w.id }));
+
   return (
     <>
-      <Select value={arg.widgetId} onChange={handleWidgetIdChange}>
-        {widgets.map((w) => (
-          <MenuItem key={w.id} value={w.id}>
-            {w.name}
-          </MenuItem>
-        ))}
-      </Select>
-      <TextField
-        id="property"
-        label="Property"
-        value={arg.property}
-        onChange={handlePropertyChange}
+      <Select
+        label={name}
+        value={options.find((o) => o.value === arg.widgetId)}
+        onChange={handleWidgetIdChange}
+        options={options}
       />
+      <Input placeholder="Property" value={arg.property} onChange={handlePropertyChange} />
     </>
   );
 };
@@ -142,29 +139,26 @@ export const FunctionVariableArgConfig = ({
 
   return (
     <Styles.Container>
-      <Styles.Header>
-        <Styles.Label>{name}</Styles.Label>
-        <Styles.ModeButtons>
-          <IconButton onClick={handleToggleMode('static')} size="small">
-            <Edit style={{ color: getColor('static') }} />
-          </IconButton>
-          <IconButton onClick={handleToggleMode('variable')} size="small">
-            <Functions style={{ color: getColor('variable') }} />
-          </IconButton>
-          <IconButton onClick={handleToggleMode('widget')} size="small">
-            <Widgets style={{ color: getColor('widget') }} />
-          </IconButton>
-        </Styles.ModeButtons>
-      </Styles.Header>
       {arg.type === 'static' && (
-        <InputConfig valueType={valueType} arg={arg} onChange={handleOnChange} />
+        <InputConfig name={name} valueType={valueType} arg={arg} onChange={handleOnChange} />
       )}
       {arg.type === 'variable' && (
-        <VariableConfig valueType={valueType} arg={arg} onChange={handleOnChange} />
+        <VariableConfig name={name} valueType={valueType} arg={arg} onChange={handleOnChange} />
       )}
       {arg.type === 'widget' && (
-        <WidgetConfig valueType={valueType} arg={arg} onChange={handleOnChange} />
+        <WidgetConfig name={name} valueType={valueType} arg={arg} onChange={handleOnChange} />
       )}
+      <Styles.ModeButtons>
+        <IconButton onClick={handleToggleMode('static')} size="small">
+          <Edit style={{ color: getColor('static') }} />
+        </IconButton>
+        <IconButton onClick={handleToggleMode('variable')} size="small">
+          <Functions style={{ color: getColor('variable') }} />
+        </IconButton>
+        <IconButton onClick={handleToggleMode('widget')} size="small">
+          <Widgets style={{ color: getColor('widget') }} />
+        </IconButton>
+      </Styles.ModeButtons>
     </Styles.Container>
   );
 };

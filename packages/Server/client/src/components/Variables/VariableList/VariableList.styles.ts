@@ -4,22 +4,21 @@ import Color from 'color';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 8px;
 `;
 
-export const Header = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+export const VariableItem = styled.div<{ active: boolean }>`
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-column-gap: 8px;
   align-items: center;
-  padding: 8px 16px;
-  background-color: #1c1c1c;
-  color: #fff;
-  font-weight: 600;
-  font-size: 16px;
-`;
-
-export const VariableItem = styled.div<any>`
-  padding: 4px 8px;
+  cursor: pointer;
+  transition: background-color 300ms;
+  padding-left: 8px;
+  padding-right: 4px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-radius: 3px;
 
   background-color: ${({ active }) =>
     active ? Color('#fa7268').alpha(0.4).hsl().string() : 'none'};
@@ -31,6 +30,24 @@ export const VariableItem = styled.div<any>`
         .hsl()
         .string()};
   }
+
+  & span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
-export const Name = styled.div``;
+export const Name = styled.span``;
+
+export const Actions = styled.div<{ selected: boolean }>`
+  display: grid;
+  grid-template-columns: repeat(1, auto);
+  grid-column-gap: 8px;
+  transition: max-width 600ms;
+  overflow: hidden;
+  max-width: ${({ selected }) => (selected ? '144px' : '0')};
+
+  ${VariableItem}:hover & {
+    max-width: 144px;
+  }
+`;
