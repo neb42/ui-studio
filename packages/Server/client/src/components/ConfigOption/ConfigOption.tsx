@@ -219,7 +219,7 @@ export const ConfigOption = ({ widget, config }: ConfigOptionProps): JSX.Element
           return {
             mode: 'static',
             type: 'string',
-            value: '',
+            value: config.component === 'select' ? config.options[0]?.key : '',
           };
         case 'variable':
           return {

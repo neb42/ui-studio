@@ -33,7 +33,7 @@ export const VariableList = () => {
               style={Button.styles.naked}
               color={Button.colors.secondary}
               size={Button.sizes.medium}
-              onClick={handleDeleteVariable}
+              onClick={handleDeleteVariable(v.id)}
             />
           </Styles.Actions>
         </Styles.VariableItem>
