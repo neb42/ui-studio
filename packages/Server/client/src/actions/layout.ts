@@ -29,6 +29,9 @@ const getDefaultStyle = (parent: Element | null): TStyle => {
       if (parent.layoutType === 'flex') {
         return {
           type: 'flex',
+          align: 'flex-start',
+          justify: 'flex-start',
+          grow: 0,
           css: '',
           classNames: '',
         };
@@ -64,7 +67,12 @@ const getDefaultConfig = (layoutType: 'grid' | 'flex') => {
   if (layoutType === 'flex') {
     return {
       layoutType,
-      props: {},
+      props: {
+        direction: 'row' as const,
+        align: 'flex-start' as const,
+        justify: 'flex-start' as const,
+        wrap: false,
+      },
     };
   }
   throw Error();

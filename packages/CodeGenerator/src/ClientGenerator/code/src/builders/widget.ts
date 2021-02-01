@@ -119,7 +119,13 @@ export const WidgetBuilder = ({
       `
         : ''}
 
-      ${widget.style.type === 'flex' ? '' : ''}
+      ${widget.style.type === 'flex'
+        ? `
+        align-self: ${widget.style.align};
+        justify-self: ${widget.style.justify};
+        flex-grow: ${widget.style.grow};
+      `
+        : ''}
 
       ${widget.style.css}
     `;

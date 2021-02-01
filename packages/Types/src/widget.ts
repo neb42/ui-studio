@@ -2,20 +2,20 @@ import { TStyle } from './style';
 import { Event } from './event';
 
 export type WidgetProp$Static = {
-  mode: 'static'
+  mode: 'static';
 } & (
   | { type: 'string'; value: string }
   | { type: 'number'; value: number }
   | { type: 'boolean'; value: boolean }
   | { type: 'object'; value: string }
-)
+);
 
 export type WidgetProp$Variable = {
-  mode: 'variable'
+  mode: 'variable';
 } & (
   | { type: 'string' | 'number' | 'boolean'; variableId: string }
-  | { type: 'object'; variableId: string, lookup: string }
-)
+  | { type: 'object'; variableId: string; lookup: string }
+);
 
 export type WidgetProp$Widget = {
   mode: 'widget';
@@ -23,7 +23,7 @@ export type WidgetProp$Widget = {
   lookup: string;
 };
 
-export type WidgetProp = WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget; 
+export type WidgetProp = WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget;
 
 export interface Widget {
   id: string;

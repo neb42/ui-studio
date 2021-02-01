@@ -6,11 +6,11 @@ export interface BaseVariable {
 export type StaticVariable = BaseVariable & {
   type: 'static';
 } & (
-  | { valueType: 'string'; value: string}
-  | { valueType: 'number'; value: number }
-  | { valueType: 'boolean'; value: boolean}
-  | { valueType: 'object'; value: string }
-);
+    | { valueType: 'string'; value: string }
+    | { valueType: 'number'; value: number }
+    | { valueType: 'boolean'; value: boolean }
+    | { valueType: 'object'; value: string }
+  );
 
 // export type LookupVariable = BaseVariable & {
 //   type: 'lookup';
@@ -19,32 +19,35 @@ export type StaticVariable = BaseVariable & {
 // };
 
 export type FunctionVariable$StaticArg = {
-  type: 'static',
+  type: 'static';
 } & (
-  | { valueType: 'string'; value: string}
+  | { valueType: 'string'; value: string }
   | { valueType: 'number'; value: number }
-  | { valueType: 'boolean'; value: boolean}
+  | { valueType: 'boolean'; value: boolean }
 );
 
 export interface FunctionVariable$VariableArg {
-  type: 'variable',
+  type: 'variable';
   variableId: string;
 }
 
 export interface FunctionVariable$WidgetArg {
-  type: 'widget',
+  type: 'widget';
   widgetId: string;
   property: string;
 }
 
-export type FunctionVariableArg = FunctionVariable$StaticArg | FunctionVariable$VariableArg | FunctionVariable$WidgetArg;
+export type FunctionVariableArg =
+  | FunctionVariable$StaticArg
+  | FunctionVariable$VariableArg
+  | FunctionVariable$WidgetArg;
 
 export interface FunctionVariable extends BaseVariable {
   type: 'function';
   functionId: string;
   valueType: 'string' | 'number' | 'boolean' | 'object';
   trigger: 'auto' | 'event';
-  args: FunctionVariableArg[],
+  args: FunctionVariableArg[];
 }
 
 export type Variable = FunctionVariable | StaticVariable;

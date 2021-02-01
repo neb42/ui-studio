@@ -21,4 +21,4 @@ export interface Event$NavigatePage {
   pageId: string;
 }
 
-export type Event = Event$UpdateVariable | Event$TriggerAction | Event$NavigatePage; 
+export type Event = Event$UpdateVariable | Event$TriggerAction | Event$NavigatePage;

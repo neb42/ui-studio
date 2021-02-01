@@ -1,0 +1,1 @@
+export { FlexLayoutConfig } from './FlexLayoutConfig';

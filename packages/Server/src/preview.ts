@@ -57,9 +57,9 @@ export const initCode = async (): Promise<void> => {
 
   const installPackages = () => {
     console.log(`Installing client packages as ${clientPath}...`);
-    execSync('yarn', { cwd: clientPath, stdio: 'inherit' });
+    execSync('yarn --force', { cwd: clientPath, stdio: 'inherit' });
     console.log(`Installing server packages at ${serverPath}...`);
-    execSync('yarn', { cwd: serverPath, stdio: 'inherit' });
+    execSync('yarn --force', { cwd: serverPath, stdio: 'inherit' });
   };
 
   installPackages();

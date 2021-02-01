@@ -1,4 +1,4 @@
-import { GridAlignment, TStyle } from './style';
+import { FlexAlignment, FlexJustification, GridAlignment, TStyle } from './style';
 
 export type GridUnit = 'fr' | '%' | 'px' | 'em' | 'mincontent' | 'maxcontent' | 'minmax' | 'auto';
 
@@ -31,7 +31,12 @@ export interface FlexLayout {
   layoutType: 'flex';
   name: string;
   parent: string;
-  props: { [key: string]: any };
+  props: {
+    direction: 'row' | 'column';
+    align: FlexAlignment;
+    justify: FlexJustification;
+    wrap: boolean;
+  };
   position: number;
   style: TStyle;
 }

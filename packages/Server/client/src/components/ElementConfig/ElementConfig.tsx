@@ -9,7 +9,9 @@ import { makeGetElement, makeGetSelectedElement } from 'selectors/element';
 import { updateElementName } from 'actions/element';
 import { ElementIcon } from 'components/ElementIcon';
 import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig/GridLayoutConfig';
+import { FlexLayoutConfig } from 'components/Flex/FlexLayoutConfig';
 import { GridParentStyle } from 'components/Grid/GridParentStyle';
+import { FlexParentStyle } from 'components/Flex/FlexParentStyle';
 import { WidgetConfig } from 'components/WidgetConfig';
 import { CSSInput } from 'components/CSSInput';
 import { ClassNamesInput } from 'components/ClassNamesInput';
@@ -57,28 +59,6 @@ export const ElementConfig = (): JSX.Element => {
     return <Styles.Container>No element selected</Styles.Container>;
   }
 
-  const componentName = (() => {
-    switch (selectedElement.type) {
-      case 'page':
-        return 'Page';
-      case 'layout': {
-        switch (selectedElement.layoutType) {
-          case 'grid':
-            return 'Grid layout';
-          case 'flex':
-            return 'Flex layout';
-          default:
-            return 'Unknown';
-        }
-      }
-      case 'widget': {
-        return selectedElement.component;
-      }
-      default:
-        return 'Unknown';
-    }
-  })();
-
   const tabHeaders = [{ content: 'Config' }, { content: 'Styles' }];
   if (selectedElement.type === 'widget') {
     tabHeaders.push({ content: 'Events' });
@@ -112,6 +92,9 @@ export const ElementConfig = (): JSX.Element => {
         {tabIndex === 0 &&
           selectedElement.type === 'layout' &&
           selectedElement.layoutType === 'grid' && <GridLayoutConfig layout={selectedElement} />}
+        {tabIndex === 0 &&
+          selectedElement.type === 'layout' &&
+          selectedElement.layoutType === 'flex' && <FlexLayoutConfig layout={selectedElement} />}
         {tabIndex === 0 && selectedElement.type === 'widget' && (
           <WidgetConfig widget={selectedElement} />
         )}
@@ -121,6 +104,10 @@ export const ElementConfig = (): JSX.Element => {
           parentElement?.layoutType === 'grid' && (
             <GridParentStyle element={selectedElement} parent={parentElement} />
           )}
+        {tabIndex === 1 &&
+          selectedElement?.type !== 'page' &&
+          parentElement?.type === 'layout' &&
+          parentElement?.layoutType === 'flex' && <FlexParentStyle element={selectedElement} />}
         {tabIndex === 1 && <ClassNamesInput element={selectedElement} />}
         {tabIndex === 1 && <CSSInput element={selectedElement} />}
         {selectedElement.type === 'widget' && tabIndex === 2 && (

@@ -30,6 +30,10 @@ export const LayoutBuilder = ({
     ${layout.layoutType === 'flex'
       ? `
         display: flex;
+        flex-direction: ${layout.props.direction};
+        align-items: ${layout.props.align};
+        justify-content: ${layout.props.justify};
+        flex-wrap: ${layout.props.wrap ? 'wrap' : 'no-wrap'};
       `
       : ''}
 
@@ -40,7 +44,13 @@ export const LayoutBuilder = ({
       `
       : ''}
 
-      ${layout.style.type === 'flex' ? '' : ''}
+      ${layout.style.type === 'flex'
+      ? `
+        align-self: ${layout.style.align};
+        justify-self: ${layout.style.justify};
+        flex-grow: ${layout.style.grow};
+      `
+      : ''}
 
       ${layout.style.css}
   `;

@@ -7,5 +7,5 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.div`
-  font-weight: 600;
+  font-weight: 500;
 `;
