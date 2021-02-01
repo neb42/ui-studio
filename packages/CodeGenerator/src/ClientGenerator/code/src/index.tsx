@@ -26,6 +26,9 @@ const GlobalStyles = createGlobalStyle`
 
   * {
     box-sizing: border-box;
+    outline: none !important;
+    outline-width: 0 !important;
+    outline-style: none !important;
   }
 `;
 
