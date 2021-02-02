@@ -5,6 +5,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 8px;
+  overflow: auto;
 `;
 
 export const VariableItem = styled.div<{ active: boolean }>`
