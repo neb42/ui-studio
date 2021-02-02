@@ -1,15 +1,29 @@
 import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import Graph from 'graph-data-structure';
-import { ElementTreeNode } from '@ui-builder/types';
+import { ElementTreeNode, Widget, Page, Layout } from '@ui-builder/types';
 
-import { Store } from '../types/store';
+import { Store, KeyedObject } from '../types/store';
+
+const getElements = createSelector<
+  Store,
+  KeyedObject<Widget>,
+  KeyedObject<Page>,
+  KeyedObject<Layout>,
+  {
+    widgets: KeyedObject<Widget>;
+    pages: KeyedObject<Page>;
+    layouts: KeyedObject<Layout>;
+  }
+>(
+  (state) => state.widget.config,
+  (state) => state.page.config,
+  (state) => state.layout.config,
+  (widgets, pages, layouts) => ({ widgets, pages, layouts }),
+);
 
 export const useBuildTree = (): ElementTreeNode[] => {
-  const { widgets, pages, layouts } = useSelector((state: Store) => ({
-    widgets: state.widget.config,
-    pages: state.page.config,
-    layouts: state.layout.config,
-  }));
+  const { widgets, pages, layouts } = useSelector(getElements);
 
   const all = { ...pages, ...layouts, ...widgets };
 

@@ -16,6 +16,7 @@ const baseDependencies = [
   { name: 'redux-thunk', version: '^2.3.0', last: false },
   { name: 'react-router', version: '^5.2.0', last: false },
   { name: 'react-router-dom', version: '^5.2.0', last: false },
+  { name: 'reselect', version: '^4.0.0', last: false },
   { name: 'styled-components', version: '^5.2.1', last: false },
   { name: 'graph-data-structure', version: '^1.13.0', last: false },
   { name: 'web-vitals', version: '^0.2.4', last: false },
