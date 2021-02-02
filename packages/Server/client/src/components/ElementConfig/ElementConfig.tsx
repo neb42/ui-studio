@@ -19,12 +19,6 @@ import { EventConfig } from 'components/EventConfig';
 
 import * as Styles from './ElementConfig.styles';
 
-interface WidgetConfig {
-  component: 'input';
-  key: string;
-  label: string;
-}
-
 export const ElementConfig = (): JSX.Element => {
   const theme = useTheme();
   const dispatch = useDispatch();
