@@ -2,15 +2,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Layout } from '@ui-builder/types';
 
-export const LayoutBuilder = ({
-  layout,
-  children,
-}: {
-  children?: React.ReactNode;
-  layout: Layout;
-}): React.FunctionComponentElement<any> => {
-  const LayoutWrapper: React.FC<any> = styled.div`
-    ${layout.layoutType === 'grid'
+const LayoutWrapper = styled.div<{ layout: Layout }>`
+  ${({ layout }) =>
+    layout.layoutType === 'grid'
       ? `
         display: grid;
         grid-template-columns: ${layout.props.columns
@@ -24,7 +18,8 @@ export const LayoutBuilder = ({
       `
       : ''}
 
-    ${layout.layoutType === 'flex'
+  ${({ layout }) =>
+    layout.layoutType === 'flex'
       ? `
         display: flex;
         flex-direction: ${layout.props.direction};
@@ -34,14 +29,16 @@ export const LayoutBuilder = ({
       `
       : ''}
 
-      ${layout.style.type === 'grid'
+  ${({ layout }) =>
+    layout.style.type === 'grid'
       ? `
         grid-row: ${layout.style.layout[0][0]} / ${layout.style.layout[1][0] + 1};
         grid-column: ${layout.style.layout[0][1]} / ${layout.style.layout[1][1] + 1};
       `
       : ''}
 
-      ${layout.style.type === 'flex'
+  ${({ layout }) =>
+    layout.style.type === 'flex'
       ? `
         align-self: ${layout.style.align};
         justify-self: ${layout.style.justify};
@@ -49,8 +46,19 @@ export const LayoutBuilder = ({
       `
       : ''}
 
-      ${layout.style.css}
-  `;
+  ${({ layout }) => layout.style.css}
+`;
 
-  return React.createElement(LayoutWrapper, { className: layout.style.classNames }, children);
+export const LayoutBuilder: React.FC<any> = ({
+  layout,
+  children,
+}: {
+  children?: React.ReactNode;
+  layout: Layout;
+}) => {
+  return React.createElement(
+    LayoutWrapper,
+    { className: layout.style.classNames, layout },
+    children,
+  );
 };

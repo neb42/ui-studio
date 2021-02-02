@@ -13,7 +13,7 @@ export const App = () => {
     <Switch>
       {tree.map((node) => {
         const Page = () => React.createElement(PageBuilder, { pageNode: node });
-        return <Route path={`/${node.element.name}`} component={Page} />;
+        return <Route key={`route-${node.id}`} path={`/${node.element.name}`} component={Page} />;
       })}
       <Redirect to={`/${tree[0].name}`} />
     </Switch>
