@@ -13,7 +13,7 @@ import {
   WidgetProp$Widget,
 } from '@ui-builder/types';
 import { updateWidgetProps } from 'actions/widget';
-import { getWidgets, getVariables } from 'selectors/element';
+import { makeGetComponents, getWidgets, getVariables } from 'selectors/element';
 
 import * as Styles from './ConfigOption.styles';
 
@@ -22,11 +22,6 @@ interface IFoo {
   config: ComponentConfig;
   onChange: (value: WidgetProp) => void;
 }
-
-type SelectEvent = React.ChangeEvent<{
-  name?: string | undefined;
-  value: unknown;
-}>;
 
 const StaticConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
   const widgetProp = widget.props[config.key];
@@ -158,6 +153,8 @@ const VariableConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
 };
 
 const WidgetConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
+  const components = useSelector(makeGetComponents());
+
   const widgetProp = widget.props[config.key];
 
   if (widgetProp.mode !== 'widget')
@@ -173,12 +170,21 @@ const WidgetConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
     onChange(buildWidgetWidgetProps(value as string, widgetProp.lookup));
   };
 
-  const handleLookupChange = (value: string) => {
-    onChange(buildWidgetWidgetProps(widgetProp.widgetId, value));
+  const handleLookupChange = ({ value }: any) => {
+    onChange(buildWidgetWidgetProps(widgetProp.widgetId, value as string));
   };
 
-  const widgets = Object.values(useSelector(getWidgets));
+  const widgets = Object.values(useSelector(getWidgets)).filter((w) => {
+    const comp = components.find((c) => c.name === w.component);
+    if (comp) return comp?.exposedProperties.length > 0;
+    return false;
+  });
   const selectedWidget = widgets.find((w) => w.id === widgetProp.widgetId);
+  const exposedPropertyOptions = selectedWidget
+    ? components
+        .find((c) => c.name === selectedWidget.component)
+        ?.exposedProperties.map((p) => ({ value: p, label: p })) ?? []
+    : [];
 
   return (
     <>
@@ -188,11 +194,11 @@ const WidgetConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
         onChange={handleIdChange}
         options={widgets.map((w) => ({ value: w.id, label: w.name }))}
       />
-      <Input
+      <Select
         label="Widget property"
+        value={{ value: widgetProp.lookup, label: widgetProp.lookup }}
         onChange={handleLookupChange}
-        value={widgetProp.lookup}
-        error={widgetProp.lookup.length === 0 ? 'Required' : undefined}
+        options={exposedPropertyOptions}
       />
     </>
   );

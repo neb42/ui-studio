@@ -27,6 +27,7 @@ export interface Component {
   library: string;
   icon: string;
   hasChildren: boolean;
+  exposedProperties: string[];
   events: Component$Event[];
   config: ComponentConfig[];
 }
