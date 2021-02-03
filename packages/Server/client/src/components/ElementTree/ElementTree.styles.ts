@@ -22,7 +22,7 @@ interface ITreeNode {
 }
 
 export const TreeNode = styled.div`
-  margin-left: ${({ depth }: ITreeNode) => 8 * depth}px;
+  margin-left: 8px;
 `;
 
 interface ITreeItemLabel {
