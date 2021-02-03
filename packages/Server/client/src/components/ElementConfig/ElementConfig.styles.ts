@@ -11,7 +11,7 @@ export const Container = styled.div`
 
 export const Header = styled.div`
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
+  grid-template-columns: 20px auto;
   grid-column-gap: ${({ theme }) => theme.spacing.px.small}px;
   align-items: center;
   padding: ${({ theme }) => theme.spacing.px.small}px ${({ theme }) => theme.spacing.px.regular}px;
