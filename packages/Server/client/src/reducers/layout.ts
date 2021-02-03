@@ -114,20 +114,16 @@ export const layout = (
       };
     }
     case UPDATE_ELEMENT_NAME: {
-      return Object.keys(state).reduce(
-        (acc, cur) => {
-          if (cur === action.payload.id) return acc;
-          return { ...acc, [cur]: state[cur] };
-        },
-        action.payload.type === 'overlay'
-          ? {
-              [action.payload.name]: {
-                ...state[action.payload.id],
-                name: action.payload.name,
-              },
-            }
-          : {},
-      );
+      if (Object.keys(state).includes(action.payload.id)) {
+        return {
+          ...state,
+          [action.payload.id]: {
+            ...state[action.payload.id],
+            name: action.payload.name,
+          },
+        };
+      }
+      return state;
     }
     case UPDATE_ELEMENT_CSS: {
       if (Object.keys(state).includes(action.payload.id)) {
