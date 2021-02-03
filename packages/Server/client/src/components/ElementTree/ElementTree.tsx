@@ -113,7 +113,7 @@ const TreeNode = ({
       onClick={handleSelect(node.id)}
       handleOpenAddElementMenu={handleOpenAddElementMenu}
     />
-    <Styles.TreeNode depth={depth + 1}>
+    <Styles.TreeNode>
       {node.children
         .sort((a, b) => (a.position > b.position ? 1 : -1))
         .map((c) => (
