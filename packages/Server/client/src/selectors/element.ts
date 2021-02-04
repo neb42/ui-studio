@@ -22,6 +22,7 @@ export const getSelectedVariableId = (state: Store): string | null =>
   state.element.selectedVariable;
 export const getSelectedView = (state: Store): 'preview' | 'variable' | 'css' =>
   state.element.selectedView;
+export const getComponents = (state: Store): Component[] => state.element.components;
 
 export const makeGetElementTree = (): OutputParametricSelector<
   Store,
@@ -32,6 +33,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
     pages: Store$Page,
     layouts: Store$Layout,
     widgets: Store$Widget,
+    components: Component[],
   ) => Record<string, TreeItem>
 > =>
   createSelector(
@@ -39,12 +41,18 @@ export const makeGetElementTree = (): OutputParametricSelector<
     getPages,
     getLayouts,
     getWidgets,
-    (pageId, pages, layouts, widgets) => {
+    getComponents,
+    (pageId, pages, layouts, widgets, components) => {
       const all = {
         ...pages,
         ...layouts,
         ...widgets,
       };
+
+      const componentMap = components.reduce<Record<string, Component>>(
+        (acc, cur) => ({ ...acc, [cur.name]: cur }),
+        {},
+      );
 
       const tree: Record<string, TreeItem> = Object.keys(all).reduce((acc, cur) => {
         const element = all[cur];
@@ -53,7 +61,7 @@ export const makeGetElementTree = (): OutputParametricSelector<
           [cur]: {
             id: cur,
             children: [],
-            hasChildren: element.type !== 'widget',
+            hasChildren: element.type !== 'widget' || componentMap[element.component].hasChildren,
             data: {
               name: element.name,
               type: element.type,
@@ -173,7 +181,7 @@ export const makeGetNextPosition = () =>
     },
   );
 
-export const makeGetComponents = () => (state: Store): Component[] => state.element.components;
+export const makeGetComponents = () => getComponents;
 
 export const makeGetFunctions = () => (state: Store): FunctionDefinition[] =>
   state.element.functions;
