@@ -48,7 +48,7 @@ export const TreeItemLabel = styled.div<{ active: boolean }>`
 export const TreeItemActions = styled.div<{ selected: boolean }>`
   display: grid;
   grid-template-columns: repeat(2, auto);
-  grid-column-gap: 8px;
+  /* grid-column-gap: 8px; */
   transition: max-width 600ms;
   overflow: hidden;
   max-width: ${({ selected }) => (selected ? '144px' : '0')};

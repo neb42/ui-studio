@@ -112,7 +112,13 @@ export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
     source: TreeSourcePosition,
     destination?: TreeDestinationPosition,
   ) => {
-    if (!dragId || !destination || destination.parentId === 'root') return;
+    if (
+      !dragId ||
+      !destination ||
+      destination.parentId === 'root' ||
+      !elementTree[destination.parentId].hasChildren
+    )
+      return;
     dispatch(
       updateElementPosition(
         dragId,
@@ -140,6 +146,7 @@ export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
   };
 
   const handleCollapse = (id: string | number) => {
+    if (elementTree[id.toString()].children.length === 0) return;
     setCollapseMap({
       ...collapseMap,
       [id.toString()]: true,
