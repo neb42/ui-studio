@@ -62,16 +62,6 @@ export const widget = (
             },
           };
         }
-        if (current.parent === action.payload.id) {
-          return {
-            ...acc,
-            [cur]: {
-              ...current,
-              position: null,
-              parent: null,
-            },
-          };
-        }
         return {
           ...acc,
           [cur]: {
