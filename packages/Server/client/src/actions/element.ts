@@ -85,11 +85,23 @@ export const selectPage = (id: string): ISelectPage => ({
 
 export interface ISelectElement {
   type: 'SELECT_ELEMENT';
-  payload: string;
+  payload: string | null;
 }
 
-export const selectElement = (id: string): ISelectElement => ({
+export const selectElement = (id: string | null): ISelectElement => ({
   type: SELECT_ELEMENT,
+  payload: id,
+});
+
+export interface HoverElement {
+  type: 'HOVER_ELEMENT';
+  payload: string | null;
+}
+
+export const HOVER_ELEMENT = 'HOVER_ELEMENT';
+
+export const hoverElement = (id: string | null): HoverElement => ({
+  type: HOVER_ELEMENT,
   payload: id,
 });
 
@@ -156,16 +168,16 @@ export interface UpdateElementPosition {
     destination: {
       parentId: string;
       position: number;
-    }
+    };
   };
 }
 
 export const UPDATE_ELEMENT_POSITION = 'UPDATE_ELEMENT_POSITION';
 
 export const updateElementPosition = (
-  elementId: string, 
-  source: { parentId: string; position: number; },
-  destination: { parentId: string; position: number; },
+  elementId: string,
+  source: { parentId: string; position: number },
+  destination: { parentId: string; position: number },
 ): UpdateElementPosition => ({
   type: UPDATE_ELEMENT_POSITION,
   payload: {
@@ -178,6 +190,7 @@ export const updateElementPosition = (
 export type Action$Element =
   | ISelectPage
   | ISelectElement
+  | HoverElement
   | SelectView
   | IUpdateElementName
   | IInitFunctions

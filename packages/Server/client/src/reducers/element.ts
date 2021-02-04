@@ -1,6 +1,7 @@
 import {
   SELECT_PAGE,
   SELECT_ELEMENT,
+  HOVER_ELEMENT,
   SELECT_VIEW,
   INIT_FUNCTIONS,
   INIT_COMPONENTS,
@@ -14,6 +15,7 @@ const initialState: Store$Element = {
   selectedPage: null,
   selectedOverlay: null,
   selectedElement: null,
+  hoverElement: null,
   selectedVariable: null,
   selectedView: 'preview',
   functions: [],
@@ -37,6 +39,12 @@ export const element = (
       return {
         ...state,
         selectedElement: action.payload,
+      };
+    }
+    case HOVER_ELEMENT: {
+      return {
+        ...state,
+        hoverElement: action.payload,
       };
     }
     case SELECT_VARIABLE: {

@@ -42,8 +42,8 @@ const run = async (): Promise<void> => {
       clientPort: PREVIEW_CLIENT_PORT,
     });
 
-    socket.on('init-builder', (foo) => {
-      socket.broadcast.emit('init-builder', foo);
+    socket.on('init-builder', (r) => {
+      socket.broadcast.emit('init-builder', r);
     });
 
     socket.on('elements-updated', async (elements) => {
@@ -51,8 +51,16 @@ const run = async (): Promise<void> => {
       writeFileSync(clientJsonPath, JSON.stringify(elements, null, 4));
     });
 
-    socket.on('navigate-page', (url) => {
-      socket.broadcast.emit('navigate-page', url);
+    socket.on('navigate-page', (r) => {
+      socket.broadcast.emit('navigate-page', r);
+    });
+
+    socket.on('select-element', (r) => {
+      socket.broadcast.emit('select-element', r);
+    });
+
+    socket.on('hover-element', (r) => {
+      socket.broadcast.emit('hover-element', r);
     });
   });
 

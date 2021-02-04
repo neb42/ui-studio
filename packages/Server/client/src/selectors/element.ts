@@ -16,6 +16,7 @@ export const getLayouts = (state: Store): Store$Layout => state.layout;
 export const getWidgets = (state: Store): Store$Widget => state.widget;
 export const getVariables = (state: Store): Store$Variable => state.variable;
 export const getSelectedElementId = (state: Store): string | null => state.element.selectedElement;
+export const getHoverElementId = (state: Store): string | null => state.element.hoverElement;
 export const getSelectedPageId = (state: Store): string | null => state.element.selectedPage;
 export const getSelectedOverlayId = (state: Store): string | null => state.element.selectedOverlay;
 export const getSelectedVariableId = (state: Store): string | null =>
@@ -61,7 +62,8 @@ export const makeGetElementTree = (): OutputParametricSelector<
           [cur]: {
             id: cur,
             children: [],
-            hasChildren: element.type !== 'widget' || componentMap[element.component].hasChildren,
+            hasChildren:
+              (element.type !== 'widget' || componentMap[element.component]?.hasChildren) ?? true,
             data: {
               name: element.name,
               type: element.type,

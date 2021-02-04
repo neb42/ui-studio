@@ -3,7 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import { InitFunctions, Component } from '@ui-builder/types';
 import { Store$Page, Store$Layout, Store$Widget, Store$Variable } from 'types/store';
-import { makeGetElements, getVariables, getPages } from 'selectors/element';
+import {
+  makeGetElements,
+  getVariables,
+  getPages,
+  getSelectedElementId,
+  getHoverElementId,
+} from 'selectors/element';
 import { initComponents, initFunctions, initClient, selectPage } from 'actions/element';
 
 import * as Styles from './Preview.styles';
@@ -25,6 +31,9 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
     clientPort: number;
     serverPort: number;
   } | null>(null);
+
+  const selectedElementId = useSelector(getSelectedElementId);
+  const hoverElementId = useSelector(getHoverElementId);
 
   const socket = React.useMemo(() => io('/'), []);
 
@@ -73,6 +82,14 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
   React.useEffect(() => {
     socket.emit('navigate-page', { url: pageName });
   }, [pageName]);
+
+  React.useEffect(() => {
+    socket.emit('select-element', { id: selectedElementId });
+  }, [selectedElementId]);
+
+  React.useEffect(() => {
+    socket.emit('hover-element', { id: hoverElementId });
+  }, [hoverElementId]);
 
   if (!previewServer) return <div />;
 

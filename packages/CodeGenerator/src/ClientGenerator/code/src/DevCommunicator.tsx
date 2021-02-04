@@ -8,6 +8,7 @@ import { Functions } from 'functions-pkg';
 
 import { KeyedObject } from './types/store';
 import { updateTree } from './actions/updateTree';
+import { updateHoverElement, updateSelectedElement } from './actions/development';
 import { Components } from './Components';
 
 const removeNullParent = (n: KeyedObject<any>) =>
@@ -62,6 +63,14 @@ export const DevCommunicator = () => {
       if (response.url !== location.pathname) {
         history.push(response.url);
       }
+    });
+
+    socket.on('select-element', (response: { id: string | null }) => {
+      dispatch(updateSelectedElement(response.id));
+    });
+
+    socket.on('hover-element', (response: { id: string | null }) => {
+      dispatch(updateHoverElement(response.id));
     });
   }, []);
 

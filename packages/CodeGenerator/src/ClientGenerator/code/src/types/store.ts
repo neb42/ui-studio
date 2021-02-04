@@ -24,11 +24,17 @@ export interface Store$Layout {
   config: KeyedObject<Layout>;
 }
 
+export interface Store$Development {
+  selectedElement: string | null;
+  hoverElement: string | null;
+}
+
 export interface Store {
   widget: Store$Widget;
   variable: Store$Variable;
   page: Store$Page;
   layout: Store$Layout;
+  development: Store$Development;
 }
 
 export type GetState = () => Store;

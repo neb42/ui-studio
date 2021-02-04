@@ -1,8 +1,11 @@
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Layout } from '@ui-builder/types';
 
-const LayoutWrapper = styled.div<{ layout: Layout }>`
+import { Store } from '../types/store';
+
+const LayoutWrapper = styled.div<{ layout: Layout; isSelected: boolean }>`
   ${({ layout }) =>
     layout.layoutType === 'grid'
       ? `
@@ -47,6 +50,8 @@ const LayoutWrapper = styled.div<{ layout: Layout }>`
       : ''}
 
   ${({ layout }) => layout.style.css}
+
+  ${({ theme, isSelected }) => (isSelected ? `border: 1px solid ${theme.colors.brand500};` : '')}
 `;
 
 export const LayoutBuilder: React.FC<any> = ({
@@ -56,9 +61,14 @@ export const LayoutBuilder: React.FC<any> = ({
   children?: React.ReactNode;
   layout: Layout;
 }) => {
+  const isSelected = useSelector(
+    (state: Store) =>
+      state.development.selectedElement === layout.id ||
+      state.development.hoverElement === layout.id,
+  );
   return React.createElement(
     LayoutWrapper,
-    { className: layout.style.classNames, layout },
+    { className: layout.style.classNames, layout, isSelected },
     children,
   );
 };

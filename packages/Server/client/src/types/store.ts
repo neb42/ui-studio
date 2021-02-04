@@ -19,6 +19,7 @@ export type Store$Element = {
   selectedPage: string | null;
   selectedOverlay: string | null;
   selectedElement: string | null;
+  hoverElement: string | null;
   selectedVariable: string | null;
   selectedView: 'preview' | 'variable' | 'css';
   functions: FunctionDefinition[];

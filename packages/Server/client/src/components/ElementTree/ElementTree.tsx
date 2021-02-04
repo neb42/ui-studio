@@ -11,7 +11,7 @@ import { ClearSharp, AddSharp } from '@material-ui/icons';
 import { Page, Layout, Widget } from '@ui-builder/types';
 import { Store } from 'types/store';
 import { makeGetElementTree, makeGetSelectedElement } from 'selectors/element';
-import { selectElement, updateElementPosition } from 'actions/element';
+import { selectElement, hoverElement, updateElementPosition } from 'actions/element';
 import { removeLayout } from 'actions/layout';
 import { removeWidget } from 'actions/widget';
 import { ElementIcon } from 'components/ElementIcon';
@@ -27,6 +27,8 @@ interface IElementTree {
 interface ITreeItemLabel {
   selectedElement: Page | Layout | Widget | null;
   onClick: (id: string) => () => void;
+  onMouseEnter: (id: string) => () => void;
+  onMouseLeave: () => void;
   onRemove: (element: Page | Layout | Widget) => () => any;
   handleOpenAddElementMenu: (anchor: HTMLElement) => void;
 }
@@ -34,6 +36,8 @@ interface ITreeItemLabel {
 const TreeItemLabelBuilder = ({
   selectedElement,
   onClick,
+  onMouseEnter,
+  onMouseLeave,
   onRemove,
   handleOpenAddElementMenu,
 }: ITreeItemLabel) => {
@@ -65,6 +69,8 @@ const TreeItemLabelBuilder = ({
         <Styles.TreeItemLabel
           onClick={onClick(element.id)}
           onDoubleClick={handleDoubleClick}
+          onMouseEnter={onMouseEnter(element.id)}
+          onMouseLeave={onMouseLeave}
           active={element.id === selectedElement?.id}
         >
           <ElementIcon element={element} color="#000" />
@@ -106,6 +112,14 @@ export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
 
   const handleSelect = (nodeId: string) => () => {
     dispatch(selectElement(nodeId));
+  };
+
+  const handleMouseEnter = (nodeId: string) => () => {
+    dispatch(hoverElement(nodeId));
+  };
+
+  const handleMouseLeave = () => {
+    dispatch(hoverElement(null));
   };
 
   const handleUpdateParent = (
@@ -169,6 +183,8 @@ export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
   const ItemTreeLabel = TreeItemLabelBuilder({
     selectedElement,
     onClick: handleSelect,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
     onRemove: handleRemove,
     handleOpenAddElementMenu: setAddElementMenuAnchor,
   });

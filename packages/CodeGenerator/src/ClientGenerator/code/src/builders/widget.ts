@@ -8,8 +8,9 @@ import { getVariableValue, getWidgetPropertyValue } from '../selectors';
 import { handleEvent } from '../actions/handleEvent';
 import { updateWidget } from '../actions/updateWidget';
 import { Components } from '../Components';
+import { Store } from '../types/store';
 
-const WidgetWrapper = styled.div<{ widget: Widget }>`
+const WidgetWrapper = styled.div<{ widget: Widget; isSelected: boolean }>`
   ${({ widget }) =>
     widget.style.type === 'grid'
       ? `
@@ -30,6 +31,8 @@ const WidgetWrapper = styled.div<{ widget: Widget }>`
       : ''}
 
   ${({ widget }) => widget.style.css}
+
+  ${({ theme, isSelected }) => (isSelected ? `border: 1px solid ${theme.colors.brand500};` : '')}
 `;
 
 const useGetProps = (
@@ -139,6 +142,11 @@ export const WidgetBuilder: React.FC<any> = ({
   const dispatch = useDispatch();
   const { loading, error, values, exposedProperties } = useGetProps(widget);
   const eventHandlers = useEventHandlers(widget);
+  const isSelected = useSelector(
+    (state: Store) =>
+      state.development.selectedElement === widget.id ||
+      state.development.hoverElement === widget.id,
+  );
 
   const handleExposedPropetyUpdate = (ep: { [key: string]: any }) => {
     dispatch(updateWidget(widget.id, ep));
@@ -161,7 +169,7 @@ export const WidgetBuilder: React.FC<any> = ({
 
   return React.createElement(
     WidgetWrapper,
-    { className: widget.style.classNames, widget },
+    { className: widget.style.classNames, widget, isSelected },
     React.createElement(C, props, children),
   );
 };

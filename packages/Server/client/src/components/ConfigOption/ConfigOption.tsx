@@ -4,6 +4,7 @@ import { IconButton } from '@material-ui/core';
 import { Edit, Functions, Widgets } from '@material-ui/icons';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
+import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
 import {
   Widget,
   ComponentConfig,
@@ -47,20 +48,31 @@ const StaticConfig = ({ widget, config, onChange }: IFoo): JSX.Element => {
   const handleInputOnChange = (value: string) => {
     onChange(buildStaticWidgetProp(value));
   };
+
   const handleSelectOnChange = ({ value }: any) => {
     onChange(buildStaticWidgetProp(value as string));
+  };
+
+  const handleCheckboxOnChange = (value: boolean) => {
+    onChange(buildStaticWidgetProp(value));
   };
 
   switch (config.component) {
     case 'input':
       switch (config.type) {
         case 'string':
+        case 'object':
         case 'number': {
           if (typeof widgetProp.value === 'boolean') throw Error();
           return <Input label="value" onChange={handleInputOnChange} value={widgetProp.value} />;
         }
         case 'boolean':
-          return <div>Not implemented</div>;
+          if (typeof widgetProp.value !== 'boolean') throw Error();
+          return (
+            <Checkbox checked={widgetProp.value} onChange={handleCheckboxOnChange} controlled>
+              {config.label}
+            </Checkbox>
+          );
         default:
           throw Error();
       }
