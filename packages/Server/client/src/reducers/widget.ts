@@ -15,10 +15,12 @@ import {
   UPDATE_ELEMENT_NAME,
   UPDATE_ELEMENT_CSS,
   UPDATE_ELEMENT_CLASS_NAMES,
+  UPDATE_ELEMENT_POSITION,
   INIT_CLIENT,
   IUpdateElementName,
   UpdateElementCSS,
   UpdateElementClassNames,
+  UpdateElementPosition,
   InitClient,
 } from 'actions/element';
 import { Store$Widget } from 'types/store';
@@ -33,6 +35,7 @@ export const widget = (
     | IRemoveLayout
     | UpdateElementCSS
     | UpdateElementClassNames
+    | UpdateElementPosition
     | RemovePage
     | RemoveVariable
     | InitClient,
@@ -224,6 +227,70 @@ export const widget = (
           },
         },
       };
+    }
+    case UPDATE_ELEMENT_POSITION: {
+      return Object.keys(state).reduce((acc, cur) => {
+        const current = state[cur];
+        // The element being moved
+        if (current.id === action.payload.elementId) {
+          return {
+            ...acc,
+            [cur]: {
+              ...current,
+              parent: action.payload.destination.parentId,
+              position: action.payload.destination.position,
+            },
+          };
+        }
+        // The element is being moved within it's current parent element
+        if (action.payload.destination.parentId === action.payload.source.parentId) {
+          if (current.parent === action.payload.destination.parentId) {
+            const position = (() => {
+              let p = current.position;
+              if (p > action.payload.source.position) p -= 1;
+              if (p >= action.payload.destination.position) p += 1;
+              return p;
+            })();
+            return {
+              ...acc,
+              [cur]: {
+                ...current,
+                position,
+              },
+            };
+          }
+        }
+        // The element has been moved into this element's parent
+        if (current.parent === action.payload.destination.parentId) {
+          return {
+            ...acc,
+            [cur]: {
+              ...current,
+              position:
+                current.position >= action.payload.destination.position
+                  ? current.position + 1
+                  : current.position,
+            },
+          };
+        }
+        // The element has been moved out of this element's parent
+        if (current.parent === action.payload.source.parentId) {
+          return {
+            ...acc,
+            [cur]: {
+              ...current,
+              position:
+                current.position > action.payload.source.position
+                  ? current.position - 1
+                  : current.position,
+            },
+          };
+        }
+        return {
+          ...acc,
+          [cur]: current,
+        };
+      }, {});
     }
     case INIT_CLIENT: {
       return action.payload.widgets;

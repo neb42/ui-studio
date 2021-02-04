@@ -145,6 +145,36 @@ export const initClient = (client: {
   payload: client,
 });
 
+export interface UpdateElementPosition {
+  type: 'UPDATE_ELEMENT_POSITION';
+  payload: {
+    elementId: string;
+    source: {
+      parentId: string;
+      position: number;
+    };
+    destination: {
+      parentId: string;
+      position: number;
+    }
+  };
+}
+
+export const UPDATE_ELEMENT_POSITION = 'UPDATE_ELEMENT_POSITION';
+
+export const updateElementPosition = (
+  elementId: string, 
+  source: { parentId: string; position: number; },
+  destination: { parentId: string; position: number; },
+): UpdateElementPosition => ({
+  type: UPDATE_ELEMENT_POSITION,
+  payload: {
+    elementId,
+    source,
+    destination,
+  },
+});
+
 export type Action$Element =
   | ISelectPage
   | ISelectElement

@@ -1,11 +1,17 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Tree, {
+  RenderItemParams,
+  TreeItem,
+  TreeSourcePosition,
+  TreeDestinationPosition,
+} from '@atlaskit/tree';
 import { IconButton } from '@material-ui/core';
-import { ClearSharp, ArrowDropDownSharp, ArrowDropUpSharp, AddSharp } from '@material-ui/icons';
-import { ElementTreeNode, Element } from '@ui-builder/types';
+import { ClearSharp, AddSharp } from '@material-ui/icons';
+import { Page, Layout, Widget } from '@ui-builder/types';
 import { Store } from 'types/store';
 import { makeGetElementTree, makeGetSelectedElement } from 'selectors/element';
-import { selectElement } from 'actions/element';
+import { selectElement, updateElementPosition } from 'actions/element';
 import { removeLayout } from 'actions/layout';
 import { removeWidget } from 'actions/widget';
 import { ElementIcon } from 'components/ElementIcon';
@@ -19,26 +25,104 @@ interface IElementTree {
 }
 
 interface ITreeItemLabel {
-  element: Element;
-  siblingCount: number;
-  onClick: () => void;
+  selectedElement: Page | Layout | Widget | null;
+  onClick: (id: string) => () => void;
+  onRemove: (element: Page | Layout | Widget) => () => any;
   handleOpenAddElementMenu: (anchor: HTMLElement) => void;
 }
 
-const TreeItemLabel = ({
-  element,
-  siblingCount,
+const TreeItemLabelBuilder = ({
+  selectedElement,
   onClick,
+  onRemove,
   handleOpenAddElementMenu,
-}: ITreeItemLabel): JSX.Element => {
+}: ITreeItemLabel) => {
+  const ItemTreeLabel = ({
+    item,
+    onExpand,
+    onCollapse,
+    provided,
+  }: RenderItemParams): React.ReactNode => {
+    const { element } = item.data;
+
+    const handleOpenAddMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+      handleOpenAddElementMenu(event.currentTarget);
+
+    const handleDoubleClick = () => {
+      if (item.hasChildren && item.children.length > 0) {
+        if (item.isExpanded) return onCollapse(item.id);
+        return onExpand(item.id);
+      }
+    };
+
+    return (
+      <div
+        ref={provided.innerRef}
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+        style={provided.draggableProps.style}
+      >
+        <Styles.TreeItemLabel
+          onClick={onClick(element.id)}
+          onDoubleClick={handleDoubleClick}
+          active={element.id === selectedElement?.id}
+        >
+          <ElementIcon element={element} color="#000" />
+          <span>{element.name}</span>
+          <Styles.TreeItemActions
+            selected={Boolean(selectedElement && selectedElement.id === element.id)}
+          >
+            {(element.type === 'page' || element.type === 'overlay') && <div />}
+            {element.type !== 'widget' || element.hasChildren ? (
+              <IconButton onClick={handleOpenAddMenu} size="small">
+                <AddSharp />
+              </IconButton>
+            ) : (
+              <div />
+            )}
+            {element.type !== 'page' && element.type !== 'overlay' && (
+              <IconButton onClick={onRemove(element)} size="small">
+                <ClearSharp />
+              </IconButton>
+            )}
+          </Styles.TreeItemActions>
+        </Styles.TreeItemLabel>
+      </div>
+    );
+  };
+  return ItemTreeLabel;
+};
+
+export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
   const dispatch = useDispatch();
-  const getSelectedElement = React.useMemo(makeGetSelectedElement, []);
-  const selectedElement = useSelector(getSelectedElement);
+  const [addElementMenuAnchor, setAddElementMenuAnchor] = React.useState<HTMLElement | null>(null);
+  const getElementTree = React.useMemo(makeGetElementTree, []);
+  const elementTree = useSelector((state: Store) => getElementTree(state, pageId));
+  const selectedElement = useSelector(React.useMemo(makeGetSelectedElement, []));
+  const [dragId, setDragId] = React.useState<string | null>(null);
+  const [collapseMap, setCollapseMap] = React.useState<{ [key: string]: boolean }>({});
 
-  const handleOpenAddMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-    handleOpenAddElementMenu(event.currentTarget);
+  const handleCloseAddElementMenu = () => setAddElementMenuAnchor(null);
 
-  const handleRemove = () => {
+  const handleSelect = (nodeId: string) => () => {
+    dispatch(selectElement(nodeId));
+  };
+
+  const handleUpdateParent = (
+    source: TreeSourcePosition,
+    destination?: TreeDestinationPosition,
+  ) => {
+    if (!dragId || !destination || destination.parentId === 'root') return;
+    dispatch(
+      updateElementPosition(
+        dragId,
+        { parentId: source.parentId.toString(), position: source.index },
+        { parentId: destination.parentId.toString(), position: destination.index || 0 },
+      ),
+    );
+  };
+
+  const handleRemove = (element: Page | Layout | Widget) => () => {
     if (element.type === 'layout') {
       dispatch(removeLayout(element));
     }
@@ -48,112 +132,63 @@ const TreeItemLabel = ({
     }
   };
 
-  return (
-    <Styles.TreeItemLabel onClick={onClick} active={element.id === selectedElement?.id}>
-      <ElementIcon element={element} color="#000" />
-      <span>{element.name}</span>
-      <Styles.TreeItemActions
-        selected={Boolean(selectedElement && selectedElement.id === element.id)}
-      >
-        {(element.type === 'page' || element.type === 'overlay') && (
-          <>
-            <div />
-            <div />
-            <div />
-          </>
-        )}
-        {element.type !== 'widget' || element.hasChildren ? (
-          <IconButton onClick={handleOpenAddMenu} size="small">
-            <AddSharp />
-          </IconButton>
-        ) : (
-          <div />
-        )}
-        {element.type !== 'page' && element.type !== 'overlay' && (
-          <>
-            <IconButton
-              onClick={() => {}}
-              size="small"
-              disabled={element.position === siblingCount - 1}
-            >
-              <ArrowDropDownSharp />
-            </IconButton>
-            <IconButton onClick={() => {}} size="small" disabled={element.position === 0}>
-              <ArrowDropUpSharp />
-            </IconButton>
-            <IconButton onClick={handleRemove} size="small">
-              <ClearSharp />
-            </IconButton>
-          </>
-        )}
-      </Styles.TreeItemActions>
-    </Styles.TreeItemLabel>
-  );
-};
+  const handleExpand = (id: string | number) => {
+    setCollapseMap({
+      ...collapseMap,
+      [id.toString()]: false,
+    });
+  };
 
-interface ITreeNode {
-  node: ElementTreeNode;
-  siblingCount: number;
-  depth: number;
-  handleSelect: (name: string) => () => void;
-  handleOpenAddElementMenu: (anchor: HTMLElement) => void;
-}
-
-const TreeNode = ({
-  node,
-  siblingCount,
-  depth,
-  handleSelect,
-  handleOpenAddElementMenu,
-}: ITreeNode): JSX.Element => (
-  <>
-    <TreeItemLabel
-      element={node.element}
-      siblingCount={siblingCount}
-      onClick={handleSelect(node.id)}
-      handleOpenAddElementMenu={handleOpenAddElementMenu}
-    />
-    <Styles.TreeNode>
-      {node.children
-        .sort((a, b) => (a.position > b.position ? 1 : -1))
-        .map((c) => (
-          <TreeNode
-            key={c.id}
-            node={c}
-            siblingCount={node.children.length}
-            depth={depth + 1}
-            handleSelect={handleSelect}
-            handleOpenAddElementMenu={handleOpenAddElementMenu}
-          />
-        ))}
-    </Styles.TreeNode>
-  </>
-);
-
-export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
-  const dispatch = useDispatch();
-  const [addElementMenuAnchor, setAddElementMenuAnchor] = React.useState<HTMLElement | null>(null);
-  const getElementTree = React.useMemo(makeGetElementTree, []);
-  const elementTree = useSelector((state: Store) => getElementTree(state, pageId));
-
-  const handleCloseAddElementMenu = () => setAddElementMenuAnchor(null);
-
-  const handleSelect = (nodeId: string) => () => {
-    dispatch(selectElement(nodeId));
+  const handleCollapse = (id: string | number) => {
+    setCollapseMap({
+      ...collapseMap,
+      [id.toString()]: true,
+    });
   };
 
   if (!elementTree) return null;
+
+  const tree: Record<string, TreeItem> = Object.keys(elementTree).reduce((acc, cur) => {
+    const expanded = cur in collapseMap ? !collapseMap[cur] : true;
+    return {
+      ...acc,
+      [cur]: {
+        ...elementTree[cur],
+        isExpanded: expanded,
+      },
+    };
+  }, {});
+
+  const ItemTreeLabel = TreeItemLabelBuilder({
+    selectedElement,
+    onClick: handleSelect,
+    onRemove: handleRemove,
+    handleOpenAddElementMenu: setAddElementMenuAnchor,
+  });
 
   return (
     <Styles.Container>
       <ElementTreeHeader />
       <Styles.Tree>
-        <TreeNode
-          node={elementTree}
-          siblingCount={1}
-          depth={0}
-          handleSelect={handleSelect}
-          handleOpenAddElementMenu={setAddElementMenuAnchor}
+        <Tree
+          tree={{
+            rootId: 'root',
+            items: {
+              root: {
+                id: 'root',
+                children: [pageId],
+              },
+              ...tree,
+            },
+          }}
+          renderItem={ItemTreeLabel}
+          onDragStart={(id) => setDragId(id.toString())}
+          onDragEnd={handleUpdateParent}
+          onCollapse={handleCollapse}
+          onExpand={handleExpand}
+          offsetPerLevel={8}
+          isDragEnabled={(id) => id.toString() !== pageId}
+          isNestingEnabled
         />
       </Styles.Tree>
       <AddElementMenu anchor={addElementMenuAnchor} onClose={handleCloseAddElementMenu} />

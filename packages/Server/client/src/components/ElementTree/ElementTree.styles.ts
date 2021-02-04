@@ -17,19 +17,7 @@ export const Tree = styled.div`
   padding: 16px;
 `;
 
-interface ITreeNode {
-  depth: number;
-}
-
-export const TreeNode = styled.div`
-  margin-left: 8px;
-`;
-
-interface ITreeItemLabel {
-  active: boolean;
-}
-
-export const TreeItemLabel = styled.div`
+export const TreeItemLabel = styled.div<{ active: boolean }>`
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-column-gap: 8px;
@@ -40,11 +28,11 @@ export const TreeItemLabel = styled.div`
   padding-right: 4px;
   border-radius: 3px;
 
-  background-color: ${({ active }: ITreeItemLabel) =>
+  background-color: ${({ active }) =>
     active ? Color('#fa7268').alpha(0.4).hsl().string() : 'none'};
 
   &:hover {
-    background-color: ${({ active }: ITreeItemLabel) =>
+    background-color: ${({ active }) =>
       Color(active ? '#fa7268' : '#cfcfcf')
         .alpha(0.4)
         .hsl()
@@ -57,17 +45,13 @@ export const TreeItemLabel = styled.div`
   }
 `;
 
-interface ITreeItemActions {
-  selected: boolean;
-}
-
-export const TreeItemActions = styled.div`
+export const TreeItemActions = styled.div<{ selected: boolean }>`
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: repeat(2, auto);
   grid-column-gap: 8px;
   transition: max-width 600ms;
   overflow: hidden;
-  max-width: ${({ selected }: ITreeItemActions) => (selected ? '144px' : '0')};
+  max-width: ${({ selected }) => (selected ? '144px' : '0')};
 
   ${TreeItemLabel}:hover & {
     max-width: 144px;

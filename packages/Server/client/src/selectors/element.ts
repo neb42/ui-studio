@@ -1,11 +1,5 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
-import Graph from 'graph-data-structure';
-import {
-  ElementTreeNode,
-  Component,
-  FunctionDefinition,
-  ActionDefinition,
-} from '@ui-builder/types';
+import { Component, FunctionDefinition, ActionDefinition } from '@ui-builder/types';
 import {
   Store,
   Store$Page,
@@ -14,6 +8,7 @@ import {
   Store$Overlay,
   Store$Variable,
 } from 'types/store';
+import { TreeItem } from '@atlaskit/tree';
 
 export const getPages = (state: Store): Store$Page => state.page;
 export const getOverlays = (state: Store): Store$Overlay => state.overlay;
@@ -31,13 +26,13 @@ export const getSelectedView = (state: Store): 'preview' | 'variable' | 'css' =>
 export const makeGetElementTree = (): OutputParametricSelector<
   Store,
   string,
-  ElementTreeNode | null,
+  Record<string, TreeItem>,
   (
     pageId: string,
     pages: Store$Page,
     layouts: Store$Layout,
     widgets: Store$Widget,
-  ) => ElementTreeNode | null
+  ) => Record<string, TreeItem>
 > =>
   createSelector(
     (_: Store, pageId: string) => pageId,
@@ -51,27 +46,42 @@ export const makeGetElementTree = (): OutputParametricSelector<
         ...widgets,
       };
 
-      const elementGraph = Graph();
-      Object.keys({ ...pages, ...layouts, ...widgets }).forEach((k) => elementGraph.addNode(k));
-      Object.values({ ...widgets, ...layouts }).forEach((v) =>
-        elementGraph.addEdge(v.parent, v.id),
-      );
-
-      const buildTree = (node: string): ElementTreeNode => {
-        const element = all[node];
-        const children = elementGraph.adjacent(node);
+      const tree: Record<string, TreeItem> = Object.keys(all).reduce((acc, cur) => {
+        const element = all[cur];
         return {
-          id: element.id,
-          name: element.name,
-          type: element.type,
-          position: element.type === 'page' ? 0 : element.position,
-          element,
-          children: children.map(buildTree),
+          ...acc,
+          [cur]: {
+            id: cur,
+            children: [],
+            hasChildren: element.type !== 'widget',
+            data: {
+              name: element.name,
+              type: element.type,
+              element,
+            },
+          },
         };
-      };
+      }, {});
 
-      const elementTree = buildTree(pageId);
-      return elementTree;
+      Object.values(all).forEach((el) => {
+        if (el.type === 'widget' || el.type === 'layout') {
+          if (el.parent && tree[el.parent]) {
+            tree[el.parent].children = [...tree[el.parent].children, el.id];
+          }
+        }
+      });
+
+      Object.keys(tree).forEach((key) => {
+        tree[key].children = tree[key].children.sort((a, b) => {
+          const posA = tree[a].data.element.position;
+          const posB = tree[b].data.element.position;
+          if (posA > posB) return 1;
+          if (posA < posB) return -1;
+          return 0;
+        });
+      });
+
+      return tree;
     },
   );
 
