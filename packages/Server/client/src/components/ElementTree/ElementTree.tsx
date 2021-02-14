@@ -74,7 +74,7 @@ const TreeItemLabelBuilder = ({
           active={element.id === selectedElement?.id}
         >
           <ElementIcon element={element} color="#000" />
-          <span>{element.name}</span>
+          <Styles.ElementName>{element.name}</Styles.ElementName>
           <Styles.TreeItemActions
             selected={Boolean(selectedElement && selectedElement.id === element.id)}
           >

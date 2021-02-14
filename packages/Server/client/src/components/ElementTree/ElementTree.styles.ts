@@ -28,12 +28,12 @@ export const TreeItemLabel = styled.div<{ active: boolean }>`
   padding-right: 4px;
   border-radius: 3px;
 
-  background-color: ${({ active }) =>
-    active ? Color('#fa7268').alpha(0.4).hsl().string() : 'none'};
+  background-color: ${({ active, theme }) =>
+    active ? Color(theme.colors.brand500).alpha(0.4).hsl().string() : 'none'};
 
   &:hover {
-    background-color: ${({ active }) =>
-      Color(active ? '#fa7268' : '#cfcfcf')
+    background-color: ${({ active, theme }) =>
+      Color(active ? theme.colors.brand500 : theme.colors.secondary300)
         .alpha(0.4)
         .hsl()
         .string()};
@@ -56,4 +56,8 @@ export const TreeItemActions = styled.div<{ selected: boolean }>`
   ${TreeItemLabel}:hover & {
     max-width: 144px;
   }
+`;
+
+export const ElementName = styled.span`
+  font-size: 16px;
 `;
