@@ -3,6 +3,7 @@ import { Event } from './event';
 
 export type WidgetProp$Static = {
   mode: 'static';
+  radioKey?: string | null;
 } & (
   | { type: 'string'; value: string }
   | { type: 'number'; value: number }
@@ -12,6 +13,7 @@ export type WidgetProp$Static = {
 
 export type WidgetProp$Variable = {
   mode: 'variable';
+  radioKey?: string | null;
 } & (
   | { type: 'string' | 'number' | 'boolean'; variableId: string }
   | { type: 'object'; variableId: string; lookup: string }
@@ -32,7 +34,8 @@ export interface Widget {
   parent: string;
   component: string;
   library: string;
-  props: { [key: string]: WidgetProp };
+  // props: { [key: string]: WidgetProp | WidgetProp[] | { [subKey: string]: WidgetProp } };
+  props: { [key: string]: WidgetProp | WidgetProp[] };
   events: {
     [key: string]: Event[];
   };

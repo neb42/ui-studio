@@ -28,6 +28,8 @@ export type {
   BaseComponentConfig,
   ComponentConfig$Input,
   ComponentConfig$Select,
+  ComponentConfig$List,
+  ComponentConfig$Radio,
   ComponentConfig,
   Component,
 } from './components';

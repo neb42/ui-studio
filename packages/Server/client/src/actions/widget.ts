@@ -169,14 +169,14 @@ interface IUpdateWidgetProps {
   payload: {
     id: string;
     key: string;
-    prop: WidgetProp;
+    prop: WidgetProp | WidgetProp[] | { [subKey: string]: WidgetProp };
   };
 }
 
 export const updateWidgetProps = (
   id: string,
   key: string,
-  prop: WidgetProp,
+  prop: WidgetProp | WidgetProp[] | { [subKey: string]: WidgetProp },
 ): IUpdateWidgetProps => ({
   type: UPDATE_WIDGET_PROPS,
   payload: {
