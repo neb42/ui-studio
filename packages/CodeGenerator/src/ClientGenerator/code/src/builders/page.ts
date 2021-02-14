@@ -1,8 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Store } from '../types/store';
+import { updateHoverElement } from '../actions/development';
 
 import { useChildrenMap } from './tree';
 
@@ -14,12 +15,20 @@ const PageWrapper = styled.div<{ css: string }>`
 `;
 
 export const PageBuilder = ({ pageId }: { pageId: string }): React.ReactElement<any> => {
+  const dispatch = useDispatch();
   const page = useSelector((state: Store) => state.page.config[pageId]);
   const children = useChildrenMap(pageId);
 
+  const handleMouseLeave = () => dispatch(updateHoverElement(null));
+
   return React.createElement(
     PageWrapper,
-    { key: `page-wrapper-${page.id}`, className: page.style.classNames, css: page.style.css },
+    {
+      key: `page-wrapper-${page.id}`,
+      className: page.style.classNames,
+      onMouseLeave: handleMouseLeave,
+      css: page.style.css,
+    },
     children,
   );
 };

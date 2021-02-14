@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Widget, Variable, Page, Layout, Component } from '@ui-builder/types';
 import { Functions } from 'functions-pkg';
 
-import { KeyedObject } from './types/store';
+import { KeyedObject, Store } from './types/store';
 import { updateTree } from './actions/updateTree';
 import { updateHoverElement, updateSelectedElement } from './actions/development';
 import { Components } from './Components';
@@ -22,6 +22,7 @@ export const DevCommunicator = () => {
   const socket = React.useMemo(() => io('http://localhost:3002'), []);
   const location = useLocation();
   const history = useHistory();
+  const selectedElementId = useSelector((state: Store) => state.development.selectedElement);
 
   React.useEffect(() => {
     ['init-client', 'update-tree'].forEach((e) => {
@@ -66,7 +67,7 @@ export const DevCommunicator = () => {
     });
 
     socket.on('select-element', (response: { id: string | null }) => {
-      dispatch(updateSelectedElement(response.id));
+      if (response.id !== selectedElementId) dispatch(updateSelectedElement(response.id));
     });
 
     socket.on('hover-element', (response: { id: string | null }) => {
@@ -77,6 +78,10 @@ export const DevCommunicator = () => {
   React.useEffect(() => {
     socket.emit('navigate-page', { url: location.pathname });
   }, [location.pathname]);
+
+  React.useEffect(() => {
+    socket.emit('select-element', { id: selectedElementId });
+  }, [selectedElementId]);
 
   return null;
 };

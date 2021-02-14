@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { Layout } from '@ui-builder/types';
 
 import { Store } from '../types/store';
+import { updateHoverElement, updateSelectedElement } from '../actions/development';
 
 import { useChildrenMap } from './tree';
 
@@ -57,7 +58,10 @@ const LayoutWrapper = styled.div<{ layout: Layout; isSelected: boolean }>`
 `;
 
 export const LayoutBuilder: React.FC<any> = ({ layoutId }: { layoutId: string }) => {
+  const dispatch = useDispatch();
   const layout = useSelector((state: Store) => state.layout.config[layoutId]);
+  const selectedElementId = useSelector((state: Store) => state.development.selectedElement);
+  const hoverElementId = useSelector((state: Store) => state.development.hoverElement);
 
   const isSelected = useSelector(
     (state: Store) =>
@@ -67,9 +71,29 @@ export const LayoutBuilder: React.FC<any> = ({ layoutId }: { layoutId: string })
 
   const children = useChildrenMap(layoutId);
 
+  const handleOnClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (selectedElementId !== layoutId) {
+      event.stopPropagation();
+      dispatch(updateSelectedElement(layoutId));
+    }
+  };
+  const handleOnMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (hoverElementId !== layoutId) {
+      event.stopPropagation();
+      dispatch(updateHoverElement(layoutId));
+    }
+  };
+
   return React.createElement(
     LayoutWrapper,
-    { key: `layout-wrapper-${layout.id}`, className: layout.style.classNames, layout, isSelected },
+    {
+      key: `layout-wrapper-${layout.id}`,
+      className: layout.style.classNames,
+      onClick: handleOnClick,
+      onMouseMove: handleOnMouseMove,
+      layout,
+      isSelected,
+    },
     children,
   );
 };

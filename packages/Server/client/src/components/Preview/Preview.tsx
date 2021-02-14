@@ -10,7 +10,13 @@ import {
   getSelectedElementId,
   getHoverElementId,
 } from 'selectors/element';
-import { initComponents, initFunctions, initClient, selectPage } from 'actions/element';
+import {
+  initComponents,
+  initFunctions,
+  initClient,
+  selectPage,
+  selectElement,
+} from 'actions/element';
 
 import * as Styles from './Preview.styles';
 
@@ -18,10 +24,6 @@ interface IPreview {
   pageName: string;
 }
 
-/*
- Hot reloading doesn't seem to work in iframes
- Instead we set a random key when
-*/
 export const Preview = ({ pageName }: IPreview): JSX.Element => {
   const dispatch = useDispatch();
   const pages = Object.values(useSelector(getPages));
@@ -63,6 +65,10 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
         dispatch(initComponents(components));
       },
     );
+
+    socket.on('select-element', (response: { id: string | null }) => {
+      if (response.id !== selectedElementId) dispatch(selectElement(response.id));
+    });
   }, []);
 
   React.useEffect(() => {

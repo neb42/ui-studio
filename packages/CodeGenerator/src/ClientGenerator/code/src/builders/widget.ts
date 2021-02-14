@@ -7,6 +7,7 @@ import { Widget } from '@ui-builder/types';
 import { getVariableValue, getWidgetPropertyValue } from '../selectors';
 import { handleEvent } from '../actions/handleEvent';
 import { updateWidget } from '../actions/updateWidget';
+import { updateHoverElement, updateSelectedElement } from '../actions/development';
 import { Components } from '../Components';
 import { Store } from '../types/store';
 
@@ -144,6 +145,22 @@ export const WidgetBuilder: React.FC<any> = ({ widgetId }: { widgetId: string })
       state.development.selectedElement === widget.id ||
       state.development.hoverElement === widget.id,
   );
+  const selectedElementId = useSelector((state: Store) => state.development.selectedElement);
+  const hoverElementId = useSelector((state: Store) => state.development.hoverElement);
+
+  const handleOnClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (selectedElementId !== widgetId) {
+      event.stopPropagation();
+      dispatch(updateSelectedElement(widgetId));
+    }
+  };
+
+  const handleOnMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (hoverElementId !== widgetId) {
+      event.stopPropagation();
+      dispatch(updateHoverElement(widgetId));
+    }
+  };
 
   const handleExposedPropetyUpdate = (ep: { [key: string]: any }) => {
     dispatch(updateWidget(widget.id, ep));
@@ -169,7 +186,14 @@ export const WidgetBuilder: React.FC<any> = ({ widgetId }: { widgetId: string })
 
   return React.createElement(
     WidgetWrapper,
-    { key: `widget-wrapper-${widget.id}`, className: widget.style.classNames, widget, isSelected },
+    {
+      key: `widget-wrapper-${widget.id}`,
+      className: widget.style.classNames,
+      onClick: handleOnClick,
+      onMouseOver: handleOnMouseMove,
+      widget,
+      isSelected,
+    },
     React.createElement(C, props, children),
   );
 };
