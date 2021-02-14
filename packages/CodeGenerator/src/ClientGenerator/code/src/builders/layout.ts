@@ -5,6 +5,8 @@ import { Layout } from '@ui-builder/types';
 
 import { Store } from '../types/store';
 
+import { useChildrenMap } from './tree';
+
 const LayoutWrapper = styled.div<{ layout: Layout; isSelected: boolean }>`
   ${({ layout }) =>
     layout.layoutType === 'grid'
@@ -54,21 +56,20 @@ const LayoutWrapper = styled.div<{ layout: Layout; isSelected: boolean }>`
   ${({ theme, isSelected }) => (isSelected ? `border: 1px solid ${theme.colors.brand500};` : '')}
 `;
 
-export const LayoutBuilder: React.FC<any> = ({
-  layout,
-  children,
-}: {
-  children?: React.ReactNode;
-  layout: Layout;
-}) => {
+export const LayoutBuilder: React.FC<any> = ({ layoutId }: { layoutId: string }) => {
+  const layout = useSelector((state: Store) => state.layout.config[layoutId]);
+
   const isSelected = useSelector(
     (state: Store) =>
       state.development.selectedElement === layout.id ||
       state.development.hoverElement === layout.id,
   );
+
+  const children = useChildrenMap(layoutId);
+
   return React.createElement(
     LayoutWrapper,
-    { className: layout.style.classNames, layout, isSelected },
+    { key: `layout-wrapper-${layout.id}`, className: layout.style.classNames, layout, isSelected },
     children,
   );
 };

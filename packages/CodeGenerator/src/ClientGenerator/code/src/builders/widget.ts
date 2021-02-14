@@ -10,6 +10,8 @@ import { updateWidget } from '../actions/updateWidget';
 import { Components } from '../Components';
 import { Store } from '../types/store';
 
+import { useChildrenMap } from './tree';
+
 const WidgetWrapper = styled.div<{ widget: Widget; isSelected: boolean }>`
   ${({ widget }) =>
     widget.style.type === 'grid'
@@ -132,13 +134,8 @@ const useEventHandlers = (widget: Widget) => {
   }, {});
 };
 
-export const WidgetBuilder: React.FC<any> = ({
-  widget,
-  children,
-}: {
-  children?: React.ReactNode;
-  widget: Widget;
-}) => {
+export const WidgetBuilder: React.FC<any> = ({ widgetId }: { widgetId: string }) => {
+  const widget = useSelector((state: Store) => state.widget.config[widgetId]);
   const dispatch = useDispatch();
   const { loading, error, values, exposedProperties } = useGetProps(widget);
   const eventHandlers = useEventHandlers(widget);
@@ -158,6 +155,7 @@ export const WidgetBuilder: React.FC<any> = ({
     },
     {
       ...eventHandlers,
+      key: `widget-${widget.id}`,
       loading,
       error,
       exposedProperties,
@@ -165,11 +163,13 @@ export const WidgetBuilder: React.FC<any> = ({
     },
   );
 
+  const children = useChildrenMap(widgetId);
+
   const C = Components[widget.library][widget.component].component;
 
   return React.createElement(
     WidgetWrapper,
-    { className: widget.style.classNames, widget, isSelected },
+    { key: `widget-wrapper-${widget.id}`, className: widget.style.classNames, widget, isSelected },
     React.createElement(C, props, children),
   );
 };

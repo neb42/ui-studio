@@ -1,45 +1,25 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { ElementTreeNode } from '@ui-builder/types';
+import { useSelector } from 'react-redux';
 
-import { WidgetBuilder } from './widget';
-import { LayoutBuilder } from './layout';
+import { Store } from '../types/store';
 
-export const PageBuilder = ({
-  pageNode,
-}: {
-  pageNode: ElementTreeNode;
-}): React.ReactElement<any> => {
-  if (pageNode.element.type !== 'page') throw Error();
+import { useChildrenMap } from './tree';
 
-  const makeElement = (node: ElementTreeNode): React.ReactNode => {
-    if (node.type === 'widget' && node.element.type === 'widget')
-      return React.createElement(
-        WidgetBuilder,
-        { widget: node.element },
-        node.children.map(makeElement),
-      );
+const PageWrapper = styled.div<{ css: string }>`
+  height: 100%;
+  width: 100%;
 
-    if (node.type === 'layout' && node.element.type === 'layout')
-      return React.createElement(
-        LayoutBuilder,
-        { layout: node.element },
-        node.children.map(makeElement),
-      );
+  ${({ css }) => css}
+`;
 
-    throw Error();
-  };
-
-  const PageWrapper = styled.div`
-    height: 100%;
-    width: 100%;
-
-    ${pageNode.element.style.css}
-  `;
+export const PageBuilder = ({ pageId }: { pageId: string }): React.ReactElement<any> => {
+  const page = useSelector((state: Store) => state.page.config[pageId]);
+  const children = useChildrenMap(pageId);
 
   return React.createElement(
     PageWrapper,
-    { className: pageNode.element.style.classNames },
-    pageNode.children.map(makeElement),
+    { key: `page-wrapper-${page.id}`, className: page.style.classNames, css: page.style.css },
+    children,
   );
 };

@@ -1,9 +1,13 @@
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import Graph from 'graph-data-structure';
 import { ElementTreeNode, Widget, Page, Layout } from '@ui-builder/types';
 
 import { Store, KeyedObject } from '../types/store';
+
+import { WidgetBuilder } from './widget';
+import { LayoutBuilder } from './layout';
 
 const getElements = createSelector<
   Store,
@@ -47,4 +51,45 @@ export const useBuildTree = (): ElementTreeNode[] => {
   const elementTree: ElementTreeNode[] = Object.keys(pages).map(buildTree);
 
   return elementTree;
+};
+
+export const useChildrenMap = (nodeId: string): React.FunctionComponentElement<any>[] => {
+  const [childrenMap, setChildrenMap] = React.useState<
+    Record<string, React.FunctionComponentElement<any>>
+  >({});
+
+  const { widgets, layouts } = useSelector(getElements);
+  const all = { ...layouts, ...widgets };
+  const children = Object.values(all).filter((el) => el.parent === nodeId);
+
+  React.useEffect(() => {
+    setChildrenMap(() => {
+      return children.reduce((acc, cur) => {
+        if (childrenMap[cur.id]) {
+          return { ...acc, [cur.id]: childrenMap[cur.id] };
+        }
+        if (cur.type === 'widget') {
+          return {
+            ...acc,
+            [cur.id]: React.createElement(React.memo(WidgetBuilder), {
+              key: `widget-builder-${cur.id}`,
+              widgetId: cur.id,
+            }),
+          };
+        }
+        if (cur.type === 'layout') {
+          return {
+            ...acc,
+            [cur.id]: React.createElement(React.memo(LayoutBuilder), {
+              key: `layout-builder-${cur.id}`,
+              layoutId: cur.id,
+            }),
+          };
+        }
+        return acc;
+      }, {});
+    });
+  }, [JSON.stringify(children)]);
+
+  return children.sort((a, b) => (a.position > b.position ? 1 : -1)).map((c) => childrenMap[c.id]);
 };
