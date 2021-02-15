@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { Widget } from '@ui-builder/types';
+import { Widget } from 'canvas-types';
 import { makeGetComponents } from 'selectors/element';
 import { ConfigOption } from 'components/ConfigOption';
 

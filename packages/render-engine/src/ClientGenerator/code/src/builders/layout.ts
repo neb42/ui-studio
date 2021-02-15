@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { Layout } from '@ui-builder/types';
+import { Layout } from 'canvas-types';
 
 import { Store } from '../types/store';
 import { updateHoverElement, updateSelectedElement } from '../actions/development';

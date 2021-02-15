@@ -15,8 +15,6 @@
     "src"
   ],
   "exclude": [
-    "src/ClientGenerator/code",
-    "src/DEPRECATED_ClientGenerator",
-    "src/DEPRECATED_run.ts"
+    "src/ClientGenerator/code"
   ]
 }

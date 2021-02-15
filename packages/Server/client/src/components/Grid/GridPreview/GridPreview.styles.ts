@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Color from 'color';
-import { IGridCell } from '@ui-builder/types';
+import { IGridCell } from 'canvas-types';
 
 interface IGrid {
   columns: IGridCell[];

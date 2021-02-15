@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Menu, ListItemIcon, MenuItem } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
-import { Component } from '@ui-builder/types';
+import { Component } from 'canvas-types';
 import { makeGetSelectedElement, makeGetComponents } from 'selectors/element';
 import { addWidget } from 'actions/widget';
 import { addLayout } from 'actions/layout';

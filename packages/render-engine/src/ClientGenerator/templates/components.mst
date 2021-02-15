@@ -1,4 +1,4 @@
-import { Component } from '@ui-builder/types';
+import { Component } from 'canvas-types';
 import * as FunctionsPkg from 'functions-pkg';
 {{ #components }}
 import * as {{{ name }}} from '{{{ package }}}';

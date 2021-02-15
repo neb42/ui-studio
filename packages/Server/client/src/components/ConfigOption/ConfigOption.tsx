@@ -12,7 +12,7 @@ import {
   WidgetProp$Static,
   WidgetProp$Variable,
   WidgetProp$Widget,
-} from '@ui-builder/types';
+} from 'canvas-types';
 import { updateWidgetProps } from 'actions/widget';
 import { makeGetComponents, getWidgets, getVariables } from 'selectors/element';
 

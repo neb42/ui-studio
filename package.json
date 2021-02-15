@@ -1,9 +1,17 @@
 {
   "name": "root",
   "private": true,
+  "description": "> TODO: description",
+  "author": "Ben McAlindin <bmcalindin@faculty.ai>",
+  "homepage": "https://github.com/neb42/canvas#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neb42/canvas.git"
+  },
   "workspaces": [
     "packages/*",
-    "packages/Server/client"
+    "packages/server/client"
   ],
   "scripts": {
     "lerna": "lerna"
@@ -31,8 +39,8 @@
     "typescript": "3.9.7"
   },
   "dependencies": {
-    "@ui-builder/code-generator": "file:packages/CodeGenerator",
-    "@ui-builder/server": "file:packages/Server",
-    "@ui-builder/types": "link:packages/Types"
+    "canvas-render-engine": "file:packages/render-engine",
+    "canvas-server": "file:packages/server",
+    "canvs-types": "link:packages/types"
   }
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Slider from '@faculty/adler-web-components/atoms/Slider/Slider';
-import { Widget, Layout, FlexJustification, FlexAlignment, IFlexStyle } from '@ui-builder/types';
+import { Widget, Layout, FlexJustification, FlexAlignment, IFlexStyle } from 'canvas-types';
 import { updateLayoutStyle } from 'actions/layout';
 import { updateWidgetStyle } from 'actions/widget';
 

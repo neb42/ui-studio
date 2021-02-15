@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
-import { TStyle, IGridCell, Element, Layout } from '@ui-builder/types';
+import { TStyle, IGridCell, Element, Layout } from 'canvas-types';
 import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';

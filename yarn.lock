@@ -2903,29 +2903,6 @@
   dependencies:
     eslint-visitor-keys "^1.1.0"
 
-"@ui-builder/code-generator@file:packages/CodeGenerator":
-  version "0.1.0"
-  dependencies:
-    fs-extra "^9.1.0"
-    mustache "^4.0.1"
-
-"@ui-builder/server@file:packages/Server":
-  version "0.1.0"
-  dependencies:
-    "@types/yargs" "^15.0.5"
-    "@ui-builder/code-generator" "file:packages/CodeGenerator"
-    cors "^2.8.5"
-    express "^4.17.1"
-    get-port "^5.1.1"
-    nodemon "^2.0.4"
-    open "^7.3.1"
-    socket.io "^2.3.0"
-    yargs "^16.0.3"
-
-"@ui-builder/types@link:packages/Types":
-  version "0.0.0"
-  uid ""
-
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"
@@ -4317,6 +4294,29 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001035, can
   version "1.0.30001180"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001180.tgz#67abcd6d1edf48fa5e7d1e84091d1d65ab76e33b"
   integrity sha512-n8JVqXuZMVSPKiPiypjFtDTXc4jWIdjxull0f92WLo7e1MSi3uJ3NvveakSh/aCl1QKFAvIz3vIj0v+0K+FrXw==
+
+"canvas-render-engine@file:packages/render-engine":
+  version "0.1.0"
+  dependencies:
+    fs-extra "^9.1.0"
+    mustache "^4.0.1"
+
+"canvas-server@file:packages/server":
+  version "0.1.0"
+  dependencies:
+    "@types/yargs" "^15.0.5"
+    canvas-render-engine "file:packages/render-engine"
+    cors "^2.8.5"
+    express "^4.17.1"
+    get-port "^5.1.1"
+    nodemon "^2.0.4"
+    open "^7.3.1"
+    socket.io "^2.3.0"
+    yargs "^16.0.3"
+
+"canvs-types@link:packages/types":
+  version "0.0.0"
+  uid ""
 
 capture-exit@^2.0.0:
   version "2.0.0"

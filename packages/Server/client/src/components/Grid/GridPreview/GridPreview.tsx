@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IconButton } from '@material-ui/core';
 import { ClearSharp } from '@material-ui/icons';
-import { IGridCell, TGridStyleLayout } from '@ui-builder/types';
+import { IGridCell, TGridStyleLayout } from 'canvas-types';
 
 import * as Styles from './GridPreview.styles';
 

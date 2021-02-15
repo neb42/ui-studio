@@ -1,4 +1,4 @@
-import { InitFunctions, Component } from '@ui-builder/types';
+import { InitFunctions, Component } from 'canvas-types';
 import { Store$Page, Store$Widget, Store$Layout, Store$Variable } from 'types/store';
 
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';

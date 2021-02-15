@@ -1,17 +1,17 @@
 {
-  "name": "@ui-builder/server",
+  "name": "canvas-server",
   "version": "0.1.0",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
-  "homepage": "https://github.com/neb42/ui-builder#readme",
+  "homepage": "https://github.com/neb42/canvas#readme",
   "license": "MIT",
   "main": "build/server.js",
   "bin": {
-    "ui-builder": "build/server.js"
+    "canvas": "build/server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neb42/ui-builder.git"
+    "url": "git+https://github.com/neb42/canvas.git"
   },
   "scripts": {
     "clean": "rm -rf build/*",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@types/yargs": "^15.0.5",
-    "@ui-builder/code-generator": "/Users/bmcalindin/workspace/ui-builder/packages/CodeGenerator",
+    "canvas-render-engine": "/Users/bmcalindin/workspace/ui-builder/packages/render-engine",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "get-port": "^5.1.1",

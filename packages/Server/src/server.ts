@@ -7,7 +7,6 @@ import { writeFileSync, readFileSync } from 'fs';
 import cors from 'cors';
 import express from 'express';
 import socketio from 'socket.io';
-import { run as generateCode } from '@ui-builder/code-generator';
 
 import { getOptions } from './options';
 import { initCode } from './preview';

@@ -37,7 +37,7 @@ const devDependencies = [
   { name: '@types/socket.io-client', version: '^1.4.35', last: false },
   { name: '@types/styled-components', version: '^5.1.4', last: false },
   {
-    name: '@ui-builder/types',
+    name: 'canvas-types',
     version: '/Users/bmcalindin/workspace/ui-builder/packages/Types',
     last: false,
   },

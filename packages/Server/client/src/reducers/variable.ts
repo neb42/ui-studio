@@ -1,5 +1,5 @@
 import { ArrowRightSharp } from '@material-ui/icons';
-import { Variable, StaticVariable, FunctionVariable } from '@ui-builder/types';
+import { Variable, StaticVariable, FunctionVariable } from 'canvas-types';
 import {
   Action$Variable,
   ADD_VARIABLE,

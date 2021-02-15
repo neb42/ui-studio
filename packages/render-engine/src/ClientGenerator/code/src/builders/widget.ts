@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { Widget } from '@ui-builder/types';
+import { Widget } from 'canvas-types';
 
 import { getVariableValue, getWidgetPropertyValue } from '../selectors';
 import { handleEvent } from '../actions/handleEvent';

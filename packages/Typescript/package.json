@@ -1,14 +1,14 @@
 {
-  "name": "@ui-builder/typescript",
+  "name": "canvas-typescript",
   "version": "0.1.0",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
-  "homepage": "https://github.com/neb42/ui-builder#readme",
+  "homepage": "https://github.com/neb42/canvas#readme",
   "license": "MIT",
   "main": "build/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neb42/ui-builder.git"
+    "url": "git+https://github.com/neb42/canvas.git"
   },
   "scripts": {
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",

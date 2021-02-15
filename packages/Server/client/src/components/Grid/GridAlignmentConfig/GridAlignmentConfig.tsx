@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import { GridAlignment } from '@ui-builder/types';
+import { GridAlignment } from 'canvas-types';
 
 import * as Styles from './GridAlignmentConfig.styles';
 

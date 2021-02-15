@@ -8,7 +8,7 @@ import Tree, {
 } from '@atlaskit/tree';
 import { IconButton } from '@material-ui/core';
 import { ClearSharp, AddSharp } from '@material-ui/icons';
-import { Page, Layout, Widget } from '@ui-builder/types';
+import { Page, Layout, Widget } from 'canvas-types';
 import { Store } from 'types/store';
 import { makeGetElementTree, makeGetSelectedElement } from 'selectors/element';
 import { selectElement, hoverElement, updateElementPosition } from 'actions/element';

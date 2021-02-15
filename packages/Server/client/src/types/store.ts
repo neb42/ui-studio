@@ -9,7 +9,7 @@ import {
   IOverlay,
   Variable,
   Component,
-} from '@ui-builder/types';
+} from 'canvas-types';
 
 export interface KeyedObject<T> {
   [key: string]: T;

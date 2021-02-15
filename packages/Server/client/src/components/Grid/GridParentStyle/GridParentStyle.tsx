@@ -7,7 +7,7 @@ import {
   IGridStyle,
   TGridStyleLayout,
   GridAlignment,
-} from '@ui-builder/types';
+} from 'canvas-types';
 import { Store } from 'types/store';
 import { makeGetUsedGridSpace } from 'selectors/element';
 import { GridPreview } from 'components/Grid/GridPreview';

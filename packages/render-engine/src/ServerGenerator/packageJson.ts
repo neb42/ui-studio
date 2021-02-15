@@ -36,7 +36,7 @@ const generatePackageJsonFile = async (source: string, dev: boolean): Promise<vo
   } else {
     dependencies.push({
       name: 'functions-pkg',
-      version: `https://github.com/ui-builder-function-packages/${source}`,
+      version: `https://github.com/canvas-function-packages/${source}`,
       last: true,
     });
   }

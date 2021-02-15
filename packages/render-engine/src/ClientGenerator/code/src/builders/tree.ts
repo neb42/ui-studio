@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import Graph from 'graph-data-structure';
-import { ElementTreeNode, Widget, Page, Layout } from '@ui-builder/types';
+import { ElementTreeNode, Widget, Page, Layout } from 'canvas-types';
 
 import { Store, KeyedObject } from '../types/store';
 

@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
-import { TStyle, Element, Widget, WidgetProp, Event } from '@ui-builder/types';
+import { TStyle, Element, Widget, WidgetProp, Event } from 'canvas-types';
 import {
   makeGetElement,
   makeGenerateDefaultName,

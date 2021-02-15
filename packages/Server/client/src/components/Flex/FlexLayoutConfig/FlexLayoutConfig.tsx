@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
-import { Layout, FlexJustification, FlexAlignment } from '@ui-builder/types';
+import { Layout, FlexJustification, FlexAlignment } from 'canvas-types';
 import { updateLayoutConfig } from 'actions/layout';
 
 import * as Styles from './FlexLayoutConfig.styles';

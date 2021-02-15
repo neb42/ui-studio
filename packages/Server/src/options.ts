@@ -33,8 +33,7 @@ export const getOptions = async () => {
   if (!SERVER_PORT)
     SERVER_PORT = await getPort({ port: argv.port || Number(process.env.SERVER_PORT) || 3002 });
   const GENERATED_CODE_PATH = argv.generated || process.env.GENERATED_PATH || '/tmp/GeneratedCode';
-  const FUNCTIONS_PATH = argv.path || process.env.FUNCTIONS_PATH || '';
-  if (FUNCTIONS_PATH === '') throw Error('No functions path specified');
+  const FUNCTIONS_PATH = argv.path || process.env.FUNCTIONS_PATH || process.cwd();
 
   return {
     PREVIEW_CLIENT_PORT,

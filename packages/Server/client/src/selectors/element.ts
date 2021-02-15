@@ -1,5 +1,5 @@
 import { createSelector, OutputParametricSelector } from 'reselect';
-import { Component, FunctionDefinition, ActionDefinition } from '@ui-builder/types';
+import { Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
 import {
   Store,
   Store$Page,

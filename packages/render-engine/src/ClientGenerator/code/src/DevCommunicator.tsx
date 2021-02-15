@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
-import { Widget, Variable, Page, Layout, Component } from '@ui-builder/types';
+import { Widget, Variable, Page, Layout, Component } from 'canvas-types';
 import { Functions } from 'functions-pkg';
 
 import { KeyedObject, Store } from './types/store';

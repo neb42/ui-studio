@@ -42,7 +42,7 @@ export const run = async (source: string, dev: boolean): Promise<void> => {
 
 if (typeof require !== 'undefined' && require.main === module) {
   try {
-    run('/Users/bmcalindin/workspace/ui-builder/packages/ExampleApp', true);
+    run('/Users/bmcalindin/workspace/ExampleApp', true);
   } catch (error) {
     console.log(error);
   }

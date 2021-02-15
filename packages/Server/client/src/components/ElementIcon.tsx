@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
-import { Element, Component } from '@ui-builder/types';
+import { Element, Component } from 'canvas-types';
 import { makeGetComponents } from 'selectors/element';
 
 const getIcon = (element: Element, components: Component[]) => {
