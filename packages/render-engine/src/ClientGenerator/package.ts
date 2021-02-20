@@ -38,7 +38,7 @@ const devDependencies = [
   { name: '@types/styled-components', version: '^5.1.4', last: false },
   {
     name: 'canvas-types',
-    version: '/Users/bmcalindin/workspace/ui-builder/packages/Types',
+    version: '/Users/bmcalindin/workspace/canvas/packages/types',
     last: false,
   },
 ];
@@ -59,7 +59,7 @@ const generatePackageFile = async (
   } else {
     dependencies.push({
       name: 'functions-pkg',
-      version: `https://github.com/ui-builder-function-packages/${source}`,
+      version: `https://github.com/canvas-builder-function-packages/${source}`,
       last: false,
     });
   }
