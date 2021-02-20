@@ -2,37 +2,23 @@ export interface BaseComponentConfig {
   key: string;
   label: string;
   type: 'string' | 'number' | 'boolean' | 'object';
-}
-
-export interface ComponentConfig$Radio {
-  component: 'radio';
-  key: string;
-  label: string;
-  labels: string[];
-  options: ComponentConfig[];
-}
-
-export interface ComponentConfig$List {
-  component: 'list';
-  key: string;
-  label: string;
-  options: ComponentConfig[];
+  list: boolean;
 }
 
 export interface ComponentConfig$Input extends BaseComponentConfig {
   component: 'input';
 }
 
-export interface ComponentConfig$Select extends BaseComponentConfig {
+export type ComponentConfig$Select = BaseComponentConfig & {
   component: 'select';
-  options: { key: string; label: string }[];
-}
+} & (
+    | { type: 'string'; options: { key: string; label: string }[] }
+    | { type: 'number'; options: { key: number; label: string }[] }
+    | { type: 'boolean'; options: { key: boolean; label: string }[] }
+    | { type: 'object'; options: { key: string; label: string }[] }
+  );
 
-export type ComponentConfig =
-  | ComponentConfig$Input
-  | ComponentConfig$Select
-  | ComponentConfig$Radio
-  | ComponentConfig$List;
+export type ComponentConfig = ComponentConfig$Input | ComponentConfig$Select;
 
 export type Component$Event = {
   key: string;
