@@ -6,14 +6,16 @@ import {
   ComponentConfig$Input,
   ComponentConfig$Select,
   WidgetProp,
+  WidgetProp$Static,
   WidgetProp$Variable,
-} from '@ui-builder/types';
+  WidgetProp$Widget,
+} from 'canvas-types';
 import { getVariables } from 'selectors/element';
 
 interface VariableConfigProps {
   widgetProp: WidgetProp;
   config: ComponentConfig$Input | ComponentConfig$Select;
-  onChange: (value: WidgetProp) => void;
+  onChange: (value: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget) => void;
 }
 
 export const VariableConfig = ({

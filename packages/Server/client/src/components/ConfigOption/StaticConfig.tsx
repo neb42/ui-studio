@@ -7,12 +7,14 @@ import {
   ComponentConfig$Select,
   WidgetProp,
   WidgetProp$Static,
-} from '@ui-builder/types';
+  WidgetProp$Variable,
+  WidgetProp$Widget,
+} from 'canvas-types';
 
 interface StaticConfigProps {
   widgetProp: WidgetProp;
   config: ComponentConfig$Input | ComponentConfig$Select;
-  onChange: (value: WidgetProp) => void;
+  onChange: (value: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget) => void;
 }
 
 export const StaticConfig = ({ widgetProp, config, onChange }: StaticConfigProps): JSX.Element => {

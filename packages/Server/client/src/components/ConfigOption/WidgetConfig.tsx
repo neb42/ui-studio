@@ -1,12 +1,17 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import { WidgetProp, WidgetProp$Widget } from '@ui-builder/types';
+import {
+  WidgetProp,
+  WidgetProp$Static,
+  WidgetProp$Variable,
+  WidgetProp$Widget,
+} from 'canvas-types';
 import { makeGetComponents, getWidgets } from 'selectors/element';
 
 interface WidgetConfigProps {
   widgetProp: WidgetProp;
-  onChange: (value: WidgetProp) => void;
+  onChange: (prop: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget) => void;
 }
 
 export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.Element => {

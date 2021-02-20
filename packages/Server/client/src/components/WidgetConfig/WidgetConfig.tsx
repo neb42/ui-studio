@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { Widget } from 'canvas-types';
 import { makeGetComponents } from 'selectors/element';
 import { StandardConfig } from 'components/ConfigOption/StandardConfig';
-import { RadioConfig } from 'components/ConfigOption/RadioConfig';
 import { ListConfig } from 'components/ConfigOption/ListConfig';
 
 import * as Styles from './WidgetConfig.styles';
@@ -21,8 +20,7 @@ export const WidgetConfig = ({ widget }: WidgetConfigProps): JSX.Element => {
   return (
     <Styles.Container>
       {component.config.map((c) => {
-        if (c.component === 'radio') return <RadioConfig key={c.key} widget={widget} config={c} />;
-        if (c.component === 'list') return <ListConfig key={c.key} widget={widget} config={c} />;
+        if (c.list) return <ListConfig key={c.key} widget={widget} config={c} />;
         return <StandardConfig key={c.label} widget={widget} config={c} />;
       })}
     </Styles.Container>

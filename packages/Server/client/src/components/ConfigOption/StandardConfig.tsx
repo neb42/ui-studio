@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import {
-  Widget,
-  ComponentConfig$Input,
-  ComponentConfig$Select,
-  WidgetProp,
-} from '@ui-builder/types';
+import { Widget, ComponentConfig$Input, ComponentConfig$Select, WidgetProp } from 'canvas-types';
 import { updateWidgetProps } from 'actions/widget';
 import { ConfigOption } from 'components/ConfigOption/ConfigOption';
 
@@ -19,7 +14,7 @@ export const StandardConfig = ({ widget, config }: StandardConfigProps): JSX.Ele
 
   const widgetProp = widget.props[config.key];
 
-  if (Array.isArray(widgetProp)) throw Error();
+  if (widgetProp.mode === 'list') throw Error();
 
   const handleOnChange = (prop: WidgetProp) => {
     dispatch(updateWidgetProps(widget.id, config.key, prop));

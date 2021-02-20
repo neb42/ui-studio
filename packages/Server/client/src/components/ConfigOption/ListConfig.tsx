@@ -1,7 +1,15 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Button from '@faculty/adler-web-components/atoms/Button';
-import { Widget, WidgetProp, ComponentConfig$List } from '@ui-builder/types';
+import {
+  Widget,
+  WidgetProp,
+  ComponentConfig,
+  WidgetProp$List,
+  WidgetProp$Static,
+  WidgetProp$Variable,
+  WidgetProp$Widget,
+} from 'canvas-types';
 import { ConfigOption } from 'components/ConfigOption';
 import { updateWidgetProps } from 'actions/widget';
 
@@ -9,7 +17,7 @@ import * as Styles from './ConfigOption.styles';
 
 interface ListConfigProps {
   widget: Widget;
-  config: ComponentConfig$List;
+  config: ComponentConfig;
 }
 
 export const ListConfig = ({ widget, config }: ListConfigProps): JSX.Element => {
@@ -17,24 +25,77 @@ export const ListConfig = ({ widget, config }: ListConfigProps): JSX.Element => 
 
   const widgetProp = widget.props[config.key];
 
-  if (!Array.isArray(widgetProp)) throw Error();
+  if (widgetProp.mode !== 'list') throw Error();
 
-  const handleOnChange = (idx: number) => (subProp: WidgetProp) => {
-    const prop = [...widgetProp];
-    prop[idx] = subProp;
+  const handleAddProp = () => {
+    const defaultProp: WidgetProp = (() => {
+      switch (config.type) {
+        case 'string': {
+          const value = config.component === 'input' ? '' : config.options[0]?.key ?? '';
+          return { mode: 'static', type: 'string', value } as const;
+        }
+        case 'number': {
+          const value = config.component === 'input' ? 0 : config.options[0]?.key ?? 0;
+          return { mode: 'static', type: 'number', value } as const;
+        }
+        case 'boolean': {
+          const value = config.component === 'input' ? true : config.options[0]?.key ?? true;
+          return { mode: 'static', type: 'boolean', value } as const;
+        }
+        case 'object': {
+          const value = config.component === 'input' ? '' : config.options[0]?.key ?? '';
+          return { mode: 'static', type: 'object', value } as const;
+        }
+        default:
+          throw Error();
+      }
+    })();
+
+    const prop: WidgetProp$List = { ...widgetProp };
+    prop.props.push(defaultProp);
+    dispatch(updateWidgetProps(widget.id, config.key, prop));
+  };
+
+  const handleOnChange = (idx: number) => (
+    subProp: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget,
+  ) => {
+    const prop: WidgetProp$List = { ...widgetProp };
+    prop.props[idx] = subProp;
     dispatch(updateWidgetProps(widget.id, config.key, prop));
   };
 
   const handleModeChange = (idx: number) => (m: 'static' | 'variable' | 'widget') => {
-    const defaultProp = ((): WidgetProp => {
+    const defaultProp = ((): WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget => {
       switch (m) {
         case 'static': {
-          const opt = config.options[idx];
-          return {
-            mode: 'static',
-            type: 'string',
-            value: opt.component === 'select' ? opt.options[0]?.key : '',
-          };
+          switch (config.type) {
+            case 'string':
+              return {
+                mode: 'static',
+                type: config.type,
+                value: config.component === 'select' ? config.options[0]?.key : '',
+              };
+            case 'number':
+              return {
+                mode: 'static',
+                type: config.type,
+                value: config.component === 'select' ? config.options[0]?.key : 0,
+              };
+            case 'boolean':
+              return {
+                mode: 'static',
+                type: config.type,
+                value: config.component === 'select' ? config.options[0]?.key : true,
+              };
+            case 'object':
+              return {
+                mode: 'static',
+                type: config.type,
+                value: config.component === 'select' ? config.options[0]?.key : '',
+              };
+            default:
+              throw Error();
+          }
         }
         case 'variable':
           return {
@@ -55,8 +116,14 @@ export const ListConfig = ({ widget, config }: ListConfigProps): JSX.Element => 
     handleOnChange(idx)(defaultProp);
   };
 
+  const handleDelete = (idx: number) => () => {
+    const prop: WidgetProp$List = { ...widgetProp };
+    prop.props = prop.props.filter((_, i) => i !== idx);
+    dispatch(updateWidgetProps(widget.id, config.key, prop));
+  };
+
   return (
-    <Styles.Container>
+    <Styles.Container nested={false}>
       <Styles.Header>
         <Styles.Label>{config.label}</Styles.Label>
         <Button
@@ -64,15 +131,18 @@ export const ListConfig = ({ widget, config }: ListConfigProps): JSX.Element => 
           style={Button.styles.naked}
           color={Button.colors.secondary}
           size={Button.sizes.medium}
+          onClick={handleAddProp}
         />
       </Styles.Header>
-      {config.options.map((o, idx) => (
+      {widgetProp.props.map((p, idx) => (
         <ConfigOption
-          key={o.key}
-          widgetProp={widgetProp[idx]}
-          config={o}
+          key={idx}
+          widgetProp={p}
+          config={config}
           onChange={handleOnChange(idx)}
           onModeChange={handleModeChange(idx)}
+          onDelete={handleDelete(idx)}
+          nested
         />
       ))}
     </Styles.Container>

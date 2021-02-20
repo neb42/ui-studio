@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { IconButton } from '@material-ui/core';
 import { Edit, Functions, Widgets } from '@material-ui/icons';
-import { WidgetProp, ComponentConfig } from '@ui-builder/types';
+import Button from '@faculty/adler-web-components/atoms/Button';
+import {
+  WidgetProp,
+  WidgetProp$Static,
+  WidgetProp$Variable,
+  WidgetProp$Widget,
+  ComponentConfig,
+} from 'canvas-types';
 import { StaticConfig } from 'components/ConfigOption/StaticConfig';
 import { VariableConfig } from 'components/ConfigOption/VariableConfig';
 import { WidgetConfig } from 'components/ConfigOption/WidgetConfig';
@@ -11,8 +18,10 @@ import * as Styles from './ConfigOption.styles';
 interface ConfigOptionProps {
   widgetProp: WidgetProp;
   config: ComponentConfig;
-  onChange: (prop: WidgetProp) => void;
+  onChange: (prop: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget) => void;
   onModeChange: (mode: 'static' | 'variable' | 'widget') => void;
+  onDelete?: () => void;
+  nested?: boolean;
 }
 
 export const ConfigOption = ({
@@ -20,6 +29,8 @@ export const ConfigOption = ({
   config,
   onChange,
   onModeChange,
+  onDelete,
+  nested = false,
 }: ConfigOptionProps): JSX.Element => {
   const handleToggleMode = (m: 'static' | 'variable' | 'widget') => () => onModeChange(m);
 
@@ -31,10 +42,23 @@ export const ConfigOption = ({
   const getColor = (m: 'static' | 'variable' | 'widget') =>
     widgetProp.mode === m ? '#fa7268' : '#9c9c9c';
 
+  const handleDelete = () => {
+    if (onDelete) onDelete();
+  };
+
   return (
-    <Styles.Container>
+    <Styles.Container nested={nested}>
+      {onDelete && (
+        <Button
+          icon="delete"
+          style={Button.styles.naked}
+          color={Button.colors.secondary}
+          size={Button.sizes.medium}
+          onClick={handleDelete}
+        />
+      )}
       <Styles.Header>
-        <Styles.Label>{config.label}</Styles.Label>
+        {!nested && <Styles.Label>{config.label}</Styles.Label>}
         <Styles.ModeButtons>
           <IconButton onClick={handleToggleMode('static')} size="small">
             <Edit style={{ color: getColor('static') }} />
