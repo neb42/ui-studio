@@ -37,7 +37,8 @@ export const Grid = styled.div`
     columns
       .map((col) => {
         if (['mincontent', 'maxcontent', 'minmax', 'auto'].includes(col.unit)) {
-          return col.unit;
+          // return col.unit;
+          return '12px';
         }
         return `${col.value}${col.unit}`;
       })
@@ -46,7 +47,8 @@ export const Grid = styled.div`
     rows
       .map((row) => {
         if (['mincontent', 'maxcontent', 'minmax', 'auto'].includes(row.unit)) {
-          return row.unit;
+          // return row.unit;
+          return '12px';
         }
         return `${row.value}${row.unit}`;
       })
