@@ -34,11 +34,11 @@ const UpdateVariableEventConfig = ({
     onChange({ type: 'update-variable', variableId: value as string });
   };
 
-  const options = eventFunctionVariables.map(v => ({ value: v.id, label: v.name }));
+  const options = eventFunctionVariables.map((v) => ({ value: v.id, label: v.name }));
 
   return (
     <Select
-      value={options.find(o => o.value === event.variableId)}
+      value={options.find((o) => o.value === event.variableId)}
       options={options}
       onChange={handleOnChange}
     />
@@ -78,12 +78,12 @@ const TriggerActionEventConfig = ({
     onChange({ type: 'trigger-action', actionId: event.actionId, args: newArgs });
   };
 
-  const options = actions.map(a => ({ value: a.name, label: a.name }));
+  const options = actions.map((a) => ({ value: a.name, label: a.name }));
 
   return (
     <>
       <Select
-        value={options.find(o => o.value === event.actionId)}
+        value={options.find((o) => o.value === event.actionId)}
         options={options}
         onChange={handleActionChange}
       />
@@ -111,11 +111,11 @@ const NavigatePageEventConfig = ({
     onChange({ type: 'navigate-page', pageId: value as string });
   };
 
-  const options = pages.map(p => ({ value: p.name, label: p.name }));
+  const options = pages.map((p) => ({ value: p.name, label: p.name }));
 
   return (
     <Select
-      value={options.find(o => o.value === event.pageId)}
+      value={options.find((o) => o.value === event.pageId)}
       options={options}
       onChange={handleOnChange}
     />
@@ -173,7 +173,7 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
     dispatch(updateWidgetEvent(widget.id, eventKey, index, event));
   };
 
-  const eventTypeOptions = eventTypes.map(et => ({ value: et.key, label: et.label }));
+  const eventTypeOptions = eventTypes.map((et) => ({ value: et.key, label: et.label }));
 
   return (
     <Styles.Container>
@@ -189,7 +189,7 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
                 <DeleteSharp />
               </IconButton>
               <Select
-                value={eventTypeOptions.find(o => o.value === ee.type)}
+                value={eventTypeOptions.find((o) => o.value === ee.type)}
                 options={eventTypeOptions}
                 onChange={handleEventTypeChange(e.key, i)}
               />
