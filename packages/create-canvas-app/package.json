@@ -1,0 +1,35 @@
+{
+  "name": "create-canvas-app",
+  "version": "0.1.0",
+  "description": "> TODO: description",
+  "author": "Ben McAlindin <bmcalindin@faculty.ai>",
+  "homepage": "https://github.com/neb42/canvas/tree/master/packages/create-canvas-app#readme",
+  "license": "MIT",
+  "main": "build/index.js",
+  "files": [
+    "build"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.yarnpkg.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neb42/ui-builder.git"
+  },
+  "scripts": {
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "copy-template": "cp -r src/template build/template",
+    "build": "rm -rf build/* && tsc && yarn copy-template"
+  },
+  "bugs": {
+    "url": "https://github.com/neb42/ui-builder/issues"
+  },
+  "dependencies": {
+    "fs-extra": "^9.1.0",
+    "mustache": "^4.1.0",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "@types/yargs": "^16.0.0"
+  }
+}

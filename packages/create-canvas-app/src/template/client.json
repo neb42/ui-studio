@@ -1,0 +1,18 @@
+{
+  "pages": {
+      "edefcfcc-ba2b-41d3-9488-6ee39ac4b240": {
+          "id": "edefcfcc-ba2b-41d3-9488-6ee39ac4b240",
+          "type": "page",
+          "name": "Home",
+          "props": {},
+          "style": {
+              "type": "base",
+              "css": "",
+              "classNames": ""
+          }
+      }
+  },
+  "layouts": {},
+  "widgets": {},
+  "variables": {}
+}
