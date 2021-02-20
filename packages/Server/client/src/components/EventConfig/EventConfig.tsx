@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton, Select, MenuItem } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { AddSharp, DeleteSharp } from '@material-ui/icons';
+import Select from '@faculty/adler-web-components/atoms/Select';
 import {
   Event,
   Event$UpdateVariable,
@@ -16,12 +17,6 @@ import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariable
 
 import * as Styles from './EventConfig.styles';
 
-type InputEvent = React.ChangeEvent<HTMLInputElement>;
-type SelectEvent = React.ChangeEvent<{
-  name?: string | undefined;
-  value: unknown;
-}>;
-
 interface EventConfigInstanceProps<T extends Event> {
   event: T;
   onChange: (event: T) => void;
@@ -35,18 +30,18 @@ const UpdateVariableEventConfig = ({
     (v) => v.type === 'function' && v.trigger === 'event',
   );
 
-  const handleOnChange = (e: SelectEvent) => {
-    onChange({ type: 'update-variable', variableId: e.target.value as string });
+  const handleOnChange = ({ value }: any) => {
+    onChange({ type: 'update-variable', variableId: value as string });
   };
 
+  const options = eventFunctionVariables.map(v => ({ value: v.id, label: v.name }));
+
   return (
-    <Select value={event.variableId} onChange={handleOnChange} style={{ width: '100%' }}>
-      {eventFunctionVariables.map((v) => (
-        <MenuItem key={v.id} value={v.id}>
-          {v.name}
-        </MenuItem>
-      ))}
-    </Select>
+    <Select
+      value={options.find(o => o.value === event.variableId)}
+      options={options}
+      onChange={handleOnChange}
+    />
   );
 };
 
@@ -58,8 +53,8 @@ const TriggerActionEventConfig = ({
 
   const selectedAction = actions.find((a) => a.name === event.actionId);
 
-  const handleActionChange = (e: SelectEvent) => {
-    const newActionId = e.target.value as string;
+  const handleActionChange = ({ value }: any) => {
+    const newActionId = value as string;
     const newSelectedAction = actions.find((a) => a.name === newActionId);
     if (!newSelectedAction) return;
     const args: FunctionVariableArg[] = newSelectedAction.args.map((a) => {
@@ -83,15 +78,15 @@ const TriggerActionEventConfig = ({
     onChange({ type: 'trigger-action', actionId: event.actionId, args: newArgs });
   };
 
+  const options = actions.map(a => ({ value: a.name, label: a.name }));
+
   return (
     <>
-      <Select value={event.actionId} onChange={handleActionChange} style={{ width: '100%' }}>
-        {actions.map((a) => (
-          <MenuItem key={a.name} value={a.name}>
-            {a.name}
-          </MenuItem>
-        ))}
-      </Select>
+      <Select
+        value={options.find(o => o.value === event.actionId)}
+        options={options}
+        onChange={handleActionChange}
+      />
       {selectedAction &&
         selectedAction.args.map((a, i) => (
           <FunctionVariableArgConfig
@@ -112,18 +107,18 @@ const NavigatePageEventConfig = ({
 }: EventConfigInstanceProps<Event$NavigatePage>): JSX.Element => {
   const pages = Object.values(useSelector(getPages));
 
-  const handleOnChange = (e: SelectEvent) => {
-    onChange({ type: 'navigate-page', pageId: e.target.value as string });
+  const handleOnChange = ({ value }: any) => {
+    onChange({ type: 'navigate-page', pageId: value as string });
   };
 
+  const options = pages.map(p => ({ value: p.name, label: p.name }));
+
   return (
-    <Select value={event.pageId} onChange={handleOnChange} style={{ width: '100%' }}>
-      {pages.map((p) => (
-        <MenuItem key={p.id} value={p.name}>
-          {p.name}
-        </MenuItem>
-      ))}
-    </Select>
+    <Select
+      value={options.find(o => o.value === event.pageId)}
+      options={options}
+      onChange={handleOnChange}
+    />
   );
 };
 
@@ -168,8 +163,8 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
     dispatch(removeWidgetEvent(widget.id, eventKey, index));
   };
 
-  const handleEventTypeChange = (eventKey: string, index: number) => (event: SelectEvent) => {
-    const eventType = event.target.value as 'update-variable' | 'trigger-action' | 'navigate-page';
+  const handleEventTypeChange = (eventKey: string, index: number) => ({ value }: any) => {
+    const eventType = value as 'update-variable' | 'trigger-action' | 'navigate-page';
     const defaultEvent = buildDefaultEvent(eventType);
     dispatch(updateWidgetEvent(widget.id, eventKey, index, defaultEvent));
   };
@@ -177,6 +172,8 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
   const handleEventChange = (eventKey: string, index: number) => (event: Event) => {
     dispatch(updateWidgetEvent(widget.id, eventKey, index, event));
   };
+
+  const eventTypeOptions = eventTypes.map(et => ({ value: et.key, label: et.label }));
 
   return (
     <Styles.Container>
@@ -192,16 +189,10 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
                 <DeleteSharp />
               </IconButton>
               <Select
-                value={ee.type}
+                value={eventTypeOptions.find(o => o.value === ee.type)}
+                options={eventTypeOptions}
                 onChange={handleEventTypeChange(e.key, i)}
-                style={{ width: '100%' }}
-              >
-                {eventTypes.map((et) => (
-                  <MenuItem key={et.key} value={et.key}>
-                    {et.label}
-                  </MenuItem>
-                ))}
-              </Select>
+              />
               {ee.type === 'update-variable' && (
                 <UpdateVariableEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
               )}
