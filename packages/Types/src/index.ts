@@ -6,6 +6,7 @@ export type {
   WidgetProp$Static,
   WidgetProp$Variable,
   WidgetProp$Widget,
+  WidgetProp$List,
 } from './widget';
 
 export type { Layout, FlexLayout, GridLayout, GridUnit, IGridCell } from './layout';

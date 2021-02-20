@@ -2,16 +2,21 @@ export interface BaseComponentConfig {
   key: string;
   label: string;
   type: 'string' | 'number' | 'boolean' | 'object';
+  list: boolean;
 }
 
 export interface ComponentConfig$Input extends BaseComponentConfig {
   component: 'input';
 }
 
-export interface ComponentConfig$Select extends BaseComponentConfig {
+export type ComponentConfig$Select = BaseComponentConfig & {
   component: 'select';
-  options: { key: string; label: string }[];
-}
+} & (
+    | { type: 'string'; options: { key: string; label: string }[] }
+    | { type: 'number'; options: { key: number; label: string }[] }
+    | { type: 'boolean'; options: { key: boolean; label: string }[] }
+    | { type: 'object'; options: { key: string; label: string }[] }
+  );
 
 export type ComponentConfig = ComponentConfig$Input | ComponentConfig$Select;
 

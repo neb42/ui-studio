@@ -23,7 +23,16 @@ export type WidgetProp$Widget = {
   lookup: string;
 };
 
-export type WidgetProp = WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget;
+export type WidgetProp$List = {
+  mode: 'list';
+  props: (WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget)[];
+};
+
+export type WidgetProp =
+  | WidgetProp$Static
+  | WidgetProp$Variable
+  | WidgetProp$Widget
+  | WidgetProp$List;
 
 export interface Widget {
   id: string;

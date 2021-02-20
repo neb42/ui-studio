@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { Widget } from 'canvas-types';
+import { Widget, WidgetProp } from 'canvas-types';
 
 import { getVariableValue, getWidgetPropertyValue } from '../selectors';
 import { handleEvent } from '../actions/handleEvent';
@@ -54,34 +54,32 @@ const useGetProps = (
   const getWidgetPropertyValueInstance = useSelector(getWidgetPropertyValue);
 
   const rawValues: { [key: string]: any } = Object.keys(widget.props).reduce((acc, cur) => {
-    const prop = widget.props[cur];
-    if (prop.mode === 'variable') {
-      if (prop.type === 'object') {
-        return {
-          ...acc,
-          [cur]: getVariableValueInstance(prop.variableId, prop.lookup),
-        };
+    const getProp = (prop: WidgetProp): any | null => {
+      if (prop.mode === 'list') {
+        return prop.props.map(getProp);
       }
-      return {
-        ...acc,
-        [cur]: getVariableValueInstance(prop.variableId, null),
-      };
-    }
 
-    if (prop.mode === 'widget') {
-      return {
-        ...acc,
-        [cur]: getWidgetPropertyValueInstance(prop.widgetId, prop.lookup),
-      };
-    }
+      if (prop.mode === 'variable') {
+        if (prop.type === 'object') {
+          return getVariableValueInstance(prop.variableId, prop.lookup);
+        }
+        return getVariableValueInstance(prop.variableId, null);
+      }
 
-    if (prop.mode === 'static') {
-      return {
-        ...acc,
-        [cur]: prop.value,
-      };
-    }
+      if (prop.mode === 'widget') {
+        return getWidgetPropertyValueInstance(prop.widgetId, prop.lookup);
+      }
 
+      if (prop.mode === 'static') {
+        return prop.value;
+      }
+
+      return null;
+    };
+
+    const prop = getProp(widget.props[cur]);
+
+    if (prop) return { ...acc, [cur]: prop };
     return acc;
   }, {});
 
