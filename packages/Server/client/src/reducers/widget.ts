@@ -87,7 +87,7 @@ export const widget = (
             },
           };
         }
-        return acc;
+        return { ...acc, [cur]: current };
       }, {});
     }
     case REMOVE_VARIABLE: {

@@ -82,7 +82,7 @@ export const layout = (
             },
           };
         }
-        return acc;
+        return { ...acc, [cur]: current };
       }, {});
     }
     case UPDATE_LAYOUT_CONFIG: {
