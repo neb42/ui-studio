@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Menu, MenuItem } from '@material-ui/core';
-import { selectPage, updateElementName } from 'actions/element';
+import { selectPage } from 'actions/element';
 import { addPage, removePage } from 'actions/page';
 import { getOverlays, getPages, getSelectedPageId } from 'selectors/element';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Button from '@faculty/adler-web-components/atoms/Button';
-import Input from '@faculty/adler-web-components/atoms/Input';
 
 import * as Styles from './ElementTreeHeader.styles';
 
@@ -16,8 +15,6 @@ export const ElementTreeHeader = (): JSX.Element => {
   const pages = useSelector(getPages);
   const overlays = useSelector(getOverlays);
   // const components = {};
-
-  const [edit, setEdit] = React.useState<boolean>(false);
 
   const [anchorEl, setAnchorEl] = React.useState<(EventTarget & HTMLButtonElement) | null>(null);
   const handleOpenAddMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
@@ -39,12 +36,6 @@ export const ElementTreeHeader = (): JSX.Element => {
     if (selectedPageId) dispatch(removePage(selectedPageId));
   };
 
-  const handleToggleEditName = () => setEdit(!edit);
-
-  const handleEditName = (value: string) => {
-    if (selectedPageId) dispatch(updateElementName(selectedPageId, 'page', value));
-  };
-
   // TODO handle overlay and components
   if (!selectedPageId) return <div />;
 
@@ -53,24 +44,21 @@ export const ElementTreeHeader = (): JSX.Element => {
 
   return (
     <Styles.Container>
-      {!edit && (
-        <Select
-          value={{ label: element.name, value: element.id }}
-          onChange={handleOnChange}
-          options={[
-            {
-              label: 'Pages',
-              options: Object.values(pages).map((p) => ({ value: p.id, label: p.name })),
-            },
-            {
-              label: 'Overlays',
-              options: Object.values(overlays).map((o) => ({ value: o.id, label: o.name })),
-            },
-            { label: 'Components', options: [] },
-          ]}
-        />
-      )}
-      {edit && <Input onChange={handleEditName} value={element.name} />}
+      <Select
+        value={{ label: element.name, value: element.id }}
+        onChange={handleOnChange}
+        options={[
+          {
+            label: 'Pages',
+            options: Object.values(pages).map((p) => ({ value: p.id, label: p.name })),
+          },
+          {
+            label: 'Overlays',
+            options: Object.values(overlays).map((o) => ({ value: o.id, label: o.name })),
+          },
+          { label: 'Components', options: [] },
+        ]}
+      />
       <div />
       <Button
         icon="add"
@@ -78,13 +66,6 @@ export const ElementTreeHeader = (): JSX.Element => {
         color={Button.colors.secondary}
         size={Button.sizes.medium}
         onClick={handleOpenAddMenu}
-      />
-      <Button
-        icon="edit"
-        style={Button.styles.naked}
-        color={edit ? Button.colors.brand : Button.colors.secondary}
-        size={Button.sizes.medium}
-        onClick={handleToggleEditName}
       />
       <Button
         icon="delete"
