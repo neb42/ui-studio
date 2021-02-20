@@ -6,6 +6,7 @@ import {
   makeGenerateDefaultName,
   makeGetNextPosition,
   makeGetComponents,
+  getSelectedElementId,
 } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
@@ -141,15 +142,27 @@ export interface IRemoveWidget {
   };
 }
 
-export const removeWidget = (widget: Widget, del = false): IRemoveWidget => ({
-  type: REMOVE_WIDGET,
-  payload: {
-    id: widget.id,
-    parent: widget.parent,
-    position: widget.position,
-    delete: del,
-  },
-});
+export const removeWidget = (widget: Widget, del = false): TThunkAction<IRemoveWidget> => (
+  dispatch: Dispatch<IRemoveWidget | ISelectElement>,
+  getState: TGetState,
+) => {
+  const state = getState();
+
+  const selectedElementId = getSelectedElementId(state);
+  if (selectedElementId === widget.id) {
+    dispatch(selectElement(null));
+  }
+
+  return dispatch({
+    type: REMOVE_WIDGET,
+    payload: {
+      id: widget.id,
+      parent: widget.parent,
+      position: widget.position,
+      delete: del,
+    },
+  });
+};
 
 interface IUpdateWidgetProps {
   type: 'UPDATE_WIDGET_PROPS';

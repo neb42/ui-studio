@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
 import { TStyle, IGridCell, Element, Layout } from 'canvas-types';
-import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition } from 'selectors/element';
+import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition, getSelectedElementId } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
 
@@ -128,15 +128,27 @@ export interface IRemoveLayout {
   };
 }
 
-export const removeLayout = (layout: Layout, del = false): IRemoveLayout => ({
-  type: REMOVE_LAYOUT,
-  payload: {
-    id: layout.id,
-    parent: layout.parent,
-    position: layout.position,
-    delete: del,
-  },
-});
+export const removeLayout = (layout: Layout, del = false): TThunkAction<IRemoveLayout> => (
+  dispatch: Dispatch<IRemoveLayout | ISelectElement>,
+  getState: TGetState,
+) => {
+  const state = getState();
+
+  const selectedElementId = getSelectedElementId(state);
+  if (selectedElementId === layout.id) {
+    dispatch(selectElement(null));
+  }
+
+  return dispatch({
+    type: REMOVE_LAYOUT,
+    payload: {
+      id: layout.id,
+      parent: layout.parent,
+      position: layout.position,
+      delete: del,
+    },
+  });
+};
 
 interface IUpdateLayoutConfig {
   type: 'UPDATE_LAYOUT_CONFIG';

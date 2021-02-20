@@ -52,6 +52,11 @@ const TreeItemLabelBuilder = ({
     const handleOpenAddMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       handleOpenAddElementMenu(event.currentTarget);
 
+    const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      event.stopPropagation();
+      onRemove(element);
+    };
+
     const handleDoubleClick = () => {
       if (item.hasChildren && item.children.length > 0) {
         if (item.isExpanded) return onCollapse(item.id);
@@ -87,7 +92,7 @@ const TreeItemLabelBuilder = ({
               <div />
             )}
             {element.type !== 'page' && element.type !== 'overlay' && (
-              <IconButton onClick={onRemove(element)} size="small">
+              <IconButton onClick={handleRemove} size="small">
                 <ClearSharp />
               </IconButton>
             )}
@@ -142,7 +147,7 @@ export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
     );
   };
 
-  const handleRemove = (element: Page | Layout | Widget) => () => {
+  const handleRemove = (element: Page | Layout | Widget) => {
     if (element.type === 'layout') {
       dispatch(removeLayout(element));
     }
