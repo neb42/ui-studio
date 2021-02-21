@@ -1,7 +1,12 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
 import { TStyle, IGridCell, Element, Layout } from 'canvas-types';
-import { makeGetElement, makeGenerateDefaultName, makeGetNextPosition, getSelectedElementId } from 'selectors/element';
+import {
+  makeGetElement,
+  makeGenerateDefaultName,
+  makeGetNextPosition,
+  getSelectedElementId,
+} from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
 
@@ -184,4 +189,39 @@ export const updateLayoutStyle = (id: string, style: TStyle): IUpdateLayoutStyle
   },
 });
 
-export type Action$Layout = IAddLayout | IRemoveLayout | IUpdateLayoutConfig | IUpdateLayoutStyle;
+interface UpdateLayoutParent {
+  type: 'UPDATE_LAYOUT_PARENT';
+  payload: {
+    layoutId: string;
+    parentId: string;
+    position: number;
+  };
+}
+
+export const UPDATE_LAYOUT_PARENT = 'UPDATE_LAYOUT_PARENT';
+
+export const updateLayoutParent = (
+  layoutId: string,
+  parentId: string,
+): TThunkAction<UpdateLayoutParent> => (
+  dispatch: Dispatch<UpdateLayoutParent>,
+  getState: TGetState,
+) => {
+  const state = getState();
+  const position = makeGetNextPosition()(state, parentId);
+  return dispatch({
+    type: UPDATE_LAYOUT_PARENT,
+    payload: {
+      layoutId,
+      parentId,
+      position,
+    },
+  });
+};
+
+export type Action$Layout =
+  | IAddLayout
+  | IRemoveLayout
+  | IUpdateLayoutConfig
+  | IUpdateLayoutStyle
+  | UpdateLayoutParent;

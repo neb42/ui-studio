@@ -3,6 +3,7 @@ import {
   REMOVE_LAYOUT,
   UPDATE_LAYOUT_CONFIG,
   UPDATE_LAYOUT_STYLE,
+  UPDATE_LAYOUT_PARENT,
   Action$Layout,
 } from 'actions/layout';
 import {
@@ -211,6 +212,16 @@ export const layout = (
           [cur]: current,
         };
       }, {});
+    }
+    case UPDATE_LAYOUT_PARENT: {
+      return {
+        ...state,
+        [action.payload.layoutId]: {
+          ...state[action.payload.layoutId],
+          parent: action.payload.parentId,
+          position: action.payload.position,
+        },
+      };
     }
     case INIT_CLIENT: {
       return action.payload.layouts;

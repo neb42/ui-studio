@@ -6,6 +6,7 @@ import {
   ADD_WIDGET_EVENT,
   UPDATE_WIDGET_EVENT,
   REMOVE_WIDGET_EVENT,
+  UPDATE_WIDGET_PARENT,
   Action$Widget,
 } from 'actions/widget';
 import { REMOVE_LAYOUT, IRemoveLayout } from 'actions/layout';
@@ -281,6 +282,16 @@ export const widget = (
           [cur]: current,
         };
       }, {});
+    }
+    case UPDATE_WIDGET_PARENT: {
+      return {
+        ...state,
+        [action.payload.widgetId]: {
+          ...state[action.payload.widgetId],
+          parent: action.payload.parentId,
+          position: action.payload.position,
+        },
+      };
     }
     case INIT_CLIENT: {
       return action.payload.widgets;

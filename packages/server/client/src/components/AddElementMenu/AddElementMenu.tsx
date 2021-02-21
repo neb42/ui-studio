@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Menu, ListItemIcon, MenuItem } from '@material-ui/core';
+import { Menu, ListItemIcon, MenuItem, Divider } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
 import { Component } from 'canvas-types';
-import { makeGetSelectedElement, makeGetComponents } from 'selectors/element';
-import { addWidget } from 'actions/widget';
-import { addLayout } from 'actions/layout';
+import {
+  makeGetSelectedElement,
+  makeGetComponents,
+  getOrphanedRootElements,
+} from 'selectors/element';
+import { addWidget, updateWidgetParent } from 'actions/widget';
+import { addLayout, updateLayoutParent } from 'actions/layout';
 
 const makeElements = (
   components: Component[],
@@ -82,6 +86,9 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
   const [category, setCategory] = React.useState<string | null>(null);
   const selectedElement = useSelector(React.useMemo(makeGetSelectedElement, []));
   const components = useSelector(React.useMemo(makeGetComponents, []));
+  const orphanedElements = useSelector(getOrphanedRootElements);
+
+  const showOrphanedElements = category === 'Orphaned elements';
 
   const elements = makeElements(components);
   const categories = Object.keys(elements);
@@ -104,6 +111,19 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
     }
   };
 
+  const handleUpdateParent = (type: 'layout' | 'widget', orphanId: string) => () => {
+    if (selectedElement) {
+      if (type === 'layout') {
+        dispatch(updateLayoutParent(orphanId, selectedElement.id));
+      }
+      if (type === 'widget') {
+        dispatch(updateWidgetParent(orphanId, selectedElement.id));
+      }
+      onClose();
+      setCategory(null);
+    }
+  };
+
   const handleClickCategory = (cat: string | null) => () => setCategory(cat);
 
   if (category === null) {
@@ -114,6 +134,8 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
             {c}
           </MenuItem>
         ))}
+        <Divider />
+        <MenuItem onClick={handleClickCategory('Orphaned elements')}>Orphaned elements</MenuItem>
       </Menu>
     );
   }
@@ -126,14 +148,39 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
         </ListItemIcon>
         {category}
       </MenuItem>
-      {(elements?.[category] ?? []).map((e) => (
-        <MenuItem key={e.title} onClick={handleAddElement(e.type, e.subtype, e.library)}>
-          <ListItemIcon>
-            <e.icon />
-          </ListItemIcon>
-          {e.title}
-        </MenuItem>
-      ))}
+      {!showOrphanedElements &&
+        (elements?.[category] ?? []).map((e) => (
+          <MenuItem key={e.title} onClick={handleAddElement(e.type, e.subtype, e.library)}>
+            <ListItemIcon>
+              <e.icon />
+            </ListItemIcon>
+            {e.title}
+          </MenuItem>
+        ))}
+      {showOrphanedElements &&
+        orphanedElements.map((e) => {
+          const Icon = (() => {
+            if (e.type === 'layout') {
+              if (e.layoutType === 'grid') return Icons.GridOnSharp;
+              if (e.layoutType === 'flex') return Icons.ViewWeekSharp;
+              throw Error();
+            }
+            const comp = components.find((c) => c.name === e.component);
+            if (!comp) throw Error();
+            return (
+              (Icons as { [key: string]: Icons.SvgIconComponent })?.[comp.icon] ??
+              Icons.HelpOutlineSharp
+            );
+          })();
+          return (
+            <MenuItem key={e.id} onClick={handleUpdateParent(e.type, e.id)}>
+              <ListItemIcon>
+                <Icon />
+              </ListItemIcon>
+              {e.name}
+            </MenuItem>
+          );
+        })}
     </Menu>
   );
 };

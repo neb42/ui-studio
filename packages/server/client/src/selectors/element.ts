@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { Widget, Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
+import { Widget, Layout, Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
 import {
   Store,
   Store$Page,
@@ -240,4 +240,19 @@ export const getWidgetsInTree = (state: Store): { [key: string]: Widget } => {
     .reduce((acc, cur) => {
       return { ...acc, [cur]: allWidgets[cur] };
     }, {});
+};
+
+export const getOrphanedRootElements = (state: Store): (Layout | Widget)[] => {
+  const elements = makeGetElements()(state);
+  const all = { ...elements.layouts, ...elements.widgets };
+
+  const rootWidgetIds = Object.values(getWidgets(state))
+    .filter((w) => w.parent === null)
+    .map((w) => w.id);
+
+  const rootLayoutIds = Object.values(getLayouts(state))
+    .filter((l) => l.parent === null)
+    .map((l) => l.id);
+
+  return [...rootWidgetIds, ...rootLayoutIds].map((id) => all[id]);
 };

@@ -255,6 +255,36 @@ export const removeWidgetEvent = (
   },
 });
 
+interface UpdateWidgetParent {
+  type: 'UPDATE_WIDGET_PARENT';
+  payload: {
+    widgetId: string;
+    parentId: string;
+    position: number;
+  };
+}
+
+export const UPDATE_WIDGET_PARENT = 'UPDATE_WIDGET_PARENT';
+
+export const updateWidgetParent = (
+  widgetId: string,
+  parentId: string,
+): TThunkAction<UpdateWidgetParent> => (
+  dispatch: Dispatch<UpdateWidgetParent>,
+  getState: TGetState,
+) => {
+  const state = getState();
+  const position = makeGetNextPosition()(state, parentId);
+  return dispatch({
+    type: UPDATE_WIDGET_PARENT,
+    payload: {
+      widgetId,
+      parentId,
+      position,
+    },
+  });
+};
+
 export type Action$Widget =
   | IAddWidget
   | IRemoveWidget
@@ -262,4 +292,5 @@ export type Action$Widget =
   | IUpdateWidgetStyle
   | AddWidgetEvent
   | UpdateWidgetEvent
-  | RemoveWidgetEvent;
+  | RemoveWidgetEvent
+  | UpdateWidgetParent;
