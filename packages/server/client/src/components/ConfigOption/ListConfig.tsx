@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import Button from '@faculty/adler-web-components/atoms/Button';
 import {
   Widget,
-  WidgetProp,
   ComponentConfig,
   WidgetProp$List,
   WidgetProp$Static,
@@ -28,28 +27,7 @@ export const ListConfig = ({ widget, config }: ListConfigProps): JSX.Element => 
   if (widgetProp.mode !== 'list') throw Error();
 
   const handleAddProp = () => {
-    const defaultProp: WidgetProp = (() => {
-      switch (config.type) {
-        case 'string': {
-          const value = config.component === 'input' ? '' : config.options[0]?.key ?? '';
-          return { mode: 'static', type: 'string', value } as const;
-        }
-        case 'number': {
-          const value = config.component === 'input' ? 0 : config.options[0]?.key ?? 0;
-          return { mode: 'static', type: 'number', value } as const;
-        }
-        case 'boolean': {
-          const value = config.component === 'input' ? true : config.options[0]?.key ?? true;
-          return { mode: 'static', type: 'boolean', value } as const;
-        }
-        case 'object': {
-          const value = config.component === 'input' ? '' : config.options[0]?.key ?? '';
-          return { mode: 'static', type: 'object', value } as const;
-        }
-        default:
-          throw Error();
-      }
-    })();
+    const defaultProp = { mode: 'static' as const, type: config.type, value: config.defaultValue };
 
     const prop: WidgetProp$List = { ...widgetProp };
     prop.props.push(defaultProp);
@@ -68,34 +46,7 @@ export const ListConfig = ({ widget, config }: ListConfigProps): JSX.Element => 
     const defaultProp = ((): WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget => {
       switch (m) {
         case 'static': {
-          switch (config.type) {
-            case 'string':
-              return {
-                mode: 'static',
-                type: config.type,
-                value: config.component === 'select' ? config.options[0]?.key : '',
-              };
-            case 'number':
-              return {
-                mode: 'static',
-                type: config.type,
-                value: config.component === 'select' ? config.options[0]?.key : 0,
-              };
-            case 'boolean':
-              return {
-                mode: 'static',
-                type: config.type,
-                value: config.component === 'select' ? config.options[0]?.key : true,
-              };
-            case 'object':
-              return {
-                mode: 'static',
-                type: config.type,
-                value: config.component === 'select' ? config.options[0]?.key : '',
-              };
-            default:
-              throw Error();
-          }
+          return { mode: 'static' as const, type: config.type, value: config.defaultValue };
         }
         case 'variable':
           return {

@@ -3,6 +3,7 @@ export interface BaseComponentConfig {
   label: string;
   type: 'string' | 'number' | 'boolean' | 'object';
   list: boolean;
+  defaultValue: any;
 }
 
 export interface ComponentConfig$Input extends BaseComponentConfig {

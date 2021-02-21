@@ -87,26 +87,7 @@ export const addWidget = (
   const props = componentConfig.config.reduce((acc, cur) => {
     const defaultProp: WidgetProp = (() => {
       if (cur.list) return { mode: 'list' as const, props: [] };
-      switch (cur.type) {
-        case 'string': {
-          const value = cur.component === 'input' ? '' : cur.options[0]?.key ?? '';
-          return { mode: 'static', type: 'string', value } as const;
-        }
-        case 'number': {
-          const value = cur.component === 'input' ? 0 : cur.options[0]?.key ?? 0;
-          return { mode: 'static', type: 'number', value } as const;
-        }
-        case 'boolean': {
-          const value = cur.component === 'input' ? true : cur.options[0]?.key ?? true;
-          return { mode: 'static', type: 'boolean', value } as const;
-        }
-        case 'object': {
-          const value = cur.component === 'input' ? '' : cur.options[0]?.key ?? '';
-          return { mode: 'static', type: 'object', value } as const;
-        }
-        default:
-          throw Error();
-      }
+      return { mode: 'static' as const, type: cur.type, value: cur.defaultValue };
     })();
     return { ...acc, [cur.key]: defaultProp };
   }, {});
