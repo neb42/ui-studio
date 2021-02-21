@@ -10,7 +10,7 @@ import {
   FunctionVariable$VariableArg,
   FunctionVariable$WidgetArg,
 } from 'canvas-types';
-import { getWidgets, getVariables } from 'selectors/element';
+import { getWidgetsInTree, getVariables, makeGetComponents } from 'selectors/element';
 
 import * as Styles from './FunctionVariableArgConfig.styles';
 
@@ -88,27 +88,45 @@ const VariableConfig = ({
 };
 
 const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>): JSX.Element => {
+  const components = useSelector(makeGetComponents());
+
   const handleWidgetIdChange = ({ value }: any) => {
     onChange({ type: 'widget', widgetId: value as string, property: arg.property });
   };
 
-  const handlePropertyChange = (value: string) => {
+  const handlePropertyChange = ({ value }: any) => {
     onChange({ type: 'widget', widgetId: arg.widgetId, property: value as string });
   };
 
-  const widgets = Object.values(useSelector(getWidgets));
+  const widgets = Object.values(useSelector(getWidgetsInTree)).filter((w) => {
+    const comp = components.find((c) => c.name === w.component);
+    if (comp) return comp?.exposedProperties.length > 0;
+    return false;
+  });
 
-  const options = widgets.map((w) => ({ label: w.name, value: w.id }));
+  const selectedWidget = widgets.find((w) => w.id === arg.widgetId);
+  const exposedPropertyOptions = selectedWidget
+    ? components
+        .find((c) => c.name === selectedWidget.component)
+        ?.exposedProperties.map((p) => ({ value: p, label: p })) ?? []
+    : [];
+
+  const widgetOptions = widgets.map((w) => ({ label: w.name, value: w.id }));
 
   return (
     <>
       <Select
         label={name}
-        value={options.find((o) => o.value === arg.widgetId)}
+        value={widgetOptions.find((o) => o.value === arg.widgetId)}
         onChange={handleWidgetIdChange}
-        options={options}
+        options={widgetOptions}
       />
-      <Input placeholder="Property" value={arg.property} onChange={handlePropertyChange} />
+      <Select
+        label="Widget property"
+        value={{ value: arg.property, label: arg.property }}
+        onChange={handlePropertyChange}
+        options={exposedPropertyOptions}
+      />
     </>
   );
 };

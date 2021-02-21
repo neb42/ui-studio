@@ -7,7 +7,7 @@ import {
   WidgetProp$Variable,
   WidgetProp$Widget,
 } from 'canvas-types';
-import { makeGetComponents, getWidgets } from 'selectors/element';
+import { makeGetComponents, getWidgetsInTree } from 'selectors/element';
 
 interface WidgetConfigProps {
   widgetProp: WidgetProp;
@@ -34,7 +34,7 @@ export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.E
     onChange(buildWidgetWidgetProps(widgetProp.widgetId, value as string));
   };
 
-  const widgets = Object.values(useSelector(getWidgets)).filter((w) => {
+  const widgets = Object.values(useSelector(getWidgetsInTree)).filter((w) => {
     const comp = components.find((c) => c.name === w.component);
     if (comp) return comp?.exposedProperties.length > 0;
     return false;

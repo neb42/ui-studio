@@ -9,8 +9,7 @@ import Tree, {
 import { IconButton } from '@material-ui/core';
 import { ClearSharp, AddSharp } from '@material-ui/icons';
 import { Page, Layout, Widget } from 'canvas-types';
-import { Store } from 'types/store';
-import { makeGetElementTree, makeGetSelectedElement } from 'selectors/element';
+import { getElementTree, makeGetSelectedElement } from 'selectors/element';
 import { selectElement, hoverElement, updateElementPosition } from 'actions/element';
 import { removeLayout } from 'actions/layout';
 import { removeWidget } from 'actions/widget';
@@ -29,7 +28,7 @@ interface ITreeItemLabel {
   onClick: (id: string) => () => void;
   onMouseEnter: (id: string) => () => void;
   onMouseLeave: () => void;
-  onRemove: (element: Page | Layout | Widget) => () => any;
+  onRemove: (element: Page | Layout | Widget) => any;
   handleOpenAddElementMenu: (anchor: HTMLElement) => void;
 }
 
@@ -107,8 +106,7 @@ const TreeItemLabelBuilder = ({
 export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
   const dispatch = useDispatch();
   const [addElementMenuAnchor, setAddElementMenuAnchor] = React.useState<HTMLElement | null>(null);
-  const getElementTree = React.useMemo(makeGetElementTree, []);
-  const elementTree = useSelector((state: Store) => getElementTree(state, pageId));
+  const elementTree = useSelector(getElementTree);
   const selectedElement = useSelector(React.useMemo(makeGetSelectedElement, []));
   const [dragId, setDragId] = React.useState<string | null>(null);
   const [collapseMap, setCollapseMap] = React.useState<{ [key: string]: boolean }>({});

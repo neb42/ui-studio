@@ -1,5 +1,5 @@
-import { createSelector, OutputParametricSelector } from 'reselect';
-import { Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
+import { createSelector } from 'reselect';
+import { Widget, Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
 import {
   Store,
   Store$Page,
@@ -25,75 +25,62 @@ export const getSelectedView = (state: Store): 'preview' | 'variable' | 'css' =>
   state.element.selectedView;
 export const getComponents = (state: Store): Component[] => state.element.components;
 
-export const makeGetElementTree = (): OutputParametricSelector<
-  Store,
-  string,
-  Record<string, TreeItem>,
-  (
-    pageId: string,
-    pages: Store$Page,
-    layouts: Store$Layout,
-    widgets: Store$Widget,
-    components: Component[],
-  ) => Record<string, TreeItem>
-> =>
-  createSelector(
-    (_: Store, pageId: string) => pageId,
-    getPages,
-    getLayouts,
-    getWidgets,
-    getComponents,
-    (pageId, pages, layouts, widgets, components) => {
-      const all = {
-        ...pages,
-        ...layouts,
-        ...widgets,
-      };
+export const getElementTree = createSelector(
+  getPages,
+  getLayouts,
+  getWidgets,
+  getComponents,
+  (pages, layouts, widgets, components) => {
+    const all = {
+      ...pages,
+      ...layouts,
+      ...widgets,
+    };
 
-      const componentMap = components.reduce<Record<string, Component>>(
-        (acc, cur) => ({ ...acc, [cur.name]: cur }),
-        {},
-      );
+    const componentMap = components.reduce<Record<string, Component>>(
+      (acc, cur) => ({ ...acc, [cur.name]: cur }),
+      {},
+    );
 
-      const tree: Record<string, TreeItem> = Object.keys(all).reduce((acc, cur) => {
-        const element = all[cur];
-        return {
-          ...acc,
-          [cur]: {
-            id: cur,
-            children: [],
-            hasChildren:
-              (element.type !== 'widget' || componentMap[element.component]?.hasChildren) ?? true,
-            data: {
-              name: element.name,
-              type: element.type,
-              element,
-            },
+    const tree: Record<string, TreeItem> = Object.keys(all).reduce((acc, cur) => {
+      const element = all[cur];
+      return {
+        ...acc,
+        [cur]: {
+          id: cur,
+          children: [],
+          hasChildren:
+            (element.type !== 'widget' || componentMap[element.component]?.hasChildren) ?? true,
+          data: {
+            name: element.name,
+            type: element.type,
+            element,
           },
-        };
-      }, {});
+        },
+      };
+    }, {});
 
-      Object.values(all).forEach((el) => {
-        if (el.type === 'widget' || el.type === 'layout') {
-          if (el.parent && tree[el.parent]) {
-            tree[el.parent].children = [...tree[el.parent].children, el.id];
-          }
+    Object.values(all).forEach((el) => {
+      if (el.type === 'widget' || el.type === 'layout') {
+        if (el.parent && tree[el.parent]) {
+          tree[el.parent].children = [...tree[el.parent].children, el.id];
         }
-      });
+      }
+    });
 
-      Object.keys(tree).forEach((key) => {
-        tree[key].children = tree[key].children.sort((a, b) => {
-          const posA = tree[a].data.element.position;
-          const posB = tree[b].data.element.position;
-          if (posA > posB) return 1;
-          if (posA < posB) return -1;
-          return 0;
-        });
+    Object.keys(tree).forEach((key) => {
+      tree[key].children = tree[key].children.sort((a, b) => {
+        const posA = tree[a].data.element.position;
+        const posB = tree[b].data.element.position;
+        if (posA > posB) return 1;
+        if (posA < posB) return -1;
+        return 0;
       });
+    });
 
-      return tree;
-    },
-  );
+    return tree;
+  },
+);
 
 export const makeGetSelectedElement = () =>
   createSelector(
@@ -212,3 +199,45 @@ export const getParentElement = createSelector(
     return getElement(element.parent);
   },
 );
+
+export const getOrphanedIds = (state: Store): string[] => {
+  const tree = getElementTree(state);
+
+  const getIdsInBranch = (id: string): string[] => {
+    const children = tree[id].children.map((c) => c.toString());
+    return children.reduce((acc, cur) => {
+      return [...acc, ...getIdsInBranch(cur)];
+    }, children);
+  };
+
+  const rootWidgetIds = Object.values(getWidgets(state))
+    .filter((w) => w.parent === null)
+    .map((w) => w.id);
+
+  const rootLayoutIds = Object.values(getLayouts(state))
+    .filter((l) => l.parent === null)
+    .map((l) => l.id);
+
+  let orphanedIds: string[] = [...rootWidgetIds, ...rootLayoutIds];
+
+  rootWidgetIds.forEach((id) => {
+    orphanedIds = [...orphanedIds, ...getIdsInBranch(id)];
+  });
+
+  rootLayoutIds.forEach((id) => {
+    orphanedIds = [...orphanedIds, ...getIdsInBranch(id)];
+  });
+
+  return orphanedIds;
+};
+
+export const getWidgetsInTree = (state: Store): { [key: string]: Widget } => {
+  const orphanedIds = getOrphanedIds(state);
+  const allWidgets = getWidgets(state);
+
+  return Object.keys(allWidgets)
+    .filter((id) => !orphanedIds.includes(id))
+    .reduce((acc, cur) => {
+      return { ...acc, [cur]: allWidgets[cur] };
+    }, {});
+};
