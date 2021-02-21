@@ -1,9 +1,19 @@
 import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { Widget } from 'canvas-types';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  Widget,
+  WidgetProp,
+  WidgetProp$Static,
+  WidgetProp$Variable,
+  WidgetProp$Widget,
+  ComponentConfig$Input,
+  ComponentConfig$Select,
+} from 'canvas-types';
 import { makeGetComponents } from 'selectors/element';
 import { StandardConfig } from 'components/ConfigOption/StandardConfig';
 import { ListConfig } from 'components/ConfigOption/ListConfig';
+import { ComplexConfig } from 'components/ConfigOption/ComplexConfig';
+import { updateWidgetProps } from 'actions/widget';
 
 import * as Styles from './WidgetConfig.styles';
 
@@ -12,16 +22,46 @@ interface WidgetConfigProps {
 }
 
 export const WidgetConfig = ({ widget }: WidgetConfigProps): JSX.Element => {
+  const dispatch = useDispatch();
   const components = useSelector(makeGetComponents());
   const component = components.find((c) => c.name === widget.component);
+
+  const handleOnChange = (widgetId: string) => (propKey: string, prop: WidgetProp) => {
+    dispatch(updateWidgetProps(widgetId, propKey, prop));
+  };
 
   if (!component) return <div />;
 
   return (
     <Styles.Container>
       {component.config.map((c) => {
-        if (c.list) return <ListConfig key={c.key} widget={widget} config={c} />;
-        return <StandardConfig key={c.label} widget={widget} config={c} />;
+        const widgetProp = widget.props[c.key];
+        if (c.list && widgetProp.mode === 'list')
+          return (
+            <ListConfig
+              key={c.key}
+              widgetProp={widgetProp}
+              config={c}
+              onChange={handleOnChange(widget.id)}
+            />
+          );
+        if (c.component === 'complex' && widgetProp.mode === 'complex')
+          return (
+            <ComplexConfig
+              key={c.key}
+              widgetProp={widgetProp}
+              config={c}
+              onChange={handleOnChange(widget.id)}
+            />
+          );
+        return (
+          <StandardConfig
+            key={c.label}
+            widgetProp={widgetProp as WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget}
+            config={c as ComponentConfig$Input | ComponentConfig$Select}
+            onChange={handleOnChange(widget.id)}
+          />
+        );
       })}
     </Styles.Container>
   );

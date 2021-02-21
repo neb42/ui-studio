@@ -7,6 +7,7 @@ export type {
   WidgetProp$Variable,
   WidgetProp$Widget,
   WidgetProp$List,
+  WidgetProp$Complex,
 } from './widget';
 
 export type { Layout, FlexLayout, GridLayout, GridUnit, IGridCell } from './layout';
@@ -29,6 +30,7 @@ export type {
   BaseComponentConfig,
   ComponentConfig$Input,
   ComponentConfig$Select,
+  ComponentConfig$Complex,
   ComponentConfig,
   Component,
 } from './components';

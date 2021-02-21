@@ -59,6 +59,13 @@ const useGetProps = (
         return prop.props.map(getProp);
       }
 
+      if (prop.mode === 'complex') {
+        return Object.keys(prop.props).reduce(
+          (a, c) => ({ ...a, [c]: getProp(prop.props[c]) }),
+          {},
+        );
+      }
+
       if (prop.mode === 'variable') {
         if (prop.type === 'object') {
           return getVariableValueInstance(prop.variableId, prop.lookup);

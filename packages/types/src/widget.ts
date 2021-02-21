@@ -23,16 +23,22 @@ export type WidgetProp$Widget = {
   lookup: string;
 };
 
+export type WidgetProp$Complex = {
+  mode: 'complex';
+  props: { [key: string]: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget };
+};
+
 export type WidgetProp$List = {
   mode: 'list';
-  props: (WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget)[];
+  props: (WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget | WidgetProp$Complex)[];
 };
 
 export type WidgetProp =
   | WidgetProp$Static
   | WidgetProp$Variable
   | WidgetProp$Widget
-  | WidgetProp$List;
+  | WidgetProp$List
+  | WidgetProp$Complex;
 
 export interface Widget {
   id: string;

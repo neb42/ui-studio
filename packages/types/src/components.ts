@@ -19,7 +19,18 @@ export type ComponentConfig$Select = BaseComponentConfig & {
     | { type: 'object'; options: { key: string; label: string }[] }
   );
 
-export type ComponentConfig = ComponentConfig$Input | ComponentConfig$Select;
+export type ComponentConfig$Complex = {
+  key: string;
+  label: string;
+  component: 'complex';
+  list: boolean;
+  config: (ComponentConfig$Input | ComponentConfig$Select)[];
+};
+
+export type ComponentConfig =
+  | ComponentConfig$Input
+  | ComponentConfig$Select
+  | ComponentConfig$Complex;
 
 export type Component$Event = {
   key: string;

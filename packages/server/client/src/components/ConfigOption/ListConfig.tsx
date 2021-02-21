@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import Button from '@faculty/adler-web-components/atoms/Button';
 import {
   Widget,
@@ -8,41 +7,49 @@ import {
   WidgetProp$Static,
   WidgetProp$Variable,
   WidgetProp$Widget,
+  WidgetProp$Complex,
 } from 'canvas-types';
 import { ConfigOption } from 'components/ConfigOption';
-import { updateWidgetProps } from 'actions/widget';
 
 import * as Styles from './ConfigOption.styles';
+import { ComplexConfig } from './ComplexConfig';
 
 interface ListConfigProps {
-  widget: Widget;
+  widgetProp: WidgetProp$List;
   config: ComponentConfig;
+  onChange: (propKey: string, prop: WidgetProp$List) => any;
 }
 
-export const ListConfig = ({ widget, config }: ListConfigProps): JSX.Element => {
-  const dispatch = useDispatch();
-
-  const widgetProp = widget.props[config.key];
-
-  if (widgetProp.mode !== 'list') throw Error();
+export const ListConfig = ({ widgetProp, config, onChange }: ListConfigProps): JSX.Element => {
+  if (!config.list) throw Error();
 
   const handleAddProp = () => {
-    const defaultProp = { mode: 'static' as const, type: config.type, value: config.defaultValue };
+    const defaultProp = (() => {
+      if (config.component === 'complex')
+        return {
+          mode: 'complex' as const,
+          props: config.config.reduce((acc, cur) => {
+            return { ...acc, [cur.key]: cur.defaultValue };
+          }, {}),
+        };
+      return { mode: 'static' as const, type: config.type, value: config.defaultValue };
+    })();
 
     const prop: WidgetProp$List = { ...widgetProp };
     prop.props.push(defaultProp);
-    dispatch(updateWidgetProps(widget.id, config.key, prop));
+    onChange(config.key, prop);
   };
 
   const handleOnChange = (idx: number) => (
-    subProp: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget,
+    subProp: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget | WidgetProp$Complex,
   ) => {
     const prop: WidgetProp$List = { ...widgetProp };
     prop.props[idx] = subProp;
-    dispatch(updateWidgetProps(widget.id, config.key, prop));
+    onChange(config.key, prop);
   };
 
   const handleModeChange = (idx: number) => (m: 'static' | 'variable' | 'widget') => {
+    if (config.component === 'complex') return;
     const defaultProp = ((): WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget => {
       switch (m) {
         case 'static': {
@@ -70,7 +77,7 @@ export const ListConfig = ({ widget, config }: ListConfigProps): JSX.Element => 
   const handleDelete = (idx: number) => () => {
     const prop: WidgetProp$List = { ...widgetProp };
     prop.props = prop.props.filter((_, i) => i !== idx);
-    dispatch(updateWidgetProps(widget.id, config.key, prop));
+    onChange(config.key, prop);
   };
 
   return (
@@ -85,17 +92,25 @@ export const ListConfig = ({ widget, config }: ListConfigProps): JSX.Element => 
           onClick={handleAddProp}
         />
       </Styles.Header>
-      {widgetProp.props.map((p, idx) => (
-        <ConfigOption
-          key={idx}
-          widgetProp={p}
-          config={config}
-          onChange={handleOnChange(idx)}
-          onModeChange={handleModeChange(idx)}
-          onDelete={handleDelete(idx)}
-          nested
-        />
-      ))}
+      {widgetProp.props.map((p, idx) =>
+        config.component === 'complex' ? (
+          <ComplexConfig
+            widgetProp={p as WidgetProp$Complex}
+            config={config}
+            onChange={(_: string, prop: WidgetProp$Complex) => handleOnChange(idx)(prop)}
+          />
+        ) : (
+          <ConfigOption
+            key={idx}
+            widgetProp={p}
+            config={config}
+            onChange={handleOnChange(idx)}
+            onModeChange={handleModeChange(idx)}
+            onDelete={handleDelete(idx)}
+            nested
+          />
+        ),
+      )}
     </Styles.Container>
   );
 };

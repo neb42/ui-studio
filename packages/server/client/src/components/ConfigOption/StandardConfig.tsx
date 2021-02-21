@@ -1,23 +1,27 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
-import { Widget, ComponentConfig$Input, ComponentConfig$Select, WidgetProp } from 'canvas-types';
-import { updateWidgetProps } from 'actions/widget';
+import {
+  WidgetProp,
+  WidgetProp$Static,
+  WidgetProp$Variable,
+  WidgetProp$Widget,
+  ComponentConfig$Input,
+  ComponentConfig$Select,
+} from 'canvas-types';
 import { ConfigOption } from 'components/ConfigOption/ConfigOption';
 
 interface StandardConfigProps {
-  widget: Widget;
+  widgetProp: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget;
   config: ComponentConfig$Input | ComponentConfig$Select;
+  onChange: (propKey: string, prop: WidgetProp) => any;
 }
 
-export const StandardConfig = ({ widget, config }: StandardConfigProps): JSX.Element => {
-  const dispatch = useDispatch();
-
-  const widgetProp = widget.props[config.key];
-
-  if (widgetProp.mode === 'list') throw Error();
-
+export const StandardConfig = ({
+  widgetProp,
+  config,
+  onChange,
+}: StandardConfigProps): JSX.Element => {
   const handleOnChange = (prop: WidgetProp) => {
-    dispatch(updateWidgetProps(widget.id, config.key, prop));
+    onChange(config.key, prop);
   };
 
   const handleModeChange = (m: 'static' | 'variable' | 'widget') => {
@@ -26,8 +30,8 @@ export const StandardConfig = ({ widget, config }: StandardConfigProps): JSX.Ele
         case 'static':
           return {
             mode: 'static',
-            type: 'string',
-            value: config.component === 'select' ? config.options[0]?.key : '',
+            type: config.type,
+            value: config.defaultValue,
           };
         case 'variable':
           return {

@@ -87,6 +87,13 @@ export const addWidget = (
   const props = componentConfig.config.reduce((acc, cur) => {
     const defaultProp: WidgetProp = (() => {
       if (cur.list) return { mode: 'list' as const, props: [] };
+      if (cur.component === 'complex')
+        return {
+          mode: 'complex' as const,
+          props: cur.config.reduce((ac, cu) => {
+            return { ...ac, [cu.key]: cu.defaultValue };
+          }, {}),
+        };
       return { mode: 'static' as const, type: cur.type, value: cur.defaultValue };
     })();
     return { ...acc, [cur.key]: defaultProp };
