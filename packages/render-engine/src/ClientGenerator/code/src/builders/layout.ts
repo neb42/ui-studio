@@ -89,8 +89,8 @@ export const LayoutBuilder: React.FC<any> = ({ layoutId }: { layoutId: string })
     {
       key: `layout-wrapper-${layout.id}`,
       className: layout.style.classNames,
-      onClick: handleOnClick,
-      onMouseMove: handleOnMouseMove,
+      // onClick: handleOnClick,
+      // onMouseMove: handleOnMouseMove,
       layout,
       isSelected,
     },

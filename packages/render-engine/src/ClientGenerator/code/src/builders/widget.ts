@@ -79,8 +79,7 @@ const useGetProps = (
 
     const prop = getProp(widget.props[cur]);
 
-    if (prop) return { ...acc, [cur]: prop };
-    return acc;
+    return { ...acc, [cur]: prop };
   }, {});
 
   const loading = Object.keys(rawValues).some((k) => {
@@ -187,8 +186,8 @@ export const WidgetBuilder: React.FC<any> = ({ widgetId }: { widgetId: string })
     {
       key: `widget-wrapper-${widget.id}`,
       className: widget.style.classNames,
-      onClick: handleOnClick,
-      onMouseOver: handleOnMouseMove,
+      // onClick: handleOnClick,
+      // onMouseOver: handleOnMouseMove,
       widget,
       isSelected,
     },
