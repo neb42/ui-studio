@@ -9,50 +9,12 @@ import {
 } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
+import { Styles } from 'models/styles';
 
 export const ADD_LAYOUT = 'ADD_LAYOUT';
 export const REMOVE_LAYOUT = 'REMOVE_LAYOUT';
 export const UPDATE_LAYOUT_CONFIG = 'UPDATE_LAYOUT_CONFIG';
 export const UPDATE_LAYOUT_STYLE = 'UPDATE_LAYOUT_STYLE';
-
-const getDefaultStyle = (parent: Element | null): TStyle => {
-  if (parent) {
-    if (parent.type === 'layout') {
-      if (parent.layoutType === 'grid') {
-        return {
-          type: 'grid',
-          css: '',
-          classNames: '',
-          layout: [
-            [0, 0],
-            [0, 0],
-          ],
-          rowAlignment: 'stretch',
-          columnAlignment: 'stretch',
-        };
-      }
-      if (parent.layoutType === 'flex') {
-        return {
-          type: 'flex',
-          align: 'auto',
-          justify: 'auto',
-          grow: 0,
-          css: '',
-          classNames: '',
-        };
-      }
-    }
-    if (parent.type === 'page') {
-      return {
-        type: 'page',
-        css: '',
-        classNames: '',
-      };
-    }
-    return { type: 'base', css: '', classNames: '' };
-  }
-  throw Error();
-};
 
 const defaultCell: IGridCell = { value: 1, unit: 'fr' };
 const getDefaultConfig = (layoutType: 'grid' | 'flex') => {
@@ -103,7 +65,7 @@ export const addLayout = (
     layoutType.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
   );
   const defaultConfig = getDefaultConfig(layoutType);
-  const defaultStyle = getDefaultStyle(parentElement);
+  const defaultStyle = Styles.getDefaultStyle(parentElement);
   const position = makeGetNextPosition()(state, parentElement.id);
   const layout: Layout = {
     id: uuidv4(),

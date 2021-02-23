@@ -10,50 +10,12 @@ import {
 } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
+import { Styles } from 'models/styles';
 
 export const ADD_WIDGET = 'ADD_WIDGET';
 export const REMOVE_WIDGET = 'REMOVE_WIDGET';
 export const UPDATE_WIDGET_PROPS = 'UPDATE_WIDGET_PROPS';
 export const UPDATE_WIDGET_STYLE = 'UPDATE_WIDGET_STYLE';
-
-const getDefaultStyle = (parent: Element | null): TStyle => {
-  if (parent) {
-    if (parent.type === 'layout') {
-      if (parent.layoutType === 'grid') {
-        return {
-          type: 'grid',
-          css: '',
-          classNames: '',
-          layout: [
-            [0, 0],
-            [0, 0],
-          ],
-          rowAlignment: 'stretch',
-          columnAlignment: 'stretch',
-        };
-      }
-      if (parent.layoutType === 'flex') {
-        return {
-          type: 'flex',
-          align: 'auto',
-          justify: 'auto',
-          grow: 0,
-          css: '',
-          classNames: '',
-        };
-      }
-    }
-    if (parent.type === 'page') {
-      return {
-        type: 'page',
-        css: '',
-        classNames: '',
-      };
-    }
-    return { type: 'base', css: '', classNames: '' };
-  }
-  throw Error();
-};
 
 interface IAddWidget {
   type: 'ADD_WIDGET';
@@ -80,7 +42,7 @@ export const addWidget = (
     state,
     component.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
   );
-  const defaultStyle = getDefaultStyle(parentElement);
+  const defaultStyle = Styles.getDefaultStyle(parentElement);
   const position = makeGetNextPosition()(state, parentElement.id);
   const hasChildren = Boolean(componentConfig.hasChildren);
   const events = componentConfig.events.reduce((acc, cur) => ({ ...acc, [cur.key]: [] }), {});
