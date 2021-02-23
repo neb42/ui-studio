@@ -11,7 +11,7 @@ export const FilePaths = {
   server: '',
   serverSrc: '',
 };
-FilePaths.base = '/tmp/GeneratedCode';
+FilePaths.base = path.join(process.cwd(), '.canvas');
 
 FilePaths.client = path.join(FilePaths.base, 'client');
 FilePaths.public = path.join(FilePaths.client, 'public');
