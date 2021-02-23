@@ -230,6 +230,7 @@ export const widget = (
               ...current,
               parent: action.payload.destination.parentId,
               position: action.payload.destination.position,
+              style: action.payload.style,
             },
           };
         }

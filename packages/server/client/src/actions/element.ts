@@ -1,5 +1,15 @@
-import { InitFunctions, Component } from 'canvas-types';
-import { Store$Page, Store$Widget, Store$Layout, Store$Variable } from 'types/store';
+import { Dispatch } from 'redux';
+import { InitFunctions, Component, TStyle } from 'canvas-types';
+import {
+  Store$Page,
+  Store$Widget,
+  Store$Layout,
+  Store$Variable,
+  TGetState,
+  TThunkAction,
+} from 'types/store';
+import { makeGetElement } from 'selectors/element';
+import { Styles } from 'models/styles';
 
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
 export const UPDATE_ELEMENT_CSS = 'UPDATE_ELEMENT_CSS';
@@ -169,6 +179,7 @@ export interface UpdateElementPosition {
       parentId: string;
       position: number;
     };
+    style: TStyle;
   };
 }
 
@@ -178,14 +189,39 @@ export const updateElementPosition = (
   elementId: string,
   source: { parentId: string; position: number },
   destination: { parentId: string; position: number },
-): UpdateElementPosition => ({
-  type: UPDATE_ELEMENT_POSITION,
-  payload: {
-    elementId,
-    source,
-    destination,
-  },
-});
+): TThunkAction<UpdateElementPosition> => (
+  dispatch: Dispatch<UpdateElementPosition>,
+  getState: TGetState,
+) => {
+  const state = getState();
+
+  const element = makeGetElement()(state, elementId);
+  const sourceElement = makeGetElement()(state, source.parentId);
+  const destinationElement = makeGetElement()(state, destination.parentId);
+
+  if (!element || !sourceElement || !destinationElement) throw Error();
+
+  const sourceDefaultStyle = Styles.getDefaultStyle(sourceElement);
+  const destinationDefaultStyle = Styles.getDefaultStyle(destinationElement);
+  const style: TStyle =
+    sourceDefaultStyle.type === destinationDefaultStyle.type
+      ? element.style
+      : {
+          ...destinationDefaultStyle,
+          css: element.style.css,
+          classNames: element.style.classNames,
+        };
+
+  return dispatch({
+    type: UPDATE_ELEMENT_POSITION,
+    payload: {
+      elementId,
+      source,
+      destination,
+      style,
+    },
+  });
+};
 
 export type Action$Element =
   | ISelectPage

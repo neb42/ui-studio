@@ -22,6 +22,7 @@ export type {
   TStyle,
   TGridStyleLayout,
   IRootStyle,
+  BaseStyle,
 } from './style';
 
 export type { InitFunctions, FunctionDefinition, ActionDefinition } from './functions';
