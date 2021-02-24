@@ -9,8 +9,14 @@ const parseLookup = (variable: any, lookup: string) =>
   lookup.split('.').reduce((acc, cur) => (cur.length > 0 ? acc[cur] : acc), variable);
 
 export const getVariableValue = (state: Store) => (variableId: string, lookup: string | null) => {
-  const variable = state.variable.value[variableId];
+  let variable = state.variable.value[variableId];
   if (!variable) return null;
+
+  if (state.variable.config[variableId].valueType === 'object' && typeof variable === 'string') {
+    try {
+      variable = JSON.parse(variable);
+    } catch {}
+  }
 
   if (lookup && lookup.length > 0) {
     if (

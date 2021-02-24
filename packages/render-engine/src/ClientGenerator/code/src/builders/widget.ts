@@ -78,6 +78,13 @@ const useGetProps = (
       }
 
       if (prop.mode === 'static') {
+        if (prop.type === 'object') {
+          try {
+            return JSON.parse(prop.value);
+          } catch {
+            return null;
+          }
+        }
         return prop.value;
       }
 
