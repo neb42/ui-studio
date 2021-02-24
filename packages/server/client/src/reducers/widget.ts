@@ -107,7 +107,7 @@ export const widget = (
                   value: '',
                 };
               }
-              return { ...acc, [c]: currentProp };
+              return { ...a, [c]: currentProp };
             }, {}),
           },
         };
