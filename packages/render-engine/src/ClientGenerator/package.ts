@@ -20,8 +20,8 @@ const baseDependencies = [
   { name: 'styled-components', version: '^5.2.1', last: false },
   { name: 'graph-data-structure', version: '^1.13.0', last: false },
   { name: 'web-vitals', version: '^0.2.4', last: false },
-  { name: '@faculty/adler-tokens', version: 'dev', last: false },
-  { name: '@faculty/adler-web-components', version: 'dev', last: false },
+  { name: '@faculty/adler-tokens', version: 'latest', last: false },
+  { name: '@faculty/adler-web-components', version: 'latest', last: false },
 ];
 
 const devDependencies = [
