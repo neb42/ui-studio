@@ -10,6 +10,8 @@ const parseLookup = (variable: any, lookup: string) =>
 
 export const getVariableValue = (state: Store) => (variableId: string, lookup: string | null) => {
   const variable = state.variable.value[variableId];
+  if (!variable) return null;
+
   if (lookup && lookup.length > 0) {
     if (
       JSON.stringify(Object.keys(variable).sort()) ===
@@ -47,7 +49,7 @@ export const getVariableArgs = (state: Store) => (variableId: string) => {
     }
 
     if (a.type === 'widget') {
-      return getVariableValue(state)(a.widgetId, a.property);
+      return getWidgetPropertyValue(state)(a.widgetId, a.property);
     }
 
     return null;
