@@ -24,7 +24,7 @@ functions.registered.functions.forEach(f => {
     `/function_${f.name}`,
     async (request, response, next) => {
       try {
-        const data = await functions[f.name](request.body);
+        const data = await functions[f.name](...request.body);
         response.status(200).send({ data });
       } catch (error) {
         next(error);
@@ -38,7 +38,7 @@ functions.registered.actions.forEach(f => {
     `/action_${f.name}`,
     async (request, response, next) => {
       try {
-        const data = await functions[f.name](request.body);
+        const data = await functions[f.name](...request.body);
         response.status(200).send({ data });
       } catch (error) {
         next(error);
