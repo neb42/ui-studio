@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 import Tabs from '@faculty/adler-web-components/atoms/Tabs';
-import Button from '@faculty/adler-web-components/atoms/Button';
 import { Store } from 'types/store';
 import { makeGetElement, makeGetSelectedElement } from 'selectors/element';
 import { ElementIcon } from 'components/ElementIcon';

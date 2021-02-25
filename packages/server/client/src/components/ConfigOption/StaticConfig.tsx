@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useTheme } from 'styled-components';
+import AceEditor from 'react-ace';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
@@ -18,6 +20,9 @@ interface StaticConfigProps {
 }
 
 export const StaticConfig = ({ widgetProp, config, onChange }: StaticConfigProps): JSX.Element => {
+  const theme = useTheme();
+  const [hasFocus, setHasFocus] = React.useState(false);
+
   if (widgetProp.mode !== 'static')
     throw Error(`Trying to render static config editor for ${widgetProp.mode} prop`);
 
@@ -52,7 +57,6 @@ export const StaticConfig = ({ widgetProp, config, onChange }: StaticConfigProps
     case 'input':
       switch (config.type) {
         case 'string':
-        case 'object':
         case 'number': {
           if (typeof widgetProp.value === 'boolean') throw Error();
           return <Input label="value" onChange={handleInputOnChange} value={widgetProp.value} />;
@@ -63,6 +67,39 @@ export const StaticConfig = ({ widgetProp, config, onChange }: StaticConfigProps
             <Checkbox checked={widgetProp.value} onChange={handleCheckboxOnChange} controlled>
               {config.label}
             </Checkbox>
+          );
+        case 'object':
+          if (typeof widgetProp.value !== 'string') throw Error();
+          return (
+            <AceEditor
+              mode="json"
+              theme="chrome"
+              defaultValue={widgetProp.value}
+              onChange={handleInputOnChange}
+              editorProps={{ $blockScrolling: true }}
+              width="100%"
+              height="300px"
+              tabSize={2}
+              wrapEnabled
+              onFocus={() => setHasFocus(true)}
+              onBlur={() => setHasFocus(false)}
+              highlightActiveLine={false}
+              showGutter={false}
+              showPrintMargin={false}
+              setOptions={{
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+                enableSnippets: true,
+              }}
+              style={{
+                padding: '8px',
+                border: `1px solid ${
+                  hasFocus ? theme.input.border.color.focused : theme.input.border.color.default
+                }`,
+                fontFamily: 'Menlo, monospace',
+                transition: 'border 300ms ease-in-out',
+              }}
+            />
           );
         default:
           throw Error();

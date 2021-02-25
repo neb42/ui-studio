@@ -7,11 +7,6 @@ import { updateElementCSS } from 'actions/element';
 
 import * as Styles from './CSSInput.styles';
 
-// import 'ace-builds/src-noconflict/mode-css';
-// import 'ace-builds/src-noconflict/worker-css';
-// import 'ace-builds/src-noconflict/theme-chrome';
-// import 'ace-builds/src-noconflict/ext-language_tools';
-
 interface ICSSInput {
   element: Element;
 }

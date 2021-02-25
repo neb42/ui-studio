@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useTheme } from 'styled-components';
+import AceEditor from 'react-ace';
 import { StaticVariable } from 'canvas-types';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
@@ -22,7 +24,9 @@ interface Props {
 }
 
 export const StaticVariableConfig = ({ variable }: Props) => {
+  const theme = useTheme();
   const dispatch = useDispatch();
+  const [hasFocus, setHasFocus] = React.useState(false);
 
   const handleValueTypeChange = ({ value }: any) => {
     const v = value as 'string' | 'number' | 'boolean' | 'object';
@@ -71,9 +75,35 @@ export const StaticVariableConfig = ({ variable }: Props) => {
         />
       )}
       {variable.valueType === 'object' && (
-        // TODO make multiline
-        // TODO add validation
-        <Input label="Value" value={variable.value} onChange={handleObjectValueChange} />
+        <AceEditor
+          mode="json"
+          theme="chrome"
+          defaultValue={variable.value}
+          onChange={handleObjectValueChange}
+          editorProps={{ $blockScrolling: true }}
+          width="100%"
+          height="300px"
+          tabSize={2}
+          wrapEnabled
+          onFocus={() => setHasFocus(true)}
+          onBlur={() => setHasFocus(false)}
+          highlightActiveLine={false}
+          showGutter={false}
+          showPrintMargin={false}
+          setOptions={{
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+            enableSnippets: true,
+          }}
+          style={{
+            padding: '8px',
+            border: `1px solid ${
+              hasFocus ? theme.input.border.color.focused : theme.input.border.color.default
+            }`,
+            fontFamily: 'Menlo, monospace',
+            transition: 'border 300ms ease-in-out',
+          }}
+        />
       )}
     </>
   );
