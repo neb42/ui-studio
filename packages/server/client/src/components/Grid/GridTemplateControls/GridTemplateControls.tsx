@@ -62,6 +62,8 @@ export const GridTemplateControls = ({
     );
   };
 
+  const showValueControl = (unit: GridUnit) => ['fr', '%', 'px', 'em'].includes(unit);
+
   return (
     <Styles.Container>
       <Styles.Header>
@@ -75,13 +77,15 @@ export const GridTemplateControls = ({
         />
       </Styles.Header>
       {config.map((c, i) => (
-        <Styles.Cell key={i}>
-          <Input
-            type="number"
-            value={c.value || ''}
-            onChange={handleValueChange(i)}
-            disabled={c.value === null}
-          />
+        <Styles.Cell key={i} showValueControl={showValueControl(c.unit)}>
+          {showValueControl(c.unit) && (
+            <Input
+              type="number"
+              value={c.value || ''}
+              onChange={handleValueChange(i)}
+              disabled={c.value === null}
+            />
+          )}
           <Select
             value={{ value: c.unit, label: c.unit }}
             onChange={handleUnitChange(i)}

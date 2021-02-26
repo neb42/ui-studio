@@ -14,9 +14,11 @@ export const Name = styled.span`
   text-transform: capitalize;
 `;
 
-export const Cell = styled.div`
+export const Cell = styled.div<{ showValueControl: boolean }>`
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: ${({ showValueControl }) =>
+    showValueControl ? '32px 1fr auto' : '1fr auto'};
+  justify-content: space-between;
   grid-column-gap: 8px;
   align-items: end;
   margin-bottom: 8px;

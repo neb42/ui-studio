@@ -36,6 +36,7 @@ export const Grid = styled.div`
   grid-template-columns: ${({ columns }: IGrid) =>
     columns
       .map((col) => {
+        return '1fr';
         if (['mincontent', 'maxcontent', 'minmax', 'auto'].includes(col.unit)) {
           // return col.unit;
           return '12px';
@@ -46,6 +47,7 @@ export const Grid = styled.div`
   grid-template-rows: ${({ rows }: IGrid) =>
     rows
       .map((row) => {
+        return '1fr';
         if (['mincontent', 'maxcontent', 'minmax', 'auto'].includes(row.unit)) {
           // return row.unit;
           return '12px';
