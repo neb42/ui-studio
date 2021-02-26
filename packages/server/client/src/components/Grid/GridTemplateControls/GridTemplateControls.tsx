@@ -18,7 +18,7 @@ const initialUnitValues = {
   minmax: null,
 } as const;
 
-const defaultCell: IGridCell = { value: 1, unit: 'fr' };
+const defaultCell: IGridCell = { value: null, unit: 'auto' };
 
 interface IGridLayoutConfig {
   name: string;
