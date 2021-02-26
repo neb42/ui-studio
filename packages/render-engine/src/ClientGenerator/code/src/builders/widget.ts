@@ -28,7 +28,6 @@ const WidgetWrapper = styled.div<{ widget: Widget; isSelected: boolean }>`
     widget.style.type === 'flex'
       ? `
         align-self: ${widget.style.align};
-        justify-self: ${widget.style.justify};
         flex-grow: ${widget.style.grow};
       `
       : ''}

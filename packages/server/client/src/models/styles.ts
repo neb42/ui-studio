@@ -28,8 +28,8 @@ export class Styles {
         [0, 0],
         [0, 0],
       ],
-      rowAlignment: 'stretch',
-      columnAlignment: 'stretch',
+      rowAlignment: 'auto',
+      columnAlignment: 'auto',
     };
   };
 
@@ -37,7 +37,6 @@ export class Styles {
     return {
       type: 'flex',
       align: 'auto',
-      justify: 'auto',
       grow: 0,
       css: '',
       classNames: '',

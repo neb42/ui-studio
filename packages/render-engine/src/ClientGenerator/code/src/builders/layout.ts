@@ -47,7 +47,6 @@ const LayoutWrapper = styled.div<{ layout: Layout; isSelected: boolean }>`
     layout.style.type === 'flex'
       ? `
         align-self: ${layout.style.align};
-        justify-self: ${layout.style.justify};
         flex-grow: ${layout.style.grow};
       `
       : ''}

@@ -92,11 +92,13 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
         usedGridSpace={usedGridSpace}
       />
       <GridAlignmentConfig
+        self
         name="row"
         alignment={element.style.rowAlignment}
         updateAlignment={handleUpdateRowAlignment}
       />
       <GridAlignmentConfig
+        self
         name="column"
         alignment={element.style.columnAlignment}
         updateAlignment={handleUpdateColumnAlignment}

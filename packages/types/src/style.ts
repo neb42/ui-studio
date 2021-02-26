@@ -1,7 +1,7 @@
-export type GridAlignment = 'start' | 'end' | 'center' | 'stretch';
+export type GridAlignment = 'auto' | 'start' | 'end' | 'center' | 'stretch';
 
-export type FlexAlignment = 'auto' | 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
-export type FlexJustification = 'auto' | 'flex-start' | 'flex-end' | 'center' | 'space-between';
+export type FlexAlignment = 'auto' | 'start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
+export type FlexJustification = 'auto' | 'start' | 'flex-end' | 'center' | 'space-between';
 
 export interface BaseStyle {
   type: 'base';
@@ -23,7 +23,6 @@ export interface IGridStyle {
 export interface IFlexStyle {
   type: 'flex';
   align: FlexAlignment;
-  justify: FlexJustification;
   grow: number;
   css: string;
   classNames: string;

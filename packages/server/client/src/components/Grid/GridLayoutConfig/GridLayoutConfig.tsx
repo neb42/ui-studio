@@ -57,6 +57,7 @@ export const GridLayoutConfig = ({ layout }: IGridLayoutConfig): JSX.Element => 
         alignment={layout.props.rowAlignment}
         updateAlignment={handleUpdateRowAlignment}
       />
+      <div style={{ height: 100 }} />
     </Styles.Container>
   );
 };

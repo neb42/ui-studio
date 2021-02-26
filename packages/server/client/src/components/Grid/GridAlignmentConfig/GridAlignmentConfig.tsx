@@ -1,36 +1,33 @@
 import * as React from 'react';
-import Select from '@faculty/adler-web-components/atoms/Select';
 import { GridAlignment } from 'canvas-types';
+import { AlignmentButton } from 'components/AlignmentButton';
 
 import * as Styles from './GridAlignmentConfig.styles';
 
-const alignmentOptions = [
-  { value: 'start', label: 'Start' },
-  { value: 'end', label: 'End' },
-  { value: 'center', label: 'Center' },
-  { value: 'stretch', label: 'Stretch' },
-];
-
 interface GridAlignmentConfigProps {
-  name: string;
+  self?: boolean;
+  name: 'row' | 'column';
   alignment: GridAlignment;
   updateAlignment: (a: GridAlignment) => any;
 }
 
 export const GridAlignmentConfig = ({
+  self,
   name,
   alignment,
   updateAlignment,
 }: GridAlignmentConfigProps): JSX.Element => {
-  const handleOnChange = ({ value }: any) => updateAlignment(value as GridAlignment);
+  const handleOnChange = (value: string) => updateAlignment(value as GridAlignment);
 
   return (
     <Styles.Container>
       <Styles.Name>{name} alignment</Styles.Name>
-      <Select
-        value={alignmentOptions.find((a) => a.value === alignment)}
+      <AlignmentButton
+        layoutType="grid"
+        direction={self ? name : 'row'}
+        alignmentType={self ? 'self' : name === 'row' ? 'align' : 'justify'}
+        value={alignment}
         onChange={handleOnChange}
-        options={alignmentOptions}
       />
     </Styles.Container>
   );
