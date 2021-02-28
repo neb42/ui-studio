@@ -17,7 +17,7 @@ export const Name = styled.span`
 export const Cell = styled.div<{ showValueControl: boolean }>`
   display: grid;
   grid-template-columns: ${({ showValueControl }) =>
-    showValueControl ? '32px 1fr auto' : '1fr auto'};
+    showValueControl ? '38px 1fr auto' : '1fr auto'};
   justify-content: space-between;
   grid-column-gap: 8px;
   align-items: end;
