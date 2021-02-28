@@ -10,7 +10,7 @@ import * as Mustache from 'mustache';
 const getPackageVersion = async (key: string) => {
   return {
     name: key,
-    version: 'latest', 
+    version: 'latest',
     last: false,
   };
   const { data } = await axios.get(`https://registry.npmjs.org/${key}`);
@@ -54,7 +54,7 @@ const renderPackageJson = async (name: string, directory: string, templates: str
   devDependencies[devDependencies.length - 1].last = true;
   if (devDependencies.length > 0) devDependencies[devDependencies.length - 1].last = true;
 
-  const componentPackages = templatePackageKeys.map(t => ({ name: t, last: false }));
+  const componentPackages = templatePackageKeys.map((t) => ({ name: t, last: false }));
   if (componentPackages.length > 0) componentPackages[componentPackages.length - 1].last = true;
 
   const data = await fs.readFile(path.join(__dirname, 'template', 'package.json.mst'));
@@ -76,7 +76,7 @@ const run = async () => {
     .default('template', [])
     .string('template');
   const name = argv._[0].toString();
-  const templates = argv.template; 
+  const templates = argv.template;
 
   const directory = path.join(process.cwd(), name);
 
