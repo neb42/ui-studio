@@ -1,6 +1,8 @@
 import { TStyle } from './style';
 import { Event } from './event';
 
+export type Mode = 'complex' | 'list' | 'static' | 'variable' | 'widget';
+
 export type WidgetProp$Static = {
   mode: 'static';
 } & (

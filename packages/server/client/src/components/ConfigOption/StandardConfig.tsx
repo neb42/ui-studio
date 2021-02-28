@@ -4,14 +4,15 @@ import {
   WidgetProp$Static,
   WidgetProp$Variable,
   WidgetProp$Widget,
-  ComponentConfig$Input,
-  ComponentConfig$Select,
+  ComponentConfig,
+  Mode,
 } from 'canvas-types';
 import { ConfigOption } from 'components/ConfigOption/ConfigOption';
+import { Widget } from 'models/widget';
 
 interface StandardConfigProps {
   widgetProp: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget;
-  config: ComponentConfig$Input | ComponentConfig$Select;
+  config: ComponentConfig;
   onChange: (propKey: string, prop: WidgetProp) => any;
 }
 
@@ -24,33 +25,16 @@ export const StandardConfig = ({
     onChange(config.key, prop);
   };
 
-  const handleModeChange = (m: 'static' | 'variable' | 'widget') => {
-    const defaultProp = ((): WidgetProp => {
-      switch (m) {
-        case 'static':
-          return {
-            mode: 'static',
-            type: config.type,
-            value: config.defaultValue,
-          };
-        case 'variable':
-          return {
-            mode: 'variable',
-            type: 'string',
-            variableId: '',
-          };
-        case 'widget':
-          return {
-            mode: 'widget',
-            widgetId: '',
-            lookup: '',
-          };
-        default:
-          throw Error();
-      }
-    })();
+  const handleModeChange = (m: Mode) => {
+    const defaultProp = Widget.getDefaultProp(m, config, widgetProp);
     handleOnChange(defaultProp);
   };
+
+  const modeOptions = ((): Mode[] => {
+    if (config.list) return ['list', 'static', 'variable'];
+    if (config.component === 'complex') return ['complex', 'static', 'variable'];
+    return ['static', 'variable', 'widget'];
+  })();
 
   return (
     <ConfigOption
@@ -58,6 +42,7 @@ export const StandardConfig = ({
       config={config}
       onChange={handleOnChange}
       onModeChange={handleModeChange}
+      modeOptions={modeOptions}
     />
   );
 };

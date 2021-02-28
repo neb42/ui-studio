@@ -53,7 +53,7 @@ export const addWidget = (
         return {
           mode: 'complex' as const,
           props: cur.config.reduce((ac, cu) => {
-            return { ...ac, [cu.key]: cu.defaultValue };
+            return { ...ac, [cu.key]: { mode: 'static', type: cu.type, value: cu.defaultValue } };
           }, {}),
         };
       return { mode: 'static' as const, type: cur.type, value: cur.defaultValue };

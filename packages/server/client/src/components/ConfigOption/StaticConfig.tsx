@@ -5,8 +5,7 @@ import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
 import {
-  ComponentConfig$Input,
-  ComponentConfig$Select,
+  ComponentConfig,
   WidgetProp,
   WidgetProp$Static,
   WidgetProp$Variable,
@@ -15,7 +14,7 @@ import {
 
 interface StaticConfigProps {
   widgetProp: WidgetProp;
-  config: ComponentConfig$Input | ComponentConfig$Select;
+  config: ComponentConfig;
   onChange: (value: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget) => void;
 }
 
@@ -27,6 +26,9 @@ export const StaticConfig = ({ widgetProp, config, onChange }: StaticConfigProps
     throw Error(`Trying to render static config editor for ${widgetProp.mode} prop`);
 
   const buildStaticWidgetProp = (v: string | number | boolean): WidgetProp$Static => {
+    if (config.list || config.component === 'complex') {
+      return { mode: 'static', type: 'object', value: v.toString() };
+    }
     switch (config.type) {
       case 'string':
         return { mode: 'static', type: 'string', value: v.toString() };
@@ -52,6 +54,41 @@ export const StaticConfig = ({ widgetProp, config, onChange }: StaticConfigProps
   const handleCheckboxOnChange = (value: boolean) => {
     onChange(buildStaticWidgetProp(value));
   };
+
+  if (config.list || config.component === 'complex') {
+    if (typeof widgetProp.value !== 'string') throw Error();
+    return (
+      <AceEditor
+        mode="json"
+        theme="chrome"
+        defaultValue={widgetProp.value}
+        onChange={handleInputOnChange}
+        editorProps={{ $blockScrolling: true }}
+        width="100%"
+        height="300px"
+        tabSize={2}
+        wrapEnabled
+        onFocus={() => setHasFocus(true)}
+        onBlur={() => setHasFocus(false)}
+        highlightActiveLine={false}
+        showGutter={false}
+        showPrintMargin={false}
+        setOptions={{
+          enableBasicAutocompletion: true,
+          enableLiveAutocompletion: true,
+          enableSnippets: true,
+        }}
+        style={{
+          padding: '8px',
+          border: `1px solid ${
+            hasFocus ? theme.input.border.color.focused : theme.input.border.color.default
+          }`,
+          fontFamily: 'Menlo, monospace',
+          transition: 'border 300ms ease-in-out',
+        }}
+      />
+    );
+  }
 
   switch (config.component) {
     case 'input':

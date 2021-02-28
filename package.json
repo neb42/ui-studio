@@ -41,6 +41,6 @@
   "dependencies": {
     "canvas-render-engine": "file:packages/render-engine",
     "canvas-server": "file:packages/server",
-    "canvs-types": "link:packages/types"
+    "canvas-types": "link:packages/types"
   }
 }

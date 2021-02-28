@@ -1,6 +1,7 @@
 export type { Page, IOverlay, Element, ElementTreeNode } from './element';
 
 export type {
+  Mode,
   Widget,
   WidgetProp,
   WidgetProp$Static,

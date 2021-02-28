@@ -1,23 +1,26 @@
 import * as React from 'react';
 import Button from '@faculty/adler-web-components/atoms/Button';
 import {
-  Widget,
   ComponentConfig,
+  WidgetProp,
   WidgetProp$List,
   WidgetProp$Static,
   WidgetProp$Variable,
   WidgetProp$Widget,
   WidgetProp$Complex,
+  Mode,
 } from 'canvas-types';
 import { ConfigOption } from 'components/ConfigOption';
+import { Widget } from 'models/widget';
 
-import * as Styles from './ConfigOption.styles';
 import { ComplexConfig } from './ComplexConfig';
+import { ModeButtons } from './ModeButtons';
+import * as Styles from './ConfigOption.styles';
 
 interface ListConfigProps {
   widgetProp: WidgetProp$List;
   config: ComponentConfig;
-  onChange: (propKey: string, prop: WidgetProp$List) => any;
+  onChange: (propKey: string, prop: WidgetProp) => any;
 }
 
 export const ListConfig = ({ widgetProp, config, onChange }: ListConfigProps): JSX.Element => {
@@ -40,15 +43,16 @@ export const ListConfig = ({ widgetProp, config, onChange }: ListConfigProps): J
     onChange(config.key, prop);
   };
 
-  const handleOnChange = (idx: number) => (
-    subProp: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget | WidgetProp$Complex,
-  ) => {
+  const handleOnChange = (idx: number) => (subProp: WidgetProp) => {
+    if (subProp.mode === 'list') throw Error();
     const prop: WidgetProp$List = { ...widgetProp };
     prop.props[idx] = subProp;
     onChange(config.key, prop);
   };
 
-  const handleModeChange = (idx: number) => (m: 'static' | 'variable' | 'widget') => {
+  const handleModeChange = (idx: number) => (
+    m: 'complex' | 'list' | 'static' | 'variable' | 'widget',
+  ) => {
     if (config.component === 'complex') return;
     const defaultProp = ((): WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget => {
       switch (m) {
@@ -80,10 +84,14 @@ export const ListConfig = ({ widgetProp, config, onChange }: ListConfigProps): J
     onChange(config.key, prop);
   };
 
+  const handleRootModeChange = (m: Mode) => {
+    const defaultProp = Widget.getDefaultProp(m, config, widgetProp);
+    onChange(config.key, defaultProp);
+  };
+
   return (
     <Styles.Container nested={false}>
       <Styles.Header>
-        <Styles.Label>{config.label}</Styles.Label>
         <Button
           icon="add"
           style={Button.styles.naked}
@@ -91,22 +99,33 @@ export const ListConfig = ({ widgetProp, config, onChange }: ListConfigProps): J
           size={Button.sizes.medium}
           onClick={handleAddProp}
         />
+        <Styles.Label leftIcon>{config.label}</Styles.Label>
+        <ModeButtons
+          mode={widgetProp.mode}
+          onModeChange={handleRootModeChange}
+          modeOptions={['list', 'static', 'variable']}
+        />
       </Styles.Header>
       {widgetProp.props.map((p, idx) =>
         config.component === 'complex' ? (
           <ComplexConfig
+            listItem
+            label={`Item ${idx}`}
             widgetProp={p as WidgetProp$Complex}
             config={config}
-            onChange={(_: string, prop: WidgetProp$Complex) => handleOnChange(idx)(prop)}
+            onChange={(_: string, prop: WidgetProp) => handleOnChange(idx)(prop)}
+            onDelete={handleDelete(idx)}
           />
         ) : (
           <ConfigOption
             key={idx}
             widgetProp={p}
-            config={config}
+            config={{ ...config, list: false }}
             onChange={handleOnChange(idx)}
             onModeChange={handleModeChange(idx)}
             onDelete={handleDelete(idx)}
+            // modeOptions={['static', 'variable', 'widget']}
+            modeOptions={[]}
             nested
           />
         ),

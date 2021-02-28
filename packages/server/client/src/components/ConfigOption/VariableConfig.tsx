@@ -3,8 +3,7 @@ import { useSelector } from 'react-redux';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import {
-  ComponentConfig$Input,
-  ComponentConfig$Select,
+  ComponentConfig,
   WidgetProp,
   WidgetProp$Static,
   WidgetProp$Variable,
@@ -14,7 +13,7 @@ import { getVariables } from 'selectors/element';
 
 interface VariableConfigProps {
   widgetProp: WidgetProp;
-  config: ComponentConfig$Input | ComponentConfig$Select;
+  config: ComponentConfig;
   onChange: (value: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget) => void;
 }
 
@@ -46,9 +45,10 @@ export const VariableConfig = ({
     };
   };
 
-  const variables = Object.values(useSelector(getVariables)).filter(
-    (v) => v.valueType === config.type || v.valueType === 'object',
-  );
+  const variables = Object.values(useSelector(getVariables)).filter((v) => {
+    if (config.list || config.component === 'complex') return v.valueType === 'object';
+    return v.valueType === config.type || v.valueType === 'object';
+  });
 
   const selectedVariableId = widgetProp.variableId;
   const selectedVariable = variables.find((v) => v.id === selectedVariableId);
@@ -81,7 +81,10 @@ export const VariableConfig = ({
           value={widgetProp.lookup}
           // TODO add validation function
           error={
-            config.type !== 'object' && widgetProp.lookup.length === 0 ? 'Required' : undefined
+            (config.list || config.component === 'complex' || config.type !== 'object') &&
+            widgetProp.lookup.length === 0
+              ? 'Required'
+              : undefined
           }
         />
       )}
