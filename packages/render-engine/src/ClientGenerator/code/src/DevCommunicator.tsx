@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Widget, Variable, Page, Layout, Component } from 'canvas-types';
-import { Functions } from 'functions-pkg';
+import Functions from 'functions-pkg/build/Functions';
 
 import { KeyedObject, Store } from './types/store';
 import { updateTree } from './actions/updateTree';

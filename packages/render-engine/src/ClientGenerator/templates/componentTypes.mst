@@ -1,4 +1,6 @@
 declare module 'functions-pkg';
+declare module 'functions-pkg/build/Functions';
+declare module 'functions-pkg/build/Components';
 {{ #componentPackages }}
-declare module '{{{ name }}}';
+declare module '{{{ name }}}/build/Components';
 {{ /componentPackages }}

@@ -11,10 +11,6 @@ const baseDependencies = [
   { name: 'cors', version: 'latest', last: false },
   { name: 'cookie-parser', version: 'latest', last: false },
   { name: 'express', version: 'latest', last: false },
-  // Bit shit we need to install these server side
-  { name: 'react', version: '^17.0.1', last: false },
-  { name: 'react-dom', version: '^17.0.1', last: false },
-  { name: 'styled-components', version: '^5.2.1', last: false },
 ];
 
 const devDependencies = [

@@ -7,7 +7,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { Functions } from 'functions-pkg';
+import Functions from 'functions-pkg/build/Functions';
 
 const router = express.Router();
 router.use(bodyParser.json());

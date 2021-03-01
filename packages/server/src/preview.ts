@@ -65,7 +65,7 @@ export const initCode = async (): Promise<void> => {
   startPreviewServer();
   startPreviewClient();
 
-  // open(`http://localhost:${SERVER_PORT}`);
+  open(`http://localhost:${SERVER_PORT}`);
 
   fs.watch(path.join(FUNCTIONS_PATH, 'package.json'), { recursive: true }, () => {
     installPackages();

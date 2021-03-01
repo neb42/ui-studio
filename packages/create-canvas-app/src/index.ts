@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
+import { execSync } from 'child_process';
 
 import { copySync } from 'fs-extra';
 import axios from 'axios';
@@ -24,10 +25,11 @@ const getPackageVersion = async (key: string) => {
 const renderPackageJson = async (name: string, directory: string, templates: string[]) => {
   const templatePackageKeys = (() => {
     const keys = [];
-    templates.forEach((t) => {
+    templates.forEach((t): void => {
       switch (t) {
         case 'faculty': {
           keys.push('@faculty/adler-web-components');
+          keys.push('@faculty/adler-canvas-wrapper');
           break;
         }
         default:
@@ -45,12 +47,14 @@ const renderPackageJson = async (name: string, directory: string, templates: str
   const devDependencies = await Promise.all(
     ['canvas-server', 'canvas-types'].map(getPackageVersion),
   );
-  devDependencies.concat([
+  [
     { name: 'typescript', version: '^4.0.3', last: false },
     { name: '@types/node', version: '^12.0.0', last: false },
     { name: '@types/react', version: '^16.9.53', last: false },
     { name: '@types/react-dom', version: '^16.9.8', last: false },
-  ]);
+  ].forEach((d) => {
+    devDependencies.push(d);
+  });
   devDependencies[devDependencies.length - 1].last = true;
   if (devDependencies.length > 0) devDependencies[devDependencies.length - 1].last = true;
 
@@ -68,7 +72,7 @@ const renderPackageJson = async (name: string, directory: string, templates: str
   await fs.unlink(path.join(directory, 'package.json.mst'));
 };
 
-const run = async () => {
+const run = async (): Promise<void> => {
   const { argv } = yargs(hideBin(process.argv))
     .array('template')
     .alias('template', 't')
@@ -78,13 +82,17 @@ const run = async () => {
   const name = argv._[0].toString();
   const templates = argv.template;
 
+  if (!name || name.length === 0) throw Error('A directory must be specified');
+
   const directory = path.join(process.cwd(), name);
 
   await fs.mkdir(directory);
 
   copySync(path.join(__dirname, 'template'), directory);
 
-  renderPackageJson(name, directory, templates);
+  await renderPackageJson(name, directory, templates);
+
+  execSync('yarn', { cwd: directory, stdio: 'inherit' });
 };
 
 run();
