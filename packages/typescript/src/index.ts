@@ -61,5 +61,8 @@ export class UIBuilder {
   registered: {
     functions: RegisteredFunctions[];
     actions: RegisteredActions[];
+  } = {
+    functions: [],
+    actions: [],
   };
 }
