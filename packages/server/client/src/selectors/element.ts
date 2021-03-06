@@ -141,34 +141,30 @@ export const makeGetUsedGridSpace = () =>
     },
   );
 
-export const makeGenerateDefaultName = () =>
-  createSelector(
-    (_: Store, regex: string) => regex,
-    getPages,
-    getLayouts,
-    getWidgets,
-    (regex, pages, layouts, widgets) => {
-      const pattern = new RegExp(`${regex}([0-9]*)`);
-      const names = Object.values({ ...pages, ...layouts, ...widgets }).map((e) => e.name);
-      const matchingNames = names.filter((n) => pattern.test(n));
-      const indicies = matchingNames.map((n) => pattern.exec(n)?.[1]).filter((n) => n);
-      return `${regex}${
-        indicies.length === 0 ? 1 : Math.max(...indicies.map((n) => Number(n))) + 1
-      }`;
-    },
-  );
+export const generateDefaultName = createSelector(
+  (_: Store, regex: string) => regex,
+  getPages,
+  getLayouts,
+  getWidgets,
+  (regex, pages, layouts, widgets) => {
+    const pattern = new RegExp(`${regex}([0-9]*)`);
+    const names = Object.values({ ...pages, ...layouts, ...widgets }).map((e) => e.name);
+    const matchingNames = names.filter((n) => pattern.test(n));
+    const indicies = matchingNames.map((n) => pattern.exec(n)?.[1]).filter((n) => n);
+    return `${regex}${indicies.length === 0 ? 1 : Math.max(...indicies.map((n) => Number(n))) + 1}`;
+  },
+);
 
-export const makeGetNextPosition = () =>
-  createSelector(
-    (_: Store, parentId: string) => parentId,
-    getLayouts,
-    getWidgets,
-    (parentId, layouts, widgets) => {
-      return [...Object.values(layouts), ...Object.values(widgets)].filter(
-        (l) => l.parent === parentId,
-      ).length;
-    },
-  );
+export const getNextPosition = createSelector(
+  (_: Store, parentId: string) => parentId,
+  getLayouts,
+  getWidgets,
+  (parentId, layouts, widgets) => {
+    return [...Object.values(layouts), ...Object.values(widgets)].filter(
+      (l) => l.parent === parentId,
+    ).length;
+  },
+);
 
 export const makeGetComponents = () => getComponents;
 

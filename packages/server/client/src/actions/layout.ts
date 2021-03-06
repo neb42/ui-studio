@@ -1,49 +1,14 @@
 import { Dispatch } from 'redux';
-import { v4 as uuidv4 } from 'uuid';
-import { TStyle, IGridCell, Element, Layout } from 'canvas-types';
-import {
-  makeGetElement,
-  makeGenerateDefaultName,
-  makeGetNextPosition,
-  getSelectedElementId,
-} from 'selectors/element';
+import { TStyle, Layout } from 'canvas-types';
+import { makeGetElement, getNextPosition, getSelectedElementId } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
-import { Styles } from 'models/styles';
+import { LayoutModel } from 'models/layout';
 
 export const ADD_LAYOUT = 'ADD_LAYOUT';
 export const REMOVE_LAYOUT = 'REMOVE_LAYOUT';
 export const UPDATE_LAYOUT_CONFIG = 'UPDATE_LAYOUT_CONFIG';
 export const UPDATE_LAYOUT_STYLE = 'UPDATE_LAYOUT_STYLE';
-
-const defaultCell: IGridCell = { value: 1, unit: 'fr' };
-const getDefaultConfig = (layoutType: 'grid' | 'flex') => {
-  if (layoutType === 'grid') {
-    return {
-      layoutType,
-      props: {
-        rows: [defaultCell],
-        columns: [defaultCell],
-        columnGap: 0,
-        rowGap: 0,
-        rowAlignment: 'stretch' as const,
-        columnAlignment: 'stretch' as const,
-      },
-    };
-  }
-  if (layoutType === 'flex') {
-    return {
-      layoutType,
-      props: {
-        direction: 'row' as const,
-        align: 'flex-start' as const,
-        justify: 'flex-start' as const,
-        wrap: false,
-      },
-    };
-  }
-  throw Error();
-};
 
 interface IAddLayout {
   type: 'ADD_LAYOUT';
@@ -58,24 +23,11 @@ export const addLayout = (
   getState: TGetState,
 ) => {
   const state = getState();
+
   const parentElement = makeGetElement()(state, parent);
   if (!parentElement) throw Error();
-  const name = makeGenerateDefaultName()(
-    state,
-    layoutType.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
-  );
-  const defaultConfig = getDefaultConfig(layoutType);
-  const defaultStyle = Styles.getDefaultStyle(parentElement);
-  const position = makeGetNextPosition()(state, parentElement.id);
-  const layout: Layout = {
-    id: uuidv4(),
-    type: 'layout',
-    name,
-    parent,
-    position,
-    style: defaultStyle,
-    ...defaultConfig,
-  };
+
+  const layout = LayoutModel.getDefaultLayout(state, parentElement, layoutType);
 
   dispatch(selectElement(layout.id));
 
@@ -170,7 +122,7 @@ export const updateLayoutParent = (
   getState: TGetState,
 ) => {
   const state = getState();
-  const position = makeGetNextPosition()(state, parentId);
+  const position = getNextPosition(state, parentId);
   return dispatch({
     type: UPDATE_LAYOUT_PARENT,
     payload: {

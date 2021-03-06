@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectPage, ISelectPage, selectElement, ISelectElement } from 'actions/element';
-import { makeGenerateDefaultName, getPages, getSelectedPageId } from 'selectors/element';
+import { generateDefaultName, getPages, getSelectedPageId } from 'selectors/element';
 import { Page } from 'canvas-types';
 
 interface AddPage {
@@ -17,7 +17,7 @@ export const addPage = (): TThunkAction<AddPage> => (
   getState: TGetState,
 ) => {
   const state = getState();
-  const name = makeGenerateDefaultName()(state, 'Page');
+  const name = generateDefaultName(state, 'Page');
   const page: Page = {
     id: uuidv4(),
     type: 'page',

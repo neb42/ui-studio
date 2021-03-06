@@ -9,7 +9,7 @@ import {
   TThunkAction,
 } from 'types/store';
 import { makeGetElement } from 'selectors/element';
-import { Styles } from 'models/styles';
+import { StylesModel } from 'models/styles';
 
 export const UPDATE_ELEMENT_NAME = 'UPDATE_ELEMENT_NAME';
 export const UPDATE_ELEMENT_CSS = 'UPDATE_ELEMENT_CSS';
@@ -201,8 +201,8 @@ export const updateElementPosition = (
 
   if (!element || !sourceElement || !destinationElement) throw Error();
 
-  const sourceDefaultStyle = Styles.getDefaultStyle(sourceElement);
-  const destinationDefaultStyle = Styles.getDefaultStyle(destinationElement);
+  const sourceDefaultStyle = StylesModel.getDefaultStyle(sourceElement);
+  const destinationDefaultStyle = StylesModel.getDefaultStyle(destinationElement);
   const style: TStyle =
     sourceDefaultStyle.type === destinationDefaultStyle.type
       ? element.style
