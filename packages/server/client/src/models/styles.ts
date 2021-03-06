@@ -1,20 +1,20 @@
-import { Element, BaseStyle, IGridStyle, IFlexStyle, IPageStyle, TStyle } from 'canvs-types';
+import { Element, BaseStyle, IGridStyle, IFlexStyle, IPageStyle, TStyle } from 'canvas-types';
 
-export class Styles {
+export class StylesModel {
   static getDefaultStyle = (parent: Element | null): TStyle => {
     if (parent) {
       if (parent.type === 'layout') {
         if (parent.layoutType === 'grid') {
-          return Styles.getDefaultGridStyle();
+          return StylesModel.getDefaultGridStyle();
         }
         if (parent.layoutType === 'flex') {
-          return Styles.getDefaultFlexStyle();
+          return StylesModel.getDefaultFlexStyle();
         }
       }
       if (parent.type === 'page') {
-        return Styles.getDefaultPageStyle();
+        return StylesModel.getDefaultPageStyle();
       }
-      return Styles.getDefaultBaseStyle();
+      return StylesModel.getDefaultBaseStyle();
     }
     throw Error();
   };
