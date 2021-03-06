@@ -92,6 +92,11 @@ const run = async (): Promise<void> => {
 
   await renderPackageJson(name, directory, templates);
 
+  execSync('git init', { cwd: directory, stdio: 'inherit' });
+  execSync("git commit -m 'Initialised from create-canvas-app'", {
+    cwd: directory,
+    stdio: 'inherit',
+  });
   execSync('yarn', { cwd: directory, stdio: 'inherit' });
 };
 
