@@ -1,6 +1,6 @@
 import { FlexAlignment, FlexJustification, GridAlignment, TStyle } from './style';
 
-export type GridUnit = 'fr' | '%' | 'px' | 'em' | 'mincontent' | 'maxcontent' | 'minmax' | 'auto';
+export type GridUnit = 'fr' | '%' | 'px' | 'em' | 'min-content' | 'max-content' | 'minmax' | 'auto';
 
 export interface IGridCell {
   value: number | null;

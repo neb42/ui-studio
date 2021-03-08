@@ -6,7 +6,8 @@ import { IGridCell, GridUnit } from 'canvas-types';
 
 import * as Styles from './GridTemplateControls.styles';
 
-const units = ['fr', '%', 'px', 'em', 'auto', 'mincontent', 'maxcontent', 'minmax'] as const;
+// const units = ['fr', '%', 'px', 'em', 'auto', 'min-content', 'max-content', 'minmax'] as const;
+const units = ['fr', '%', 'px', 'em', 'auto', 'min-content', 'max-content'] as const;
 const initialUnitValues = {
   fr: 1,
   '%': 100,
