@@ -11,6 +11,7 @@ import {
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
 import { StylesModel } from 'models/styles';
+import { WidgetModel } from 'models/widget';
 
 export const ADD_WIDGET = 'ADD_WIDGET';
 export const REMOVE_WIDGET = 'REMOVE_WIDGET';
@@ -23,7 +24,7 @@ interface IAddWidget {
 }
 
 export const addWidget = (
-  component: string,
+  componentName: string,
   library: string,
   parent: string,
 ): TThunkAction<IAddWidget> => (
@@ -35,45 +36,10 @@ export const addWidget = (
   const parentElement = makeGetElement()(state, parent);
   if (!parentElement) throw Error();
 
-  const componentConfig = makeGetComponents()(state).find((c) => c.name === component);
-  if (!componentConfig) throw Error();
+  const component = makeGetComponents()(state).find((c) => c.name === componentName);
+  if (!component) throw Error();
 
-  const name = generateDefaultName(
-    state,
-    component.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase()),
-  );
-  const defaultStyle = StylesModel.getDefaultStyle(parentElement);
-  const position = getNextPosition(state, parentElement.id);
-  const hasChildren = Boolean(componentConfig.hasChildren);
-  const events = componentConfig.events.reduce((acc, cur) => ({ ...acc, [cur.key]: [] }), {});
-  const props = componentConfig.config.reduce((acc, cur) => {
-    const defaultProp: WidgetProp = (() => {
-      if (cur.list) return { mode: 'list' as const, props: [] };
-      if (cur.component === 'complex')
-        return {
-          mode: 'complex' as const,
-          props: cur.config.reduce((ac, cu) => {
-            return { ...ac, [cu.key]: { mode: 'static', type: cu.type, value: cu.defaultValue } };
-          }, {}),
-        };
-      return { mode: 'static' as const, type: cur.type, value: cur.defaultValue };
-    })();
-    return { ...acc, [cur.key]: defaultProp };
-  }, {});
-
-  const widget: Widget = {
-    id: uuidv4(),
-    type: 'widget',
-    name,
-    component,
-    library,
-    parent,
-    position,
-    hasChildren,
-    props,
-    events,
-    style: defaultStyle,
-  };
+  const widget = WidgetModel.getDefaultWidget(state, component, library, parentElement);
 
   dispatch(selectElement(widget.id));
 

@@ -11,7 +11,7 @@ import {
   Mode,
 } from 'canvas-types';
 import { ConfigOption } from 'components/ConfigOption';
-import { Widget } from 'models/widget';
+import { WidgetModel } from 'models/widget';
 
 import { ComplexConfig } from './ComplexConfig';
 import { ModeButtons } from './ModeButtons';
@@ -85,7 +85,7 @@ export const ListConfig = ({ widgetProp, config, onChange }: ListConfigProps): J
   };
 
   const handleRootModeChange = (m: Mode) => {
-    const defaultProp = Widget.getDefaultProp(m, config, widgetProp);
+    const defaultProp = WidgetModel.getDefaultProp(m, config, widgetProp);
     onChange(config.key, defaultProp);
   };
 

@@ -8,7 +8,7 @@ import {
   Mode,
 } from 'canvas-types';
 import { ConfigOption } from 'components/ConfigOption/ConfigOption';
-import { Widget } from 'models/widget';
+import { WidgetModel } from 'models/widget';
 
 interface StandardConfigProps {
   widgetProp: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget;
@@ -26,7 +26,7 @@ export const StandardConfig = ({
   };
 
   const handleModeChange = (m: Mode) => {
-    const defaultProp = Widget.getDefaultProp(m, config, widgetProp);
+    const defaultProp = WidgetModel.getDefaultProp(m, config, widgetProp);
     handleOnChange(defaultProp);
   };
 

@@ -10,7 +10,7 @@ import {
   Mode,
 } from 'canvas-types';
 import { ConfigOption } from 'components/ConfigOption';
-import { Widget } from 'models/widget';
+import { WidgetModel } from 'models/widget';
 
 import { ModeButtons } from './ModeButtons';
 import * as Styles from './ConfigOption.styles';
@@ -74,7 +74,7 @@ export const ComplexConfig = ({
   };
 
   const handleRootModeChange = (m: Mode) => {
-    const defaultProp = Widget.getDefaultProp(m, config, widgetProp);
+    const defaultProp = WidgetModel.getDefaultProp(m, config, widgetProp);
     onChange(config.key, defaultProp);
   };
 
