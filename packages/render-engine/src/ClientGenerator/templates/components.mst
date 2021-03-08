@@ -1,12 +1,15 @@
 import { Component } from 'canvas-types';
-import * as FunctionsPkg from 'functions-pkg';
+import FunctionsPkg from 'functions-pkg/build/Components';
 {{ #components }}
 import {{{ name }}} from '{{{ package }}}/build/Components';
 {{ /components }}
 
+import * as Internal from './InternalComponents';
+
 export const Components: {
   [library: string]: { [component: string]: Component & { component: React.FC<any> }},
 } = {
+  'internal': Internal,
   'custom': FunctionsPkg,
   'functions-pkg': FunctionsPkg,
   {{ #components }}

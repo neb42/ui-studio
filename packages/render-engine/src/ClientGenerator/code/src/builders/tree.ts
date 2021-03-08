@@ -2,38 +2,34 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import Graph from 'graph-data-structure';
-import { ElementTreeNode, Widget, Page, Layout } from 'canvas-types';
+import { ElementTreeNode, Widget, Page } from 'canvas-types';
 
 import { Store, KeyedObject } from '../types/store';
 
 import { WidgetBuilder } from './widget';
-import { LayoutBuilder } from './layout';
 
 const getElements = createSelector<
   Store,
   KeyedObject<Widget>,
   KeyedObject<Page>,
-  KeyedObject<Layout>,
   {
     widgets: KeyedObject<Widget>;
     pages: KeyedObject<Page>;
-    layouts: KeyedObject<Layout>;
   }
 >(
   (state) => state.widget.config,
   (state) => state.page.config,
-  (state) => state.layout.config,
-  (widgets, pages, layouts) => ({ widgets, pages, layouts }),
+  (widgets, pages) => ({ widgets, pages }),
 );
 
 export const useBuildTree = (): ElementTreeNode[] => {
-  const { widgets, pages, layouts } = useSelector(getElements);
+  const { widgets, pages } = useSelector(getElements);
 
-  const all = { ...pages, ...layouts, ...widgets };
+  const all = { ...pages, ...widgets };
 
   const elementGraph = Graph();
   Object.keys(all).forEach((k) => elementGraph.addNode(k));
-  Object.values({ ...widgets, ...layouts }).forEach((v) => elementGraph.addEdge(v.parent, v.id));
+  Object.values(widgets).forEach((v) => elementGraph.addEdge(v.parent, v.id));
 
   const buildTree = (node: string): ElementTreeNode => {
     const element = all[node];
@@ -43,7 +39,9 @@ export const useBuildTree = (): ElementTreeNode[] => {
       name: element.name,
       type: element.type,
       position: element.type === 'page' ? 0 : element.position,
-      children: children.map(buildTree).sort((a, b) => (a.position > b.position ? 1 : -1)),
+      children: children
+        .map(buildTree)
+        .sort((a: ElementTreeNode, b: ElementTreeNode) => (a.position > b.position ? 1 : -1)),
       element,
     };
   };
@@ -58,8 +56,8 @@ export const useChildrenMap = (nodeId: string): React.FunctionComponentElement<a
     Record<string, React.FunctionComponentElement<any>>
   >({});
 
-  const { widgets, layouts } = useSelector(getElements);
-  const all = { ...layouts, ...widgets };
+  const { widgets } = useSelector(getElements);
+  const all = { ...widgets };
   const children = Object.values(all).filter((el) => el.parent === nodeId);
 
   React.useEffect(() => {
@@ -68,25 +66,13 @@ export const useChildrenMap = (nodeId: string): React.FunctionComponentElement<a
         if (childrenMap[cur.id]) {
           return { ...acc, [cur.id]: childrenMap[cur.id] };
         }
-        if (cur.type === 'widget') {
-          return {
-            ...acc,
-            [cur.id]: React.createElement(React.memo(WidgetBuilder), {
-              key: `widget-builder-${cur.id}`,
-              widgetId: cur.id,
-            }),
-          };
-        }
-        if (cur.type === 'layout') {
-          return {
-            ...acc,
-            [cur.id]: React.createElement(React.memo(LayoutBuilder), {
-              key: `layout-builder-${cur.id}`,
-              layoutId: cur.id,
-            }),
-          };
-        }
-        return acc;
+        return {
+          ...acc,
+          [cur.id]: React.createElement(React.memo(WidgetBuilder), {
+            key: `widget-builder-${cur.id}`,
+            widgetId: cur.id,
+          }),
+        };
       }, {});
     });
   }, [JSON.stringify(children)]);

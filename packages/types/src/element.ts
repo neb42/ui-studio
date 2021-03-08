@@ -1,5 +1,4 @@
 import { BaseStyle } from './style';
-import { Layout } from './layout';
 import { Widget } from './widget';
 
 export interface Page {
@@ -18,7 +17,7 @@ export interface IOverlay {
   style: BaseStyle;
 }
 
-export type Element = Page | IOverlay | Layout | Widget;
+export type Element = Page | IOverlay | Widget;
 
 export interface ElementTreeNode {
   id: string;

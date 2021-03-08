@@ -15,6 +15,32 @@ import { useChildrenMap } from './tree';
 
 const WidgetWrapper = styled.div<{ widget: Widget; isSelected: boolean }>`
   ${({ widget }) =>
+    widget.layout?.type === 'grid'
+      ? `
+        display: grid;
+        grid-template-columns: ${widget.layout.columns
+          .map((l) => `${l.value || ''}${l.unit}`)
+          .join(' ')};
+        grid-template-rows: ${widget.layout.rows.map((l) => `${l.value || ''}${l.unit}`).join(' ')};
+        grid-column-gap: ${widget.layout.columnGap}px;
+        grid-row-gap: ${widget.layout.rowGap}px;
+        align-items: ${widget.layout.rowAlignment};
+        justify-content: ${widget.layout.columnAlignment};
+      `
+      : ''}
+
+  ${({ widget }) =>
+    widget.layout?.type === 'flex'
+      ? `
+        display: flex;
+        flex-direction: ${widget.layout.direction};
+        align-items: ${widget.layout.align};
+        justify-content: ${widget.layout.justify};
+        flex-wrap: ${widget.layout.wrap ? 'wrap' : 'nowrap'};
+      `
+      : ''}
+
+  ${({ widget }) =>
     widget.style.type === 'grid'
       ? `
         grid-row: ${widget.style.layout[0][0]} / ${widget.style.layout[1][0] + 1};

@@ -1,16 +1,13 @@
 import { Dispatch } from 'redux';
-import { v4 as uuidv4 } from 'uuid';
 import { TStyle, Widget, WidgetProp, Event } from 'canvas-types';
 import {
   makeGetElement,
-  generateDefaultName,
   getNextPosition,
-  makeGetComponents,
+  getComponents,
   getSelectedElementId,
 } from 'selectors/element';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, ISelectElement } from 'actions/element';
-import { StylesModel } from 'models/styles';
 import { WidgetModel } from 'models/widget';
 
 export const ADD_WIDGET = 'ADD_WIDGET';
@@ -36,7 +33,7 @@ export const addWidget = (
   const parentElement = makeGetElement()(state, parent);
   if (!parentElement) throw Error();
 
-  const component = makeGetComponents()(state).find((c) => c.name === componentName);
+  const component = getComponents(state).find((c) => c.name === componentName);
   if (!component) throw Error();
 
   const widget = WidgetModel.getDefaultWidget(state, component, library, parentElement);
@@ -220,6 +217,51 @@ export const updateWidgetParent = (
   });
 };
 
+export const UPDATE_WIDGET_LAYOUT_CONFIG = 'UPDATE_WIDGET_LAYOUT_CONFIG';
+
+interface UpdateWidgetLayoutConfig {
+  type: 'UPDATE_WIDGET_LAYOUT_CONFIG';
+  payload: {
+    id: string;
+    key: string;
+    value: any;
+  };
+}
+
+export const updateWidgetLayoutConfig = (
+  id: string,
+  key: string,
+  value: any,
+): UpdateWidgetLayoutConfig => ({
+  type: UPDATE_WIDGET_LAYOUT_CONFIG,
+  payload: {
+    id,
+    key,
+    value,
+  },
+});
+
+export const UPDATE_WIDGET_LAYOUT_TYPE = 'UPDATE_WIDGET_LAYOUT_TYPE';
+
+interface UpdateWidgetLayoutType {
+  type: 'UPDATE_WIDGET_LAYOUT_TYPE';
+  payload: {
+    id: string;
+    layoutType: 'basic' | 'flex' | 'grid';
+  };
+}
+
+export const updateWidgetLayoutType = (
+  id: string,
+  layoutType: 'basic' | 'flex' | 'grid',
+): UpdateWidgetLayoutType => ({
+  type: UPDATE_WIDGET_LAYOUT_TYPE,
+  payload: {
+    id,
+    layoutType,
+  },
+});
+
 export type Action$Widget =
   | IAddWidget
   | IRemoveWidget
@@ -228,4 +270,6 @@ export type Action$Widget =
   | AddWidgetEvent
   | UpdateWidgetEvent
   | RemoveWidgetEvent
-  | UpdateWidgetParent;
+  | UpdateWidgetParent
+  | UpdateWidgetLayoutConfig
+  | UpdateWidgetLayoutType;

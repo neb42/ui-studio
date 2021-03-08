@@ -38,7 +38,6 @@ export const DevCommunicator = () => {
             updateTree({
               ...tree,
               widgets: removeNullParent(tree.widgets),
-              layouts: removeNullParent(tree.layouts),
             }),
           ),
       );

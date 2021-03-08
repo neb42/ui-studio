@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
-import { Layout, FlexJustification, FlexAlignment } from 'canvas-types';
-import { updateLayoutConfig } from 'actions/layout';
+import { Widget, FlexJustification, FlexAlignment } from 'canvas-types';
+import { updateWidgetLayoutConfig } from 'actions/widget';
 import { AlignmentButton } from 'components/AlignmentButton';
 
 import * as Styles from './FlexLayoutConfig.styles';
@@ -14,36 +14,37 @@ const directionOptions = [
 ];
 
 interface FlexLayoutConfigProps {
-  layout: Layout;
+  widget: Widget;
 }
 
-export const FlexLayoutConfig = ({ layout }: FlexLayoutConfigProps) => {
+export const FlexLayoutConfig = ({ widget }: FlexLayoutConfigProps): JSX.Element => {
   const dispatch = useDispatch();
 
-  if (layout.layoutType !== 'flex') throw Error();
+  if (widget.layout?.type !== 'flex') throw Error();
 
   const handleUpdateDirection = ({ value }: any) => {
-    dispatch(updateLayoutConfig(layout.id, 'direction', value as 'row' | 'column'));
+    dispatch(updateWidgetLayoutConfig(widget.id, 'direction', value as 'row' | 'column'));
   };
 
   const handleUpdateAlignment = (value: string) => {
-    dispatch(updateLayoutConfig(layout.id, 'align', value as FlexAlignment));
+    dispatch(updateWidgetLayoutConfig(widget.id, 'align', value as FlexAlignment));
   };
 
   const handleUpdateJustification = (value: string) => {
-    dispatch(updateLayoutConfig(layout.id, 'justify', value as FlexJustification));
+    dispatch(updateWidgetLayoutConfig(widget.id, 'justify', value as FlexJustification));
   };
 
   const handleUpdateWrap = (wrap: boolean) => {
-    dispatch(updateLayoutConfig(layout.id, 'wrap', wrap));
+    dispatch(updateWidgetLayoutConfig(widget.id, 'wrap', wrap));
   };
 
+  const { direction } = widget.layout;
   return (
     <Styles.Container>
       <Styles.Field>
         <Styles.FieldHeader>Direction</Styles.FieldHeader>
         <Select
-          value={directionOptions.find((o) => o.value === layout.props.direction)}
+          value={directionOptions.find((o) => o.value === direction)}
           onChange={handleUpdateDirection}
           options={directionOptions}
         />
@@ -52,9 +53,9 @@ export const FlexLayoutConfig = ({ layout }: FlexLayoutConfigProps) => {
         <Styles.FieldHeader>Alignment</Styles.FieldHeader>
         <AlignmentButton
           layoutType="flex"
-          direction={layout.props.direction}
+          direction={direction}
           alignmentType="align"
-          value={layout.props.align}
+          value={widget.layout.align}
           onChange={handleUpdateAlignment}
         />
       </Styles.Field>
@@ -62,14 +63,14 @@ export const FlexLayoutConfig = ({ layout }: FlexLayoutConfigProps) => {
         <Styles.FieldHeader>Justification</Styles.FieldHeader>
         <AlignmentButton
           layoutType="flex"
-          direction={layout.props.direction}
+          direction={direction}
           alignmentType="justify"
-          value={layout.props.justify}
+          value={widget.layout.justify}
           onChange={handleUpdateJustification}
         />
       </Styles.Field>
       <Styles.Field>
-        <Checkbox checked={layout.props.wrap} onChange={handleUpdateWrap} controlled>
+        <Checkbox checked={widget.layout.wrap} onChange={handleUpdateWrap} controlled>
           Wrap
         </Checkbox>
       </Styles.Field>

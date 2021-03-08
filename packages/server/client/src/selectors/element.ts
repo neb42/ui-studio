@@ -1,18 +1,10 @@
 import { createSelector } from 'reselect';
-import { Widget, Layout, Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
-import {
-  Store,
-  Store$Page,
-  Store$Layout,
-  Store$Widget,
-  Store$Overlay,
-  Store$Variable,
-} from 'types/store';
+import { Widget, Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
+import { Store, Store$Page, Store$Widget, Store$Overlay, Store$Variable } from 'types/store';
 import { TreeItem } from '@atlaskit/tree';
 
 export const getPages = (state: Store): Store$Page => state.page;
 export const getOverlays = (state: Store): Store$Overlay => state.overlay;
-export const getLayouts = (state: Store): Store$Layout => state.layout;
 export const getWidgets = (state: Store): Store$Widget => state.widget;
 export const getVariables = (state: Store): Store$Variable => state.variable;
 export const getSelectedElementId = (state: Store): string | null => state.element.selectedElement;
@@ -27,13 +19,11 @@ export const getComponents = (state: Store): Component[] => state.element.compon
 
 export const getElementTree = createSelector(
   getPages,
-  getLayouts,
   getWidgets,
   getComponents,
-  (pages, layouts, widgets, components) => {
+  (pages, widgets, components) => {
     const all = {
       ...pages,
-      ...layouts,
       ...widgets,
     };
 
@@ -61,7 +51,7 @@ export const getElementTree = createSelector(
     }, {});
 
     Object.values(all).forEach((el) => {
-      if (el.type === 'widget' || el.type === 'layout') {
+      if (el.type === 'widget') {
         if (el.parent && tree[el.parent]) {
           tree[el.parent].children = [...tree[el.parent].children, el.id];
         }
@@ -86,12 +76,10 @@ export const makeGetSelectedElement = () =>
   createSelector(
     getSelectedElementId,
     getPages,
-    getLayouts,
     getWidgets,
-    (selectedElementId, pages, layouts, widgets) => {
+    (selectedElementId, pages, widgets) => {
       if (selectedElementId === null) return null;
       if (selectedElementId in pages) return pages[selectedElementId];
-      if (selectedElementId in layouts) return layouts[selectedElementId];
       if (selectedElementId in widgets) return widgets[selectedElementId];
       return null;
     },
@@ -101,22 +89,19 @@ export const makeGetElement = () =>
   createSelector(
     (_: Store, elementId: string | null) => elementId,
     getPages,
-    getLayouts,
     getWidgets,
-    (elementId, pages, layouts, widgets) => {
+    (elementId, pages, widgets) => {
       if (!elementId) return null;
       if (elementId in pages) return pages[elementId];
-      if (elementId in layouts) return layouts[elementId];
       if (elementId in widgets) return widgets[elementId];
       return null;
     },
   );
 
 export const makeGetElements = () =>
-  createSelector(getPages, getLayouts, getWidgets, (pages, layouts, widgets) => {
+  createSelector(getPages, getWidgets, (pages, widgets) => {
     return {
       pages,
-      layouts,
       widgets,
     };
   });
@@ -124,14 +109,13 @@ export const makeGetElements = () =>
 export const makeGetUsedGridSpace = () =>
   createSelector(
     (_: Store, gridElementId: string, ignoreNames: string[]) => ({ gridElementId, ignoreNames }),
-    getLayouts,
     getWidgets,
-    ({ gridElementId, ignoreNames }, layouts, widgets) => {
+    ({ gridElementId, ignoreNames }, widgets) => {
       const notEmpty = <TValue>(value: TValue | null | undefined): value is TValue => {
         return value !== null && value !== undefined;
       };
-      const grid = layouts[gridElementId];
-      return [...Object.values(layouts), ...Object.values(widgets)]
+      const grid = widgets[gridElementId];
+      return [...Object.values(widgets)]
         .filter((e) => e.parent === grid.id && !ignoreNames.includes(e.id))
         .map((e) => {
           if (e.style.type === 'grid') return e.style.layout;
@@ -144,11 +128,10 @@ export const makeGetUsedGridSpace = () =>
 export const generateDefaultName = createSelector(
   (_: Store, regex: string) => regex,
   getPages,
-  getLayouts,
   getWidgets,
-  (regex, pages, layouts, widgets) => {
+  (regex, pages, widgets) => {
     const pattern = new RegExp(`${regex}([0-9]*)`);
-    const names = Object.values({ ...pages, ...layouts, ...widgets }).map((e) => e.name);
+    const names = Object.values({ ...pages, ...widgets }).map((e) => e.name);
     const matchingNames = names.filter((n) => pattern.test(n));
     const indicies = matchingNames.map((n) => pattern.exec(n)?.[1]).filter((n) => n);
     return `${regex}${indicies.length === 0 ? 1 : Math.max(...indicies.map((n) => Number(n))) + 1}`;
@@ -157,12 +140,9 @@ export const generateDefaultName = createSelector(
 
 export const getNextPosition = createSelector(
   (_: Store, parentId: string) => parentId,
-  getLayouts,
   getWidgets,
-  (parentId, layouts, widgets) => {
-    return [...Object.values(layouts), ...Object.values(widgets)].filter(
-      (l) => l.parent === parentId,
-    ).length;
+  (parentId, widgets) => {
+    return [...Object.values(widgets)].filter((l) => l.parent === parentId).length;
   },
 );
 
@@ -181,12 +161,10 @@ export const makeGetSelectedVariable = () =>
 export const getParentElement = createSelector(
   (_: Store, elementId: string) => elementId,
   getPages,
-  getLayouts,
   getWidgets,
-  (elementId, pages, layouts, widgets) => {
+  (elementId, pages, widgets) => {
     const getElement = (id: string) => {
       if (id in pages) return pages[id];
-      if (id in layouts) return layouts[id];
       if (id in widgets) return widgets[id];
       return null;
     };
@@ -210,17 +188,9 @@ export const getOrphanedIds = (state: Store): string[] => {
     .filter((w) => w.parent === null)
     .map((w) => w.id);
 
-  const rootLayoutIds = Object.values(getLayouts(state))
-    .filter((l) => l.parent === null)
-    .map((l) => l.id);
-
-  let orphanedIds: string[] = [...rootWidgetIds, ...rootLayoutIds];
+  let orphanedIds: string[] = [...rootWidgetIds];
 
   rootWidgetIds.forEach((id) => {
-    orphanedIds = [...orphanedIds, ...getIdsInBranch(id)];
-  });
-
-  rootLayoutIds.forEach((id) => {
     orphanedIds = [...orphanedIds, ...getIdsInBranch(id)];
   });
 
@@ -238,17 +208,13 @@ export const getWidgetsInTree = (state: Store): { [key: string]: Widget } => {
     }, {});
 };
 
-export const getOrphanedRootElements = (state: Store): (Layout | Widget)[] => {
+export const getOrphanedRootElements = (state: Store): Widget[] => {
   const elements = makeGetElements()(state);
-  const all = { ...elements.layouts, ...elements.widgets };
+  const all = { ...elements.widgets };
 
   const rootWidgetIds = Object.values(getWidgets(state))
     .filter((w) => w.parent === null)
     .map((w) => w.id);
 
-  const rootLayoutIds = Object.values(getLayouts(state))
-    .filter((l) => l.parent === null)
-    .map((l) => l.id);
-
-  return [...rootWidgetIds, ...rootLayoutIds].map((id) => all[id]);
+  return [...rootWidgetIds].map((id) => all[id]);
 };

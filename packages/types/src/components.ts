@@ -45,6 +45,7 @@ export interface Component {
   library: string;
   icon: string;
   hasChildren: boolean;
+  hasLayout: boolean;
   exposedProperties: string[];
   events: Component$Event[];
   config: ComponentConfig[];

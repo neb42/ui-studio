@@ -9,7 +9,6 @@ import {
   getOrphanedRootElements,
 } from 'selectors/element';
 import { addWidget, updateWidgetParent } from 'actions/widget';
-import { addLayout, updateLayoutParent } from 'actions/layout';
 
 const makeElements = (
   components: Component[],
@@ -32,33 +31,7 @@ const makeElements = (
       library: string;
       icon: Icons.SvgIconComponent;
     }[];
-  } = {
-    Layout: [
-      {
-        title: 'Grid layout',
-        description: '',
-        type: 'layout',
-        subtype: 'grid',
-        library: '',
-        icon: Icons.GridOnSharp,
-      },
-      {
-        title: 'Flex layout',
-        description: '',
-        type: 'layout',
-        subtype: 'flex',
-        library: '',
-        icon: Icons.ViewWeekSharp,
-      },
-      // {
-      //   title: 'Conditional render',
-      //   description: '',
-      //   type: 'layout',
-      //   subtype: 'conditional',
-      //   library: '',
-      // },
-    ],
-  };
+  } = {};
 
   components.forEach(({ name, description, category, icon, library }) => {
     const existing = elements[category] || [];
@@ -93,32 +66,17 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
   const elements = makeElements(components);
   const categories = Object.keys(elements);
 
-  const handleAddElement = (type: 'layout' | 'widget', subtype: string, library: string) => () => {
+  const handleAddElement = (subtype: string, library: string) => () => {
     if (selectedElement) {
-      if (type === 'layout') {
-        if (subtype === 'grid') {
-          dispatch(addLayout('grid', selectedElement.id));
-        }
-        if (subtype === 'flex') {
-          dispatch(addLayout('flex', selectedElement.id));
-        }
-      }
-      if (type === 'widget') {
-        dispatch(addWidget(subtype, library, selectedElement.id));
-      }
+      dispatch(addWidget(subtype, library, selectedElement.id));
       onClose();
       setCategory(null);
     }
   };
 
-  const handleUpdateParent = (type: 'layout' | 'widget', orphanId: string) => () => {
+  const handleUpdateParent = (orphanId: string) => () => {
     if (selectedElement) {
-      if (type === 'layout') {
-        dispatch(updateLayoutParent(orphanId, selectedElement.id));
-      }
-      if (type === 'widget') {
-        dispatch(updateWidgetParent(orphanId, selectedElement.id));
-      }
+      dispatch(updateWidgetParent(orphanId, selectedElement.id));
       onClose();
       setCategory(null);
     }
@@ -150,7 +108,7 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
       </MenuItem>
       {!showOrphanedElements &&
         (elements?.[category] ?? []).map((e) => (
-          <MenuItem key={e.title} onClick={handleAddElement(e.type, e.subtype, e.library)}>
+          <MenuItem key={e.title} onClick={handleAddElement(e.subtype, e.library)}>
             <ListItemIcon>
               <e.icon />
             </ListItemIcon>
@@ -160,11 +118,6 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
       {showOrphanedElements &&
         orphanedElements.map((e) => {
           const Icon = (() => {
-            if (e.type === 'layout') {
-              if (e.layoutType === 'grid') return Icons.GridOnSharp;
-              if (e.layoutType === 'flex') return Icons.ViewWeekSharp;
-              throw Error();
-            }
             const comp = components.find((c) => c.name === e.component);
             if (!comp) throw Error();
             return (
@@ -173,7 +126,7 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
             );
           })();
           return (
-            <MenuItem key={e.id} onClick={handleUpdateParent(e.type, e.id)}>
+            <MenuItem key={e.id} onClick={handleUpdateParent(e.id)}>
               <ListItemIcon>
                 <Icon />
               </ListItemIcon>

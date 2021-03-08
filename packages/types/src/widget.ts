@@ -1,5 +1,6 @@
 import { TStyle } from './style';
 import { Event } from './event';
+import { Layout } from './layout';
 
 export type Mode = 'complex' | 'list' | 'static' | 'variable' | 'widget';
 
@@ -53,6 +54,7 @@ export interface Widget {
   events: {
     [key: string]: Event[];
   };
+  layout: Layout;
   position: number;
   style: TStyle;
   hasChildren: boolean;

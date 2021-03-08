@@ -28,15 +28,9 @@ export interface IFlexStyle {
   classNames: string;
 }
 
-export interface IPageStyle {
-  type: 'page';
-  css: string;
-  classNames: string;
-}
-
 export interface IRootStyle {
   css: string;
   classNames: string;
 }
 
-export type TStyle = BaseStyle | IGridStyle | IFlexStyle | IPageStyle;
+export type TStyle = BaseStyle | IGridStyle | IFlexStyle;

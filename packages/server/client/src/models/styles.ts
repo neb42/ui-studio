@@ -1,18 +1,15 @@
-import { Element, BaseStyle, IGridStyle, IFlexStyle, IPageStyle, TStyle } from 'canvas-types';
+import { Element, BaseStyle, IGridStyle, IFlexStyle, TStyle } from 'canvas-types';
 
 export class StylesModel {
   static getDefaultStyle = (parent: Element | null): TStyle => {
     if (parent) {
-      if (parent.type === 'layout') {
-        if (parent.layoutType === 'grid') {
+      if (parent.type === 'widget') {
+        if (parent.layout?.type === 'grid') {
           return StylesModel.getDefaultGridStyle();
         }
-        if (parent.layoutType === 'flex') {
+        if (parent.layout?.type === 'flex') {
           return StylesModel.getDefaultFlexStyle();
         }
-      }
-      if (parent.type === 'page') {
-        return StylesModel.getDefaultPageStyle();
       }
       return StylesModel.getDefaultBaseStyle();
     }
@@ -38,14 +35,6 @@ export class StylesModel {
       type: 'flex',
       align: 'auto',
       grow: 0,
-      css: '',
-      classNames: '',
-    };
-  };
-
-  static getDefaultPageStyle = (): IPageStyle => {
-    return {
-      type: 'page',
       css: '',
       classNames: '',
     };

@@ -1,26 +1,22 @@
 import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Slider from '@faculty/adler-web-components/atoms/Slider/Slider';
-import { Widget, Layout, FlexAlignment, IFlexStyle } from 'canvas-types';
-import { updateLayoutStyle } from 'actions/layout';
+import { Widget, FlexAlignment, IFlexStyle } from 'canvas-types';
 import { updateWidgetStyle } from 'actions/widget';
 import { AlignmentButton } from 'components/AlignmentButton';
-import { getParentElement } from 'selectors/element';
-import { Store } from 'types/store';
 
 import * as Styles from './FlexParentStyle.styles';
 
 interface FlexParentStyleProps {
-  element: Widget | Layout;
+  element: Widget;
+  parent: Widget;
 }
 
-export const FlexParentStyle = ({ element }: FlexParentStyleProps): JSX.Element => {
+export const FlexParentStyle = ({ element, parent }: FlexParentStyleProps): JSX.Element => {
   const dispatch = useDispatch();
 
-  const parent = useSelector((state: Store) => getParentElement(state, element.id));
-
-  if (element.style.type !== 'flex' || parent?.type !== 'layout' || parent.layoutType !== 'flex')
-    throw Error();
+  if (element.style.type !== 'flex') throw Error();
+  if (parent.layout?.type !== 'flex') throw Error();
 
   const handleUpdateAlignment = (value: string) => {
     if (element.style.type !== 'flex') throw Error();
@@ -30,13 +26,7 @@ export const FlexParentStyle = ({ element }: FlexParentStyleProps): JSX.Element 
       align: value as FlexAlignment,
     };
 
-    if (element.type === 'widget') {
-      dispatch(updateWidgetStyle(element.id, style));
-    }
-
-    if (element.type === 'layout') {
-      dispatch(updateLayoutStyle(element.id, style));
-    }
+    dispatch(updateWidgetStyle(element.id, style));
   };
 
   const handleUpdateGrow = (grow: number) => {
@@ -47,13 +37,7 @@ export const FlexParentStyle = ({ element }: FlexParentStyleProps): JSX.Element 
       grow,
     };
 
-    if (element.type === 'widget') {
-      dispatch(updateWidgetStyle(element.id, style));
-    }
-
-    if (element.type === 'layout') {
-      dispatch(updateLayoutStyle(element.id, style));
-    }
+    dispatch(updateWidgetStyle(element.id, style));
   };
 
   const { grow, align } = element.style;
@@ -74,7 +58,7 @@ export const FlexParentStyle = ({ element }: FlexParentStyleProps): JSX.Element 
         <Styles.FieldHeader>Alignment</Styles.FieldHeader>
         <AlignmentButton
           layoutType="flex"
-          direction={parent.props.direction}
+          direction={parent.layout.direction}
           alignmentType="self"
           value={align}
           onChange={handleUpdateAlignment}

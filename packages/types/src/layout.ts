@@ -1,4 +1,4 @@
-import { FlexAlignment, FlexJustification, GridAlignment, TStyle } from './style';
+import { FlexAlignment, FlexJustification, GridAlignment } from './style';
 
 export type GridUnit = 'fr' | '%' | 'px' | 'em' | 'min-content' | 'max-content' | 'minmax' | 'auto';
 
@@ -8,37 +8,21 @@ export interface IGridCell {
 }
 
 export interface GridLayout {
-  id: string;
-  type: 'layout';
-  layoutType: 'grid';
-  name: string;
-  parent: string;
-  position: number;
-  props: {
-    columns: IGridCell[];
-    rows: IGridCell[];
-    columnGap: number;
-    rowGap: number;
-    rowAlignment: GridAlignment;
-    columnAlignment: GridAlignment;
-  };
-  style: TStyle;
+  type: 'grid';
+  columns: IGridCell[];
+  rows: IGridCell[];
+  columnGap: number;
+  rowGap: number;
+  rowAlignment: GridAlignment;
+  columnAlignment: GridAlignment;
 }
 
 export interface FlexLayout {
-  id: string;
-  type: 'layout';
-  layoutType: 'flex';
-  name: string;
-  parent: string;
-  props: {
-    direction: 'row' | 'column';
-    align: FlexAlignment;
-    justify: FlexJustification;
-    wrap: boolean;
-  };
-  position: number;
-  style: TStyle;
+  type: 'flex';
+  direction: 'row' | 'column';
+  align: FlexAlignment;
+  justify: FlexJustification;
+  wrap: boolean;
 }
 
-export type Layout = GridLayout | FlexLayout;
+export type Layout = GridLayout | FlexLayout | null;

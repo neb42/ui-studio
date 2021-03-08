@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Element, Event, Component, ComponentConfig, Widget, WidgetProp, Mode } from 'canvas-types';
 import { generateDefaultName, getNextPosition } from 'selectors/element';
 import { StylesModel } from 'models/styles';
+import { LayoutModel } from 'models/layout';
 import { Store } from 'types/store';
 
 export class WidgetModel {
@@ -23,6 +24,7 @@ export class WidgetModel {
       props: WidgetModel.getDefaultProps(component),
       events: WidgetModel.getDefaultEvents(component),
       style: StylesModel.getDefaultStyle(parentElement),
+      layout: LayoutModel.getDefaultLayout('flex'),
     };
   };
 
@@ -47,14 +49,19 @@ export class WidgetModel {
 
   static getDefaultProps = (component: Component): { [key: string]: WidgetProp } => {
     return component.config.reduce((acc, cur) => {
-      return { ...acc, [cur.key]: WidgetModel.getDefaultProp('static', cur) };
+      const mode = (() => {
+        if (cur.list) return 'list';
+        if (cur.component === 'complex') return 'complex';
+        return 'static';
+      })();
+      return { ...acc, [cur.key]: WidgetModel.getDefaultProp(mode, cur) };
     }, {});
   };
 
   static getDefaultProp = (
     mode: Mode,
     config: ComponentConfig,
-    widgetProp?: WidgetProp = null,
+    widgetProp?: WidgetProp = null, // TODO prefill with existing values
   ): WidgetProp => {
     switch (mode) {
       case 'complex': {

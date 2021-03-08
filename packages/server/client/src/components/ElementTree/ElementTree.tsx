@@ -11,7 +11,6 @@ import { ClearSharp, AddSharp } from '@material-ui/icons';
 import { Page, Layout, Widget } from 'canvas-types';
 import { getElementTree, makeGetSelectedElement } from 'selectors/element';
 import { selectElement, hoverElement, updateElementPosition } from 'actions/element';
-import { removeLayout } from 'actions/layout';
 import { removeWidget } from 'actions/widget';
 import { ElementIcon } from 'components/ElementIcon';
 import { ElementTreeHeader } from 'components/ElementTreeHeader';
@@ -28,7 +27,7 @@ interface ITreeItemLabel {
   onClick: (id: string) => () => void;
   onMouseEnter: (id: string) => () => void;
   onMouseLeave: () => void;
-  onRemove: (element: Page | Layout | Widget) => any;
+  onRemove: (element: Widget) => any;
   handleOpenAddElementMenu: (anchor: HTMLElement) => void;
 }
 
@@ -145,14 +144,8 @@ export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
     );
   };
 
-  const handleRemove = (element: Page | Layout | Widget) => {
-    if (element.type === 'layout') {
-      dispatch(removeLayout(element));
-    }
-
-    if (element.type === 'widget') {
-      dispatch(removeWidget(element));
-    }
+  const handleRemove = (element: Widget) => {
+    dispatch(removeWidget(element));
   };
 
   const handleExpand = (id: string | number) => {

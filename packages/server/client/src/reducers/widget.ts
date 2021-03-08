@@ -8,9 +8,10 @@ import {
   UPDATE_WIDGET_EVENT,
   REMOVE_WIDGET_EVENT,
   UPDATE_WIDGET_PARENT,
+  UPDATE_WIDGET_LAYOUT_CONFIG,
+  UPDATE_WIDGET_LAYOUT_TYPE,
   Action$Widget,
 } from 'actions/widget';
-import { REMOVE_LAYOUT, IRemoveLayout } from 'actions/layout';
 import { REMOVE_PAGE, RemovePage } from 'actions/page';
 import { REMOVE_VARIABLE, RemoveVariable } from 'actions/variable';
 import {
@@ -26,7 +27,9 @@ import {
   InitClient,
 } from 'actions/element';
 import { ElementModel } from 'models/element';
+import { LayoutModel } from 'models/layout';
 import { Store$Widget } from 'types/store';
+import { StylesModel } from 'models/styles';
 
 const initialState: Store$Widget = {};
 
@@ -35,7 +38,6 @@ export const widget = (
   action:
     | Action$Widget
     | IUpdateElementName
-    | IRemoveLayout
     | UpdateElementCSS
     | UpdateElementClassNames
     | UpdateElementPosition
@@ -50,7 +52,6 @@ export const widget = (
         [action.payload.id]: action.payload,
       };
     }
-    case REMOVE_LAYOUT:
     case REMOVE_WIDGET: {
       return Object.keys(state).reduce((acc, cur) => {
         const current = state[cur];
@@ -245,6 +246,42 @@ export const widget = (
           position: action.payload.position,
         },
       };
+    }
+    case UPDATE_WIDGET_LAYOUT_CONFIG: {
+      return {
+        ...state,
+        [action.payload.id]: {
+          ...state[action.payload.id],
+          layout: {
+            ...state[action.payload.id].layout,
+            [action.payload.key]: action.payload.value,
+          },
+        },
+      };
+    }
+    case UPDATE_WIDGET_LAYOUT_TYPE: {
+      const element = {
+        ...state[action.payload.id],
+        layout: LayoutModel.getDefaultLayout(action.payload.layoutType),
+      };
+      return Object.keys(state).reduce((acc, cur) => {
+        if (cur === action.payload.id) {
+          return {
+            ...acc,
+            [cur]: element,
+          };
+        }
+        if (state[cur].parent === action.payload.id) {
+          return {
+            ...acc,
+            [cur]: {
+              ...state[cur],
+              style: StylesModel.getDefaultStyle(element),
+            },
+          };
+        }
+        return acc;
+      }, {});
     }
     case INIT_CLIENT: {
       return action.payload.widgets;

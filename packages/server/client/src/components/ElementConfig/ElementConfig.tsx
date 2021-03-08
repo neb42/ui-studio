@@ -3,16 +3,12 @@ import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 import Tabs from '@faculty/adler-web-components/atoms/Tabs';
 import { Store } from 'types/store';
-import { makeGetElement, makeGetSelectedElement } from 'selectors/element';
+import { makeGetElement, makeGetSelectedElement, makeGetComponents } from 'selectors/element';
 import { ElementIcon } from 'components/ElementIcon';
-import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig/GridLayoutConfig';
-import { FlexLayoutConfig } from 'components/Flex/FlexLayoutConfig';
-import { GridParentStyle } from 'components/Grid/GridParentStyle';
-import { FlexParentStyle } from 'components/Flex/FlexParentStyle';
 import { WidgetConfig } from 'components/WidgetConfig';
-import { CSSInput } from 'components/CSSInput';
-import { ClassNamesInput } from 'components/ClassNamesInput';
+import { LayoutConfig } from 'components/LayoutConfig';
 import { EventConfig } from 'components/EventConfig';
+import { StyleConfig } from 'components/StyleConfig';
 import { EditName } from 'components/EditName/EditName';
 
 import * as Styles from './ElementConfig.styles';
@@ -28,46 +24,52 @@ export const ElementConfig = (): JSX.Element => {
     !selectedElement || selectedElement.type === 'page' ? null : selectedElement.parent;
   const parentElement = useSelector((state: Store) => getElement(state, parentName));
 
+  const component = useSelector(React.useMemo(makeGetComponents, [])).find((c) => {
+    if (selectedElement?.type !== 'widget') return false;
+    return c.name === selectedElement.component;
+  });
+
   if (selectedElement === null) {
     return <Styles.Container>No element selected</Styles.Container>;
   }
 
-  const tabHeaders = [{ content: 'Config' }, { content: 'Styles' }];
-  if (selectedElement.type === 'widget') {
-    tabHeaders.push({ content: 'Events' });
-  }
+  const hasConfig = Boolean(component && component.config && component.config.length > 0);
+  const hasEvents = Boolean(component && component.events && component.events.length > 0);
+  const hasLayout = Boolean(component?.hasLayout);
+
+  const tabHeaders = (() => {
+    const th = [];
+    if (hasConfig) th.push('Config');
+    if (hasLayout) th.push('Layout');
+    if (hasEvents) th.push('Events');
+    th.push('Styles');
+    return th;
+  })();
+
+  const isSelected = (key: string) => tabHeaders.findIndex((k) => k === key) === tabIndex;
 
   return (
     <Styles.Container>
       <Styles.Header>
         <ElementIcon element={selectedElement} color={theme.colors.text.secondary} />
         <EditName element={selectedElement} component={Styles.ComponentName} />
-        <Tabs tabHeaders={tabHeaders} onTabChange={(_, idx: number) => setTabIndex(idx)} />
+        <Tabs
+          tabHeaders={tabHeaders.map((k) => ({ content: k }))}
+          onTabChange={(_, idx: number) => setTabIndex(idx)}
+        />
       </Styles.Header>
       <Styles.Body>
-        {tabIndex === 0 &&
-          selectedElement.type === 'layout' &&
-          selectedElement.layoutType === 'grid' && <GridLayoutConfig layout={selectedElement} />}
-        {tabIndex === 0 &&
-          selectedElement.type === 'layout' &&
-          selectedElement.layoutType === 'flex' && <FlexLayoutConfig layout={selectedElement} />}
-        {tabIndex === 0 && selectedElement.type === 'widget' && (
+        {hasConfig && selectedElement.type === 'widget' && isSelected('Config') && (
           <WidgetConfig widget={selectedElement} />
         )}
-        {tabIndex === 1 &&
-          selectedElement?.type !== 'page' &&
-          parentElement?.type === 'layout' &&
-          parentElement?.layoutType === 'grid' && (
-            <GridParentStyle element={selectedElement} parent={parentElement} />
-          )}
-        {tabIndex === 1 &&
-          selectedElement?.type !== 'page' &&
-          parentElement?.type === 'layout' &&
-          parentElement?.layoutType === 'flex' && <FlexParentStyle element={selectedElement} />}
-        {tabIndex === 1 && <ClassNamesInput element={selectedElement} />}
-        {tabIndex === 1 && <CSSInput element={selectedElement} />}
-        {selectedElement.type === 'widget' && tabIndex === 2 && (
+        {hasLayout && selectedElement.type === 'widget' && isSelected('Layout') && (
+          <LayoutConfig widget={selectedElement} />
+        )}
+        {selectedElement.type === 'widget' && isSelected('Events') && (
           <EventConfig widget={selectedElement} />
+        )}
+        {isSelected('Styles') && (
+          <StyleConfig element={selectedElement} parentElement={parentElement} />
         )}
       </Styles.Body>
     </Styles.Container>
