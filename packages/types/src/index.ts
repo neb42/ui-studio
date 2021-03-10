@@ -19,7 +19,6 @@ export type {
   FlexJustification,
   IGridStyle,
   IFlexStyle,
-  IPageStyle,
   TStyle,
   TGridStyleLayout,
   IRootStyle,
