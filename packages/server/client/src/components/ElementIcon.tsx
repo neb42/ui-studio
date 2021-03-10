@@ -6,12 +6,7 @@ import { Element, Component } from 'canvas-types';
 import { makeGetComponents } from 'selectors/element';
 
 const getIcon = (element: Element, components: Component[]) => {
-  if (element.type === 'page') return Icons.DashboardSharp;
-
-  if (element.type === 'layout') {
-    if (element.layoutType === 'grid') return Icons.GridOnSharp;
-    if (element.layoutType === 'flex') return Icons.ViewWeekSharp;
-  }
+  if (element.type === 'page') return Icons.WebSharp;
 
   if (element.type === 'widget') {
     const icon = components.find((c) => c.name === element.component)?.icon ?? '';
