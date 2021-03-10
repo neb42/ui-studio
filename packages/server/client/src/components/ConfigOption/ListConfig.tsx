@@ -27,17 +27,11 @@ export const ListConfig = ({ widgetProp, config, onChange }: ListConfigProps): J
   if (!config.list) throw Error();
 
   const handleAddProp = () => {
-    const defaultProp = (() => {
-      if (config.component === 'complex')
-        return {
-          mode: 'complex' as const,
-          props: config.config.reduce((acc, cur) => {
-            return { ...acc, [cur.key]: cur.defaultValue };
-          }, {}),
-        };
-      return { mode: 'static' as const, type: config.type, value: config.defaultValue };
-    })();
-
+    const defaultProp = WidgetModel.getDefaultProp(
+      config.component === 'complex' ? 'complex' : 'static',
+      { ...config, list: false },
+    );
+    if (defaultProp.mode === 'list') throw Error();
     const prop: WidgetProp$List = { ...widgetProp };
     prop.props.push(defaultProp);
     onChange(config.key, prop);
