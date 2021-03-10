@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme } from 'styled-components';
-import { IconButton } from '@material-ui/core';
+import { Menu, ListItemIcon, MenuItem, IconButton } from '@material-ui/core';
 import { Edit, Functions, Widgets, Settings } from '@material-ui/icons';
 import { Mode } from 'canvas-types';
 
@@ -28,24 +28,40 @@ export const ModeButtons = ({
   modeOptions,
 }: ModeButtonsProps): JSX.Element | null => {
   const theme = useTheme();
+  const [anchorEl, setAnchorEl] = React.useState<(EventTarget & HTMLButtonElement) | null>(null);
 
-  const handleToggleMode = (m: Mode) => () => onModeChange(m);
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+    setAnchorEl(event.currentTarget);
+  const handleCloseMenu = () => setAnchorEl(null);
 
-  const getColor = (m: Mode) => (mode === m ? theme.colors.brand500 : theme.colors.secondary500);
+  const handleToggleMode = (m: Mode) => () => {
+    onModeChange(m);
+    handleCloseMenu();
+  };
 
   if (modeOptions.length === 0) return null;
 
+  const CurrentIcon = iconMap[mode];
+
   return (
     <Styles.ModeButtons>
-      {allModes.map((m) => {
-        if (!modeOptions.includes(m)) return null;
-        const Icon = iconMap[m];
-        return (
-          <IconButton key={m} onClick={handleToggleMode(m)} size="small">
-            <Icon style={{ color: getColor(m) }} />
-          </IconButton>
-        );
-      })}
+      <IconButton onClick={handleOpenMenu} size="small">
+        <CurrentIcon style={{ color: theme.colors.brand500 }} />
+      </IconButton>
+      <Menu keepMounted anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
+        {allModes.map((m) => {
+          if (!modeOptions.includes(m)) return null;
+          const Icon = iconMap[m];
+          return (
+            <MenuItem key={m} onClick={handleToggleMode(m)}>
+              <ListItemIcon>
+                <Icon style={{ color: theme.colors.secondary500 }} />
+              </ListItemIcon>
+              {m}
+            </MenuItem>
+          );
+        })}
+      </Menu>
     </Styles.ModeButtons>
   );
 };
