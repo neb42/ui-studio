@@ -38,6 +38,7 @@ export const Body = styled.div`
   display: grid;
   grid-auto-rows: min-content;
   row-gap: 24px;
-  padding: 16px 24px;
+  padding: 16px;
   overflow: auto;
+  background-color: #f8f8f8;
 `;

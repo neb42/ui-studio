@@ -1,1 +1,0 @@
-export { ConfigOption } from './ConfigOption';

@@ -1,1 +1,1 @@
-export { WidgetConfig } from './WidgetConfig';
+export { WidgetConfigList as WidgetConfig } from './WidgetConfigList';

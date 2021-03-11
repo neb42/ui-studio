@@ -4,8 +4,6 @@ import { Menu, ListItemIcon, MenuItem, IconButton } from '@material-ui/core';
 import { Edit, Functions, Widgets, Settings } from '@material-ui/icons';
 import { Mode } from 'canvas-types';
 
-import * as Styles from './ConfigOption.styles';
-
 const iconMap = {
   complex: Settings,
   list: Settings,
@@ -44,7 +42,7 @@ export const ModeButtons = ({
   const CurrentIcon = iconMap[mode];
 
   return (
-    <Styles.ModeButtons>
+    <>
       <IconButton onClick={handleOpenMenu} size="small">
         <CurrentIcon style={{ color: theme.colors.brand500 }} />
       </IconButton>
@@ -62,6 +60,6 @@ export const ModeButtons = ({
           );
         })}
       </Menu>
-    </Styles.ModeButtons>
+    </>
   );
 };
