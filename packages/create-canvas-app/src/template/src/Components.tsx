@@ -6,12 +6,16 @@ const Example = {
   category: '',
   icon: '',
   hasChildren: false,
-  events: [
-    { key: 'onClick', label: 'Example event' },
-  ],
+  events: [{ key: 'onClick', label: 'Example event' }],
   config: [
     { component: 'input', key: 'exampleInput', label: 'Example input', type: 'string' },
-    { component: 'select', options: [{ key: 'example', value: 'Example' }], key: 'exampleSelect', label: 'Example select', type: 'string' },
+    {
+      component: 'select',
+      options: [{ key: 'example', value: 'Example' }],
+      key: 'exampleSelect',
+      label: 'Example select',
+      type: 'string',
+    },
   ],
   exposedProperties: ['exampleProperty'],
   component: ({ onClick, exampleInput, exampleSelect }) => <div />,
