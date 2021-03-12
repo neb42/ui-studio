@@ -1,11 +1,16 @@
 import * as React from 'react';
+import { ScreenSizeSelection } from 'components/ScreenSizeSelection';
 
 import logo from './logo.svg';
 import * as Styles from './Header.styles';
 
 export const Header = () => (
   <Styles.Container>
-    <img src={logo} alt="logo" height={45} width={45} />
-    Canvas
+    <Styles.Title>
+      <img src={logo} alt="logo" height={45} width={45} />
+      Canvas
+    </Styles.Title>
+    <ScreenSizeSelection />
+    <div />
   </Styles.Container>
 );

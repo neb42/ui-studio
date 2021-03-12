@@ -1,6 +1,13 @@
 import { createSelector } from 'reselect';
 import { Widget, Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
-import { Store, Store$Page, Store$Widget, Store$Overlay, Store$Variable } from 'types/store';
+import {
+  Store,
+  Store$Page,
+  Store$Widget,
+  Store$Overlay,
+  Store$Variable,
+  ScreenSize,
+} from 'types/store';
 import { TreeItem } from '@atlaskit/tree';
 
 export const getPages = (state: Store): Store$Page => state.page;
@@ -16,6 +23,7 @@ export const getSelectedVariableId = (state: Store): string | null =>
 export const getSelectedView = (state: Store): 'preview' | 'variable' | 'css' =>
   state.element.selectedView;
 export const getComponents = (state: Store): Component[] => state.element.components;
+export const getPreviewSize = (state: Store): ScreenSize => state.element.previewSize;
 
 export const getElementTree = createSelector(
   getPages,

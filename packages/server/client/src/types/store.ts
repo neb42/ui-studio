@@ -14,6 +14,8 @@ export interface KeyedObject<T> {
   [key: string]: T;
 }
 
+export type ScreenSize = 'monitor' | 'laptop' | 'tablet' | 'mobile';
+
 export type Store$Element = {
   selectedPage: string | null;
   selectedOverlay: string | null;
@@ -21,6 +23,7 @@ export type Store$Element = {
   hoverElement: string | null;
   selectedVariable: string | null;
   selectedView: 'preview' | 'variable' | 'css';
+  previewSize: ScreenSize;
   functions: FunctionDefinition[];
   actions: ActionDefinition[];
   components: Component[];

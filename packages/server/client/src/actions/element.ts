@@ -7,6 +7,7 @@ import {
   Store$Variable,
   TGetState,
   TThunkAction,
+  ScreenSize,
 } from 'types/store';
 import { makeGetElement } from 'selectors/element';
 import { StylesModel } from 'models/styles';
@@ -125,6 +126,20 @@ export const selectView = (view: 'preview' | 'variable' | 'css'): SelectView => 
   payload: view,
 });
 
+export interface UpdatePreviewSize {
+  type: 'UPDATE_PREVIEW_SIZE';
+  payload: {
+    previewSize: ScreenSize;
+  };
+}
+
+export const UPDATE_PREVIEW_SIZE = 'UPDATE_PREVIEW_SIZE';
+
+export const updatePreviewSize = (previewSize: ScreenSize): UpdatePreviewSize => ({
+  type: UPDATE_PREVIEW_SIZE,
+  payload: { previewSize },
+});
+
 interface IInitFunctions {
   type: 'INIT_FUNCTIONS';
   payload: InitFunctions;
@@ -231,4 +246,5 @@ export type Action$Element =
   | IUpdateElementName
   | IInitFunctions
   | IInitComponents
-  | InitClient;
+  | InitClient
+  | UpdatePreviewSize;

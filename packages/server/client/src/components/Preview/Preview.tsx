@@ -2,13 +2,14 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import { InitFunctions, Component } from 'canvas-types';
-import { Store$Page, Store$Layout, Store$Widget, Store$Variable } from 'types/store';
+import { Store$Page, Store$Widget, Store$Variable } from 'types/store';
 import {
   makeGetElements,
   getVariables,
   getPages,
   getSelectedElementId,
   getHoverElementId,
+  getPreviewSize,
 } from 'selectors/element';
 import {
   initComponents,
@@ -27,6 +28,7 @@ interface IPreview {
 export const Preview = ({ pageName }: IPreview): JSX.Element => {
   const dispatch = useDispatch();
   const pages = Object.values(useSelector(getPages));
+  const previewSize = useSelector(getPreviewSize);
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
   const [previewServer, setPreviewServer] = React.useState<{
     host: string;
@@ -45,12 +47,7 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
   React.useEffect(() => {
     socket.on(
       'init-client',
-      async (client: {
-        pages: Store$Page;
-        layouts: Store$Layout;
-        widgets: Store$Widget;
-        variables: Store$Variable;
-      }) => {
+      async (client: { pages: Store$Page; widgets: Store$Widget; variables: Store$Variable }) => {
         await dispatch(initClient(client));
         setIsLoaded(true);
       },
@@ -99,5 +96,12 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
 
   if (!previewServer) return <div />;
 
-  return <Styles.Iframe src={`${previewServer.host}:${previewServer.clientPort}`} />;
+  return (
+    <Styles.Container>
+      <Styles.Iframe
+        previewSize={previewSize}
+        src={`${previewServer.host}:${previewServer.clientPort}`}
+      />
+    </Styles.Container>
+  );
 };
