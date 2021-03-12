@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useTheme } from 'styled-components';
-import { Menu, ListItemIcon, MenuItem, IconButton } from '@material-ui/core';
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import { Edit, Functions, Widgets, Settings } from '@material-ui/icons';
 import { Mode } from 'canvas-types';
 
@@ -12,7 +12,16 @@ const iconMap = {
   widget: Widgets,
 };
 
-const allModes: Mode[] = ['complex', 'list', 'static', 'variable', 'widget'];
+const nameMap = {
+  complex: 'Form',
+  list: 'Form',
+  static: 'Static',
+  variable: 'Variable',
+  widget: 'Widget property',
+};
+
+// const allModes: Mode[] = ['complex', 'list', 'static', 'variable', 'widget'];
+const allModes: Mode[] = ['widget', 'variable', 'static', 'list', 'complex'];
 
 interface ModeButtonsProps {
   mode: Mode;
@@ -25,16 +34,21 @@ export const ModeButtons = ({
   onModeChange,
   modeOptions,
 }: ModeButtonsProps): JSX.Element | null => {
-  const theme = useTheme();
-  const [anchorEl, setAnchorEl] = React.useState<(EventTarget & HTMLButtonElement) | null>(null);
+  const [open, setOpen] = React.useState(false);
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-    setAnchorEl(event.currentTarget);
-  const handleCloseMenu = () => setAnchorEl(null);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   const handleToggleMode = (m: Mode) => () => {
-    onModeChange(m);
-    handleCloseMenu();
+    if (mode !== m) {
+      onModeChange(m);
+    }
+    handleClose();
   };
 
   if (modeOptions.length === 0) return null;
@@ -42,24 +56,27 @@ export const ModeButtons = ({
   const CurrentIcon = iconMap[mode];
 
   return (
-    <>
-      <IconButton onClick={handleOpenMenu} size="small">
-        <CurrentIcon style={{ color: theme.colors.brand500 }} />
-      </IconButton>
-      <Menu keepMounted anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-        {allModes.map((m) => {
-          if (!modeOptions.includes(m)) return null;
+    <SpeedDial
+      ariaLabel="SpeedDial example"
+      icon={<CurrentIcon />}
+      onClose={handleClose}
+      onOpen={handleOpen}
+      open={open}
+      direction="left"
+    >
+      {allModes
+        .filter((m) => modeOptions.includes(m))
+        .map((m) => {
           const Icon = iconMap[m];
           return (
-            <MenuItem key={m} onClick={handleToggleMode(m)}>
-              <ListItemIcon>
-                <Icon style={{ color: theme.colors.secondary500 }} />
-              </ListItemIcon>
-              {m}
-            </MenuItem>
+            <SpeedDialAction
+              key={m}
+              icon={<Icon />}
+              tooltipTitle={nameMap[m]}
+              onClick={handleToggleMode(m)}
+            />
           );
         })}
-      </Menu>
-    </>
+    </SpeedDial>
   );
 };
