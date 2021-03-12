@@ -7,6 +7,7 @@ export const SegmentedControl = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.brand500};
   height: 45px;
   position: relative;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 export const HiddenRadio = styled.input`
@@ -22,7 +23,7 @@ export const Label = styled.label`
   cursor: pointer;
 `;
 
-export const ActiveSegment = styled.div<{ activeIdx: number, text: string }>`
+export const ActiveSegment = styled.div<{ activeIdx: number; text: string }>`
   height: 100%;
   width: calc(100% / 3);
   background-color: ${({ theme }) => theme.colors.brand500};
