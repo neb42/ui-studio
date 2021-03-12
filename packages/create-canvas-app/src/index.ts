@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import { promises as fs, existsSync } from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
@@ -91,6 +91,8 @@ const run = async (): Promise<void> => {
   if (!name || name.length === 0) throw Error('A directory must be specified');
 
   const directory = path.join(process.cwd(), name);
+
+  if (existsSync(directory)) throw Error('Directory already exists');
 
   await fs.mkdir(directory);
 
