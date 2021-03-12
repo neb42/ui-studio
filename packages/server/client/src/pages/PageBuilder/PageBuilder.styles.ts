@@ -9,7 +9,7 @@ export const Container = styled.div`
 
 export const Body = styled.div`
   display: grid;
-  grid-template-columns: 25% 50% 25%;
+  grid-template-columns: 300px 1fr 300px;
   overflow: hidden;
 `;
 

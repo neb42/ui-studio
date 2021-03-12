@@ -17,6 +17,7 @@ export const Tree = styled.div`
   padding: 16px;
   height: calc(100vh - 55px - 38px - 55px);
   overflow: auto;
+  background-color: ${({ theme }) => theme.colors.background.lightAlt};
 `;
 
 export const TreeItemLabel = styled.div<{ active: boolean }>`

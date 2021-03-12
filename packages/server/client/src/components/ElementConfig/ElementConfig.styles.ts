@@ -40,5 +40,5 @@ export const Body = styled.div`
   row-gap: 24px;
   padding: 16px;
   overflow: auto;
-  background-color: #f8f8f8;
+  background-color: ${({ theme }) => theme.colors.background.lightAlt};
 `;

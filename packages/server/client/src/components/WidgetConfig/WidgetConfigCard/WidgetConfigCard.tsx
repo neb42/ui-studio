@@ -12,9 +12,10 @@ interface Props {
   config: ComponentConfig;
   onChange: (prop: WidgetProp) => any;
   onDelete?: () => any;
+  label?: string;
 }
 
-const Single = ({ widgetProp, config, onChange }: Props) => {
+const Single = ({ widgetProp, config, onChange, label }: Props) => {
   if (widgetProp.mode === 'complex' && config.component === 'complex') {
     const handleComplexPropChange = (key: string) => (subProp: WidgetProp) => {
       if (subProp.mode === 'complex' || subProp.mode === 'list') throw Error();
@@ -30,13 +31,16 @@ const Single = ({ widgetProp, config, onChange }: Props) => {
             widgetProp={widgetProp.props[k]}
             config={config.config[i]}
             onChange={handleComplexPropChange(k)}
+            label={config.config[i].label}
           />
         ))}
       </>
     );
   }
   if (widgetProp.mode === 'static') {
-    return <StaticConfig widgetProp={widgetProp} config={config} onChange={onChange} />;
+    return (
+      <StaticConfig widgetProp={widgetProp} config={config} onChange={onChange} label={label} />
+    );
   }
   if (widgetProp.mode === 'variable') {
     return <VariableConfig widgetProp={widgetProp} config={config} onChange={onChange} />;

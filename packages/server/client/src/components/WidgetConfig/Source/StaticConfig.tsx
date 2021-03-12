@@ -13,12 +13,18 @@ import {
 } from 'canvas-types';
 
 interface StaticConfigProps {
+  label?: string;
   widgetProp: WidgetProp;
   config: ComponentConfig;
   onChange: (value: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget) => void;
 }
 
-export const StaticConfig = ({ widgetProp, config, onChange }: StaticConfigProps): JSX.Element => {
+export const StaticConfig = ({
+  widgetProp,
+  config,
+  onChange,
+  label,
+}: StaticConfigProps): JSX.Element => {
   const theme = useTheme();
   const [hasFocus, setHasFocus] = React.useState(false);
 
@@ -54,6 +60,8 @@ export const StaticConfig = ({ widgetProp, config, onChange }: StaticConfigProps
   const handleCheckboxOnChange = (value: boolean) => {
     onChange(buildStaticWidgetProp(value));
   };
+
+  const valueLabel = label || 'Value';
 
   if (config.list || config.component === 'complex') {
     if (typeof widgetProp.value !== 'string') throw Error();
@@ -96,7 +104,9 @@ export const StaticConfig = ({ widgetProp, config, onChange }: StaticConfigProps
         case 'string':
         case 'number': {
           if (typeof widgetProp.value === 'boolean') throw Error();
-          return <Input label="value" onChange={handleInputOnChange} value={widgetProp.value} />;
+          return (
+            <Input label={valueLabel} onChange={handleInputOnChange} value={widgetProp.value} />
+          );
         }
         case 'boolean':
           if (typeof widgetProp.value !== 'boolean') throw Error();
@@ -145,7 +155,7 @@ export const StaticConfig = ({ widgetProp, config, onChange }: StaticConfigProps
       const v = config.options.find((o) => o.key === widgetProp.value);
       return (
         <Select
-          label="Value"
+          label={valueLabel}
           value={v ? { value: v.key, label: v.label } : null}
           onChange={handleSelectOnChange}
           options={config.options.map((o) => ({ value: o.key, label: o.label }))}

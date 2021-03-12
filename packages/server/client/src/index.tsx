@@ -35,6 +35,41 @@ const GlobalStyles = createGlobalStyle`
   &:focus {
     outline: none;
   }
+
+  & .MuiSpeedDial-root {
+    position: absolute;
+    top: 6px;
+    height: 24px;
+    right: 0;
+
+    & .MuiFab-root {
+      width: 24px;
+      height: 24px;
+      min-height: 24px;
+      box-shadow: rgb(232 232 232) 0px 3px 2px 0px;
+
+      & .MuiSvgIcon-root {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    & .MuiFab-primary {
+      background-color: #1c1c1c;
+
+      &:hover {
+        background-color: #1c1c1c;
+      }
+    }
+
+    & .MuiSpeedDial-actions{
+      padding-right: 36px !important;
+    }
+
+    & .MuiSpeedDialAction-fab {
+      margin: 4px;
+    }
+  }
 `;
 
 ReactDOM.render(

@@ -71,6 +71,7 @@ export const WidgetConfigItem = ({
       ) : (
         <div />
       )}
+      <div style={{ width: 24 }} />
       <ModeButtons
         mode={widgetProp.mode}
         modeOptions={modeOptions}
