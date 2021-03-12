@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
-import { Widget, Variable, Page, Layout, Component } from 'canvas-types';
+import { Widget, Variable, Page, Component } from 'canvas-types';
 import Functions from 'functions-pkg/build/Functions';
 
 import { KeyedObject, Store } from './types/store';
@@ -31,7 +31,6 @@ export const DevCommunicator = () => {
         (tree: {
           widgets: KeyedObject<Widget>;
           pages: KeyedObject<Page>;
-          layouts: KeyedObject<Layout>;
           variables: KeyedObject<Variable>;
         }) =>
           dispatch(

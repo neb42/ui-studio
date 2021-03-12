@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 import { ThunkAction as TA } from 'redux-thunk';
-import { Widget, Variable, Page, Layout } from 'canvas-types';
+import { Widget, Variable, Page } from 'canvas-types';
 
 export interface KeyedObject<T> {
   [key: string]: T;
@@ -20,10 +20,6 @@ export interface Store$Page {
   config: KeyedObject<Page>;
 }
 
-export interface Store$Layout {
-  config: KeyedObject<Layout>;
-}
-
 export interface Store$Development {
   selectedElement: string | null;
   hoverElement: string | null;
@@ -33,7 +29,6 @@ export interface Store {
   widget: Store$Widget;
   variable: Store$Variable;
   page: Store$Page;
-  layout: Store$Layout;
   development: Store$Development;
 }
 

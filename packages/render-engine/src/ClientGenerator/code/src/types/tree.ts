@@ -2,6 +2,6 @@ export interface TreeNode {
   id: string;
   name: string;
   position: number;
-  type: 'page' | 'layout' | 'widget';
+  type: 'page' | 'widget';
   children: TreeNode[];
 }
