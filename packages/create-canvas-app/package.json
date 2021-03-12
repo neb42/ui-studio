@@ -6,6 +6,9 @@
   "homepage": "https://github.com/neb42/canvas/tree/master/packages/create-canvas-app#readme",
   "license": "MIT",
   "main": "build/index.js",
+  "bin": {
+    "create-canvas-app": "build/index.js"
+  },
   "files": [
     "build"
   ],
