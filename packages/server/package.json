@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@types/yargs": "^15.0.5",
-    "canvas-render-engine": "/Users/bmcalindin/workspace/canvas/packages/render-engine",
+    "canvas-render-engine": "0.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "get-port": "^5.1.1",
