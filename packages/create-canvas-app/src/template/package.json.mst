@@ -10,16 +10,6 @@
     "build": "rm -rf build/* && tsc",
     "start": "canvas"
   },
-  "dependencies": {
-    {{ #dependencies }}
-    "{{{ name }}}": "{{{ version }}}"{{ ^last }}, {{ /last }}      
-    {{ /dependencies }}
-  },
-  "devDependencies": {
-    {{ #devDependencies }}
-    "{{{ name }}}": "{{{ version }}}"{{ ^last }}, {{ /last }}      
-    {{ /devDependencies }}
-  },
   "peerDependencies": {
     "react": "17.x",
     "react-dom": "17.x"
