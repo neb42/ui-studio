@@ -1,11 +1,9 @@
-# `PreviewServer`
+# `canvas-server`
 
-> TODO: description
+Command line tool to run a canvas ui builder server
 
 ## Usage
 
 ```
-const previewServer = require('PreviewServer');
-
-// TODO: DEMONSTRATE API
+canvas
 ```

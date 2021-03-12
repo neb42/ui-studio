@@ -1,11 +1,18 @@
 # `create-canvas-app`
 
-> TODO: description
+Command line tool to generate a new canvas application.
+Initialises a directory with files, packages, and git.
 
 ## Usage
 
-```
-const createCanvasApp = require('create-canvas-app');
+Create a canvas application
 
-// TODO: DEMONSTRATE API
+```
+yarn create canvas-app <directory>
+```
+
+Create a canvas application with components from Faculty's Adler design system
+
+```
+yarn create canvas-app -t faculty <directory>
 ```
