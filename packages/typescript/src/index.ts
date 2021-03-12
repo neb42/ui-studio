@@ -57,7 +57,7 @@ interface RegisteredActions {
   args: { name: string; type: 'string' | 'number' | 'boolean' }[];
 }
 
-export class UIBuilder {
+export class Canvas {
   registered: {
     functions: RegisteredFunctions[];
     actions: RegisteredActions[];

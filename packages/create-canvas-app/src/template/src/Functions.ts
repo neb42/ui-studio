@@ -1,3 +1,3 @@
-import { Function, Action, UIBuilder } from 'canvas-typescript';
+import { Function, Action, Canvas } from 'canvas-typescript';
 
-export default class Functions extends UIBuilder {}
+export default class Functions extends Canvas {}
