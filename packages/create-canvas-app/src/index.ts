@@ -1,4 +1,4 @@
-import { promises as fs, existsSync } from 'fs';
+import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
@@ -50,19 +50,19 @@ const getTemplatePackageKeys = (templates: string[]): [string[], string[]] => {
   return [allPackages, componentPackages];
 };
 
-const renderPackageJson = async (name: string, directory: string, templates: string[]) => {
+const renderPackageJson = (name: string, directory: string, templates: string[]) => {
   const [_, templatePackageKeys] = getTemplatePackageKeys(templates);
 
   const componentPackages = templatePackageKeys.map((t) => ({ name: t, last: false }));
   if (componentPackages.length > 0) componentPackages[componentPackages.length - 1].last = true;
 
-  const data = await fs.readFile(path.join(__dirname, 'template', 'package.json.mst'));
+  const data = fs.readFileSync(path.join(__dirname, 'template', 'package.json.mst'));
   const renderedFile = Mustache.render(data.toString(), {
     name,
     componentPackages,
   });
-  await fs.writeFile(path.join(directory, 'package.json'), renderedFile);
-  await fs.unlink(path.join(directory, 'package.json.mst'));
+  fs.writeFileSync(path.join(directory, 'package.json'), renderedFile);
+  fs.unlinkSync(path.join(directory, 'package.json.mst'));
 };
 
 const initGit = (directory: string) => {
@@ -122,13 +122,13 @@ const run = async (): Promise<void> => {
 
   const directory = path.join(process.cwd(), name);
 
-  if (existsSync(directory)) error('Directory already exists');
+  if (fs.existsSync(directory)) error('Directory already exists');
 
-  await fs.mkdir(directory);
+  fs.mkdirSync(directory);
 
   copySync(path.join(__dirname, 'template'), directory);
 
-  await renderPackageJson(name, directory, templates);
+  renderPackageJson(name, directory, templates);
 
   addPackages(directory, templates, runner);
   initGit(directory);
