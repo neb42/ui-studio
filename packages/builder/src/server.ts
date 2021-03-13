@@ -47,7 +47,10 @@ const run = async (): Promise<void> => {
 
     socket.on('elements-updated', async (elements) => {
       socket.broadcast.emit('update-tree', elements);
-      writeFileSync(clientJsonPath, JSON.stringify(elements, null, 4));
+      writeFileSync(
+        clientJsonPath,
+        JSON.stringify({ version: clientJson.version, ...elements }, null, 4),
+      );
     });
 
     socket.on('navigate-page', (r) => {
