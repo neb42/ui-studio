@@ -1,7 +1,7 @@
 {
   "packages": [
     "packages/*",
-    "packages/server/client"
+    "packages/builder/client"
   ],
   "version": "independent",
   "npmClient": "yarn",  

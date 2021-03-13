@@ -8,7 +8,7 @@
   "scripts": {
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "build": "rm -rf build/* && tsc",
-    "start": "canvas"
+    "start": "canvas-builder"
   },
   "peerDependencies": {
     "react": "17.x",

@@ -2,6 +2,7 @@
   "name": "canvas-types",
   "version": "0.1.1",
   "private": false,
+  "homepage": "https://github.com/neb42/canvas/tree/master/packages/types#readme",
   "main": "src/index.ts",
   "scripts": {
     "clean": "rm -rf build/*",

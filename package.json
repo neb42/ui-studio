@@ -11,7 +11,7 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/server/client"
+    "packages/builder/client"
   ],
   "scripts": {
     "lerna": "lerna"

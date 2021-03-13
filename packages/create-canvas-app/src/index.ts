@@ -82,7 +82,7 @@ const addPackages = (directory: string, templates: string[], runner: 'npm' | 'ya
     version: 'latest',
   }));
   const devDependencies = [
-    { name: 'canvas-server', version: 'latest' },
+    { name: 'canvas-builder', version: 'latest' },
     { name: 'canvas-types', version: 'latest' },
     { name: 'typescript', version: '^4.0.3' },
     { name: '@types/node', version: '^12.0.0' },

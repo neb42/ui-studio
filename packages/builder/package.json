@@ -1,13 +1,13 @@
 {
-  "name": "canvas-server",
+  "name": "canvas-builder",
   "version": "0.1.1",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
-  "homepage": "https://github.com/neb42/canvas#readme",
+  "homepage": "https://github.com/neb42/canvas/tree/master/packages/builder#readme",
   "license": "MIT",
   "main": "build/server.js",
   "bin": {
-    "canvas": "build/server.js"
+    "canvas-builder": "build/server.js"
   },
   "repository": {
     "type": "git",
