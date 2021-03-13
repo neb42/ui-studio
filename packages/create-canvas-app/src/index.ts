@@ -14,7 +14,7 @@ const error = (message: string) => {
 
 const getNpmRunner = (): 'npm' | 'yarn' => {
   const runner = process.argv[0];
-  if (runner !== 'npm' || runner !== 'yarn') error('Invalid runner');
+  if (!['npm', 'yarn'].includes(runner)) error('Invalid runner');
   return runner as 'npm' | 'yarn';
 };
 
