@@ -1,6 +1,6 @@
 {
   "name": "canvas-types",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "homepage": "https://github.com/neb42/canvas/tree/master/packages/types#readme",
   "main": "src/index.ts",
