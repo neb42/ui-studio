@@ -7,6 +7,31 @@ import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import * as Mustache from 'mustache';
 
+const error = (message: string) => {
+  console.log(message);
+  process.exit(1);
+};
+
+const getNpmRunner = (): 'npm' | 'yarn' => {
+  const runner = process.argv[0];
+  if (runner !== 'npm' || runner !== 'yarn') error('Invalid runner');
+  return runner as 'npm' | 'yarn';
+};
+
+const checkNodeVersion = () => {
+  const currentNodeVersion = process.versions.node;
+  const semver = currentNodeVersion.split('.');
+  const major = semver[0];
+
+  if (typeof major !== 'number' || major < 14) {
+    error(
+      `You are running Node ${currentNodeVersion}.\n` +
+        'Create Canvas App requires Node 14 or higher. \n' +
+        'Please update your version of Node.',
+    );
+  }
+};
+
 const getTemplatePackageKeys = (templates: string[]): [string[], string[]] => {
   const allPackages = [];
   const componentPackages = [];
@@ -49,7 +74,7 @@ const initGit = (directory: string) => {
   });
 };
 
-const addPackages = (directory: string, templates: string[]) => {
+const addPackages = (directory: string, templates: string[], runner: 'npm' | 'yarn') => {
   const [templatePackageKeys] = getTemplatePackageKeys(templates);
 
   const dependencies = ['canvas-typescript', ...templatePackageKeys].map((k) => ({
@@ -65,8 +90,9 @@ const addPackages = (directory: string, templates: string[]) => {
     { name: '@types/react-dom', version: '^16.9.8' },
   ];
 
-  const depsCommand = `yarn add ${dependencies.map((d) => `${d.name}@${d.version}`).join(' ')}`;
-  const devDepsCommand = `yarn add -D ${devDependencies
+  const add = runner === 'yarn' ? 'yarn add' : 'npm install';
+  const depsCommand = `${add} ${dependencies.map((d) => `${d.name}@${d.version}`).join(' ')}`;
+  const devDepsCommand = `${add} -D ${devDependencies
     .map((d) => `${d.name}@${d.version}`)
     .join(' ')}`;
 
@@ -88,11 +114,15 @@ const run = async (): Promise<void> => {
   const name = argv._[0].toString();
   const templates = argv.template;
 
-  if (!name || name.length === 0) throw Error('A directory must be specified');
+  checkNodeVersion();
+
+  const runner = getNpmRunner();
+
+  if (!name || name.length === 0) error('A directory must be specified');
 
   const directory = path.join(process.cwd(), name);
 
-  if (existsSync(directory)) throw Error('Directory already exists');
+  if (existsSync(directory)) error('Directory already exists');
 
   await fs.mkdir(directory);
 
@@ -100,7 +130,7 @@ const run = async (): Promise<void> => {
 
   await renderPackageJson(name, directory, templates);
 
-  addPackages(directory, templates);
+  addPackages(directory, templates, runner);
   initGit(directory);
 };
 
