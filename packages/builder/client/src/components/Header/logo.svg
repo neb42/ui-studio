@@ -716,11 +716,291 @@
   -->
 
   <use id="tl" width="30" height="30" xlink:href="#y" href="#y" x="8" y="8" style="opacity: 0; animation-timing-function: ease-out;"/> <!-- top left place -->
-  <use id="tr" width="30" height="30" xlink:href="#linedot" href="#linedot" x="42" y="8" style="opacity: 0; animation-timing-function: ease-out;"/> <!-- top right place -->
-  <use id="bl" width="64" height="30" xlink:href="#widetext3" href="#widetext3" x="8" y="42" style="opacity: 0; animation-timing-function: ease-out;"/> <!-- bottom left place -->
-  <use id="br" width="30" height="30" xlink:href="#blank" href="#blank" x="42" y="42" style="opacity: 0; animation-timing-function: ease-out;"/> <!-- bottom right place -->
+  <use id="tr" width="30" height="30" xlink:href="#radar" href="#radar" x="42" y="8" style="opacity: 0; animation-timing-function: ease-out;"/> <!-- top right place -->
+  <use id="bl" width="30" height="30" xlink:href="#text4" href="#text4" x="8" y="42" style="opacity: 0; animation-timing-function: ease-out;"/> <!-- bottom left place -->
+  <use id="br" width="30" height="30" xlink:href="#line2" href="#line2" x="42" y="42" style="opacity: 0; animation-timing-function: ease-out;"/> <!-- bottom right place -->
 
   <use id="usegrid" width="80" height="80" xlink:href="#grid" href="#grid" x="0" y="0"/> <!-- overlay gridlines -->
 
   <rect id="refreshbutton" x="0" y="0" width="80" height="80" onclick="rearrange()"/> <!-- a blank rect to act as a button that rearranges the logo -->
+
+  <!-- Embedded javascript that generates random layouts, and handles refreshing -->
+
+  <script type="text/javascript"><![CDATA[
+
+    var svg = document.getElementById('dbclogo');
+
+    // a function to shuffle any array
+
+    function shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    }
+
+    // a function to remove an element from an array
+
+    function arrayRemove(arr, value) {
+       return arr.filter(function(ele){
+           return ele != value;
+       });
+    }
+
+    // initialise component arrays using the symbol definitions
+
+    var squareGraphs = ["bar","errorbars","line1","line2","linedot","pie","doughnut","area","table","tree","radar","shadedbar","distribution"];
+    var wideGraphs = ["widemap","widebar","wideerrorbars","wideline1","wideline2","wideline3","widelinedot","widescatter","widearea","widetree","widegantt","wideshadedbar"];
+    var tallGraphs = ["tallbar","talllines","talltree"];
+
+    var squareText = ["text1","text2","text3","text4"];
+    var wideText =["widetext1","widetext2","widetext3","widetext4"];
+    var tallText =["talltext1","talltext2"];
+
+    // arrange the symbols into a logo layout
+
+    function arrange() {
+
+    var layout = Math.floor((Math.random() * 10) + 1); // Roll 1d10 to pick layout: 1–4 quad, 5–8 wide, 9–10 tall
+
+    if (layout >= 5 && layout <= 8) {
+
+      // layout 5–8 has 40% chance
+      // wide layout
+
+      if (layout <= 6) {
+
+        // layout 5–6 has 20% chance
+        // wide top layout
+
+        var wideplace = "tl";
+        var clearplace = "tr";
+        var places = ["bl","br"];
+
+      } else {
+
+        // layout 7–8 has 20% chance
+        // wide bottom layout
+
+        var wideplace = "bl";
+        var clearplace = "br";
+        var places = ["tl","tr"];
+
+      }
+
+      document.getElementById(wideplace).setAttribute("width", "64");
+
+      places = shuffle(places);
+
+      var graphortext = Math.floor((Math.random() * 2) + 1); // flip a coin to decide if wide place is a graph or text
+
+      if (graphortext == 1) {
+
+        // wide place has a graph, therefore the remaining square should be either a graph or text
+
+        wideGraphs = shuffle(wideGraphs); // shuffle array
+
+        var squareGraphsText = squareGraphs.concat(squareText);
+        var square = shuffle(squareGraphsText);
+
+        document.getElementById(wideplace).setAttribute("xlink:href", "#"+wideGraphs[0]);
+        document.getElementById(wideplace).setAttribute("href", "#"+wideGraphs[0]);
+
+        // drop equivalent square graph from squareGraphs array
+
+        var squareversion = wideGraphs[0].substring(4);
+        square = arrayRemove(square,squareversion);
+
+      } else {
+
+        // wide place has text, therefore the remaining square should be a graph
+
+        wideText = shuffle(wideText);
+        var square = shuffle(squareGraphs);
+
+        document.getElementById(wideplace).setAttribute("xlink:href", "#"+wideText[0]);
+        document.getElementById(wideplace).setAttribute("href", "#"+wideText[0]);
+
+      }
+
+        document.getElementById(clearplace).setAttribute("xlink:href", "#blank");
+        document.getElementById(clearplace).setAttribute("href", "#blank");
+
+        document.getElementById(places[0]).setAttribute("xlink:href", "#y");
+        document.getElementById(places[0]).setAttribute("href", "#y");
+
+        document.getElementById(places[1]).setAttribute("xlink:href", "#"+square[0]);
+        document.getElementById(places[1]).setAttribute("href", "#"+square[0]);
+
+    } else if (layout >= 9 && layout <= 10) {
+
+      // layout 9–10 has 20% chance
+      //tall layout
+
+      if (layout == 9) {
+
+        // layout 9 has 10% chance
+        // tall left layout
+
+        var tallplace = "tl";
+        var clearplace = "bl";
+        var places = ["tr","br"];
+
+      } else {
+
+        // layout 10 has 10% chance
+        // tall right layout
+
+        var tallplace = "tr";
+        var clearplace = "br";
+        var places = ["tl","bl"];
+
+      }
+
+      document.getElementById(tallplace).setAttribute("height", "64");
+
+      places = shuffle(places);
+
+      var graphortext = Math.floor((Math.random() * 2) + 1); // flip a coin to decide if tall place is a graph or text
+
+      if (graphortext == 1) {
+
+        // tall place has a graph, therefore the remaining square should be either a graph or text
+
+        tallGraphs = shuffle(tallGraphs);
+
+        var squareGraphsText = squareGraphs.concat(squareText);
+        var square = shuffle(squareGraphsText);
+
+        document.getElementById(tallplace).setAttribute("xlink:href", "#"+tallGraphs[0]);
+        document.getElementById(tallplace).setAttribute("href", "#"+tallGraphs[0]);
+
+        // drop equivalent square graph from squareGraphs array
+
+        var squareversion = tallGraphs[0].substring(4);
+        square = arrayRemove(square,squareversion);
+
+      } else {
+
+        // tall place has text, therefore the remaining square should be a graph
+
+        tallText = shuffle(tallText);
+        var square = shuffle(squareGraphs);
+
+        document.getElementById(tallplace).setAttribute("xlink:href", "#"+tallText[0]);
+        document.getElementById(tallplace).setAttribute("href", "#"+tallText[0]);
+
+      }
+
+        document.getElementById(clearplace).setAttribute("xlink:href", "#blank");
+        document.getElementById(clearplace).setAttribute("href", "#blank");
+
+        document.getElementById(places[0]).setAttribute("xlink:href", "#y");
+        document.getElementById(places[0]).setAttribute("href", "#y");
+
+        document.getElementById(places[1]).setAttribute("xlink:href", "#"+square[0]);
+        document.getElementById(places[1]).setAttribute("href", "#"+square[0]);
+
+    } else {
+
+      // quad layout
+
+      var places = ["tl","tr","bl","br"];
+      places = shuffle(places);
+      squareGraphs = shuffle(squareGraphs);
+      squareText = shuffle(squareText);
+
+      document.getElementById(places[0]).setAttribute("xlink:href", "#y");
+      document.getElementById(places[0]).setAttribute("href", "#y");
+
+      document.getElementById(places[1]).setAttribute("xlink:href", "#"+squareText[1]);
+      document.getElementById(places[1]).setAttribute("href", "#"+squareText[1]);
+
+      // In a quad layout, only use pie or doughnut, not both.
+
+      var pieordoughnut = Math.floor((Math.random() * 2) + 1); // flip a coin for pie or doughnut
+
+      if (pieordoughnut == 1) {
+        var filteredSquareGraphs = arrayRemove(squareGraphs,"doughnut"); // filter out doughnut
+      } else {
+        var filteredSquareGraphs = arrayRemove(squareGraphs,"pie"); //filter out pie
+      }
+
+      var i=2;
+
+      while (places[i]) {
+      document.getElementById(places[i]).setAttribute("xlink:href", "#"+filteredSquareGraphs[i-1]);
+      document.getElementById(places[i]).setAttribute("href", "#"+filteredSquareGraphs[i-1]);
+      i++;
+      }
+
+    }
+
+    }
+
+    function clear() {
+
+      // animate out components
+
+      document.getElementById("tl").style = "opacity: 1; animation-timing-function: ease-in; animation-name: fadeOutUp;";
+      document.getElementById("tr").style = "opacity: 1; animation-timing-function: ease-in; animation-name: fadeOutRight;";
+      document.getElementById("br").style = "opacity: 1; animation-timing-function: ease-in; animation-name: fadeOutDown;";
+      document.getElementById("bl").style = "opacity: 1; animation-timing-function: ease-in; animation-name: fadeOutLeft;";
+
+    }
+
+    function restore() {
+
+      // reset animation styles and arrays
+
+      document.getElementById("tl").style = "animation-name: fadeInLeft;";
+      document.getElementById("tr").style = "animation-name: fadeInDown;";
+      document.getElementById("br").style = "animation-name: fadeInRight;";
+      document.getElementById("bl").style = "animation-name: fadeInUp;";
+
+      var places = [];
+      var places = ["tl","tr","bl","br"];
+
+      var i = 0;
+
+      while (places[i]) {
+        document.getElementById(places[i]).setAttribute("width", "30");
+        document.getElementById(places[i]).setAttribute("height", "30");
+        document.getElementById(places[i]).style = "opacity: 0; animation-timing-function: ease-out;";
+        document.getElementById(places[i]).setAttribute("xlink:href", "#blank");
+        document.getElementById(places[i]).setAttribute("href", "#blank");
+        i++;
+      }
+    }
+
+    function rearrange() {
+
+      // animate out components, reset, and arrange new components
+      clear();
+      window.setTimeout(restore,800);
+      window.setTimeout(arrange,800);
+      // arrange ();
+    }
+
+    // rearrange logo three times on load.
+
+    arrange();
+    window.setTimeout(rearrange,1500);
+    window.setTimeout(rearrange,3500);
+
+  ]]>
+  </script>
+
 </svg>
