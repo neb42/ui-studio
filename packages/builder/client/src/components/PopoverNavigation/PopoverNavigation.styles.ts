@@ -53,9 +53,9 @@ const slideIn = keyframes`
 
 export const PopoverContainer = styled.div`
   height: calc(100vh - 55px - 100px);
-  width: 50vw;
+  width: calc(100vw - 600px);
   position: fixed;
-  left: 25vw;
+  left: 300px;
   top: calc(55px + 100px);
   animation: 300ms ${slideIn} ease-out;
   background-color: ${({ theme }) => theme.colors.background.light};
@@ -72,10 +72,10 @@ const fadeIn = keyframes`
 
 export const Mask = styled.div`
   height: calc(100vh - 55px);
-  width: 50vw;
+  width: calc(100vw - 600px);
   position: fixed;
   bottom: 0;
-  left: 25vw;
+  left: 300px;
   background-color: ${({ theme }) => theme.colors.mask};
   animation: 300ms ${fadeIn} ease-out;
 `;
