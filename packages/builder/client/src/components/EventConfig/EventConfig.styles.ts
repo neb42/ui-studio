@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-`;
+export const Container = styled.div``;
 
 export const Event = styled.div`
   display: grid;
@@ -31,7 +30,9 @@ export const EventInstance = styled.div`
   grid-template-columns: auto min-content;
   column-gap: 16px;
   align-items: center;
-  padding-left: 24px;
+  padding: 8px;
+  background-color: #fff;
+  box-shadow: rgb(232 232 232) 0px 3px 2px 0px;
 
   & > *:nth-child(1) {
     grid-column: 2;
