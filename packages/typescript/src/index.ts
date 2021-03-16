@@ -70,8 +70,5 @@ export class Canvas {
   registered: {
     functions: RegisteredFunctions[];
     actions: RegisteredActions[];
-  } = {
-    functions: [],
-    actions: [],
   };
 }
