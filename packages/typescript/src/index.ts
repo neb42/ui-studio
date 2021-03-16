@@ -4,14 +4,23 @@
 /* eslint-disable no-param-reassign */
 import 'reflect-metadata';
 
+const getFunctionRegexMatch = (functionString: string, propertyName: string): RegExpMatchArray => {
+  const regexFirstAttempt = new RegExp(`^${propertyName}\\((.*)\\) {`);
+  const matchFirstAttempt = functionString.match(regexFirstAttempt);
+  if (matchFirstAttempt) return matchFirstAttempt;
+  const regexSecondAttempt = new RegExp(`^${propertyName})'^function\\s?\\((.*)\\) {')`);
+  const matchSecondAttempt = functionString.match(regexSecondAttempt);
+  return matchSecondAttempt;
+};
+
 export const Function = (): any => {
   return (target: any, propertyName: string, descriptor: PropertyDescriptor): void => {
     if (!target.registered) target.registered = {};
     if (!target.registered.functions) target.registered.functions = [];
 
     const functionString: string = target[propertyName].toString();
-    const regex = new RegExp(`^${propertyName}\\((.*)\\) {`);
-    const paramNames = functionString.match(regex)[1].replace(/ /g, '').split(',');
+    const regexMatch = getFunctionRegexMatch(functionString, propertyName);
+    const paramNames = regexMatch[1].replace(/ /g, '').split(',');
 
     const returnType = Reflect.getMetadata('design:returntype', target, propertyName);
     const paramTypes = Reflect.getMetadata('design:paramtypes', target, propertyName);
@@ -32,8 +41,8 @@ export const Action = (): any => {
     if (!target.registered.actions) target.registered.actions = [];
 
     const functionString: string = target[propertyName].toString();
-    const regex = new RegExp(`^${propertyName}\\((.*)\\) {`);
-    const paramNames = functionString.match(regex)[1].replace(/ /g, '').split(',');
+    const regexMatch = getFunctionRegexMatch(functionString, propertyName);
+    const paramNames = regexMatch[1].replace(/ /g, '').split(',');
 
     const paramTypes = Reflect.getMetadata('design:paramtypes', target, propertyName);
     target.registered.actions.push({
