@@ -164,7 +164,6 @@ export interface InitClient {
   type: 'INIT_CLIENT';
   payload: {
     pages: Store$Page;
-    layouts: Store$Layout;
     widgets: Store$Widget;
     variables: Store$Variable;
   };
@@ -174,7 +173,6 @@ export const INIT_CLIENT = 'INIT_CLIENT';
 
 export const initClient = (client: {
   pages: Store$Page;
-  layouts: Store$Layout;
   widgets: Store$Widget;
   variables: Store$Variable;
 }): InitClient => ({
