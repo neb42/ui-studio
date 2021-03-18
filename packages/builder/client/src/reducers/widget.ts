@@ -280,7 +280,10 @@ export const widget = (
             },
           };
         }
-        return acc;
+        return {
+          ...acc,
+          [cur]: state[cur],
+        };
       }, {});
     }
     case INIT_CLIENT: {
