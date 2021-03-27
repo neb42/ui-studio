@@ -1,3 +1,5 @@
+import { WidgetProp, WidgetProp$Iterable } from 'canvas-types';
+
 import { Store } from './types/store';
 
 export const getWidgetPropertyValue = (state: Store) => (widgetId: string, property: string) =>
@@ -60,4 +62,71 @@ export const getVariableArgs = (state: Store) => (variableId: string) => {
 
     return null;
   });
+};
+
+export const getProp = (state: Store) => (
+  widgetId: string,
+  prop: WidgetProp,
+  iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
+): any | null => {
+  if (prop.mode === 'list') {
+    return prop.props.map((p) => getProp(state)(widgetId, p, iteratorIndex));
+  }
+
+  if (prop.mode === 'complex') {
+    return Object.keys(prop.props).reduce(
+      (a, c) => ({ ...a, [c]: getProp(state)(widgetId, prop.props[c], iteratorIndex) }),
+      {},
+    );
+  }
+
+  if (prop.mode === 'variable') {
+    if (prop.type === 'object') {
+      return getVariableValue(state)(prop.variableId, prop.lookup);
+    }
+    return getVariableValue(state)(prop.variableId, null);
+  }
+
+  if (prop.mode === 'widget') {
+    return getWidgetPropertyValue(state)(prop.widgetId, prop.lookup);
+  }
+
+  if (prop.mode === 'static') {
+    if (prop.type === 'object') {
+      try {
+        return JSON.parse(prop.value);
+      } catch {
+        return null;
+      }
+    }
+    return prop.value;
+  }
+
+  if (prop.mode === 'iterable') {
+    return getIterableValue(state)(widgetId, prop, iteratorIndex);
+  }
+
+  return null;
+};
+
+export const getIterableValue = (state: Store) => (
+  sourceWidgetId: string,
+  widgetProp: WidgetProp$Iterable,
+  iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
+): any => {
+  try {
+    const position = iteratorIndex[widgetProp.widgetId][widgetProp.propKey];
+    const widget = state.widget.config[widgetProp.widgetId];
+    const iteratorValue = getProp(state)(
+      widget.id,
+      widget.props[widgetProp.propKey],
+      iteratorIndex,
+    );
+    if (!Array.isArray(iteratorValue)) throw Error();
+    const itemValue = iteratorValue[position];
+    if (widgetProp.lookup && widgetProp.lookup.length > 0) return itemValue[widgetProp.lookup];
+    return itemValue;
+  } catch {
+    return [];
+  }
 };

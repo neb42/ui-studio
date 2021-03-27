@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { Widget, Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
+import { Element, Widget, Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
 import {
   Store,
   Store$Page,
@@ -225,4 +225,39 @@ export const getOrphanedRootElements = (state: Store): Widget[] => {
     .map((w) => w.id);
 
   return [...rootWidgetIds].map((id) => all[id]);
+};
+
+const getBranch = (state: Store) => (elementId: string): Element[] => {
+  const element = makeGetElement()(state, elementId);
+  if (!element) throw Error();
+  if (element.type === 'page' || !element.parent) return [element];
+  const parentElements = getBranch(state)(element.parent);
+  return [...parentElements, element];
+};
+
+export const getAvailableIteratorKeys = (state: Store) => (
+  widgetId: string,
+): {
+  widgetId: string;
+  widgetName: string;
+  propKeys: string[];
+}[] => {
+  const parentElements = getBranch(state)(widgetId);
+  return parentElements.reduce<{ widgetId: string; widgetName: string; propKeys: string[] }[]>(
+    (acc, cur) => {
+      if (cur.id === widgetId || cur.type !== 'widget') return acc;
+      const iterablePropKeys = Object.keys(cur.props).reduce<string[]>((a, c) => {
+        const prop = cur.props[c];
+        if (
+          (prop.mode === 'list' || (prop.mode === 'static' && prop.type === 'object')) &&
+          prop.iterable
+        )
+          return [...a, c];
+        return a;
+      }, []);
+      if (iterablePropKeys.length === 0) return acc;
+      return [...acc, { widgetId: cur.id, widgetName: cur.name, propKeys: iterablePropKeys }];
+    },
+    [],
+  );
 };

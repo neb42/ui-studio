@@ -4,7 +4,6 @@ import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import {
   ComponentConfig,
-  WidgetProp,
   WidgetProp$Static,
   WidgetProp$Variable,
   WidgetProp$Widget,
@@ -12,7 +11,7 @@ import {
 import { getVariables } from 'selectors/element';
 
 interface VariableConfigProps {
-  widgetProp: WidgetProp;
+  widgetProp: WidgetProp$Variable;
   config: ComponentConfig;
   onChange: (value: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget) => void;
 }
@@ -36,12 +35,14 @@ export const VariableConfig = ({
         type: 'object',
         variableId,
         lookup: lookup || '',
+        iterable: config.iterable,
       };
 
     return {
       mode: 'variable',
       type,
       variableId,
+      iterable: false,
     };
   };
 

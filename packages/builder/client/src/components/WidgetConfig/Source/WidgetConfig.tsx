@@ -10,7 +10,7 @@ import {
 import { makeGetComponents, getWidgetsInTree } from 'selectors/element';
 
 interface WidgetConfigProps {
-  widgetProp: WidgetProp;
+  widgetProp: WidgetProp$Widget;
   onChange: (prop: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget) => void;
 }
 
@@ -24,6 +24,7 @@ export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.E
     mode: 'widget',
     widgetId,
     lookup,
+    iterable: false,
   });
 
   const handleIdChange = ({ value }: any) => {

@@ -6,7 +6,6 @@ import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
 import {
   ComponentConfig,
-  WidgetProp,
   WidgetProp$Static,
   WidgetProp$Variable,
   WidgetProp$Widget,
@@ -14,7 +13,7 @@ import {
 
 interface StaticConfigProps {
   label?: string;
-  widgetProp: WidgetProp;
+  widgetProp: WidgetProp$Static;
   config: ComponentConfig;
   onChange: (value: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget) => void;
 }
@@ -33,17 +32,17 @@ export const StaticConfig = ({
 
   const buildStaticWidgetProp = (v: string | number | boolean): WidgetProp$Static => {
     if (config.list || config.component === 'complex') {
-      return { mode: 'static', type: 'object', value: v.toString() };
+      return { mode: 'static', type: 'object', value: v.toString(), iterable: config.iterable };
     }
     switch (config.type) {
       case 'string':
-        return { mode: 'static', type: 'string', value: v.toString() };
+        return { mode: 'static', type: 'string', value: v.toString(), iterable: false };
       case 'number':
-        return { mode: 'static', type: 'number', value: Number(v) };
+        return { mode: 'static', type: 'number', value: Number(v), iterable: false };
       case 'boolean':
-        return { mode: 'static', type: 'boolean', value: Boolean(v) };
+        return { mode: 'static', type: 'boolean', value: Boolean(v), iterable: false };
       case 'object':
-        return { mode: 'static', type: 'object', value: v.toString() };
+        return { mode: 'static', type: 'object', value: v.toString(), iterable: config.iterable };
       default:
         throw Error();
     }

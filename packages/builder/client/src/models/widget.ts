@@ -1,5 +1,19 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Element, Event, Component, ComponentConfig, Widget, WidgetProp, Mode } from 'canvas-types';
+import {
+  Element,
+  Event,
+  Component,
+  ComponentConfig,
+  Widget,
+  WidgetProp,
+  WidgetProp$Static,
+  Mode,
+  WidgetProp$Widget,
+  WidgetProp$Variable,
+  WidgetProp$Complex,
+  WidgetProp$List,
+  WidgetProp$Iterable,
+} from 'canvas-types';
 import { generateDefaultName, getNextPosition } from 'selectors/element';
 import { StylesModel } from 'models/styles';
 import { LayoutModel } from 'models/layout';
@@ -24,8 +38,15 @@ export class WidgetModel {
       props: WidgetModel.getDefaultProps(component),
       events: WidgetModel.getDefaultEvents(component),
       style: StylesModel.getDefaultStyle(parentElement),
-      layout: LayoutModel.getDefaultLayout('flex'),
+      layout: component.hasLayout ? LayoutModel.getDefaultLayout('flex') : null,
     };
+  };
+
+  static getIsIterable = (config: ComponentConfig): boolean => {
+    if (config.list || (config.component !== 'complex' && config.type === 'object')) {
+      return config.iterable;
+    }
+    return false;
   };
 
   static getDefaultName = (state: Store, name: string): string => {
@@ -74,13 +95,15 @@ export class WidgetModel {
               [cur.key]: { mode: 'static', type: cur.type, value: cur.defaultValue },
             };
           }, {}),
-        };
+          iterable: false,
+        } as WidgetProp$Complex;
       }
       case 'list': {
         return {
           mode: 'list',
           props: [],
-        };
+          iterable: WidgetModel.getIsIterable(config),
+        } as WidgetProp$List;
       }
       case 'static': {
         if (config.list) {
@@ -88,7 +111,8 @@ export class WidgetModel {
             mode: 'static',
             type: 'object',
             value: JSON.stringify([], null, 2),
-          };
+            iterable: WidgetModel.getIsIterable(config),
+          } as WidgetProp$Static;
         }
         if (config.component === 'complex') {
           return {
@@ -104,27 +128,39 @@ export class WidgetModel {
               null,
               2,
             ),
-          };
+            iterable: WidgetModel.getIsIterable(config),
+          } as WidgetProp$Static;
         }
         return {
           mode: 'static',
           type: config.type,
           value: config.defaultValue,
-        };
+          iterable: config.type === 'object' ? WidgetModel.getIsIterable(config) : false,
+        } as WidgetProp$Static;
       }
       case 'variable': {
         return {
           mode: 'variable',
           type: 'string',
           variableId: '',
-        };
+          iterable: false,
+        } as WidgetProp$Variable;
       }
       case 'widget': {
         return {
           mode: 'widget',
           widgetId: '',
           lookup: '',
-        };
+          iterable: false,
+        } as WidgetProp$Widget;
+      }
+      case 'iterable': {
+        return {
+          mode: 'iterable',
+          widgetId: '',
+          propKey: '',
+          lookup: '',
+        } as WidgetProp$Iterable;
       }
       default:
         throw Error();

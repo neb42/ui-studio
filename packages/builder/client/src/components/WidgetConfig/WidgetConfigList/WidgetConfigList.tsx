@@ -28,7 +28,12 @@ export const WidgetConfigList = ({ widget }: WidgetConfigProps): JSX.Element => 
         const widgetProp = widget.props[c.key];
         return (
           <>
-            <WidgetConfigItem widgetProp={widgetProp} onChange={handleOnChange(c.key)} config={c} />
+            <WidgetConfigItem
+              widgetId={widget.id}
+              widgetProp={widgetProp}
+              onChange={handleOnChange(c.key)}
+              config={c}
+            />
             <Styles.Divider />
           </>
         );

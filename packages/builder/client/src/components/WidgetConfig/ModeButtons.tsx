@@ -1,7 +1,7 @@
 import * as React from 'react';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import { Edit, Functions, Widgets, Settings } from '@material-ui/icons';
+import { Edit, Functions, Widgets, Settings, ViewComfy } from '@material-ui/icons';
 import { Mode } from 'canvas-types';
 
 const iconMap = {
@@ -10,6 +10,7 @@ const iconMap = {
   static: Edit,
   variable: Functions,
   widget: Widgets,
+  iterable: ViewComfy,
 };
 
 const nameMap = {
@@ -18,10 +19,11 @@ const nameMap = {
   static: 'Static',
   variable: 'Variable',
   widget: 'Widget property',
+  iterable: 'Iterable',
 };
 
 // const allModes: Mode[] = ['complex', 'list', 'static', 'variable', 'widget'];
-const allModes: Mode[] = ['widget', 'variable', 'static', 'list', 'complex'];
+const allModes: Mode[] = ['iterable', 'widget', 'variable', 'static', 'list', 'complex'];
 
 interface ModeButtonsProps {
   mode: Mode;

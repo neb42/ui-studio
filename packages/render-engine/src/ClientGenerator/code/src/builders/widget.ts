@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { Widget, WidgetProp } from 'canvas-types';
+import { Widget } from 'canvas-types';
 
-import { getVariableValue, getWidgetPropertyValue } from '../selectors';
+import { getProp } from '../selectors';
 import { handleEvent } from '../actions/handleEvent';
 import { updateWidget } from '../actions/updateWidget';
 import { updateHoverElement, updateSelectedElement } from '../actions/development';
@@ -65,6 +65,7 @@ const WidgetWrapper = styled.div<{ widget: Widget; isSelected: boolean }>`
 
 const useGetProps = (
   widget: Widget,
+  iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
 ): {
   error: boolean;
   loading: boolean;
@@ -75,48 +76,9 @@ const useGetProps = (
     [key: string]: any;
   };
 } => {
-  const getVariableValueInstance = useSelector(getVariableValue);
-  const getWidgetPropertyValueInstance = useSelector(getWidgetPropertyValue);
-
+  const getPropInstance = useSelector(getProp);
   const rawValues: { [key: string]: any } = Object.keys(widget.props).reduce((acc, cur) => {
-    const getProp = (prop: WidgetProp): any | null => {
-      if (prop.mode === 'list') {
-        return prop.props.map(getProp);
-      }
-
-      if (prop.mode === 'complex') {
-        return Object.keys(prop.props).reduce(
-          (a, c) => ({ ...a, [c]: getProp(prop.props[c]) }),
-          {},
-        );
-      }
-
-      if (prop.mode === 'variable') {
-        if (prop.type === 'object') {
-          return getVariableValueInstance(prop.variableId, prop.lookup);
-        }
-        return getVariableValueInstance(prop.variableId, null);
-      }
-
-      if (prop.mode === 'widget') {
-        return getWidgetPropertyValueInstance(prop.widgetId, prop.lookup);
-      }
-
-      if (prop.mode === 'static') {
-        if (prop.type === 'object') {
-          try {
-            return JSON.parse(prop.value);
-          } catch {
-            return null;
-          }
-        }
-        return prop.value;
-      }
-
-      return null;
-    };
-
-    const prop = getProp(widget.props[cur]);
+    const prop = getPropInstance(widget.id, widget.props[cur], iteratorIndex);
 
     return { ...acc, [cur]: prop };
   }, {});
@@ -171,10 +133,16 @@ const useEventHandlers = (widget: Widget) => {
   }, {});
 };
 
-export const WidgetBuilder: React.FC<any> = ({ widgetId }: { widgetId: string }) => {
+export const WidgetBuilder: React.FC<any> = ({
+  widgetId,
+  iteratorIndex = {},
+}: {
+  widgetId: string;
+  iteratorIndex: { [widgetId: string]: { [prop: string]: number } };
+}) => {
   const widget = useSelector((state: Store) => state.widget.config[widgetId]);
   const dispatch = useDispatch();
-  const { loading, error, values, exposedProperties } = useGetProps(widget);
+  const { loading, error, values, exposedProperties } = useGetProps(widget, iteratorIndex);
   const eventHandlers = useEventHandlers(widget);
   const isSelected = useSelector(
     (state: Store) =>
@@ -209,6 +177,7 @@ export const WidgetBuilder: React.FC<any> = ({ widgetId }: { widgetId: string })
     {
       ...eventHandlers,
       key: `widget-${widget.id}`,
+      widgetId: widget.id,
       loading,
       error,
       exposedProperties,
@@ -216,7 +185,7 @@ export const WidgetBuilder: React.FC<any> = ({ widgetId }: { widgetId: string })
     },
   );
 
-  const children = useChildrenMap(widgetId);
+  const children = useChildrenMap(widgetId, iteratorIndex);
 
   const C = Components[widget.library][widget.component].component;
 

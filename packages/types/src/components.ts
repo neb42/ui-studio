@@ -1,14 +1,16 @@
-export interface BaseComponentConfig {
+export type BaseComponentConfig = {
   key: string;
   label: string;
-  type: 'string' | 'number' | 'boolean' | 'object';
-  list: boolean;
   defaultValue: any;
-}
+} & (
+  | { type: 'string' | 'number' | 'boolean'; iterable: false; list: false }
+  | { type: 'string' | 'number' | 'boolean'; iterable: boolean; list: true }
+  | { type: 'object'; iterable: boolean; list: boolean }
+);
 
-export interface ComponentConfig$Input extends BaseComponentConfig {
+export type ComponentConfig$Input = BaseComponentConfig & {
   component: 'input';
-}
+};
 
 export type ComponentConfig$Select = BaseComponentConfig & {
   component: 'select';
@@ -24,9 +26,8 @@ export type ComponentConfig$Complex = {
   key: string;
   label: string;
   component: 'complex';
-  list: boolean;
   config: (ComponentConfig$Input | ComponentConfig$Select)[];
-};
+} & ({ list: true; iterable: boolean } | { list: false; iterable: false });
 
 export type ComponentConfig =
   | ComponentConfig$Input

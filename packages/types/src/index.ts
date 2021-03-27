@@ -9,6 +9,7 @@ export type {
   WidgetProp$Widget,
   WidgetProp$List,
   WidgetProp$Complex,
+  WidgetProp$Iterable,
 } from './widget';
 
 export type { Layout, FlexLayout, GridLayout, GridUnit, IGridCell } from './layout';

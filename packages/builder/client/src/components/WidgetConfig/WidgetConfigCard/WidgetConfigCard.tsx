@@ -4,10 +4,12 @@ import { WidgetProp, WidgetProp$List, WidgetProp$Complex, ComponentConfig } from
 import { StaticConfig } from 'components/WidgetConfig/Source/StaticConfig';
 import { VariableConfig } from 'components/WidgetConfig/Source/VariableConfig';
 import { WidgetConfig } from 'components/WidgetConfig/Source/WidgetConfig';
+import { IterableConfig } from 'components/WidgetConfig/Source/IterableConfig';
 
 import * as Styles from './WidgetConfigCard.styles';
 
 interface Props {
+  widgetId: string;
   widgetProp: WidgetProp;
   config: ComponentConfig;
   onChange: (prop: WidgetProp) => any;
@@ -15,10 +17,11 @@ interface Props {
   label?: string;
 }
 
-const Single = ({ widgetProp, config, onChange, label }: Props) => {
+const Single = ({ widgetId, widgetProp, config, onChange, label }: Props) => {
   if (widgetProp.mode === 'complex' && config.component === 'complex') {
     const handleComplexPropChange = (key: string) => (subProp: WidgetProp) => {
-      if (subProp.mode === 'complex' || subProp.mode === 'list') throw Error();
+      if (subProp.mode === 'complex' || subProp.mode === 'list' || subProp.mode === 'iterable')
+        throw Error();
       const prop: WidgetProp$Complex = { ...widgetProp };
       prop.props[key] = subProp;
       onChange(prop);
@@ -28,6 +31,7 @@ const Single = ({ widgetProp, config, onChange, label }: Props) => {
         {Object.keys(widgetProp.props).map((k, i) => (
           <Single
             key={k}
+            widgetId={widgetId}
             widgetProp={widgetProp.props[k]}
             config={config.config[i]}
             onChange={handleComplexPropChange(k)}
@@ -48,10 +52,14 @@ const Single = ({ widgetProp, config, onChange, label }: Props) => {
   if (widgetProp.mode === 'widget') {
     return <WidgetConfig widgetProp={widgetProp} onChange={onChange} />;
   }
+  if (widgetProp.mode === 'iterable') {
+    return <IterableConfig widgetId={widgetId} widgetProp={widgetProp} onChange={onChange} />;
+  }
   return null;
 };
 
 export const WidgetConfigCard = ({
+  widgetId,
   widgetProp,
   config,
   onChange,
@@ -70,7 +78,7 @@ export const WidgetConfigCard = ({
       ) : (
         <div />
       )}
-      <Single widgetProp={widgetProp} config={config} onChange={onChange} />
+      <Single widgetId={widgetId} widgetProp={widgetProp} config={config} onChange={onChange} />
     </Styles.Container>
   );
 };

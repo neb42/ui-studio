@@ -51,7 +51,10 @@ export const useBuildTree = (): ElementTreeNode[] => {
   return elementTree;
 };
 
-export const useChildrenMap = (nodeId: string): React.FunctionComponentElement<any>[] => {
+export const useChildrenMap = (
+  nodeId: string,
+  iteratorIndex = {},
+): React.FunctionComponentElement<any>[] => {
   const [childrenMap, setChildrenMap] = React.useState<
     Record<string, React.FunctionComponentElement<any>>
   >({});
@@ -71,6 +74,7 @@ export const useChildrenMap = (nodeId: string): React.FunctionComponentElement<a
           [cur.id]: React.createElement(React.memo(WidgetBuilder), {
             key: `widget-builder-${cur.id}`,
             widgetId: cur.id,
+            iteratorIndex,
           }),
         };
       }, {});
