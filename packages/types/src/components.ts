@@ -3,9 +3,9 @@ export type BaseComponentConfig = {
   label: string;
   defaultValue: any;
 } & (
-  | { type: 'string' | 'number' | 'boolean'; iterable: false; list: false }
-  | { type: 'string' | 'number' | 'boolean'; iterable: boolean; list: true }
-  | { type: 'object'; iterable: boolean; list: boolean }
+  | { type: 'string' | 'number' | 'boolean'; iterable?: false; list?: false }
+  | { type: 'string' | 'number' | 'boolean'; iterable?: boolean; list: true }
+  | { type: 'object'; iterable?: boolean; list?: boolean }
 );
 
 export type ComponentConfig$Input = BaseComponentConfig & {
@@ -27,7 +27,7 @@ export type ComponentConfig$Complex = {
   label: string;
   component: 'complex';
   config: (ComponentConfig$Input | ComponentConfig$Select)[];
-} & ({ list: true; iterable: boolean } | { list: false; iterable: false });
+} & ({ list: true; iterable?: boolean } | { list?: false; iterable?: false });
 
 export type ComponentConfig =
   | ComponentConfig$Input
@@ -40,14 +40,14 @@ export type Component$Event = {
 };
 
 export interface Component {
+  key: string;
   name: string;
-  description: string;
   category: string;
   library: string;
   icon: string;
-  hasChildren: boolean;
-  hasLayout: boolean;
-  exposedProperties: string[];
-  events: Component$Event[];
-  config: ComponentConfig[];
+  hasChildren?: boolean;
+  hasLayout?: boolean;
+  exposedProperties?: string[];
+  events?: Component$Event[];
+  config?: ComponentConfig[];
 }

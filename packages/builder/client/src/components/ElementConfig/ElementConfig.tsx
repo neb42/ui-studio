@@ -26,7 +26,7 @@ export const ElementConfig = (): JSX.Element => {
 
   const component = useSelector(React.useMemo(makeGetComponents, [])).find((c) => {
     if (selectedElement?.type !== 'widget') return false;
-    return c.name === selectedElement.component;
+    return c.key === selectedElement.component;
   });
 
   if (selectedElement === null) {

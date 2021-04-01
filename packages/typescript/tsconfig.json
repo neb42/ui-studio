@@ -3,6 +3,7 @@
     "lib": ["es2020"],
     "module": "commonjs",
     "noImplicitReturns": true,
+    "declaration": true,
     "outDir": "build",
     "sourceMap": true,
     "target": "es6",

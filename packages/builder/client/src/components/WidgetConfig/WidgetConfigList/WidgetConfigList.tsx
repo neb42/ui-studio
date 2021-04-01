@@ -14,7 +14,7 @@ interface WidgetConfigProps {
 export const WidgetConfigList = ({ widget }: WidgetConfigProps): JSX.Element => {
   const dispatch = useDispatch();
   const components = useSelector(makeGetComponents());
-  const component = components.find((c) => c.name === widget.component);
+  const component = components.find((c) => c.key === widget.component);
 
   const handleOnChange = (propKey: string) => (prop: WidgetProp) => {
     dispatch(updateWidgetProps(widget.id, propKey, prop));
@@ -24,7 +24,7 @@ export const WidgetConfigList = ({ widget }: WidgetConfigProps): JSX.Element => 
 
   return (
     <Styles.Container>
-      {component.config.map((c) => {
+      {component.config?.map((c) => {
         const widgetProp = widget.props[c.key];
         return (
           <>

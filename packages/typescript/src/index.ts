@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-param-reassign */
 import 'reflect-metadata';
+import { Component } from 'canvas-types';
 
 const getFunctionRegexMatch = (functionString: string, propertyName: string): RegExpMatchArray => {
   const regexFirstAttempt = new RegExp(`^${propertyName}\\((.*)\\) {`);
@@ -72,3 +73,21 @@ export class Canvas {
     actions: RegisteredActions[];
   };
 }
+
+export const parseComponents = (
+  components: (Component & {
+    component: any;
+  })[],
+): Record<
+  string,
+  Component & {
+    component: any;
+  }
+> =>
+  components.reduce(
+    (acc, cur) => ({
+      ...acc,
+      [cur.key]: cur,
+    }),
+    {},
+  );

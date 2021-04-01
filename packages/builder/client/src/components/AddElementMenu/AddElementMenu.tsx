@@ -10,36 +10,27 @@ import {
 } from 'selectors/element';
 import { addWidget, updateWidgetParent } from 'actions/widget';
 
+type WidgetMenuItem = {
+  key: string;
+  name: string;
+  library: string;
+  icon: Icons.SvgIconComponent;
+};
+
 const makeElements = (
   components: Component[],
 ): {
-  [key: string]: {
-    title: string;
-    description: string;
-    type: 'layout' | 'widget';
-    subtype: string;
-    library: string;
-    icon: Icons.SvgIconComponent;
-  }[];
+  [key: string]: WidgetMenuItem[];
 } => {
   const elements: {
-    [key: string]: {
-      title: string;
-      description: string;
-      type: 'layout' | 'widget';
-      subtype: string;
-      library: string;
-      icon: Icons.SvgIconComponent;
-    }[];
+    [key: string]: WidgetMenuItem[];
   } = {};
 
-  components.forEach(({ name, description, category, icon, library }) => {
+  components.forEach(({ key, name, category, icon, library }) => {
     const existing = elements[category] || [];
     existing.push({
-      title: name,
-      description,
-      type: 'widget',
-      subtype: name,
+      key,
+      name,
       library,
       icon: (Icons as { [key: string]: Icons.SvgIconComponent })?.[icon] ?? Icons.HelpOutlineSharp,
     });
@@ -54,6 +45,12 @@ interface IAddElementMenu {
   onClose: () => void;
 }
 
+const sortCategory = (a: WidgetMenuItem, b: WidgetMenuItem) => {
+  if (a.name > b.name) return 1;
+  if (a.name < b.name) return -1;
+  return 0;
+};
+
 export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Element => {
   const dispatch = useDispatch();
   const [category, setCategory] = React.useState<string | null>(null);
@@ -66,9 +63,9 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
   const elements = makeElements(components);
   const categories = Object.keys(elements);
 
-  const handleAddElement = (subtype: string, library: string) => () => {
+  const handleAddElement = (key: string, library: string) => () => {
     if (selectedElement) {
-      dispatch(addWidget(subtype, library, selectedElement.id));
+      dispatch(addWidget(key, library, selectedElement.id));
       onClose();
       setCategory(null);
     }
@@ -87,7 +84,7 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
   if (category === null) {
     return (
       <Menu keepMounted anchorEl={anchor} open={Boolean(anchor)} onClose={onClose}>
-        {categories.map((c) => (
+        {categories.sort().map((c) => (
           <MenuItem key={c} onClick={handleClickCategory(c)}>
             {c}
           </MenuItem>
@@ -107,18 +104,18 @@ export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Elemen
         {category}
       </MenuItem>
       {!showOrphanedElements &&
-        (elements?.[category] ?? []).map((e) => (
-          <MenuItem key={e.title} onClick={handleAddElement(e.subtype, e.library)}>
+        (elements?.[category] ?? []).sort(sortCategory).map((e) => (
+          <MenuItem key={e.name} onClick={handleAddElement(e.key, e.library)}>
             <ListItemIcon>
               <e.icon />
             </ListItemIcon>
-            {e.title}
+            {e.name}
           </MenuItem>
         ))}
       {showOrphanedElements &&
         orphanedElements.map((e) => {
           const Icon = (() => {
-            const comp = components.find((c) => c.name === e.component);
+            const comp = components.find((c) => c.key === e.component);
             if (!comp) throw Error();
             return (
               (Icons as { [key: string]: Icons.SvgIconComponent })?.[comp.icon] ??

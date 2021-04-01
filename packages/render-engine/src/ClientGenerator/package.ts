@@ -36,13 +36,7 @@ const devDependencies = [
   { name: '@types/redux-thunk', version: '^2.1.0', last: false },
   { name: '@types/socket.io-client', version: '^1.4.35', last: false },
   { name: '@types/styled-components', version: '^5.1.4', last: false },
-  {
-    name: 'canvas-types',
-    version: '/Users/bmcalindin/workspace/canvas/packages/types',
-    last: false,
-  },
 ];
-devDependencies[devDependencies.length - 1].last = true;
 
 const generatePackageFile = async (
   componentPackages: { name: string; version: string }[],
@@ -72,7 +66,22 @@ const generatePackageFile = async (
     });
   });
 
+  const pkgJson = JSON.parse(
+    (await fs.readFile(path.join(__dirname, '../../package.json'))).toString(),
+  );
+  dependencies.push({
+    name: 'canvas-typescript',
+    version: pkgJson.dependencies['canvas-typescript'],
+    last: false,
+  });
+  devDependencies.push({
+    name: 'canvas-types',
+    version: pkgJson.dependencies['canvas-types'],
+    last: false,
+  });
+
   dependencies[dependencies.length - 1].last = true;
+  devDependencies[devDependencies.length - 1].last = true;
 
   const data = await fs.readFile(path.join(__dirname, 'templates', 'package.mst'));
   const renderedFile = Mustache.render(data.toString(), {

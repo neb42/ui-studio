@@ -99,16 +99,16 @@ const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>)
   };
 
   const widgets = Object.values(useSelector(getWidgetsInTree)).filter((w) => {
-    const comp = components.find((c) => c.name === w.component);
-    if (comp) return comp?.exposedProperties.length > 0;
+    const comp = components.find((c) => c.key === w.component);
+    if (comp && comp.exposedProperties) return comp.exposedProperties.length > 0;
     return false;
   });
 
   const selectedWidget = widgets.find((w) => w.id === arg.widgetId);
   const exposedPropertyOptions = selectedWidget
     ? components
-        .find((c) => c.name === selectedWidget.component)
-        ?.exposedProperties.map((p) => ({ value: p, label: p })) ?? []
+        .find((c) => c.key === selectedWidget.component)
+        ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
     : [];
 
   const widgetOptions = widgets.map((w) => ({ label: w.name, value: w.id }));

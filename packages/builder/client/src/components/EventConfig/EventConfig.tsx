@@ -151,7 +151,7 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
   const dispatch = useDispatch();
 
   const components = useSelector(React.useMemo(makeGetComponents, []));
-  const eventConfig = components.find((c) => c.name === widget.component)?.events ?? [];
+  const eventConfig = components.find((c) => c.key === widget.component)?.events ?? [];
 
   const handleAddEvent = (eventKey: string) => () => {
     const eventType = 'update-variable';

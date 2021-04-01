@@ -9,7 +9,7 @@ const getIcon = (element: Element, components: Component[]) => {
   if (element.type === 'page') return Icons.WebSharp;
 
   if (element.type === 'widget') {
-    const icon = components.find((c) => c.name === element.component)?.icon ?? '';
+    const icon = components.find((c) => c.key === element.component)?.icon ?? '';
     return (Icons as { [key: string]: Icons.SvgIconComponent })?.[icon] ?? Icons.HelpOutlineSharp;
   }
 

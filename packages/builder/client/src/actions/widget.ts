@@ -21,7 +21,7 @@ interface IAddWidget {
 }
 
 export const addWidget = (
-  componentName: string,
+  componentKey: string,
   library: string,
   parent: string,
 ): TThunkAction<IAddWidget> => (
@@ -33,7 +33,7 @@ export const addWidget = (
   const parentElement = makeGetElement()(state, parent);
   if (!parentElement) throw Error();
 
-  const component = getComponents(state).find((c) => c.name === componentName);
+  const component = getComponents(state).find((c) => c.key === componentKey);
   if (!component) throw Error();
 
   const widget = WidgetModel.getDefaultWidget(state, component, library, parentElement);

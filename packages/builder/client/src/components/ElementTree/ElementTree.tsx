@@ -8,7 +8,7 @@ import Tree, {
 } from '@atlaskit/tree';
 import { IconButton } from '@material-ui/core';
 import { ClearSharp, AddSharp } from '@material-ui/icons';
-import { Page, Layout, Widget } from 'canvas-types';
+import { Page, Widget } from 'canvas-types';
 import { getElementTree, makeGetSelectedElement } from 'selectors/element';
 import { selectElement, hoverElement, updateElementPosition } from 'actions/element';
 import { removeWidget } from 'actions/widget';
@@ -23,7 +23,7 @@ interface IElementTree {
 }
 
 interface ITreeItemLabel {
-  selectedElement: Page | Layout | Widget | null;
+  selectedElement: Page | Widget | null;
   onClick: (id: string) => () => void;
   onMouseEnter: (id: string) => () => void;
   onMouseLeave: () => void;

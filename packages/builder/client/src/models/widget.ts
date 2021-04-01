@@ -31,7 +31,7 @@ export class WidgetModel {
       type: 'widget',
       library,
       hasChildren: Boolean(component.hasChildren),
-      component: component.name,
+      component: component.key,
       parent: parentElement.id,
       name: WidgetModel.getDefaultName(state, component.name),
       position: WidgetModel.getNextPosition(state, parentElement.id),
@@ -44,7 +44,7 @@ export class WidgetModel {
 
   static getIsIterable = (config: ComponentConfig): boolean => {
     if (config.list || (config.component !== 'complex' && config.type === 'object')) {
-      return config.iterable;
+      return Boolean(config.iterable);
     }
     return false;
   };
@@ -65,18 +65,20 @@ export class WidgetModel {
   ): {
     [key: string]: Event[];
   } => {
-    return component.events.reduce((acc, cur) => ({ ...acc, [cur.key]: [] }), {});
+    return component.events?.reduce((acc, cur) => ({ ...acc, [cur.key]: [] }), {}) ?? {};
   };
 
   static getDefaultProps = (component: Component): { [key: string]: WidgetProp } => {
-    return component.config.reduce((acc, cur) => {
-      const mode = (() => {
-        if (cur.list) return 'list';
-        if (cur.component === 'complex') return 'complex';
-        return 'static';
-      })();
-      return { ...acc, [cur.key]: WidgetModel.getDefaultProp(mode, cur) };
-    }, {});
+    return (
+      component.config?.reduce((acc, cur) => {
+        const mode = (() => {
+          if (cur.list) return 'list';
+          if (cur.component === 'complex') return 'complex';
+          return 'static';
+        })();
+        return { ...acc, [cur.key]: WidgetModel.getDefaultProp(mode, cur) };
+      }, {}) ?? {}
+    );
   };
 
   static getDefaultProp = (

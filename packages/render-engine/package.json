@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "fs-extra": "^9.1.0",
-    "mustache": "^4.0.1"
+    "mustache": "^4.0.1",
+    "canvas-typescript": "/Users/bmcalindin/workspace/canvas/packages/typescript",
+    "canvas-types": "/Users/bmcalindin/workspace/canvas/packages/types"
   }
 }

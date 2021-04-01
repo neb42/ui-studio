@@ -5282,9 +5282,17 @@ caniuse-lite@^1.0.30001125:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001189.tgz#f8547299b9db78d3882b0dea1cae891fed1651e8"
   integrity sha512-BSfxClP/UWCD0RX1h1L+vLDexNSJY7SfOtbJtW10bcnatfj3BcoietUFYNwWreOCk+SNvGUaNapGqUNPiGAiSA==
 
+"canvas-types@file:packages/types":
+  version "0.1.2"
+
 "canvas-types@link:packages/types":
   version "0.0.0"
   uid ""
+
+"canvas-typescript@file:packages/typescript":
+  version "0.1.2"
+  dependencies:
+    reflect-metadata "^0.1.13"
 
 capture-exit@^2.0.0:
   version "2.0.0"
