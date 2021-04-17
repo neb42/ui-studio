@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/render-engine",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/canvas/tree/master/packages/render-engine#readme",
@@ -22,7 +22,7 @@
     "build": "rm -rf build/* && tsc && yarn copy-templates"
   },
   "dependencies": {
-    "@ui-studio/types": "^0.1.11",
+    "@ui-studio/types": "^0.1.12",
     "@ui-studio/typescript": "^0.1.11",
     "fs-extra": "^9.1.0",
     "mustache": "^4.0.1"
