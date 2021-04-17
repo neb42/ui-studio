@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/builder",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/canvas/tree/master/packages/builder#readme",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@types/yargs": "^15.0.5",
-    "@ui-studio/render-engine": "^0.1.7",
+    "@ui-studio/render-engine": "^0.1.8",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "get-port": "^5.1.1",
@@ -37,10 +37,10 @@
     "@types/cors": "^2.8.7",
     "@types/express": "^4.17.7",
     "@types/socket.io": "^2.1.11",
-    "@ui-studio/types": "^0.1.7"
+    "@ui-studio/types": "^0.1.8"
   },
   "publishConfig": {
     "registry": "https://registry.yarnpkg.com"
   },
-  "gitHead": "17211150a947ec90d60e1cb637e8b8a1bb7120a0"
+  "gitHead": "1724ed9409d113640df917997afd13e4389829f3"
 }
