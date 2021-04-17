@@ -39,7 +39,6 @@
     "prettier": "^2.0.5",
     "prettier-eslint": "^11.0.0",
     "prettycli": "^1.4.3",
-    "typescript": "3.9.7",
-    "@ui-studio/types": "link:packages/types"
+    "typescript": "3.9.7"
   }
 }
