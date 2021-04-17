@@ -19,7 +19,7 @@ router.use(
 
 const functions = new Functions();
 
-functions.registered.functions.forEach(f => {
+functions?.registered?.functions?.forEach(f => {
   router.post(
     `/function_${f.name}`,
     async (request, response, next) => {
@@ -33,7 +33,7 @@ functions.registered.functions.forEach(f => {
   );
 });
 
-functions.registered.actions.forEach(f => {
+functions?.registered?.actions?.forEach(f => {
   router.post(
     `/action_${f.name}`,
     async (request, response, next) => {
