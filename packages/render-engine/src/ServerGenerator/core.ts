@@ -5,14 +5,14 @@ import * as Mustache from 'mustache';
 
 import { FilePaths } from '../FilePaths';
 
-const generateBabelConfigFile = async (): Promise<void> => {
-  const data = await fs.readFile(path.join(__dirname, 'templates', 'babelConfig.mst'));
+const generateTSConfigFile = async (): Promise<void> => {
+  const data = await fs.readFile(path.join(__dirname, 'templates', 'tsconfig.json.mst'));
   const renderedFile = Mustache.render(data.toString(), {});
-  return fs.writeFile(path.join(FilePaths.server, 'babel.config.js'), renderedFile);
+  return fs.writeFile(path.join(FilePaths.server, 'tsconfig.json'), renderedFile);
 };
 
 const generateCoreFiles = (): Promise<void[]> => {
-  return Promise.all([generateBabelConfigFile()]);
+  return Promise.all([generateTSConfigFile()]);
 };
 
 export default generateCoreFiles;

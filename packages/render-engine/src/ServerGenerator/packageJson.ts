@@ -14,10 +14,10 @@ const baseDependencies = [
 ];
 
 const devDependencies = [
-  { name: '@babel/core', version: 'latest', last: false },
-  { name: '@babel/cli', version: 'latest', last: false },
-  { name: '@babel/node', version: 'latest', last: false },
-  { name: '@babel/preset-env', version: 'latest', last: false },
+  { name: '@types/express', version: 'latest', last: false },
+  { name: '@types/cors', version: 'latest', last: false },
+  { name: 'typescript', version: '^4.0.3', last: false },
+  { name: '@types/node', version: '^12.0.0', last: false },
 ];
 devDependencies[devDependencies.length - 1].last = true;
 
