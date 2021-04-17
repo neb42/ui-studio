@@ -1,9 +1,9 @@
 {
   "name": "create-ui-studio",
-  "version": "0.1.4",
+  "version": "0.1.5-alpha.0",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
-  "homepage": "https://github.com/neb42/canvas/tree/master/packages/create-canvas-app#readme",
+  "homepage": "https://github.com/neb42/canvas/tree/master/packages/create-ui-studio#readme",
   "license": "MIT",
   "main": "build/index.js",
   "bin": {
@@ -33,6 +33,8 @@
     "yargs": "^16.2.0"
   },
   "devDependencies": {
-    "@types/yargs": "^16.0.0"
-  }
+    "@types/yargs": "^16.0.0",
+    "@ui-studio/types": "^0.1.5-alpha.0"
+  },
+  "gitHead": "0b237cd09c5f6c93180ac69d6865192b85664350"
 }

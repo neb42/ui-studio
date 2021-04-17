@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/typescript",
-  "version": "0.1.4",
+  "version": "0.1.5-alpha.0",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/canvas/tree/master/packages/typescript#readme",
@@ -16,5 +16,6 @@
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13"
-  }
+  },
+  "gitHead": "0b237cd09c5f6c93180ac69d6865192b85664350"
 }

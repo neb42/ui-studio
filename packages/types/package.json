@@ -1,11 +1,12 @@
 {
   "name": "@ui-studio/types",
-  "version": "0.1.4",
+  "version": "0.1.5-alpha.0",
   "private": false,
   "homepage": "https://github.com/neb42/canvas/tree/master/packages/types#readme",
   "main": "src/index.ts",
   "scripts": {
     "clean": "rm -rf build/*",
     "build": "yarn clean && tsc"
-  }
+  },
+  "gitHead": "0b237cd09c5f6c93180ac69d6865192b85664350"
 }
