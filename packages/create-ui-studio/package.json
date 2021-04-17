@@ -1,6 +1,6 @@
 {
   "name": "create-ui-studio",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/canvas/tree/master/packages/create-ui-studio#readme",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/yargs": "^16.0.0",
-    "@ui-studio/types": "^0.1.5"
+    "@ui-studio/types": "^0.1.6"
   },
-  "gitHead": "0b237cd09c5f6c93180ac69d6865192b85664350"
+  "gitHead": "476d3f59f84f3b11ab6c176cc67d2582a65270ff"
 }
