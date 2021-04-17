@@ -64,8 +64,8 @@ export const element = (
     case INIT_FUNCTIONS: {
       return {
         ...state,
-        functions: action.payload.functions,
-        actions: action.payload.actions,
+        functions: action.payload?.functions ?? [],
+        actions: action.payload?.actions ?? [],
       };
     }
     case INIT_COMPONENTS: {
