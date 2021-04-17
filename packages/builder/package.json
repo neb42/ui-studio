@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/builder",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/canvas/tree/master/packages/builder#readme",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@types/yargs": "^15.0.5",
-    "@ui-studio/render-engine": "^0.1.12",
+    "@ui-studio/render-engine": "^0.1.13",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "get-port": "^5.1.1",
@@ -40,7 +40,7 @@
     "@types/cors": "^2.8.7",
     "@types/express": "^4.17.7",
     "@types/socket.io": "^2.1.11",
-    "@ui-studio/types": "^0.1.12"
+    "@ui-studio/types": "^0.1.13"
   },
   "publishConfig": {
     "access": "public"
