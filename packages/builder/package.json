@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/builder",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/canvas/tree/master/packages/builder#readme",
@@ -13,6 +13,9 @@
     "type": "git",
     "url": "git+https://github.com/neb42/canvas.git"
   },
+  "files": [
+    "build"
+  ],
   "scripts": {
     "clean": "rm -rf build/*",
     "build:server": "yarn clean && tsc",
@@ -24,7 +27,7 @@
   },
   "dependencies": {
     "@types/yargs": "^15.0.5",
-    "@ui-studio/render-engine": "^0.1.8",
+    "@ui-studio/render-engine": "^0.1.9",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "get-port": "^5.1.1",
@@ -37,10 +40,10 @@
     "@types/cors": "^2.8.7",
     "@types/express": "^4.17.7",
     "@types/socket.io": "^2.1.11",
-    "@ui-studio/types": "^0.1.8"
+    "@ui-studio/types": "^0.1.9"
   },
   "publishConfig": {
     "registry": "https://registry.yarnpkg.com"
   },
-  "gitHead": "1724ed9409d113640df917997afd13e4389829f3"
+  "gitHead": "66bde8cdc27a9099e0e368be7a29b6496f68ce63"
 }
