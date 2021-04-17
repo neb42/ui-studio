@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/neb42/canvas.git"
   },
+  "files": [
+    "build"
+  ],
   "scripts": {
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "build": "rm -rf build/* && tsc"
