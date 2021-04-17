@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
-import { Widget, FlexJustification, FlexAlignment } from 'canvas-types';
+import { Widget, FlexJustification, FlexAlignment } from '@ui-studio/types';
 import { updateWidgetLayoutConfig } from 'actions/widget';
 import { AlignmentButton } from 'components/AlignmentButton';
 

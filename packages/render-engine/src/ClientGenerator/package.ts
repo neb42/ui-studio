@@ -51,9 +51,10 @@ const generatePackageFile = async (
       last: false,
     });
   } else {
+    // TODO not sure we need this
     dependencies.push({
       name: 'functions-pkg',
-      version: `https://github.com/canvas-builder-function-packages/${source}`,
+      version: `https://github.com/ui-studio-builder-function-packages/${source}`,
       last: false,
     });
   }
@@ -70,13 +71,13 @@ const generatePackageFile = async (
     (await fs.readFile(path.join(__dirname, '../../package.json'))).toString(),
   );
   dependencies.push({
-    name: 'canvas-typescript',
-    version: pkgJson.dependencies['canvas-typescript'],
+    name: '@ui-studio/typescript',
+    version: pkgJson.dependencies['@ui-studio/typescript'],
     last: false,
   });
   devDependencies.push({
-    name: 'canvas-types',
-    version: pkgJson.dependencies['canvas-types'],
+    name: '@ui-studio/types',
+    version: pkgJson.dependencies['@ui-studio/types'],
     last: false,
   });
 

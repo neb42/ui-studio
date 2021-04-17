@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
-import { Variable, FunctionVariableArg } from 'canvas-types';
+import { Variable, FunctionVariableArg } from '@ui-studio/types';
 import { TThunkAction } from 'types/store';
 
 export interface SelectVariable {

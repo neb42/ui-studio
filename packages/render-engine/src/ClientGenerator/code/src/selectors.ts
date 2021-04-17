@@ -1,4 +1,4 @@
-import { WidgetProp, WidgetProp$Iterable } from 'canvas-types';
+import { WidgetProp, WidgetProp$Iterable } from '@ui-studio/types';
 
 import { Store } from './types/store';
 

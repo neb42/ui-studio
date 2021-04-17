@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { TStyle, Widget, WidgetProp, Event } from 'canvas-types';
+import { TStyle, Widget, WidgetProp, Event } from '@ui-studio/types';
 import {
   makeGetElement,
   getNextPosition,

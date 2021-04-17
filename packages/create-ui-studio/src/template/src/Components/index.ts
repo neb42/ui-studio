@@ -1,4 +1,4 @@
-import { parseComponents } from 'canvas-typescript';
+import { parseComponents } from '@ui-studio/typescript';
 
 import { Example } from './Example';
 

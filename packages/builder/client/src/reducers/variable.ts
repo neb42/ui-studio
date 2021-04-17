@@ -1,4 +1,4 @@
-import { Variable, StaticVariable, FunctionVariable } from 'canvas-types';
+import { Variable, StaticVariable, FunctionVariable } from '@ui-studio/types';
 import {
   Action$Variable,
   ADD_VARIABLE,

@@ -1,5 +1,5 @@
 node_modules
 build
-.canvas
+.ui-studio
 .env
 yarn-error.log

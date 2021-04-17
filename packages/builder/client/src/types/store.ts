@@ -8,7 +8,7 @@ import {
   IOverlay,
   Variable,
   Component,
-} from 'canvas-types';
+} from '@ui-studio/types';
 
 export interface KeyedObject<T> {
   [key: string]: T;

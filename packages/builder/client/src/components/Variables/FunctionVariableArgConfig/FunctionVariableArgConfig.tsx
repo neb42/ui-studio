@@ -9,7 +9,7 @@ import {
   FunctionVariable$StaticArg,
   FunctionVariable$VariableArg,
   FunctionVariable$WidgetArg,
-} from 'canvas-types';
+} from '@ui-studio/types';
 import { getWidgetsInTree, getVariables, makeGetComponents } from 'selectors/element';
 
 import * as Styles from './FunctionVariableArgConfig.styles';

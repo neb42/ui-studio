@@ -9,7 +9,7 @@ import {
   WidgetProp$Static,
   WidgetProp$Variable,
   WidgetProp$Widget,
-} from 'canvas-types';
+} from '@ui-studio/types';
 
 interface StaticConfigProps {
   label?: string;

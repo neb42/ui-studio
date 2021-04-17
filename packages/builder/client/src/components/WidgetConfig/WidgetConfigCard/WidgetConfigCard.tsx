@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@faculty/adler-web-components/atoms/Button';
-import { WidgetProp, WidgetProp$List, WidgetProp$Complex, ComponentConfig } from 'canvas-types';
+import { WidgetProp, WidgetProp$List, WidgetProp$Complex, ComponentConfig } from '@ui-studio/types';
 import { StaticConfig } from 'components/WidgetConfig/Source/StaticConfig';
 import { VariableConfig } from 'components/WidgetConfig/Source/VariableConfig';
 import { WidgetConfig } from 'components/WidgetConfig/Source/WidgetConfig';

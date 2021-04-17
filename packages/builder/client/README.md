@@ -1,3 +1,3 @@
-# `canvas-builder-client`
+# `ui-studio-builder-client`
 
-Client for the canvas builder
+Client for the UI Studio builder

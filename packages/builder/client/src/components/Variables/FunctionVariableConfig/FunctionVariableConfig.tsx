@@ -5,7 +5,7 @@ import {
   FunctionVariable,
   FunctionVariableArg,
   FunctionVariable$StaticArg,
-} from 'canvas-types';
+} from '@ui-studio/types';
 import { makeGetFunctions } from 'selectors/element';
 import { updateFunctionVariable } from 'actions/variable';
 import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Widget, WidgetProp } from 'canvas-types';
+import { Widget, WidgetProp } from '@ui-studio/types';
 import { makeGetComponents } from 'selectors/element';
 import { updateWidgetProps } from 'actions/widget';
 import { WidgetConfigItem } from 'components/WidgetConfig/WidgetConfigItem';

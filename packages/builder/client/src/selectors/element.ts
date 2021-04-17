@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { Element, Widget, Component, FunctionDefinition, ActionDefinition } from 'canvas-types';
+import { Element, Widget, Component, FunctionDefinition, ActionDefinition } from '@ui-studio/types';
 import {
   Store,
   Store$Page,

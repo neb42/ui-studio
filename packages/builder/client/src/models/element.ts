@@ -1,4 +1,4 @@
-import { Widget, Layout, TStyle } from 'canvas-types';
+import { Widget, Layout, TStyle } from '@ui-studio/types';
 
 export class ElementModel {
   // UPDATE_ELEMENT_POSITION

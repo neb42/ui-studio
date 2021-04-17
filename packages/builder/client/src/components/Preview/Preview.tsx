@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
-import { InitFunctions, Component } from 'canvas-types';
+import { InitFunctions, Component } from '@ui-studio/types';
 import { Store$Page, Store$Widget, Store$Variable } from 'types/store';
 import {
   makeGetElements,

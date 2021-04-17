@@ -1,5 +1,5 @@
 {
-  "name": "canvas-render-engine",
+  "name": "@ui-studio/render-engine",
   "version": "0.1.2",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
@@ -21,7 +21,7 @@
   "dependencies": {
     "fs-extra": "^9.1.0",
     "mustache": "^4.0.1",
-    "canvas-typescript": "/Users/bmcalindin/workspace/canvas/packages/typescript",
-    "canvas-types": "/Users/bmcalindin/workspace/canvas/packages/types"
+    "@ui-studio/typescript": "^0.1.2",
+    "@ui-studio/types": "^0.1.2"
   }
 }

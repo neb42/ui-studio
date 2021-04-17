@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { InitFunctions, Component, TStyle } from 'canvas-types';
+import { InitFunctions, Component, TStyle } from '@ui-studio/types';
 import {
   Store$Page,
   Store$Widget,

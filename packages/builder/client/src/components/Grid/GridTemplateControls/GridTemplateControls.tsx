@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from '@faculty/adler-web-components/atoms/Button';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import { IGridCell, GridUnit } from 'canvas-types';
+import { IGridCell, GridUnit } from '@ui-studio/types';
 
 import * as Styles from './GridTemplateControls.styles';
 

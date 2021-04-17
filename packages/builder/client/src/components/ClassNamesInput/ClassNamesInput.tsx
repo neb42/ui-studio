@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Input from '@faculty/adler-web-components/atoms/Input';
-import { Element } from 'canvas-types';
+import { Element } from '@ui-studio/types';
 import { updateElementClassNames } from 'actions/element';
 
 import * as Styles from './ClassNamesInput.styles';

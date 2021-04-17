@@ -36,7 +36,7 @@ export const getOptions = async () => {
     SERVER_PORT = await getPort({ port: argv.port || Number(process.env.SERVER_PORT) || 3002 });
   const FUNCTIONS_PATH = argv.path || process.env.FUNCTIONS_PATH || process.cwd();
   // const GENERATED_CODE_PATH = argv.generated || process.env.GENERATED_PATH || '/tmp/GeneratedCode';
-  const GENERATED_CODE_PATH = path.join(process.cwd(), '.canvas');
+  const GENERATED_CODE_PATH = path.join(process.cwd(), '.ui-studio');
 
   return {
     PREVIEW_CLIENT_PORT,

@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 import { ThunkAction as TA } from 'redux-thunk';
-import { Widget, Variable, Page } from 'canvas-types';
+import { Widget, Variable, Page } from '@ui-studio/types';
 
 export interface KeyedObject<T> {
   [key: string]: T;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Element, Widget, Page } from 'canvas-types';
+import { Element, Widget, Page } from '@ui-studio/types';
 import { FlexParentStyle } from 'components/Flex/FlexParentStyle';
 import { GridParentStyle } from 'components/Grid/GridParentStyle';
 import { CSSInput } from 'components/CSSInput';

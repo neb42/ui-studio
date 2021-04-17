@@ -1,13 +1,13 @@
-# `canvas-typescript`
+# `@ui-studio/typescript`
 
-Typescipt utitilies for writing canvas Functions and Actions
+Typescipt utitilies for writing UI Studio Functions and Actions
 
 ## Usage
 
 ```
-import { Function, Action, Canvas } from 'canvas-typescript';
+import { Function, Action, UIStudio } from '@ui-studio/typescript';
 
-export default class Functions extends Canvas {
+export default class Functions extends UIStudio {
   @Function()
   exampleFunction(): string {
     return '';

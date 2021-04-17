@@ -1,4 +1,4 @@
-import { Component } from 'canvas-types';
+import { Component } from '@ui-studio/types';
 import FunctionsPkg from 'functions-pkg/build/Components';
 {{ #components }}
 import {{{ name }}} from '{{{ package }}}/build/Components';

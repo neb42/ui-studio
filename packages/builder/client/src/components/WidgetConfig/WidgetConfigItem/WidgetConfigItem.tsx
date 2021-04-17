@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import Button from '@faculty/adler-web-components/atoms/Button';
-import { WidgetProp, WidgetProp$List, ComponentConfig, Mode } from 'canvas-types';
+import { WidgetProp, WidgetProp$List, ComponentConfig, Mode } from '@ui-studio/types';
 import { WidgetModel } from 'models/widget';
 import { getAvailableIteratorKeys } from 'selectors/element';
 import { ModeButtons } from 'components/WidgetConfig/ModeButtons';

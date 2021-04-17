@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 import open from 'open';
-import { run as generateCode } from 'canvas-render-engine';
+import { run as generateCode } from '@ui-studio/render-engine';
 
 import { getOptions } from './options';
 

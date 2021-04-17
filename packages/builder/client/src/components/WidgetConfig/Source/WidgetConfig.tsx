@@ -6,7 +6,7 @@ import {
   WidgetProp$Static,
   WidgetProp$Variable,
   WidgetProp$Widget,
-} from 'canvas-types';
+} from '@ui-studio/types';
 import { makeGetComponents, getWidgetsInTree } from 'selectors/element';
 
 interface WidgetConfigProps {

@@ -1,9 +1,9 @@
-# `canvas-builder`
+# `@ui-studio/builder`
 
-Command line tool to run a canvas ui builder
+Command line tool to run the UI Studio builder
 
 ## Usage
 
 ```
-canvas-builder
+ui-studio-builder
 ```

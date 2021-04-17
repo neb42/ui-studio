@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-param-reassign */
 import 'reflect-metadata';
-import { Component } from 'canvas-types';
+import { Component } from '@ui-studio/types';
 
 const getFunctionRegexMatch = (functionString: string, propertyName: string): RegExpMatchArray => {
   const regexFirstAttempt = new RegExp(`^${propertyName}\\((.*)\\) {`);
@@ -67,7 +67,7 @@ interface RegisteredActions {
   args: { name: string; type: 'string' | 'number' | 'boolean' }[];
 }
 
-export class Canvas {
+export class UIStudio {
   registered: {
     functions: RegisteredFunctions[];
     actions: RegisteredActions[];

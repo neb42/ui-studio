@@ -1,5 +1,5 @@
 {
-  "name": "create-canvas-app",
+  "name": "create-ui-studio",
   "version": "0.1.2",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
@@ -7,7 +7,7 @@
   "license": "MIT",
   "main": "build/index.js",
   "bin": {
-    "create-canvas-app": "build/index.js"
+    "create-ui-studio": "build/index.js"
   },
   "files": [
     "build"

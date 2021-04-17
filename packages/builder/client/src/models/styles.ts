@@ -1,4 +1,4 @@
-import { Element, BaseStyle, IGridStyle, IFlexStyle, TStyle } from 'canvas-types';
+import { Element, BaseStyle, IGridStyle, IFlexStyle, TStyle } from '@ui-studio/types';
 
 export class StylesModel {
   static getDefaultStyle = (parent: Element | null): TStyle => {

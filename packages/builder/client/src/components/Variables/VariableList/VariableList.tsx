@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from '@faculty/adler-web-components/atoms/Icon';
 import Button from '@faculty/adler-web-components/atoms/Button';
-import { Variable } from 'canvas-types';
+import { Variable } from '@ui-studio/types';
 import { selectVariable, removeVariable } from 'actions/variable';
 import { getVariables, getSelectedVariableId } from 'selectors/element';
 

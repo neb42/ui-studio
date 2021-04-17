@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import { WidgetProp$Iterable } from 'canvas-types';
+import { WidgetProp$Iterable } from '@ui-studio/types';
 import { getAvailableIteratorKeys } from 'selectors/element';
 
 interface VariableConfigProps {

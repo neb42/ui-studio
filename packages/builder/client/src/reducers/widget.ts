@@ -1,4 +1,4 @@
-import { Widget } from 'canvas-types';
+import { Widget } from '@ui-studio/types';
 import {
   ADD_WIDGET,
   REMOVE_WIDGET,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { StyledComponent, DefaultTheme } from 'styled-components';
 import Input from '@faculty/adler-web-components/atoms/Input';
-import { Widget, Layout, Page } from 'canvas-types';
+import { Widget, Layout, Page } from '@ui-studio/types';
 import { updateElementName } from 'actions/element';
 
 interface EditNameProps {

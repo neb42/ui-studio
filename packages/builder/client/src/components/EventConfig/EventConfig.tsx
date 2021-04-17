@@ -10,7 +10,7 @@ import {
   Event$NavigatePage,
   FunctionVariableArg,
   Widget,
-} from 'canvas-types';
+} from '@ui-studio/types';
 import { makeGetComponents, getVariables, makeGetActions, getPages } from 'selectors/element';
 import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/widget';
 import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';

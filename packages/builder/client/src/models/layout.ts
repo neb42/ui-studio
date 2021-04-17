@@ -1,4 +1,4 @@
-import { Layout, GridLayout, FlexLayout } from 'canvas-types';
+import { Layout, GridLayout, FlexLayout } from '@ui-studio/types';
 
 export class LayoutModel {
   static getDefaultLayout = (type: 'basic' | 'flex' | 'grid'): Layout => {

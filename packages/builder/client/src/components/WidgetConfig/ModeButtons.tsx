@@ -2,7 +2,7 @@ import * as React from 'react';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import { Edit, Functions, Widgets, Settings, ViewComfy } from '@material-ui/icons';
-import { Mode } from 'canvas-types';
+import { Mode } from '@ui-studio/types';
 
 const iconMap = {
   complex: Settings,

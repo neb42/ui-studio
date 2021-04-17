@@ -1,3 +1,3 @@
-# `canvas-types`
+# `@ui-studio/types`
 
-Common types used across canvas packages
+Common types used across UI Studio packages

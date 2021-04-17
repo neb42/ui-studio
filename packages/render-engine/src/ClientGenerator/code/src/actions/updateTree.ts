@@ -1,4 +1,4 @@
-import { Widget, Variable, Page } from 'canvas-types';
+import { Widget, Variable, Page } from '@ui-studio/types';
 
 import { KeyedObject } from '../types/store';
 

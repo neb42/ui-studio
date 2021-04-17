@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Component } from 'canvas-types';
+import { Component } from '@ui-studio/types';
 
 export const Conditional: Component & { component: any } = {
   key: 'conditional-renderer',

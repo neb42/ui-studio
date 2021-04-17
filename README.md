@@ -1,4 +1,4 @@
-# Canvas
+# UI Studio 
 
 Low code UI builder
 Design system agnostic

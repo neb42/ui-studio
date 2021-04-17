@@ -1,4 +1,4 @@
-import { parseComponents } from 'canvas-typescript';
+import { parseComponents } from '@ui-studio/typescript';
 
 import { Conditional } from './Conditional';
 import { HTML } from './HTML';

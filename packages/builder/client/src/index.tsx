@@ -21,7 +21,7 @@ const GlobalStyles = createGlobalStyle`
     height: 100vh;
     width: 100vw;
     margin: 0;
-    font-family: 'Inter UI', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
 
   #root {

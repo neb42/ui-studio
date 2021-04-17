@@ -13,7 +13,7 @@ import {
   WidgetProp$Complex,
   WidgetProp$List,
   WidgetProp$Iterable,
-} from 'canvas-types';
+} from '@ui-studio/types';
 import { generateDefaultName, getNextPosition } from 'selectors/element';
 import { StylesModel } from 'models/styles';
 import { LayoutModel } from 'models/layout';

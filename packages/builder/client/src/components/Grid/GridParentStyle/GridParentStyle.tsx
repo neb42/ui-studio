@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Widget, IGridStyle, TGridStyleLayout, GridAlignment } from 'canvas-types';
+import { Widget, IGridStyle, TGridStyleLayout, GridAlignment } from '@ui-studio/types';
 import { Store } from 'types/store';
 import { makeGetUsedGridSpace } from 'selectors/element';
 import { GridPreview } from 'components/Grid/GridPreview';

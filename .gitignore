@@ -2,4 +2,4 @@
 **/build
 **/yarn-error.log
 **/lerna-debug.log
-**/.canvas/
+**/.ui-builder/

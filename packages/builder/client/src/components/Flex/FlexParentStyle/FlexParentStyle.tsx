@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Slider from '@faculty/adler-web-components/atoms/Slider/Slider';
-import { Widget, FlexAlignment, IFlexStyle } from 'canvas-types';
+import { Widget, FlexAlignment, IFlexStyle } from '@ui-studio/types';
 import { updateWidgetStyle } from 'actions/widget';
 import { AlignmentButton } from 'components/AlignmentButton';
 

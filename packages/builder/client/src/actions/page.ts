@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectPage, ISelectPage, selectElement, ISelectElement } from 'actions/element';
 import { generateDefaultName, getPages, getSelectedPageId } from 'selectors/element';
-import { Page } from 'canvas-types';
+import { Page } from '@ui-studio/types';
 
 interface AddPage {
   type: 'ADD_PAGE';

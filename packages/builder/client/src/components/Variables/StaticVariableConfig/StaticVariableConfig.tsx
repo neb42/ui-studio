@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTheme } from 'styled-components';
 import AceEditor from 'react-ace';
-import { StaticVariable } from 'canvas-types';
+import { StaticVariable } from '@ui-studio/types';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import { useDispatch } from 'react-redux';

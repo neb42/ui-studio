@@ -1,5 +1,5 @@
 {
-  "name": "canvas-builder",
+  "name": "@ui-studio/builder",
   "version": "0.1.2",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
@@ -7,7 +7,7 @@
   "license": "MIT",
   "main": "build/server.js",
   "bin": {
-    "canvas-builder": "build/server.js"
+    "ui-studio-builder": "build/server.js"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@types/yargs": "^15.0.5",
-    "canvas-render-engine": "^0.1.2",
+    "@ui-studio/render-engine": "^0.1.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "get-port": "^5.1.1",

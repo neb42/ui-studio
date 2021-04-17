@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import AceEditor from 'react-ace';
 import { useTheme } from 'styled-components';
-import { Element } from 'canvas-types';
+import { Element } from '@ui-studio/types';
 import { updateElementCSS } from 'actions/element';
 
 import * as Styles from './CSSInput.styles';

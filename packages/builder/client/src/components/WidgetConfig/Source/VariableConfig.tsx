@@ -7,7 +7,7 @@ import {
   WidgetProp$Static,
   WidgetProp$Variable,
   WidgetProp$Widget,
-} from 'canvas-types';
+} from '@ui-studio/types';
 import { getVariables } from 'selectors/element';
 
 interface VariableConfigProps {

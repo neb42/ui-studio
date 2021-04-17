@@ -26,7 +26,7 @@ const checkNodeVersion = () => {
   if (typeof major !== 'number' || major < 14) {
     error(
       `You are running Node ${currentNodeVersion}.\n` +
-        'Create Canvas App requires Node 14 or higher. \n' +
+        'Create UI Studio requires Node 14 or higher. \n' +
         'Please update your version of Node.',
     );
   }
@@ -39,8 +39,8 @@ const getTemplatePackageKeys = (templates: string[]): [string[], string[]] => {
     switch (t) {
       case 'faculty': {
         allPackages.push('@faculty/adler-web-components');
-        allPackages.push('@faculty/adler-canvas-wrapper');
-        componentPackages.push('@faculty/adler-canvas-wrapper');
+        allPackages.push('@faculty/adler-ui-studio-wrapper');
+        componentPackages.push('@faculty/adler-ui-studio-wrapper');
         break;
       }
       default:
@@ -68,7 +68,7 @@ const renderPackageJson = (name: string, directory: string, templates: string[])
 const initGit = (directory: string) => {
   execSync('git init', { cwd: directory, stdio: 'inherit' });
   execSync('git add .', { cwd: directory, stdio: 'inherit' });
-  execSync("git commit -m 'Initialised from create-canvas-app'", {
+  execSync("git commit -m 'Initialised from create-ui-studio'", {
     cwd: directory,
     stdio: 'inherit',
   });
@@ -77,14 +77,14 @@ const initGit = (directory: string) => {
 const addPackages = (directory: string, templates: string[], runner: 'npm' | 'yarn') => {
   const [templatePackageKeys] = getTemplatePackageKeys(templates);
 
-  const dependencies = ['canvas-typescript', ...templatePackageKeys].map((k) => ({
+  const dependencies = ['@ui-studio/typescript', ...templatePackageKeys].map((k) => ({
     name: k,
     version: 'latest',
   }));
   const devDependencies = [
-    { name: 'canvas-builder', version: 'latest' },
-    { name: 'canvas-types', version: 'latest' },
-    { name: 'canvas-typescript', version: 'latest' },
+    { name: '@ui-studio/builder', version: 'latest' },
+    { name: '@ui-studio/types', version: 'latest' },
+    { name: '@ui-studio/typescript', version: 'latest' },
     { name: 'typescript', version: '^4.0.3' },
     { name: '@types/node', version: '^12.0.0' },
     { name: '@types/react', version: '^16.9.53' },

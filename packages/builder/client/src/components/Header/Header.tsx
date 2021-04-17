@@ -8,7 +8,7 @@ export const Header = () => (
   <Styles.Container>
     <Styles.Title>
       <img src={logo} alt="logo" height={45} width={45} />
-      Canvas
+      UI Studio
     </Styles.Title>
     <ScreenSizeSelection />
     <div />
