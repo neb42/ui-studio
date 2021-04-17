@@ -15,9 +15,12 @@ const error = (message: string) => {
 };
 
 const getNpmRunner = (): 'npm' | 'yarn' => {
-  const runner = process.argv[0];
-  if (!['npm', 'yarn'].includes(runner)) error('Invalid runner');
-  return runner as 'npm' | 'yarn';
+  try {
+    execSync('yarnpkg --version', { stdio: 'ignore' });
+    return 'yarn';
+  } catch (e) {
+    return 'npm';
+  }
 };
 
 const checkNodeVersion = () => {
