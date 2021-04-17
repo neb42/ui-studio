@@ -18,7 +18,8 @@
     "build": "rm -rf build/* && tsc"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "@ui-studio/types": "^0.1.13"
   },
   "publishConfig": {
     "access": "public"
