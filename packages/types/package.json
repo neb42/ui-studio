@@ -8,5 +8,8 @@
     "clean": "rm -rf build/*",
     "build": "yarn clean && tsc"
   },
-  "gitHead": "476d3f59f84f3b11ab6c176cc67d2582a65270ff"
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "17211150a947ec90d60e1cb637e8b8a1bb7120a0"
 }

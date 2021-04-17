@@ -24,5 +24,8 @@
     "fs-extra": "^9.1.0",
     "mustache": "^4.0.1"
   },
-  "gitHead": "476d3f59f84f3b11ab6c176cc67d2582a65270ff"
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "17211150a947ec90d60e1cb637e8b8a1bb7120a0"
 }
