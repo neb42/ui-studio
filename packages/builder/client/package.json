@@ -1,5 +1,5 @@
 {
-  "name": "cavnas-builder-client",
+  "name": "@ui-studio/builder-client",
   "version": "0.1.2",
   "private": true,
   "proxy": "http://localhost:3002",
