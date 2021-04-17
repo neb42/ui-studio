@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
@@ -21,9 +23,9 @@ const getNpmRunner = (): 'npm' | 'yarn' => {
 const checkNodeVersion = () => {
   const currentNodeVersion = process.versions.node;
   const semver = currentNodeVersion.split('.');
-  const major = semver[0];
+  const major = Number(semver[0]);
 
-  if (typeof major !== 'number' || major < 14) {
+  if (typeof major !== 'number' || Number.isNaN(major) || major < 14) {
     error(
       `You are running Node ${currentNodeVersion}.\n` +
         'Create UI Studio requires Node 14 or higher. \n' +
