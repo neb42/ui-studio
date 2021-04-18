@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
-import { defaultTokens, ThemeProvider } from '@faculty/adler-tokens';
 
-import { App } from './App';
+import App from './App';
+import { Router } from './Router';
 import { store } from './store';
 import { DevCommunicator } from './DevCommunicator';
 import reportWebVitals from './reportWebVitals';
@@ -35,15 +35,15 @@ const GlobalStyles = createGlobalStyle`
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={defaultTokens}>
+    <App>
       <Provider store={store}>
-        <Router>
+        <BrowserRouter>
           <GlobalStyles />
-          <App />
+          <Router />
           <DevCommunicator />
-        </Router>
+        </BrowserRouter>
       </Provider>
-    </ThemeProvider>
+    </App>
   </React.StrictMode>,
   document.getElementById('root'),
 );

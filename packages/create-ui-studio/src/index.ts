@@ -55,6 +55,24 @@ const getTemplatePackageKeys = (templates: string[]): [string[], string[]] => {
   return [allPackages, componentPackages];
 };
 
+const addAppFileForTemplate = (directory: string, templates: string[]) => {
+  const appFiles = {
+    faculty: 'App.faculty.tsx',
+  };
+
+  let customAppSet = false;
+
+  Object.entries(appFiles).forEach(([k, v]) => {
+    if (templates.includes(k)) {
+      if (customAppSet) throw Error('Cannot set more than one App.tsx');
+      fs.renameSync(path.join(directory, v), path.join(directory, 'App.tsx'));
+      customAppSet = true;
+    } else {
+      fs.unlinkSync(path.join(directory, v));
+    }
+  });
+};
+
 const renderPackageJson = (name: string, directory: string, templates: string[]) => {
   const [_, templatePackageKeys] = getTemplatePackageKeys(templates);
 
@@ -134,6 +152,7 @@ const run = async (): Promise<void> => {
 
   copySync(path.join(__dirname, 'template'), directory);
 
+  addAppFileForTemplate(directory, templates);
   renderPackageJson(name, directory, templates);
 
   addPackages(directory, templates, runner);

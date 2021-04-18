@@ -1,6 +1,7 @@
 import * as path from 'path';
 
 export const FilePaths = {
+  app: '',
   base: '',
   client: '',
   clientSrc: '',
@@ -11,7 +12,10 @@ export const FilePaths = {
   server: '',
   serverSrc: '',
 };
-FilePaths.base = path.join(process.cwd(), '.ui-studio');
+
+FilePaths.app = process.cwd();
+
+FilePaths.base = path.join(FilePaths.app, '.ui-studio');
 
 FilePaths.client = path.join(FilePaths.base, 'client');
 FilePaths.public = path.join(FilePaths.client, 'public');
