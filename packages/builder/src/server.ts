@@ -7,6 +7,7 @@ import { writeFileSync, readFileSync } from 'fs';
 import cors from 'cors';
 import express from 'express';
 import socketio from 'socket.io';
+import axios from 'axios';
 
 import { getOptions } from './options';
 import { initCode } from './preview';
@@ -23,6 +24,15 @@ const run = async (): Promise<void> => {
 
   const app = express();
   app.use(cors());
+
+  app.get('/preview-client-ready', async (request: any, response: express.Response) => {
+    try {
+      const { status } = await axios.get('http://localhost:3000');
+      response.sendStatus(status);
+    } catch {
+      response.sendStatus(500);
+    }
+  });
 
   const server = http.createServer(app);
 

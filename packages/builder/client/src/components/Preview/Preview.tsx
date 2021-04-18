@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
+import axios from 'axios';
 import { InitFunctions, Component } from '@ui-studio/types';
 import { Store$Page, Store$Widget, Store$Variable } from 'types/store';
 import {
@@ -35,6 +36,7 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
     clientPort: number;
     serverPort: number;
   } | null>(null);
+  const [previewClientReady, setPreviewClientReady] = React.useState<boolean>(false);
 
   const selectedElementId = useSelector(getSelectedElementId);
   const hoverElementId = useSelector(getHoverElementId);
@@ -43,6 +45,24 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
 
   const elements = useSelector(React.useMemo(makeGetElements, []));
   const variables = useSelector(getVariables);
+
+  React.useEffect(() => {
+    let timeout: NodeJS.Timeout | null = null;
+    const checkPreviewClient = async () => {
+      const { status } = await axios.get('/preview-client-ready');
+      if (status === 200) {
+        setPreviewClientReady(true);
+      } else {
+        timeout = setTimeout(checkPreviewClient, 500);
+      }
+    };
+    if (previewServer) {
+      checkPreviewClient();
+    }
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [JSON.stringify(previewServer)]);
 
   React.useEffect(() => {
     socket.on(
@@ -98,10 +118,12 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
 
   return (
     <Styles.Container>
-      <Styles.Iframe
-        previewSize={previewSize}
-        src={`${previewServer.host}:${previewServer.clientPort}`}
-      />
+      {previewClientReady && (
+        <Styles.Iframe
+          previewSize={previewSize}
+          src={`${previewServer.host}:${previewServer.clientPort}`}
+        />
+      )}
     </Styles.Container>
   );
 };
