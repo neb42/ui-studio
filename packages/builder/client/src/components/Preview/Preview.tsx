@@ -56,13 +56,11 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
         timeout = setTimeout(checkPreviewClient, 500);
       }
     };
-    if (previewServer) {
-      checkPreviewClient();
-    }
+    checkPreviewClient();
     return () => {
       if (timeout) clearTimeout(timeout);
     };
-  }, [JSON.stringify(previewServer)]);
+  }, []);
 
   React.useEffect(() => {
     socket.on(
