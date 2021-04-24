@@ -4,7 +4,7 @@ import { Component } from '@ui-studio/types';
 export const Iterable: Component & { component: any } = {
   key: 'iterable',
   name: 'Repeating',
-  category: 'Internal',
+  category: 'Layout',
   library: 'internal',
   icon: 'ViewComfy',
   hasChildren: true,

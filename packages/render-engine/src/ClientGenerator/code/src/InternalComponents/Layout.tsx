@@ -4,7 +4,7 @@ import { Component } from '@ui-studio/types';
 export const Layout: Component & { component: any } = {
   key: 'layout',
   name: 'Layout',
-  category: 'Internal',
+  category: 'Layout',
   library: 'internal',
   icon: 'DashboardSharp',
   hasChildren: true,

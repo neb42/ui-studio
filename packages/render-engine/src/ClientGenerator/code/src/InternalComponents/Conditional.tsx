@@ -4,7 +4,7 @@ import { Component } from '@ui-studio/types';
 export const Conditional: Component & { component: any } = {
   key: 'conditional-renderer',
   name: 'Conditional',
-  category: 'Internal',
+  category: 'Layout',
   library: 'internal',
   icon: 'HdrWeak',
   hasChildren: true,

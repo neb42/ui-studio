@@ -4,7 +4,7 @@ import { Component } from '@ui-studio/types';
 export const HTML: Component & { component: any } = {
   key: 'html',
   name: 'HTML',
-  category: 'Internal',
+  category: 'Text',
   library: 'internal',
   icon: 'Code',
   config: [
