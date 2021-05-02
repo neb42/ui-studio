@@ -21,8 +21,8 @@ export const configuration = (
     case INIT_FUNCTIONS: {
       return {
         ...state,
-        functions: action.payload.functions,
-        actions: action.payload.actions,
+        functions: action.payload?.functions ?? [],
+        actions: action.payload?.actions ?? [],
       };
     }
     default:
