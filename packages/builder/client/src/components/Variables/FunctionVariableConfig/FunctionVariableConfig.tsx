@@ -6,7 +6,8 @@ import {
   FunctionVariableArg,
   FunctionVariable$StaticArg,
 } from '@ui-studio/types';
-import { makeGetFunctions } from 'selectors/element';
+
+import { getFunctions } from 'selectors/configuration';
 import { updateFunctionVariable } from 'actions/variable';
 import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';
 
@@ -23,7 +24,7 @@ interface Props {
 
 export const FunctionVariableConfig = ({ variable }: Props) => {
   const dispatch = useDispatch();
-  const functions = useSelector(React.useMemo(makeGetFunctions, []));
+  const functions = useSelector(getFunctions);
 
   const selectedFunction = functions.find((f) => f.name === variable.functionId);
 

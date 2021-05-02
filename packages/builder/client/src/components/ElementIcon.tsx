@@ -3,10 +3,12 @@ import { useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
 import { Element, Component } from '@ui-studio/types';
-import { makeGetComponents } from 'selectors/element';
+
+import { getComponents } from 'selectors/configuration';
 
 const getIcon = (element: Element, components: Component[]) => {
   if (element.type === 'page') return Icons.WebSharp;
+  if (element.type === 'customComponent') return Icons.WebSharp;
 
   if (element.type === 'widget') {
     const icon = components.find((c) => c.key === element.component)?.icon ?? '';
@@ -26,7 +28,7 @@ interface IElementIconButton extends IElementIcon {
 }
 
 export const ElementIcon = ({ element, color }: IElementIcon): JSX.Element => {
-  const components = useSelector(React.useMemo(makeGetComponents, []));
+  const components = useSelector(getComponents);
   const Icon = getIcon(element, components);
   return <Icon style={{ color }} fontSize="small" />;
 };

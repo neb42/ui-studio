@@ -2,33 +2,25 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import axios from 'axios';
-import { InitFunctions, Component } from '@ui-studio/types';
-import { Store$Page, Store$Widget, Store$Variable } from 'types/store';
-import {
-  makeGetElements,
-  getVariables,
-  getPages,
-  getSelectedElementId,
-  getHoverElementId,
-  getPreviewSize,
-} from 'selectors/element';
-import {
-  initComponents,
-  initFunctions,
-  initClient,
-  selectPage,
-  selectElement,
-} from 'actions/element';
+import { InitFunctions, Component, Page } from '@ui-studio/types';
+
+import { Store$Tree, Store$Variable } from 'types/store';
+import { getVariables } from 'selectors/variable';
+import { getRoots, getRawTree } from 'selectors/tree';
+import { getSelectedElementId, getHoverElementId, getPreviewSize } from 'selectors/view';
+import { initComponents, initFunctions } from 'actions/configuration';
+import { initClient } from 'actions/tree/init';
+import { selectRootElement, selectElement } from 'actions/view';
 
 import * as Styles from './Preview.styles';
 
-interface IPreview {
+interface Props {
   pageName: string;
 }
 
-export const Preview = ({ pageName }: IPreview): JSX.Element => {
+export const Preview = ({ pageName }: Props): JSX.Element => {
   const dispatch = useDispatch();
-  const pages = Object.values(useSelector(getPages));
+  const pages = useSelector(getRoots).filter((e): e is Page => e.type === 'page');
   const previewSize = useSelector(getPreviewSize);
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
   const [previewServer, setPreviewServer] = React.useState<{
@@ -43,7 +35,7 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
 
   const socket = React.useMemo(() => io('/'), []);
 
-  const elements = useSelector(React.useMemo(makeGetElements, []));
+  const tree = useSelector(getRawTree);
   const variables = useSelector(getVariables);
 
   React.useEffect(() => {
@@ -63,13 +55,10 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
   }, []);
 
   React.useEffect(() => {
-    socket.on(
-      'init-client',
-      async (client: { pages: Store$Page; widgets: Store$Widget; variables: Store$Variable }) => {
-        await dispatch(initClient(client));
-        setIsLoaded(true);
-      },
-    );
+    socket.on('init-client', async (client: { tree: Store$Tree; variables: Store$Variable }) => {
+      await dispatch(initClient(client));
+      setIsLoaded(true);
+    });
 
     socket.on('set-server', setPreviewServer);
 
@@ -91,14 +80,14 @@ export const Preview = ({ pageName }: IPreview): JSX.Element => {
       const newPageName = response.url.replace('/', '');
       if (newPageName !== pageName) {
         const newPageId = pages.find((p) => p.name === newPageName)?.id;
-        if (newPageId) dispatch(selectPage(newPageId));
+        if (newPageId) dispatch(selectRootElement(newPageId));
       }
     });
   }, [JSON.stringify(pages), pageName]);
 
   React.useEffect(() => {
-    if (isLoaded) socket.emit('elements-updated', { ...elements, variables });
-  }, [JSON.stringify(elements), JSON.stringify(variables)]);
+    if (isLoaded) socket.emit('elements-updated', { tree, variables });
+  }, [JSON.stringify(tree), JSON.stringify(variables)]);
 
   React.useEffect(() => {
     socket.emit('navigate-page', { url: pageName });

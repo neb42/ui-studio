@@ -10,7 +10,10 @@ import {
   FunctionVariable$VariableArg,
   FunctionVariable$WidgetArg,
 } from '@ui-studio/types';
-import { getWidgetsInTree, getVariables, makeGetComponents } from 'selectors/element';
+
+import { getVariables } from 'selectors/variable';
+import { getComponents } from 'selectors/configuration';
+import { getWidgetsInSelectedTree } from 'selectors/tree';
 
 import * as Styles from './FunctionVariableArgConfig.styles';
 
@@ -88,7 +91,7 @@ const VariableConfig = ({
 };
 
 const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>): JSX.Element => {
-  const components = useSelector(makeGetComponents());
+  const components = useSelector(getComponents);
 
   const handleWidgetIdChange = ({ value }: any) => {
     onChange({ type: 'widget', widgetId: value as string, property: arg.property });
@@ -98,7 +101,7 @@ const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>)
     onChange({ type: 'widget', widgetId: arg.widgetId, property: value as string });
   };
 
-  const widgets = Object.values(useSelector(getWidgetsInTree)).filter((w) => {
+  const widgets = useSelector(getWidgetsInSelectedTree).filter((w) => {
     const comp = components.find((c) => c.key === w.component);
     if (comp && comp.exposedProperties) return comp.exposedProperties.length > 0;
     return false;

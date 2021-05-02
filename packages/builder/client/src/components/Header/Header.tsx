@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { ScreenSizeSelection } from 'components/ScreenSizeSelection';
 
 import logo from './logo.svg';

@@ -16,7 +16,7 @@ const PageWrapper = styled.div<{ css: string }>`
 
 export const PageBuilder = ({ pageId }: { pageId: string }): React.ReactElement<any> => {
   const dispatch = useDispatch();
-  const page = useSelector((state: Store) => state.page.config[pageId]);
+  const page = useSelector((state: Store) => state.root.config[pageId]);
   const children = useChildrenMap(pageId);
 
   const handleMouseLeave = () => dispatch(updateHoverElement(null));

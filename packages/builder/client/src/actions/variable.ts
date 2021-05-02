@@ -1,19 +1,9 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
 import { Variable, FunctionVariableArg } from '@ui-studio/types';
+
 import { TThunkAction } from 'types/store';
-
-export interface SelectVariable {
-  type: 'SELECT_VARIABLE';
-  payload: string;
-}
-
-export const SELECT_VARIABLE = 'SELECT_VARIABLE';
-
-export const selectVariable = (id: string): SelectVariable => ({
-  type: SELECT_VARIABLE,
-  payload: id,
-});
+import { selectVariable, SelectVariable } from 'actions/view';
 
 interface AddVariable {
   type: 'ADD_VARIABLE';
@@ -176,7 +166,6 @@ export const updateFunctionVariable = (
 });
 
 export type Action$Variable =
-  | SelectVariable
   | AddVariable
   | RemoveVariable
   | UpdateVariableName

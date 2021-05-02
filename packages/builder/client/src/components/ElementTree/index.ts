@@ -1,1 +1,1 @@
-export { ElementTree } from './ElementTree';
+export { ElementTreeContainer as ElementTree } from './ElementTree.container';

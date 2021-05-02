@@ -5,6 +5,7 @@ import { StaticVariable } from '@ui-studio/types';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import { useDispatch } from 'react-redux';
+
 import { updateStaticVariable } from 'actions/variable';
 
 const valueTypeOptions = [

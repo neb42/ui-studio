@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
 import { Widget, FlexJustification, FlexAlignment } from '@ui-studio/types';
-import { updateWidgetLayoutConfig } from 'actions/widget';
+
+import { updateWidgetLayoutConfig } from 'actions/tree/layout';
 import { AlignmentButton } from 'components/AlignmentButton';
 
 import * as Styles from './FlexLayoutConfig.styles';

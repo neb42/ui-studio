@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 import IconButton from '@material-ui/core/IconButton';
 import { DesktopMac, LaptopMac, TabletMac, PhoneIphone } from '@material-ui/icons';
-import { updatePreviewSize } from 'actions/element';
-import { getPreviewSize } from 'selectors/element';
+
+import { updatePreviewSize } from 'actions/view';
+import { getPreviewSize } from 'selectors/view';
 import { ScreenSize } from 'types/store';
 
 import * as Styles from './ScreenSizeSelection.styles';

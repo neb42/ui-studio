@@ -43,7 +43,6 @@ const GlobalStyles = createGlobalStyle`
   body {
     min-height: 100vh;
     text-rendering: optimizeSpeed;
-    line-height: 1.5;
     font-family: 'Inter', sans-serif;
   }
 

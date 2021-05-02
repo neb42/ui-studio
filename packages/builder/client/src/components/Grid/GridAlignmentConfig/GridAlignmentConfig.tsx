@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { GridAlignment } from '@ui-studio/types';
+
 import { AlignmentButton } from 'components/AlignmentButton';
 
 import * as Styles from './GridAlignmentConfig.styles';

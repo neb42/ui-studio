@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 import Tabs from '@faculty/adler-web-components/atoms/Tabs';
-import { Store } from 'types/store';
-import { makeGetElement, makeGetSelectedElement, makeGetComponents } from 'selectors/element';
+import { Element } from '@ui-studio/types';
+
 import { ElementIcon } from 'components/ElementIcon';
 import { WidgetConfig } from 'components/WidgetConfig';
 import { LayoutConfig } from 'components/LayoutConfig';
@@ -13,29 +12,27 @@ import { EditName } from 'components/EditName/EditName';
 
 import * as Styles from './ElementConfig.styles';
 
-export const ElementConfig = (): JSX.Element => {
+type Props = {
+  selectedElement: Element | null;
+  parentElement: Element | null;
+  hasConfig: boolean;
+  hasEvents: boolean;
+  hasLayout: boolean;
+};
+
+export const ElementConfigComponent = ({
+  selectedElement,
+  parentElement,
+  hasConfig,
+  hasEvents,
+  hasLayout,
+}: Props): JSX.Element => {
   const theme = useTheme();
-  const getElement = React.useMemo(makeGetElement, []);
-  const getSelectedElement = React.useMemo(makeGetSelectedElement, []);
-  const selectedElement = useSelector(getSelectedElement);
   const [tabIndex, setTabIndex] = React.useState(0);
-
-  const parentName =
-    !selectedElement || selectedElement.type === 'page' ? null : selectedElement.parent;
-  const parentElement = useSelector((state: Store) => getElement(state, parentName));
-
-  const component = useSelector(React.useMemo(makeGetComponents, [])).find((c) => {
-    if (selectedElement?.type !== 'widget') return false;
-    return c.key === selectedElement.component;
-  });
 
   if (selectedElement === null) {
     return <Styles.Container>No element selected</Styles.Container>;
   }
-
-  const hasConfig = Boolean(component && component.config && component.config.length > 0);
-  const hasEvents = Boolean(component && component.events && component.events.length > 0);
-  const hasLayout = Boolean(component?.hasLayout);
 
   const tabHeaders = (() => {
     const th = [];

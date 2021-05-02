@@ -1,29 +1,22 @@
 import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import Tree, {
   RenderItemParams,
   TreeItem,
   TreeSourcePosition,
   TreeDestinationPosition,
+  ItemId,
 } from '@atlaskit/tree';
 import { IconButton } from '@material-ui/core';
 import { ClearSharp, AddSharp } from '@material-ui/icons';
-import { Page, Widget } from '@ui-studio/types';
-import { getElementTree, makeGetSelectedElement } from 'selectors/element';
-import { selectElement, hoverElement, updateElementPosition } from 'actions/element';
-import { removeWidget } from 'actions/widget';
+import { Widget, Element } from '@ui-studio/types';
 import { ElementIcon } from 'components/ElementIcon';
 import { ElementTreeHeader } from 'components/ElementTreeHeader';
 import { AddElementMenu } from 'components/AddElementMenu';
 
 import * as Styles from './ElementTree.styles';
 
-interface IElementTree {
-  pageId: string;
-}
-
 interface ITreeItemLabel {
-  selectedElement: Page | Widget | null;
+  selectedElement: Element | null;
   onClick: (id: string) => () => void;
   onMouseEnter: (id: string) => () => void;
   onMouseLeave: () => void;
@@ -81,7 +74,7 @@ const TreeItemLabelBuilder = ({
           <Styles.TreeItemActions
             selected={Boolean(selectedElement && selectedElement.id === element.id)}
           >
-            {(element.type === 'page' || element.type === 'overlay') && <div />}
+            {element.type !== 'widget' && <div />}
             {element.type !== 'widget' || element.hasChildren ? (
               <IconButton onClick={handleOpenAddMenu} size="small">
                 <AddSharp />
@@ -89,7 +82,7 @@ const TreeItemLabelBuilder = ({
             ) : (
               <div />
             )}
-            {element.type !== 'page' && element.type !== 'overlay' && (
+            {element.type === 'widget' && (
               <IconButton onClick={handleRemove} size="small">
                 <ClearSharp />
               </IconButton>
@@ -102,50 +95,54 @@ const TreeItemLabelBuilder = ({
   return ItemTreeLabel;
 };
 
-export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
-  const dispatch = useDispatch();
+type Props = {
+  rootId: string;
+  selectedElement: Element | null;
+  tree: Record<string, TreeItem>;
+  onSelect: (nodeId: string) => any;
+  onHover: (nodeId: string | null) => any;
+  onRemove: (widget: Widget) => any;
+  onDragStart: (id: string) => any;
+  onDragEnd: (source: TreeSourcePosition, destination?: TreeDestinationPosition) => any;
+};
+
+export const ElementTreeComponent = ({
+  rootId,
+  selectedElement,
+  tree,
+  onSelect,
+  onHover,
+  onRemove,
+  onDragStart,
+  onDragEnd,
+}: Props): JSX.Element | null => {
   const [addElementMenuAnchor, setAddElementMenuAnchor] = React.useState<HTMLElement | null>(null);
-  const elementTree = useSelector(getElementTree);
-  const selectedElement = useSelector(React.useMemo(makeGetSelectedElement, []));
-  const [dragId, setDragId] = React.useState<string | null>(null);
   const [collapseMap, setCollapseMap] = React.useState<{ [key: string]: boolean }>({});
 
   const handleCloseAddElementMenu = () => setAddElementMenuAnchor(null);
 
   const handleSelect = (nodeId: string) => () => {
-    dispatch(selectElement(nodeId));
+    onSelect(nodeId);
   };
 
   const handleMouseEnter = (nodeId: string) => () => {
-    dispatch(hoverElement(nodeId));
+    onHover(nodeId);
   };
 
   const handleMouseLeave = () => {
-    dispatch(hoverElement(null));
+    onHover(null);
   };
 
-  const handleUpdateParent = (
-    source: TreeSourcePosition,
-    destination?: TreeDestinationPosition,
-  ) => {
-    if (
-      !dragId ||
-      !destination ||
-      destination.parentId === 'root' ||
-      !elementTree[destination.parentId].hasChildren
-    )
-      return;
-    dispatch(
-      updateElementPosition(
-        dragId,
-        { parentId: source.parentId.toString(), position: source.index },
-        { parentId: destination.parentId.toString(), position: destination.index || 0 },
-      ),
-    );
+  const handleOnDragStart = (id: ItemId) => {
+    onDragStart(id.toString());
   };
 
-  const handleRemove = (element: Widget) => {
-    dispatch(removeWidget(element));
+  const handleOnDragEnd = (source: TreeSourcePosition, destination?: TreeDestinationPosition) => {
+    onDragEnd(source, destination);
+  };
+
+  const handleRemove = (widget: Widget) => {
+    onRemove(widget);
   };
 
   const handleExpand = (id: string | number) => {
@@ -156,21 +153,21 @@ export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
   };
 
   const handleCollapse = (id: string | number) => {
-    if (elementTree[id.toString()].children.length === 0) return;
+    if (tree[id.toString()].children.length === 0) return;
     setCollapseMap({
       ...collapseMap,
       [id.toString()]: true,
     });
   };
 
-  if (!elementTree) return null;
+  if (!tree) return null;
 
-  const tree: Record<string, TreeItem> = Object.keys(elementTree).reduce((acc, cur) => {
+  const treeWithExpanded: Record<string, TreeItem> = Object.keys(tree).reduce((acc, cur) => {
     const expanded = cur in collapseMap ? !collapseMap[cur] : true;
     return {
       ...acc,
       [cur]: {
-        ...elementTree[cur],
+        ...tree[cur],
         isExpanded: expanded,
       },
     };
@@ -195,18 +192,18 @@ export const ElementTree = ({ pageId }: IElementTree): JSX.Element | null => {
             items: {
               root: {
                 id: 'root',
-                children: [pageId],
+                children: [rootId],
               },
-              ...tree,
+              ...treeWithExpanded,
             },
           }}
           renderItem={ItemTreeLabel}
-          onDragStart={(id) => setDragId(id.toString())}
-          onDragEnd={handleUpdateParent}
+          onDragStart={handleOnDragStart}
+          onDragEnd={handleOnDragEnd}
           onCollapse={handleCollapse}
           onExpand={handleExpand}
           offsetPerLevel={8}
-          isDragEnabled={(id) => id.toString() !== pageId}
+          isDragEnabled={(id) => id.toString() !== rootId}
           isNestingEnabled
         />
       </Styles.Tree>

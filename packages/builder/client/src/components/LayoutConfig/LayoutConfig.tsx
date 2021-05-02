@@ -2,9 +2,10 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import { Widget } from '@ui-studio/types';
+
 import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig';
 import { FlexLayoutConfig } from 'components/Flex/FlexLayoutConfig';
-import { updateWidgetLayoutType } from 'actions/widget';
+import { updateWidgetLayoutType } from 'actions/tree/layout';
 
 const layoutTypeOptions = [
   { value: 'basic', label: 'Basic' },

@@ -2,18 +2,19 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import { Element } from '@ui-studio/types';
-import { updateElementClassNames } from 'actions/element';
+
+import { updateElementClassNames } from 'actions/tree/styles';
 
 import * as Styles from './ClassNamesInput.styles';
 
-interface ClassNamesInputProps {
+interface Props {
   element: Element;
 }
 
-export const ClassNamesInput = ({ element }: ClassNamesInputProps): JSX.Element => {
+export const ClassNamesInput = ({ element }: Props): JSX.Element => {
   const dispatch = useDispatch();
 
-  const handleOnChange = (value: string) => dispatch(updateElementClassNames(element.id, value));
+  const handleOnChange = (value: string) => dispatch(updateElementClassNames(value));
 
   return (
     <Styles.Container>

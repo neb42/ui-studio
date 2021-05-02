@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
-import { Widget, Variable, Page, Component } from '@ui-studio/types';
+import { Widget, Variable, Page, Component, CustomComponent } from '@ui-studio/types';
 import Functions from 'functions-pkg/build/Functions';
 
 import { KeyedObject, Store } from './types/store';
@@ -28,15 +28,22 @@ export const DevCommunicator = () => {
     ['init-client', 'update-tree'].forEach((e) => {
       socket.on(
         e,
-        (tree: {
-          widgets: KeyedObject<Widget>;
-          pages: KeyedObject<Page>;
+        (client: {
+          tree: KeyedObject<{ root: Page | CustomComponent; widgets: KeyedObject<Widget> }>;
           variables: KeyedObject<Variable>;
         }) =>
           dispatch(
             updateTree({
-              ...tree,
-              widgets: removeNullParent(tree.widgets),
+              ...client,
+              tree: Object.keys(client.tree).reduce((acc, cur) => {
+                return {
+                  ...acc,
+                  [cur]: {
+                    ...client.tree[cur],
+                    widgets: removeNullParent(client.tree[cur].widgets),
+                  },
+                };
+              }, {}),
             }),
           ),
       );

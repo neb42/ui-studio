@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import {
-  WidgetProp,
-  WidgetProp$Static,
-  WidgetProp$Variable,
-  WidgetProp$Widget,
-} from '@ui-studio/types';
-import { makeGetComponents, getWidgetsInTree } from 'selectors/element';
+import { WidgetProp$Static, WidgetProp$Variable, WidgetProp$Widget } from '@ui-studio/types';
+
+import { getWidgetsInSelectedTree } from 'selectors/tree';
+import { getComponents } from 'selectors/configuration';
 
 interface WidgetConfigProps {
   widgetProp: WidgetProp$Widget;
@@ -15,7 +12,7 @@ interface WidgetConfigProps {
 }
 
 export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.Element => {
-  const components = useSelector(makeGetComponents());
+  const components = useSelector(getComponents);
 
   if (widgetProp.mode !== 'widget')
     throw Error(`Trying to render widget config editor for ${widgetProp.mode} prop`);
@@ -35,7 +32,7 @@ export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.E
     onChange(buildWidgetWidgetProps(widgetProp.widgetId, value as string));
   };
 
-  const widgets = Object.values(useSelector(getWidgetsInTree)).filter((w) => {
+  const widgets = useSelector(getWidgetsInSelectedTree).filter((w) => {
     const comp = components.find((c) => c.key === w.component);
     if (comp && comp.exposedProperties) return comp.exposedProperties.length > 0;
     return false;

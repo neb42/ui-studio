@@ -3,12 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Menu, ListItemIcon, MenuItem, Divider } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
 import { Component } from '@ui-studio/types';
-import {
-  makeGetSelectedElement,
-  makeGetComponents,
-  getOrphanedRootElements,
-} from 'selectors/element';
-import { addWidget, updateWidgetParent } from 'actions/widget';
+
+import { getOrphanedRootElements } from 'selectors/element';
+import { getSelectedElement } from 'selectors/tree';
+import { getComponents } from 'selectors/configuration';
+import { addWidget, updateWidgetParent } from 'actions/tree/widget';
 
 type WidgetMenuItem = {
   key: string;
@@ -54,8 +53,8 @@ const sortCategory = (a: WidgetMenuItem, b: WidgetMenuItem) => {
 export const AddElementMenu = ({ anchor, onClose }: IAddElementMenu): JSX.Element => {
   const dispatch = useDispatch();
   const [category, setCategory] = React.useState<string | null>(null);
-  const selectedElement = useSelector(React.useMemo(makeGetSelectedElement, []));
-  const components = useSelector(React.useMemo(makeGetComponents, []));
+  const selectedElement = useSelector(getSelectedElement);
+  const components = useSelector(getComponents);
   const orphanedElements = useSelector(getOrphanedRootElements);
 
   const showOrphanedElements = category === 'Orphaned elements';

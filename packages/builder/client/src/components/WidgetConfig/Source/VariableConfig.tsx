@@ -8,7 +8,8 @@ import {
   WidgetProp$Variable,
   WidgetProp$Widget,
 } from '@ui-studio/types';
-import { getVariables } from 'selectors/element';
+
+import { getVariables } from 'selectors/variable';
 
 interface VariableConfigProps {
   widgetProp: WidgetProp$Variable;
@@ -35,7 +36,7 @@ export const VariableConfig = ({
         type: 'object',
         variableId,
         lookup: lookup || '',
-        iterable: config.iterable,
+        iterable: Boolean(config.iterable),
       };
 
     return {
