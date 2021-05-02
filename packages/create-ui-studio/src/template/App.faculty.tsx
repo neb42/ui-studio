@@ -44,6 +44,7 @@ const GlobalStyles = createGlobalStyle`
     min-height: 100vh;
     text-rendering: optimizeSpeed;
     font-family: 'Inter', sans-serif;
+    background-color: #f8f8f8;
   }
 
   /* A elements that don't have a class get default styles */
