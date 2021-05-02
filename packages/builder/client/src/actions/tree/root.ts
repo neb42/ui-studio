@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
 import { Page, CustomComponent } from '@ui-studio/types';
-
 import { TGetState, TThunkAction } from 'types/store';
 import { selectRootElement, SelectRootElement, selectElement, SelectElement } from 'actions/view';
 import { getRoots } from 'selectors/tree';

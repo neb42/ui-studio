@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
 import { Widget, FlexJustification, FlexAlignment } from '@ui-studio/types';
-
 import { updateWidgetLayoutConfig } from 'actions/tree/layout';
 import { AlignmentButton } from 'components/AlignmentButton';
 
@@ -24,19 +23,19 @@ export const FlexLayoutConfig = ({ widget }: FlexLayoutConfigProps): JSX.Element
   if (widget.layout?.type !== 'flex') throw Error();
 
   const handleUpdateDirection = ({ value }: any) => {
-    dispatch(updateWidgetLayoutConfig(widget.id, 'direction', value as 'row' | 'column'));
+    dispatch(updateWidgetLayoutConfig('direction', value as 'row' | 'column'));
   };
 
   const handleUpdateAlignment = (value: string) => {
-    dispatch(updateWidgetLayoutConfig(widget.id, 'align', value as FlexAlignment));
+    dispatch(updateWidgetLayoutConfig('align', value as FlexAlignment));
   };
 
   const handleUpdateJustification = (value: string) => {
-    dispatch(updateWidgetLayoutConfig(widget.id, 'justify', value as FlexJustification));
+    dispatch(updateWidgetLayoutConfig('justify', value as FlexJustification));
   };
 
   const handleUpdateWrap = (wrap: boolean) => {
-    dispatch(updateWidgetLayoutConfig(widget.id, 'wrap', wrap));
+    dispatch(updateWidgetLayoutConfig('wrap', wrap));
   };
 
   const { direction } = widget.layout;

@@ -1,5 +1,4 @@
 import { Dispatch } from 'redux';
-
 import { TGetState, TThunkAction } from 'types/store';
 import { getSelectedRootId, getSelectedElementId } from 'selectors/view';
 

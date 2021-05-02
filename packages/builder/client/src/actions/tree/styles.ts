@@ -1,6 +1,5 @@
 import { Dispatch } from 'redux';
 import { TStyle, BaseStyle } from '@ui-studio/types';
-
 import { TGetState, TThunkAction } from 'types/store';
 import { getSelectedRootId, getSelectedElementId } from 'selectors/view';
 import { getSelectedElement } from 'selectors/tree';

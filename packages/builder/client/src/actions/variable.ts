@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
 import { Variable, FunctionVariableArg } from '@ui-studio/types';
-
 import { TThunkAction } from 'types/store';
 import { selectVariable, SelectVariable } from 'actions/view';
 

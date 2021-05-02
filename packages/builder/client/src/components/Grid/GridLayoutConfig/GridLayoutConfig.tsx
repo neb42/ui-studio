@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { GridAlignment, IGridCell, Widget } from '@ui-studio/types';
-
 import { updateWidgetLayoutConfig } from 'actions/tree/layout';
 import { GridPreview } from 'components/Grid/GridPreview';
 import { GridTemplateControls } from 'components/Grid/GridTemplateControls';
@@ -19,23 +18,21 @@ export const GridLayoutConfig = ({ widget }: IGridLayoutConfig): JSX.Element => 
 
   if (widget.layout?.type !== 'grid') throw Error();
 
-  const handleUpdateRows = (rows: IGridCell[]) =>
-    dispatch(updateWidgetLayoutConfig(widget.id, 'rows', rows));
+  const handleUpdateRows = (rows: IGridCell[]) => dispatch(updateWidgetLayoutConfig('rows', rows));
 
   const handleUpdateColumns = (columns: IGridCell[]) =>
-    dispatch(updateWidgetLayoutConfig(widget.id, 'columns', columns));
+    dispatch(updateWidgetLayoutConfig('columns', columns));
 
   const handleUpdateColumnGap = (gap: number) =>
-    dispatch(updateWidgetLayoutConfig(widget.id, 'columnGap', gap));
+    dispatch(updateWidgetLayoutConfig('columnGap', gap));
 
-  const handleUpdateRowGap = (gap: number) =>
-    dispatch(updateWidgetLayoutConfig(widget.id, 'rowGap', gap));
+  const handleUpdateRowGap = (gap: number) => dispatch(updateWidgetLayoutConfig('rowGap', gap));
 
   const handleUpdateColumnAlignment = (alignment: GridAlignment) =>
-    dispatch(updateWidgetLayoutConfig(widget.id, 'columnAlignment', alignment));
+    dispatch(updateWidgetLayoutConfig('columnAlignment', alignment));
 
   const handleUpdateRowAlignment = (alignment: GridAlignment) =>
-    dispatch(updateWidgetLayoutConfig(widget.id, 'rowAlignment', alignment));
+    dispatch(updateWidgetLayoutConfig('rowAlignment', alignment));
 
   return (
     <Styles.Container>

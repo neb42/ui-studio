@@ -1,6 +1,5 @@
 import { Dispatch } from 'redux';
 import { Layout } from '@ui-studio/types';
-
 import { TGetState, TThunkAction } from 'types/store';
 import { getSelectedRootId, getSelectedElementId } from 'selectors/view';
 import { getSelectedElement } from 'selectors/tree';
@@ -26,7 +25,7 @@ export const updateWidgetLayoutConfig = (
   const state = getState();
   const rootId = getSelectedRootId(state);
   const widget = getSelectedElement(state);
-  if (!rootId || widget.type !== 'widget') throw Error();
+  if (!rootId || !widget || widget.type !== 'widget') throw Error();
   return dispatch({
     type: UPDATE_WIDGET_LAYOUT_CONFIG,
     payload: {

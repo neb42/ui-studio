@@ -210,7 +210,6 @@ export const tree = (
     }
 
     case ADD_WIDGET_EVENT: {
-      console.log(action);
       const { rootId, widgetId, eventKey, event } = action.payload;
       return {
         ...state,

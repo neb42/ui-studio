@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Widget, WidgetProp } from '@ui-studio/types';
-
 import { getComponents } from 'selectors/configuration';
 import { updateWidgetProps } from 'actions/tree/widget';
 import { WidgetConfigItem } from 'components/WidgetConfig/WidgetConfigItem';
@@ -18,7 +17,7 @@ export const WidgetConfigList = ({ widget }: WidgetConfigProps): JSX.Element => 
   const component = components.find((c) => c.key === widget.component);
 
   const handleOnChange = (propKey: string) => (prop: WidgetProp) => {
-    dispatch(updateWidgetProps(widget.id, propKey, prop));
+    dispatch(updateWidgetProps(propKey, prop));
   };
 
   if (!component) return <div />;
