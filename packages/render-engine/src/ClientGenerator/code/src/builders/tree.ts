@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import Graph from 'graph-data-structure';
-import { ElementTreeNode, Widget, Page } from '@ui-studio/types';
+import { ElementTreeNode, Widget, Page, CustomComponent } from '@ui-studio/types';
 
 import { Store, KeyedObject } from '../types/store';
 
@@ -11,14 +11,14 @@ import { WidgetBuilder } from './widget';
 const getElements = createSelector<
   Store,
   KeyedObject<Widget>,
-  KeyedObject<Page>,
+  KeyedObject<Page | CustomComponent>,
   {
     widgets: KeyedObject<Widget>;
-    pages: KeyedObject<Page>;
+    pages: KeyedObject<Page | CustomComponent>;
   }
 >(
   (state) => state.widget.config,
-  (state) => state.page.config,
+  (state) => state.root.config,
   (widgets, pages) => ({ widgets, pages }),
 );
 
@@ -38,7 +38,7 @@ export const useBuildTree = (): ElementTreeNode[] => {
       id: element.id,
       name: element.name,
       type: element.type,
-      position: element.type === 'page' ? 0 : element.position,
+      position: element.type !== 'widget' ? 0 : element.position,
       children: children
         .map(buildTree)
         .sort((a: ElementTreeNode, b: ElementTreeNode) => (a.position > b.position ? 1 : -1)),

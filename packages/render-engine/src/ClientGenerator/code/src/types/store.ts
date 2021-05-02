@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 import { ThunkAction as TA } from 'redux-thunk';
-import { Widget, Variable, Page } from '@ui-studio/types';
+import { Widget, Variable, Page, CustomComponent } from '@ui-studio/types';
 
 export interface KeyedObject<T> {
   [key: string]: T;
@@ -16,8 +16,8 @@ export interface Store$Variable {
   value: KeyedObject<KeyedObject<any>>;
 }
 
-export interface Store$Page {
-  config: KeyedObject<Page>;
+export interface Store$Root {
+  config: KeyedObject<Page | CustomComponent>;
 }
 
 export interface Store$Development {
@@ -26,9 +26,9 @@ export interface Store$Development {
 }
 
 export interface Store {
+  root: Store$Root;
   widget: Store$Widget;
   variable: Store$Variable;
-  page: Store$Page;
   development: Store$Development;
 }
 

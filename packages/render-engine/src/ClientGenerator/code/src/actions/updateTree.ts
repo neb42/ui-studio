@@ -1,12 +1,11 @@
-import { Widget, Variable, Page } from '@ui-studio/types';
+import { Widget, Variable, Page, CustomComponent } from '@ui-studio/types';
 
 import { KeyedObject } from '../types/store';
 
 export interface UpdateTree {
   type: 'UPDATE_TREE';
   payload: {
-    widgets: KeyedObject<Widget>;
-    pages: KeyedObject<Page>;
+    tree: KeyedObject<{ root: Page | CustomComponent; widgets: KeyedObject<Widget> }>;
     variables: KeyedObject<Variable>;
   };
 }
@@ -14,8 +13,7 @@ export interface UpdateTree {
 export const UPDATE_TREE = 'UPDATE_TREE';
 
 export const updateTree = (tree: {
-  widgets: KeyedObject<Widget>;
-  pages: KeyedObject<Page>;
+  tree: KeyedObject<{ root: Page | CustomComponent; widgets: KeyedObject<Widget> }>;
   variables: KeyedObject<Variable>;
 }): UpdateTree => ({
   type: UPDATE_TREE,
