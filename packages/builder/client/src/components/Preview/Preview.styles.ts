@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { ScreenSize } from 'types/store';
 
 const screenSizeToWidthMap = {

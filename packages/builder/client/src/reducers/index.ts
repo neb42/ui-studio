@@ -1,22 +1,21 @@
 import { combineReducers, Reducer } from 'redux';
+
 import { Store } from 'types/store';
-import { Action$Element } from 'actions/element';
 import { Action$Variable } from 'actions/variable';
+import { Action$View } from 'actions/view';
 
-import { element } from './element';
-import { page } from './page';
-import { overlay } from './overlay';
-import { widget } from './widget';
+import { tree } from './tree';
 import { variable } from './variable';
+import { view } from './view';
+import { configuration } from './configuration';
 
-type AllActions = Action$Element | Action$Widget | Action$Variable;
+type AllActions = Action$Tree | Action$Variable | Action$View;
 
 const rootReducer: Reducer<Store, AllActions> = combineReducers({
-  element,
-  page,
-  overlay,
-  widget,
+  tree,
   variable,
+  view,
+  configuration,
 });
 
 export default rootReducer;

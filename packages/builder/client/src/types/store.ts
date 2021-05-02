@@ -8,6 +8,7 @@ import {
   IOverlay,
   Variable,
   Component,
+  CustomComponent,
 } from '@ui-studio/types';
 
 export interface KeyedObject<T> {
@@ -16,28 +17,42 @@ export interface KeyedObject<T> {
 
 export type ScreenSize = 'monitor' | 'laptop' | 'tablet' | 'mobile';
 
-export type Store$Element = {
-  selectedPage: string | null;
-  selectedOverlay: string | null;
-  selectedElement: string | null;
-  hoverElement: string | null;
-  selectedVariable: string | null;
-  selectedView: 'preview' | 'variable' | 'css';
-  previewSize: ScreenSize;
-  functions: FunctionDefinition[];
-  actions: ActionDefinition[];
-  components: Component[];
-};
 export type Store$Page = KeyedObject<Page>;
+export type Store$CustomComponent = KeyedObject<CustomComponent>;
 export type Store$Overlay = KeyedObject<IOverlay>;
 export type Store$Widget = KeyedObject<Widget>;
 export type Store$Variable = KeyedObject<Variable>;
 
+export type Store$Tree = KeyedObject<{
+  root: Page | CustomComponent;
+  widgets: KeyedObject<Widget>;
+}>;
+
+export type Store$View = {
+  tree: {
+    rootId: string | null;
+    selectedElementId: string | null;
+    hoverElementId: string | null;
+  };
+  variable: {
+    selectedVariableId: string | null;
+  };
+  preview: {
+    size: ScreenSize;
+  };
+  selectedView: 'preview' | 'variable' | 'css';
+};
+
+export type Store$Configuration = {
+  functions: FunctionDefinition[];
+  actions: ActionDefinition[];
+  components: Component[];
+};
+
 export interface Store {
-  element: Store$Element;
-  page: Store$Page;
-  overlay: Store$Overlay;
-  widget: Store$Widget;
+  tree: Store$Tree;
+  view: Store$View;
+  configuration: Store$Configuration;
   variable: Store$Variable;
 }
 

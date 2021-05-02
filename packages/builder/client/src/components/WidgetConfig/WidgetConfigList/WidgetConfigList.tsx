@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Widget, WidgetProp } from '@ui-studio/types';
-import { makeGetComponents } from 'selectors/element';
-import { updateWidgetProps } from 'actions/widget';
+
+import { getComponents } from 'selectors/configuration';
+import { updateWidgetProps } from 'actions/tree/widget';
 import { WidgetConfigItem } from 'components/WidgetConfig/WidgetConfigItem';
 
 import * as Styles from './WidgetConfigList.styles';
@@ -13,7 +14,7 @@ interface WidgetConfigProps {
 
 export const WidgetConfigList = ({ widget }: WidgetConfigProps): JSX.Element => {
   const dispatch = useDispatch();
-  const components = useSelector(makeGetComponents());
+  const components = useSelector(getComponents);
   const component = components.find((c) => c.key === widget.component);
 
   const handleOnChange = (propKey: string) => (prop: WidgetProp) => {

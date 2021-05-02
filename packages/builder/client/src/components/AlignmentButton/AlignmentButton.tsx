@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useTheme } from 'styled-components';
+
 import { ReactComponent as AlignCenter } from 'icons/align-center.svg';
 import { ReactComponent as AlignEnd } from 'icons/align-end.svg';
 import { ReactComponent as AlignStart } from 'icons/align-start.svg';

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { PageBuilder } from 'pages/PageBuilder';
 
 const App = (): JSX.Element => {

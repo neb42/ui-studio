@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Slider from '@faculty/adler-web-components/atoms/Slider/Slider';
 import { Widget, FlexAlignment, IFlexStyle } from '@ui-studio/types';
-import { updateWidgetStyle } from 'actions/widget';
+
+import { updateWidgetStyle } from 'actions/tree/styles';
 import { AlignmentButton } from 'components/AlignmentButton';
 
 import * as Styles from './FlexParentStyle.styles';
@@ -26,7 +27,7 @@ export const FlexParentStyle = ({ element, parent }: FlexParentStyleProps): JSX.
       align: value as FlexAlignment,
     };
 
-    dispatch(updateWidgetStyle(element.id, style));
+    dispatch(updateWidgetStyle(style));
   };
 
   const handleUpdateGrow = (grow: number) => {
@@ -37,7 +38,7 @@ export const FlexParentStyle = ({ element, parent }: FlexParentStyleProps): JSX.
       grow,
     };
 
-    dispatch(updateWidgetStyle(element.id, style));
+    dispatch(updateWidgetStyle(style));
   };
 
   const { grow, align } = element.style;

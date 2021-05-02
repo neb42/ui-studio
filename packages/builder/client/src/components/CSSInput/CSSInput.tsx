@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import AceEditor from 'react-ace';
 import { useTheme } from 'styled-components';
 import { Element } from '@ui-studio/types';
-import { updateElementCSS } from 'actions/element';
+
+import { updateElementCSS } from 'actions/tree/styles';
 
 import * as Styles from './CSSInput.styles';
 
@@ -16,7 +17,7 @@ export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
   const theme = useTheme();
   const [hasFocus, setHasFocus] = React.useState(false);
 
-  const handleOnChange = (value: string) => dispatch(updateElementCSS(element.id, value));
+  const handleOnChange = (value: string) => dispatch(updateElementCSS(value));
 
   return (
     <Styles.Container>

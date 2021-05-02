@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Button from '@faculty/adler-web-components/atoms/Button';
+
 import { addVariable } from 'actions/variable';
 import { VariableList } from 'components/Variables/VariableList';
 import { VariableConfig } from 'components/Variables/VariableConfig';

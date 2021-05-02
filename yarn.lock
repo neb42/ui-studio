@@ -1909,20 +1909,20 @@
     unique-filename "^1.1.1"
     which "^1.3.1"
 
-"@faculty/adler-tokens@0.0.120-dev.10", "@faculty/adler-tokens@^0.0.120-dev.10":
-  version "0.0.120-dev.10"
-  resolved "https://registry.yarnpkg.com/@faculty/adler-tokens/-/adler-tokens-0.0.120-dev.10.tgz#4598524561cae259d9e1bb6906c5504e7613ba67"
-  integrity sha512-A4I9Kkonk5LBlnD/B4VWHcYDA5JXeCuXxp4kwXlW98X3xeVCSMK3FDkvwVB5MvgNwN9BZekLsYegO5rsT3YqPQ==
+"@faculty/adler-tokens@0.0.129", "@faculty/adler-tokens@^0.0.129":
+  version "0.0.129"
+  resolved "https://registry.yarnpkg.com/@faculty/adler-tokens/-/adler-tokens-0.0.129.tgz#a9403fe087160c052a1118b6ee6e20c52e69b719"
+  integrity sha512-OVUPbo25hWpbrDe+hmNmfrdZ8pkpdhM4uzIXs7Ep/xyCCy1hR7n8nru0+lJC2B0Vlef6b1CTRS1gKx5/mCpVSQ==
   dependencies:
     color "^3.1.1"
     lodash.merge "^4.6.1"
 
-"@faculty/adler-web-components@^0.0.120-dev.10":
-  version "0.0.120-dev.10"
-  resolved "https://registry.yarnpkg.com/@faculty/adler-web-components/-/adler-web-components-0.0.120-dev.10.tgz#c8799ab6d0b142ea82a169b96a0429727511bee6"
-  integrity sha512-6AL4OTlwlEDAMGmOakjA36kugK0sZ1b66oZ6A3UEgLo/5tKrlbXRuFqPgJfbycvdETeC5ss341XTr/a8GcENnw==
+"@faculty/adler-web-components@^0.0.129":
+  version "0.0.129"
+  resolved "https://registry.yarnpkg.com/@faculty/adler-web-components/-/adler-web-components-0.0.129.tgz#e1c48221b5740c4ebf126dafea3c7d7720854cce"
+  integrity sha512-pHPedwmuD4hmPpwMuIQc2mSes/oyTL7xIYKrmoLkSAAEhCzM0dR3xOvz1C2pctRDYraXmIvk147l3A8w2TWY4g==
   dependencies:
-    "@faculty/adler-tokens" "0.0.120-dev.10"
+    "@faculty/adler-tokens" "0.0.129"
     d3-array "^2.4.0"
     d3-dispatch "^1.0.6"
     d3-selection "^1.4.1"

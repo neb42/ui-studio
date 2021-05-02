@@ -2,11 +2,12 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { StyledComponent, DefaultTheme } from 'styled-components';
 import Input from '@faculty/adler-web-components/atoms/Input';
-import { Widget, Layout, Page } from '@ui-studio/types';
-import { updateElementName } from 'actions/element';
+import { Element } from '@ui-studio/types';
+
+import { updateElementName } from 'actions/tree/name';
 
 interface EditNameProps {
-  element: Page | Layout | Widget;
+  element: Element;
   component?: StyledComponent<any, DefaultTheme, {}, never>;
 }
 
@@ -17,7 +18,7 @@ export const EditName = ({ element, component }: EditNameProps) => {
   const [focus, setFocus] = React.useState(false);
 
   const handleOnChange = (value: string) => {
-    dispatch(updateElementName(element.id, element.type, value));
+    dispatch(updateElementName(value));
   };
 
   const Component = component || 'span';

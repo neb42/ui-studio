@@ -1,1 +1,1 @@
-export { ElementTreeHeader } from './ElementTreeHeader';
+export { ElementTreeHeaderContainer as ElementTreeHeader } from './ElementTreeHeader.container';

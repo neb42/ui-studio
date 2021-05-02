@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSelectedView } from 'selectors/element';
-import { selectView } from 'actions/element';
+
+import { getSelectedView } from 'selectors/view';
+import { selectView } from 'actions/view';
 import { Variables } from 'components/Variables';
 
 import * as Styles from './PopoverNavigation.styles';

@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
+
 import { updateVariableName, updateVariableType } from 'actions/variable';
-import { makeGetSelectedVariable } from 'selectors/element';
+import { getSelectedVariable } from 'selectors/variable';
 import { StaticVariableConfig } from 'components/Variables/StaticVariableConfig';
 import { FunctionVariableConfig } from 'components/Variables/FunctionVariableConfig';
 
@@ -16,7 +17,7 @@ const variableTypeOptions = [
 
 export const VariableConfig = () => {
   const dispatch = useDispatch();
-  const selectedVariable = useSelector(React.useMemo(makeGetSelectedVariable, []));
+  const selectedVariable = useSelector(getSelectedVariable);
 
   const handleOnNameChange = (name: string) => {
     if (selectedVariable) {

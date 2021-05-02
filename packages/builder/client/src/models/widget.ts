@@ -13,7 +13,9 @@ import {
   WidgetProp$Complex,
   WidgetProp$List,
   WidgetProp$Iterable,
+  TStyle,
 } from '@ui-studio/types';
+
 import { generateDefaultName, getNextPosition } from 'selectors/element';
 import { StylesModel } from 'models/styles';
 import { LayoutModel } from 'models/layout';
@@ -167,5 +169,59 @@ export class WidgetModel {
       default:
         throw Error();
     }
+  };
+
+  static updatePosition = (
+    widget: Widget,
+    movingElementId: string,
+    source: {
+      parentId: string;
+      position: number;
+    },
+    destination: {
+      parentId: string;
+      position: number;
+    },
+    style: TStyle,
+  ): Widget => {
+    // The element being moved
+    if (widget.id === movingElementId) {
+      return {
+        ...widget,
+        parent: destination.parentId,
+        position: destination.position,
+        style,
+      };
+    }
+    // The element is being moved within it's current parent element
+    if (destination.parentId === source.parentId) {
+      if (widget.parent === destination.parentId) {
+        const position = (() => {
+          let p = widget.position;
+          if (p > source.position) p -= 1;
+          if (p >= destination.position) p += 1;
+          return p;
+        })();
+        return {
+          ...widget,
+          position,
+        };
+      }
+    }
+    // The element has been moved into this element's parent
+    if (widget.parent === destination.parentId) {
+      return {
+        ...widget,
+        position: widget.position >= destination.position ? widget.position + 1 : widget.position,
+      };
+    }
+    // The element has been moved out of this element's parent
+    if (widget.parent === source.parentId) {
+      return {
+        ...widget,
+        position: widget.position > source.position ? widget.position - 1 : widget.position,
+      };
+    }
+    return widget;
   };
 }

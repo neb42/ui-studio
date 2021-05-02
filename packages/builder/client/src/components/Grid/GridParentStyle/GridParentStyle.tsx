@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Widget, IGridStyle, TGridStyleLayout, GridAlignment } from '@ui-studio/types';
-import { Store } from 'types/store';
-import { makeGetUsedGridSpace } from 'selectors/element';
+
+import { updateWidgetStyle } from 'actions/tree/styles';
+import { getUsedGridSpaceForSelectedElement } from 'selectors/grid';
 import { GridPreview } from 'components/Grid/GridPreview';
-import { updateWidgetStyle } from 'actions/widget';
 import { GridAlignmentConfig } from 'components/Grid/GridAlignmentConfig';
 
 import * as Styles from './GridParentStyle.styles';
@@ -16,10 +16,7 @@ interface IGridParentStyle {
 
 export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Element => {
   const dispatch = useDispatch();
-  const getUsedGridSpace = React.useMemo(makeGetUsedGridSpace, []);
-  const usedGridSpace = useSelector((state: Store) =>
-    getUsedGridSpace(state, parent.id, [element.id]),
-  );
+  const usedGridSpace = useSelector(getUsedGridSpaceForSelectedElement);
 
   if (element.style.type !== 'grid') throw Error();
   if (parent.layout?.type !== 'grid') throw Error();
@@ -32,7 +29,7 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
       layout: grid,
     };
 
-    dispatch(updateWidgetStyle(element.id, style));
+    dispatch(updateWidgetStyle(style));
   };
 
   const handleUpdateRowAlignment = (alignment: GridAlignment) => {
@@ -43,7 +40,7 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
       rowAlignment: alignment,
     };
 
-    dispatch(updateWidgetStyle(element.id, style));
+    dispatch(updateWidgetStyle(style));
   };
 
   const handleUpdateColumnAlignment = (alignment: GridAlignment) => {
@@ -54,7 +51,7 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
       columnAlignment: alignment,
     };
 
-    dispatch(updateWidgetStyle(element.id, style));
+    dispatch(updateWidgetStyle(style));
   };
 
   return (

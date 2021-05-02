@@ -3,8 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import Icon from '@faculty/adler-web-components/atoms/Icon';
 import Button from '@faculty/adler-web-components/atoms/Button';
 import { Variable } from '@ui-studio/types';
-import { selectVariable, removeVariable } from 'actions/variable';
-import { getVariables, getSelectedVariableId } from 'selectors/element';
+
+import { removeVariable } from 'actions/variable';
+import { selectVariable } from 'actions/view';
+import { getVariables } from 'selectors/variable';
+import { getSelectedVariableId } from 'selectors/view';
 
 import * as Styles from './VariableList.styles';
 

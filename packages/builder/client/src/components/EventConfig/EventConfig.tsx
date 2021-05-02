@@ -10,9 +10,12 @@ import {
   Event$NavigatePage,
   FunctionVariableArg,
   Widget,
+  Page,
 } from '@ui-studio/types';
-import { makeGetComponents, getVariables, makeGetActions, getPages } from 'selectors/element';
-import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/widget';
+import { getComponents, getActions } from 'selectors/configuration';
+import { getRoots } from 'selectors/tree';
+import { getVariables } from 'selectors/variable';
+import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/tree/event';
 import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';
 
 import * as Styles from './EventConfig.styles';
@@ -49,7 +52,7 @@ const TriggerActionEventConfig = ({
   event,
   onChange,
 }: EventConfigInstanceProps<Event$TriggerAction>): JSX.Element => {
-  const actions = useSelector(React.useMemo(makeGetActions, []));
+  const actions = useSelector(getActions);
 
   const selectedAction = actions.find((a) => a.name === event.actionId);
 
@@ -105,7 +108,7 @@ const NavigatePageEventConfig = ({
   event,
   onChange,
 }: EventConfigInstanceProps<Event$NavigatePage>): JSX.Element => {
-  const pages = Object.values(useSelector(getPages));
+  const pages = useSelector(getRoots).filter((e): e is Page => e.type === 'page');
 
   const handleOnChange = ({ value }: any) => {
     onChange({ type: 'navigate-page', pageId: value as string });
@@ -150,27 +153,27 @@ interface EventConfigProps {
 export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
   const dispatch = useDispatch();
 
-  const components = useSelector(React.useMemo(makeGetComponents, []));
+  const components = useSelector(getComponents);
   const eventConfig = components.find((c) => c.key === widget.component)?.events ?? [];
 
   const handleAddEvent = (eventKey: string) => () => {
     const eventType = 'update-variable';
     const defaultEvent = buildDefaultEvent(eventType);
-    dispatch(addWidgetEvent(widget.id, eventKey, defaultEvent));
+    dispatch(addWidgetEvent(eventKey, defaultEvent));
   };
 
   const handleRemoveEvent = (eventKey: string, index: number) => () => {
-    dispatch(removeWidgetEvent(widget.id, eventKey, index));
+    dispatch(removeWidgetEvent(eventKey, index));
   };
 
   const handleEventTypeChange = (eventKey: string, index: number) => ({ value }: any) => {
     const eventType = value as 'update-variable' | 'trigger-action' | 'navigate-page';
     const defaultEvent = buildDefaultEvent(eventType);
-    dispatch(updateWidgetEvent(widget.id, eventKey, index, defaultEvent));
+    dispatch(updateWidgetEvent(eventKey, index, defaultEvent));
   };
 
   const handleEventChange = (eventKey: string, index: number) => (event: Event) => {
-    dispatch(updateWidgetEvent(widget.id, eventKey, index, event));
+    dispatch(updateWidgetEvent(eventKey, index, event));
   };
 
   const eventTypeOptions = eventTypes.map((et) => ({ value: et.key, label: et.label }));

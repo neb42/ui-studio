@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { Element, Widget, Page } from '@ui-studio/types';
+import { Element } from '@ui-studio/types';
+
 import { FlexParentStyle } from 'components/Flex/FlexParentStyle';
 import { GridParentStyle } from 'components/Grid/GridParentStyle';
 import { CSSInput } from 'components/CSSInput';
 import { ClassNamesInput } from 'components/ClassNamesInput';
 
 interface Props {
-  element: Widget | Page;
+  element: Element;
   parentElement: Element | null;
 }
 export const StyleConfig = ({ element, parentElement }: Props): JSX.Element | null => {

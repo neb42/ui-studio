@@ -1,1 +1,1 @@
-export { ElementConfig } from './ElementConfig';
+export { ElementConfigContainer as ElementConfig } from './ElementConfig.container';

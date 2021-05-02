@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPages, getSelectedPageId, getSelectedElementId } from 'selectors/element';
-import { selectPage } from 'actions/element';
+import { getRoots, getSelectedRootElement } from 'selectors/tree';
+import { selectRootElement } from 'actions/view';
 import { ElementTree } from 'components/ElementTree';
 import { ElementConfig } from 'components/ElementConfig';
 import { PopoverNavigation } from 'components/PopoverNavigation';
@@ -12,28 +12,27 @@ import * as Styles from './PageBuilder.styles';
 
 export const PageBuilder = (): JSX.Element => {
   const dispatch = useDispatch();
-  const pageId = useSelector(getSelectedPageId);
-  const elementId = useSelector(getSelectedElementId);
-  const pages = useSelector(getPages);
+  const roots = useSelector(getRoots);
+  const rootElement = useSelector(getSelectedRootElement);
 
   React.useEffect(() => {
-    if (pageId === null) {
-      dispatch(selectPage(Object.keys(pages)[0]));
+    if (!rootElement) {
+      dispatch(selectRootElement(Object.keys(roots)[0]));
     }
-  }, [pageId]);
+  }, [JSON.stringify(rootElement)]);
 
-  const pageName = pageId ? pages[pageId].name : '';
+  const name = rootElement ? rootElement.name : '';
 
   return (
     <Styles.Container>
       <Header />
       <Styles.Body>
         <Styles.ColLeft>
-          {pageId && <ElementTree pageId={pageId} />}
+          {rootElement && <ElementTree />}
           <PopoverNavigation />
         </Styles.ColLeft>
-        <Preview pageName={pageName} />
-        <ElementConfig key={elementId} />
+        <Preview pageName={name} />
+        <ElementConfig key={rootElement?.id} />
       </Styles.Body>
     </Styles.Container>
   );
