@@ -44,12 +44,10 @@ export const ElementTreeHeaderComponent = ({
     setAnchorEl(null);
   };
 
-  // TODO handle overlay and components
   const handleRemove = () => {
     onRemove();
   };
 
-  // TODO handle overlay and components
   if (!rootElement) return <div />;
 
   return (

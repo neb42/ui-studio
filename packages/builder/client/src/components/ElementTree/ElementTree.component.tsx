@@ -9,7 +9,6 @@ import Tree, {
 import { IconButton } from '@material-ui/core';
 import { ClearSharp, AddSharp } from '@material-ui/icons';
 import { Widget, Element } from '@ui-studio/types';
-
 import { ElementIcon } from 'components/ElementIcon';
 import { ElementTreeHeader } from 'components/ElementTreeHeader';
 import { AddElementMenu } from 'components/AddElementMenu';
@@ -75,7 +74,7 @@ const TreeItemLabelBuilder = ({
           <Styles.TreeItemActions
             selected={Boolean(selectedElement && selectedElement.id === element.id)}
           >
-            {(element.type === 'page' || element.type === 'overlay') && <div />}
+            {element.type !== 'widget' && <div />}
             {element.type !== 'widget' || element.hasChildren ? (
               <IconButton onClick={handleOpenAddMenu} size="small">
                 <AddSharp />
@@ -83,7 +82,7 @@ const TreeItemLabelBuilder = ({
             ) : (
               <div />
             )}
-            {element.type !== 'page' && element.type !== 'overlay' && (
+            {element.type === 'widget' && (
               <IconButton onClick={handleRemove} size="small">
                 <ClearSharp />
               </IconButton>

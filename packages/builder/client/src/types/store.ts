@@ -5,7 +5,6 @@ import {
   Widget,
   FunctionDefinition,
   ActionDefinition,
-  IOverlay,
   Variable,
   Component,
   CustomComponent,
@@ -17,10 +16,6 @@ export interface KeyedObject<T> {
 
 export type ScreenSize = 'monitor' | 'laptop' | 'tablet' | 'mobile';
 
-export type Store$Page = KeyedObject<Page>;
-export type Store$CustomComponent = KeyedObject<CustomComponent>;
-export type Store$Overlay = KeyedObject<IOverlay>;
-export type Store$Widget = KeyedObject<Widget>;
 export type Store$Variable = KeyedObject<Variable>;
 
 export type Store$Tree = KeyedObject<{

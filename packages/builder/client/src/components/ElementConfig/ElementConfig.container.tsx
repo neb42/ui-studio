@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-
 import { getSelectedElement, getParentElementForSelectedElement } from 'selectors/tree';
 import { getComponents } from 'selectors/configuration';
 
@@ -14,10 +13,6 @@ export const ElementConfigContainer = (): JSX.Element => {
     if (selectedElement?.type !== 'widget') return false;
     return c.key === selectedElement.component;
   });
-
-  if (selectedElement === null) {
-    return <div />;
-  }
 
   const hasConfig = Boolean(component && component.config && component.config.length > 0);
   const hasEvents = Boolean(component && component.events && component.events.length > 0);
