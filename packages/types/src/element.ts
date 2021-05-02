@@ -1,5 +1,6 @@
 import { BaseStyle } from './style';
 import { Widget } from './widget';
+import { CustomComponent } from './customComponent';
 
 export interface Page {
   id: string;
@@ -9,21 +10,13 @@ export interface Page {
   style: BaseStyle;
 }
 
-export interface IOverlay {
-  id: string;
-  type: 'overlay';
-  overlayType: 'modal' | 'drawer';
-  name: string;
-  style: BaseStyle;
-}
-
-export type Element = Page | IOverlay | Widget;
+export type Element = Page | Widget | CustomComponent;
 
 export interface ElementTreeNode {
   id: string;
   name: string;
   position: number;
-  type: 'page' | 'layout' | 'widget';
+  type: 'page' | 'customComponent' | 'widget';
   element: Element;
   children: ElementTreeNode[];
 }
