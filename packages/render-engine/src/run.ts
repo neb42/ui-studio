@@ -19,6 +19,8 @@ const setupDirectory = async () => {
 };
 
 export const run = async (source: string, dev: boolean): Promise<void> => {
+  FilePaths.init(source);
+
   await setupDirectory();
 
   const pkgJson = JSON.parse(readFileSync(path.join(source, 'package.json')).toString());

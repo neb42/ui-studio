@@ -1,28 +1,41 @@
 import * as path from 'path';
 
-export const FilePaths = {
-  app: '',
-  base: '',
-  client: '',
-  clientSrc: '',
-  components: '',
-  reducers: '',
-  pages: '',
-  public: '',
-  server: '',
-  serverSrc: '',
-};
+class FilePathBuilder {
+  app = '';
 
-FilePaths.app = process.cwd();
+  base = '';
 
-FilePaths.base = path.join(FilePaths.app, '.ui-studio');
+  client = '';
 
-FilePaths.client = path.join(FilePaths.base, 'client');
-FilePaths.public = path.join(FilePaths.client, 'public');
-FilePaths.clientSrc = path.join(FilePaths.client, 'src');
-FilePaths.components = path.join(FilePaths.clientSrc, 'components');
-FilePaths.reducers = path.join(FilePaths.clientSrc, 'reducers');
-FilePaths.pages = path.join(FilePaths.clientSrc, 'pages');
+  clientSrc = '';
 
-FilePaths.server = path.join(FilePaths.base, 'server');
-FilePaths.serverSrc = path.join(FilePaths.server, 'src');
+  components = '';
+
+  reducers = '';
+
+  pages = '';
+
+  public = '';
+
+  server = '';
+
+  serverSrc = '';
+
+  init = (root: string = process.cwd()) => {
+    this.app = root;
+
+    this.base = path.join(this.app, '.ui-studio');
+
+    this.client = path.join(this.base, 'client');
+    this.public = path.join(this.client, 'public');
+    this.clientSrc = path.join(this.client, 'src');
+    this.components = path.join(this.clientSrc, 'components');
+    this.reducers = path.join(this.clientSrc, 'reducers');
+    this.pages = path.join(this.clientSrc, 'pages');
+
+    this.server = path.join(this.base, 'server');
+    this.serverSrc = path.join(this.server, 'src');
+  };
+}
+
+export const FilePaths = new FilePathBuilder();
