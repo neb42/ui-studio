@@ -1,20 +1,26 @@
 import { Dispatch } from 'redux';
-import { Widget, WidgetProp, TStyle } from '@ui-studio/types';
-
+import {
+  Widget,
+  WidgetProp,
+  TStyle,
+  CustomComponent,
+  CustomComponentInstance,
+} from '@ui-studio/types';
 import { getNextPosition } from 'selectors/element';
 import { getComponents } from 'selectors/configuration';
 import { getSelectedRootId, getSelectedElementId } from 'selectors/view';
-import { getElement } from 'selectors/tree';
+import { getElement, getRoots } from 'selectors/tree';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, SelectElement } from 'actions/view';
 import { WidgetModel } from 'models/widget';
 import { StylesModel } from 'models/styles';
+import { CustomComponentModel } from 'models/customComponent';
 
 export interface AddWidget {
   type: 'ADD_WIDGET';
   payload: {
     rootId: string;
-    widget: Widget;
+    widget: Widget | CustomComponentInstance;
   };
 }
 
@@ -51,6 +57,42 @@ export const addWidget = (
   });
 };
 
+export const addCustomComponentInstance = (
+  customComponentId: string,
+  parentElementId: string,
+): TThunkAction<AddWidget> => (
+  dispatch: Dispatch<AddWidget | SelectElement>,
+  getState: TGetState,
+) => {
+  const state = getState();
+
+  const rootId = getSelectedRootId(state);
+  if (!rootId) throw Error();
+  const parentElement = getElement(state, rootId, parentElementId);
+  if (!parentElement) throw Error();
+
+  const customComponent = getRoots(state)
+    .filter((e): e is CustomComponent => e.type === 'customComponent')
+    .find((c) => c.id === customComponentId);
+  if (!customComponent) throw Error();
+
+  const widget = CustomComponentModel.getDefaultCustomComponentInstance(
+    state,
+    customComponent,
+    parentElement,
+  );
+
+  dispatch(selectElement(widget.id));
+
+  return dispatch({
+    type: ADD_WIDGET,
+    payload: {
+      rootId,
+      widget,
+    },
+  });
+};
+
 export interface RemoveWidget {
   type: 'REMOVE_WIDGET';
   payload: {
@@ -64,7 +106,10 @@ export interface RemoveWidget {
 
 export const REMOVE_WIDGET = 'REMOVE_WIDGET';
 
-export const removeWidget = (widget: Widget, del = false): TThunkAction<RemoveWidget> => (
+export const removeWidget = (
+  widget: Widget | CustomComponentInstance,
+  del = false,
+): TThunkAction<RemoveWidget> => (
   dispatch: Dispatch<RemoveWidget | SelectElement>,
   getState: TGetState,
 ) => {

@@ -25,7 +25,7 @@ export const updateWidgetLayoutConfig = (
   const state = getState();
   const rootId = getSelectedRootId(state);
   const widget = getSelectedElement(state);
-  if (!rootId || !widget || widget.type !== 'widget') throw Error();
+  if (!rootId || !widget || widget.rootElement) throw Error();
   return dispatch({
     type: UPDATE_WIDGET_LAYOUT_CONFIG,
     payload: {

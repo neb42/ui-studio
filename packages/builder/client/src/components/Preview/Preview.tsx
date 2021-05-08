@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import axios from 'axios';
 import { InitFunctions, Component, Page } from '@ui-studio/types';
-
-import { Store$Tree, Store$Variable } from 'types/store';
+import { Store$Tree, Store$Variable, Store } from 'types/store';
 import { getVariables } from 'selectors/variable';
 import { getRoots, getRawTree } from 'selectors/tree';
 import { getSelectedElementId, getHoverElementId, getPreviewSize } from 'selectors/view';
@@ -14,13 +13,18 @@ import { selectRootElement, selectElement } from 'actions/view';
 
 import * as Styles from './Preview.styles';
 
-interface Props {
-  pageName: string;
-}
+const getUrl = (state: Store) => {
+  const { rootId } = state.view.tree;
+  if (!rootId) return null;
+  const { root } = state.tree[rootId];
+  if (root.type === 'page') return `/${root.name}`;
+  return `/__customComponent/${root.id}`;
+};
 
-export const Preview = ({ pageName }: Props): JSX.Element => {
+export const Preview = (): JSX.Element => {
   const dispatch = useDispatch();
-  const pages = useSelector(getRoots).filter((e): e is Page => e.type === 'page');
+  const url = useSelector(getUrl);
+  const roots = useSelector(getRoots);
   const previewSize = useSelector(getPreviewSize);
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
   const [previewServer, setPreviewServer] = React.useState<{
@@ -77,21 +81,25 @@ export const Preview = ({ pageName }: Props): JSX.Element => {
 
   React.useEffect(() => {
     socket.on('navigate-page', (response: { url: string }) => {
-      const newPageName = response.url.replace('/', '');
-      if (newPageName !== pageName) {
-        const newPageId = pages.find((p) => p.name === newPageName)?.id;
-        if (newPageId) dispatch(selectRootElement(newPageId));
+      if (url) {
+        const currentRootIdentifier = url.replace('/__customComponent', '').replace('/', '');
+        const nextRootIdentifier = response.url.replace('/__customComponent', '').replace('/', '');
+        if (currentRootIdentifier !== nextRootIdentifier) {
+          // TODO check if page or component
+          const nextRootId = roots.find((p) => p.name === nextRootIdentifier)?.id;
+          if (nextRootId) dispatch(selectRootElement(nextRootId));
+        }
       }
     });
-  }, [JSON.stringify(pages), pageName]);
+  }, [JSON.stringify(roots), url]);
 
   React.useEffect(() => {
     if (isLoaded) socket.emit('elements-updated', { tree, variables });
   }, [JSON.stringify(tree), JSON.stringify(variables)]);
 
   React.useEffect(() => {
-    socket.emit('navigate-page', { url: pageName });
-  }, [pageName]);
+    socket.emit('navigate-page', { url });
+  }, [url]);
 
   React.useEffect(() => {
     socket.emit('select-element', { id: selectedElementId });

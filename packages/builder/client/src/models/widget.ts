@@ -4,6 +4,7 @@ import {
   Event,
   Component,
   ComponentConfig,
+  Component$Event,
   Widget,
   WidgetProp,
   WidgetProp$Static,
@@ -14,8 +15,8 @@ import {
   WidgetProp$List,
   WidgetProp$Iterable,
   TStyle,
+  CustomComponentInstance,
 } from '@ui-studio/types';
-
 import { generateDefaultName, getNextPosition } from 'selectors/element';
 import { StylesModel } from 'models/styles';
 import { LayoutModel } from 'models/layout';
@@ -30,6 +31,7 @@ export class WidgetModel {
   ): Widget => {
     return {
       id: uuidv4(),
+      rootElement: false,
       type: 'widget',
       library,
       hasChildren: Boolean(component.hasChildren),
@@ -37,8 +39,8 @@ export class WidgetModel {
       parent: parentElement.id,
       name: WidgetModel.getDefaultName(state, component.name),
       position: WidgetModel.getNextPosition(state, parentElement.id),
-      props: WidgetModel.getDefaultProps(component),
-      events: WidgetModel.getDefaultEvents(component),
+      props: WidgetModel.getDefaultProps(component.config || []),
+      events: WidgetModel.getDefaultEvents(component.events || []),
       style: StylesModel.getDefaultStyle(parentElement),
       layout: component.hasLayout ? LayoutModel.getDefaultLayout('flex') : null,
     };
@@ -63,16 +65,16 @@ export class WidgetModel {
   };
 
   static getDefaultEvents = (
-    component: Component,
+    events: Component$Event[],
   ): {
     [key: string]: Event[];
   } => {
-    return component.events?.reduce((acc, cur) => ({ ...acc, [cur.key]: [] }), {}) ?? {};
+    return events.reduce((acc, cur) => ({ ...acc, [cur.key]: [] }), {}) ?? {};
   };
 
-  static getDefaultProps = (component: Component): { [key: string]: WidgetProp } => {
+  static getDefaultProps = (config: ComponentConfig[]): { [key: string]: WidgetProp } => {
     return (
-      component.config?.reduce((acc, cur) => {
+      config.reduce((acc, cur) => {
         const mode = (() => {
           if (cur.list) return 'list';
           if (cur.component === 'complex') return 'complex';
@@ -172,7 +174,7 @@ export class WidgetModel {
   };
 
   static updatePosition = (
-    widget: Widget,
+    widget: Widget | CustomComponentInstance,
     movingElementId: string,
     source: {
       parentId: string;
@@ -183,7 +185,7 @@ export class WidgetModel {
       position: number;
     },
     style: TStyle,
-  ): Widget => {
+  ): Widget | CustomComponentInstance => {
     // The element being moved
     if (widget.id === movingElementId) {
       return {

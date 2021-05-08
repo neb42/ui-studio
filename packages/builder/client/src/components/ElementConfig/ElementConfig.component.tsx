@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useTheme } from 'styled-components';
 import Tabs from '@faculty/adler-web-components/atoms/Tabs';
 import { Element } from '@ui-studio/types';
-
 import { ElementIcon } from 'components/ElementIcon';
 import { WidgetConfig } from 'components/WidgetConfig';
 import { LayoutConfig } from 'components/LayoutConfig';
@@ -30,7 +29,7 @@ export const ElementConfigComponent = ({
   const theme = useTheme();
   const [tabIndex, setTabIndex] = React.useState(0);
 
-  if (selectedElement === null) {
+  if (!selectedElement) {
     return <Styles.Container>No element selected</Styles.Container>;
   }
 
@@ -56,13 +55,13 @@ export const ElementConfigComponent = ({
         />
       </Styles.Header>
       <Styles.Body>
-        {hasConfig && selectedElement.type === 'widget' && isSelected('Config') && (
+        {hasConfig && !selectedElement.rootElement && isSelected('Config') && (
           <WidgetConfig widget={selectedElement} />
         )}
-        {hasLayout && selectedElement.type === 'widget' && isSelected('Layout') && (
+        {hasLayout && !selectedElement.rootElement && isSelected('Layout') && (
           <LayoutConfig widget={selectedElement} />
         )}
-        {selectedElement.type === 'widget' && isSelected('Events') && (
+        {!selectedElement.rootElement && isSelected('Events') && (
           <EventConfig widget={selectedElement} />
         )}
         {isSelected('Styles') && (

@@ -1,4 +1,11 @@
-import { Page, CustomComponent, Widget, Component, Element } from '@ui-studio/types';
+import {
+  Page,
+  CustomComponent,
+  Widget,
+  Component,
+  Element,
+  CustomComponentInstance,
+} from '@ui-studio/types';
 import { TreeItem } from '@atlaskit/tree';
 import { getComponents } from 'selectors/configuration';
 import { getSelectedRootId, getSelectedElementId } from 'selectors/view';
@@ -9,10 +16,12 @@ export const getRawTree = (state: Store): Store['tree'] => state.tree;
 export const getRoots = (state: Store): (Page | CustomComponent)[] =>
   Object.values(state.tree).map((t) => t.root);
 
-export const getWidgetsForRoot = (state: Store, rootId: string): Widget[] =>
-  Object.values(state.tree[rootId].widgets);
+export const getWidgetsForRoot = (
+  state: Store,
+  rootId: string,
+): (Widget | CustomComponentInstance)[] => Object.values(state.tree[rootId].widgets);
 
-export const getWidgetsInSelectedTree = (state: Store): Widget[] => {
+export const getWidgetsInSelectedTree = (state: Store): (Widget | CustomComponentInstance)[] => {
   const rootId = getSelectedRootId(state);
   if (!rootId) return [];
   return getWidgetsForRoot(state, rootId);
@@ -66,7 +75,7 @@ export const getTreeForRoot = (state: Store, rootId: string): Record<string, Tre
   }, {});
 
   Object.values(all).forEach((el) => {
-    if (el.type === 'widget') {
+    if (!el.rootElement) {
       if (el.parent && tree[el.parent]) {
         tree[el.parent].children = [...tree[el.parent].children, el.id];
       }
@@ -105,7 +114,7 @@ export const getParentElement = (
   elementId: string,
 ): Element | null => {
   const element = getElement(state, rootId, elementId);
-  if (!element || element.type !== 'widget') return null;
+  if (!element || element.rootElement) return null;
   return getElement(state, rootId, element.parent);
 };
 

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CustomComponent, Page } from '@ui-studio/types';
-
 import { selectRootElement } from 'actions/view';
-import { addPage, removeRoot } from 'actions/tree/root';
+import { addPage, addCustomComponent, removeRoot } from 'actions/tree/root';
 import { getRoots, getSelectedRootElement } from 'selectors/tree';
 
 import { ElementTreeHeaderComponent } from './ElementTreeHeader.component';
@@ -26,7 +25,7 @@ export const ElementTreeHeaderContainer = (): JSX.Element => {
   };
 
   const handleOnAddCustomComponent = () => {
-    // dispatch(addCustomComponent());
+    dispatch(addCustomComponent());
   };
 
   const handleOnRemove = () => {

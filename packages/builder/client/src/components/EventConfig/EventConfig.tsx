@@ -11,6 +11,8 @@ import {
   FunctionVariableArg,
   Widget,
   Page,
+  CustomComponentInstance,
+  CustomComponent,
 } from '@ui-studio/types';
 import { getComponents, getActions } from 'selectors/configuration';
 import { getRoots } from 'selectors/tree';
@@ -147,14 +149,26 @@ const buildDefaultEvent = (
 };
 
 interface EventConfigProps {
-  widget: Widget;
+  widget: Widget | CustomComponentInstance;
 }
 
 export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
   const dispatch = useDispatch();
 
+  const roots = useSelector(getRoots);
   const components = useSelector(getComponents);
-  const eventConfig = components.find((c) => c.key === widget.component)?.events ?? [];
+
+  const eventConfig = (() => {
+    if (widget.type === 'widget') {
+      const component = components.find((c) => c.key === widget.component);
+      return component?.events ?? [];
+    }
+    const component = roots.find(
+      (c): c is CustomComponent =>
+        c.id === widget.customComponentId && c.type === 'customComponent',
+    );
+    return component?.events ?? [];
+  })();
 
   const handleAddEvent = (eventKey: string) => () => {
     const eventType = 'update-variable';

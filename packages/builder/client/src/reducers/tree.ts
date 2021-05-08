@@ -1,4 +1,4 @@
-import { Widget } from '@ui-studio/types';
+import { Widget, CustomComponentInstance } from '@ui-studio/types';
 import {
   UPDATE_ROOT_STYLE,
   UPDATE_WIDGET_STYLE,
@@ -289,7 +289,7 @@ export const tree = (
     }
     case UPDATE_WIDGET_LAYOUT_TYPE: {
       const { rootId, widgetId, layoutType } = action.payload;
-      const widget: Widget = {
+      const widget = {
         ...state[rootId].widgets[widgetId],
         layout: LayoutModel.getDefaultLayout(layoutType),
       };
@@ -378,7 +378,7 @@ export const tree = (
           return { ...acc, [cur]: currentProp };
         }, {});
 
-      const doWidgets = (widgets: KeyedObject<Widget>) =>
+      const doWidgets = (widgets: KeyedObject<Widget | CustomComponentInstance>) =>
         Object.keys(widgets).reduce((acc, cur) => {
           const current = widgets[cur];
           return {

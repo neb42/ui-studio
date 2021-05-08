@@ -1,9 +1,9 @@
 import { Element, BaseStyle, IGridStyle, IFlexStyle, TStyle } from '@ui-studio/types';
 
 export class StylesModel {
-  static getDefaultStyle = (parent: Element | null): TStyle => {
+  static getDefaultStyle = (parent?: Element | null): TStyle => {
     if (parent) {
-      if (parent.type === 'widget') {
+      if (!parent.rootElement) {
         if (parent.layout?.type === 'grid') {
           return StylesModel.getDefaultGridStyle();
         }
@@ -11,9 +11,8 @@ export class StylesModel {
           return StylesModel.getDefaultFlexStyle();
         }
       }
-      return StylesModel.getDefaultBaseStyle();
     }
-    throw Error();
+    return StylesModel.getDefaultBaseStyle();
   };
 
   static getDefaultGridStyle = (): IGridStyle => {

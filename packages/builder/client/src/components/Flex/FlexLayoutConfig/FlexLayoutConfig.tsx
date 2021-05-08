@@ -2,7 +2,12 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
-import { Widget, FlexJustification, FlexAlignment } from '@ui-studio/types';
+import {
+  Widget,
+  FlexJustification,
+  FlexAlignment,
+  CustomComponentInstance,
+} from '@ui-studio/types';
 import { updateWidgetLayoutConfig } from 'actions/tree/layout';
 import { AlignmentButton } from 'components/AlignmentButton';
 
@@ -14,7 +19,7 @@ const directionOptions = [
 ];
 
 interface FlexLayoutConfigProps {
-  widget: Widget;
+  widget: Widget | CustomComponentInstance;
 }
 
 export const FlexLayoutConfig = ({ widget }: FlexLayoutConfigProps): JSX.Element => {

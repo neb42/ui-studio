@@ -195,7 +195,7 @@ export const AlignmentButton = ({
           count={Object.keys(config).length}
           rotate={direction === 'column'}
         >
-          <Icon width={16} height={16} fill={theme.colors.secondary900} />
+          <Icon width={16} height={16} fill={theme.colors.primary} />
         </Styles.Label>
       ))}
       <Styles.ActiveSegment

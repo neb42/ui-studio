@@ -1,11 +1,11 @@
 import { Dispatch } from 'redux';
-import { v4 as uuidv4 } from 'uuid';
 import { Page, CustomComponent } from '@ui-studio/types';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectRootElement, SelectRootElement, selectElement, SelectElement } from 'actions/view';
 import { getRoots } from 'selectors/tree';
 import { getSelectedRootId } from 'selectors/view';
-import { generateDefaultName } from 'selectors/element';
+import { CustomComponentModel } from 'models/customComponent';
+import { PageModel } from 'models/page';
 
 export interface AddRoot {
   type: 'ADD_ROOT';
@@ -19,18 +19,7 @@ export const addPage = (): TThunkAction<AddRoot> => (
   getState: TGetState,
 ) => {
   const state = getState();
-  const name = generateDefaultName(state, 'Page');
-  const page: Page = {
-    id: uuidv4(),
-    type: 'page',
-    name,
-    props: {},
-    style: {
-      type: 'base',
-      css: '',
-      classNames: '',
-    },
-  };
+  const page = PageModel.getDefaultPage(state);
 
   dispatch(selectRootElement(page.id));
   dispatch(selectElement(page.id));
@@ -38,6 +27,22 @@ export const addPage = (): TThunkAction<AddRoot> => (
   return dispatch({
     type: ADD_ROOT,
     payload: page,
+  });
+};
+
+export const addCustomComponent = (): TThunkAction<AddRoot> => (
+  dispatch: Dispatch<AddRoot | SelectRootElement | SelectElement>,
+  getState: TGetState,
+) => {
+  const state = getState();
+  const customComponent = CustomComponentModel.getDefaultCustomComponent(state);
+
+  dispatch(selectRootElement(customComponent.id));
+  dispatch(selectElement(customComponent.id));
+
+  return dispatch({
+    type: ADD_ROOT,
+    payload: customComponent,
   });
 };
 

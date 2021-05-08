@@ -35,13 +35,13 @@ export const updateElementClassNames = (
   const rootId = getSelectedRootId(state);
   const selectedElement = getSelectedElement(state);
   if (!rootId || !selectedElement) throw Error();
-  if (rootId === selectedElement.id && selectedElement.type !== 'widget') {
+  if (rootId === selectedElement.id && !selectedElement.rootElement) {
     return dispatch({
       type: UPDATE_ROOT_STYLE,
       payload: {
         rootId,
         style: {
-          ...selectedElement.style,
+          ...(selectedElement.style as BaseStyle),
           classNames,
         },
       },
@@ -70,13 +70,13 @@ export const updateElementCSS = (
   const rootId = getSelectedRootId(state);
   const selectedElement = getSelectedElement(state);
   if (!rootId || !selectedElement) throw Error();
-  if (rootId === selectedElement.id && selectedElement.type !== 'widget') {
+  if (rootId === selectedElement.id && !selectedElement.rootElement) {
     return dispatch({
       type: UPDATE_ROOT_STYLE,
       payload: {
         rootId,
         style: {
-          ...selectedElement.style,
+          ...(selectedElement.style as BaseStyle),
           css,
         },
       },

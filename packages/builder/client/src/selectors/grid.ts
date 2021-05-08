@@ -1,5 +1,4 @@
 import { TGridStyleLayout } from '@ui-studio/types';
-
 import { getElement, getWidgetsForRoot, getParentElement } from 'selectors/tree';
 import { getSelectedRootId, getSelectedElementId } from 'selectors/view';
 import { Store } from 'types/store';
@@ -15,6 +14,7 @@ export const getUsedGridSpace = (
   };
   const widgets = getWidgetsForRoot(state, rootId);
   const grid = getElement(state, rootId, gridElementId);
+  if (!grid) throw Error();
   return widgets
     .filter((e) => e.parent === grid.id && !ignoreIds.includes(e.id))
     .map((e) => {
@@ -29,6 +29,6 @@ export const getUsedGridSpaceForSelectedElement = (state: Store): TGridStyleLayo
   const selectedElementId = getSelectedElementId(state);
   if (!rootId || !selectedElementId) throw Error();
   const parent = getParentElement(state, rootId, selectedElementId);
-  if (!parent || parent.type !== 'widget' || parent.layout?.type !== 'grid') throw Error();
+  if (!parent || parent.rootElement || parent.layout?.type !== 'grid') throw Error();
   return getUsedGridSpace(state, rootId, parent.id, [selectedElementId]);
 };

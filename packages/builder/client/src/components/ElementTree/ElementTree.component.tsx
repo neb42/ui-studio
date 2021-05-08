@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from 'styled-components';
 import Tree, {
   RenderItemParams,
   TreeItem,
@@ -8,7 +9,7 @@ import Tree, {
 } from '@atlaskit/tree';
 import { IconButton } from '@material-ui/core';
 import { ClearSharp, AddSharp } from '@material-ui/icons';
-import { Widget, Element } from '@ui-studio/types';
+import { Widget, Element, CustomComponentInstance } from '@ui-studio/types';
 import { ElementIcon } from 'components/ElementIcon';
 import { ElementTreeHeader } from 'components/ElementTreeHeader';
 import { AddElementMenu } from 'components/AddElementMenu';
@@ -20,7 +21,7 @@ interface ITreeItemLabel {
   onClick: (id: string) => () => void;
   onMouseEnter: (id: string) => () => void;
   onMouseLeave: () => void;
-  onRemove: (element: Widget) => any;
+  onRemove: (element: Widget | CustomComponentInstance) => any;
   handleOpenAddElementMenu: (anchor: HTMLElement) => void;
 }
 
@@ -32,20 +33,21 @@ const TreeItemLabelBuilder = ({
   onRemove,
   handleOpenAddElementMenu,
 }: ITreeItemLabel) => {
+  const theme = useTheme();
   const ItemTreeLabel = ({
     item,
     onExpand,
     onCollapse,
     provided,
   }: RenderItemParams): React.ReactNode => {
-    const { element } = item.data;
+    const { element } = item.data as { element: Element };
 
     const handleOpenAddMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       handleOpenAddElementMenu(event.currentTarget);
 
     const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation();
-      onRemove(element);
+      if (!element.rootElement) onRemove(element);
     };
 
     const handleDoubleClick = () => {
@@ -69,20 +71,20 @@ const TreeItemLabelBuilder = ({
           onMouseLeave={onMouseLeave}
           active={element.id === selectedElement?.id}
         >
-          <ElementIcon element={element} color="#000" />
+          <ElementIcon element={element} color={theme.colors.primary} />
           <Styles.ElementName>{element.name}</Styles.ElementName>
           <Styles.TreeItemActions
             selected={Boolean(selectedElement && selectedElement.id === element.id)}
           >
-            {element.type !== 'widget' && <div />}
-            {element.type !== 'widget' || element.hasChildren ? (
+            {element.rootElement && <div />}
+            {element.rootElement || element.hasChildren ? (
               <IconButton onClick={handleOpenAddMenu} size="small">
                 <AddSharp />
               </IconButton>
             ) : (
               <div />
             )}
-            {element.type === 'widget' && (
+            {!element.rootElement && (
               <IconButton onClick={handleRemove} size="small">
                 <ClearSharp />
               </IconButton>
@@ -101,7 +103,7 @@ type Props = {
   tree: Record<string, TreeItem>;
   onSelect: (nodeId: string) => any;
   onHover: (nodeId: string | null) => any;
-  onRemove: (widget: Widget) => any;
+  onRemove: (widget: Widget | CustomComponentInstance) => any;
   onDragStart: (id: string) => any;
   onDragEnd: (source: TreeSourcePosition, destination?: TreeDestinationPosition) => any;
 };
@@ -141,7 +143,7 @@ export const ElementTreeComponent = ({
     onDragEnd(source, destination);
   };
 
-  const handleRemove = (widget: Widget) => {
+  const handleRemove = (widget: Widget | CustomComponentInstance) => {
     onRemove(widget);
   };
 
