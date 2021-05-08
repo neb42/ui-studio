@@ -57,6 +57,7 @@ export type WidgetProp =
 
 export interface Widget {
   id: string;
+  rootElement: false;
   type: 'widget';
   name: string;
   parent: string;
