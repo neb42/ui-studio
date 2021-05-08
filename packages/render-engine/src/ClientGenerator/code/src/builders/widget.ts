@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { Widget } from '@ui-studio/types';
+import { Widget, CustomComponentInstance } from '@ui-studio/types';
 
 import { getProp } from '../selectors';
 import { handleEvent } from '../actions/handleEvent';
@@ -13,7 +13,7 @@ import { Store } from '../types/store';
 
 import { useChildrenMap } from './tree';
 
-const WidgetWrapper = styled.div<{ widget: Widget; isSelected: boolean }>`
+const WidgetWrapper = styled.div<{ widget: Widget | CustomComponentInstance; isSelected: boolean }>`
   ${({ widget }) =>
     widget.layout?.type === 'grid'
       ? `
@@ -64,7 +64,8 @@ const WidgetWrapper = styled.div<{ widget: Widget; isSelected: boolean }>`
 `;
 
 const useGetProps = (
-  widget: Widget,
+  widget: Widget | CustomComponentInstance,
+  rootId: string | null,
   iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
 ): {
   error: boolean;
@@ -78,7 +79,7 @@ const useGetProps = (
 } => {
   const getPropInstance = useSelector(getProp);
   const rawValues: { [key: string]: any } = Object.keys(widget.props).reduce((acc, cur) => {
-    const prop = getPropInstance(widget.id, widget.props[cur], iteratorIndex);
+    const prop = getPropInstance(widget.id, rootId, widget.props[cur], iteratorIndex);
 
     return { ...acc, [cur]: prop };
   }, {});
@@ -122,7 +123,7 @@ const useGetProps = (
   };
 };
 
-const useEventHandlers = (widget: Widget) => {
+const useEventHandlers = (widget: Widget | CustomComponentInstance) => {
   const dispatch = useDispatch();
   const history = useHistory();
   return Object.keys(widget.events).reduce((acc, cur) => {
@@ -135,20 +136,24 @@ const useEventHandlers = (widget: Widget) => {
 
 export const WidgetBuilder: React.FC<any> = ({
   widgetId,
+  rootId,
   iteratorIndex = {},
 }: {
   widgetId: string;
+  rootId: string;
   iteratorIndex: { [widgetId: string]: { [prop: string]: number } };
 }) => {
   const widget = useSelector((state: Store) => state.widget.config[widgetId]);
   const dispatch = useDispatch();
-  const { loading, error, values, exposedProperties } = useGetProps(widget, iteratorIndex);
+  const { loading, error, values, exposedProperties } = useGetProps(widget, rootId, iteratorIndex);
   const eventHandlers = useEventHandlers(widget);
   const isSelected = useSelector(
     (state: Store) =>
       state.development.selectedElement === widget.id ||
       state.development.hoverElement === widget.id,
   );
+
+  /* Used for selecting element with mouse. Causes issues with onClick events.
   const selectedElementId = useSelector((state: Store) => state.development.selectedElement);
   const hoverElementId = useSelector((state: Store) => state.development.hoverElement);
 
@@ -165,9 +170,10 @@ export const WidgetBuilder: React.FC<any> = ({
       dispatch(updateHoverElement(widgetId));
     }
   };
+  */
 
   const handleExposedPropetyUpdate = (ep: { [key: string]: any }) => {
-    dispatch(updateWidget(widget.id, ep));
+    dispatch(updateWidget(widget.id, rootId, ep));
   };
 
   const props = Object.keys(widget.props).reduce(
@@ -185,9 +191,14 @@ export const WidgetBuilder: React.FC<any> = ({
     },
   );
 
-  const children = useChildrenMap(widgetId, iteratorIndex);
+  const children = useChildrenMap(
+    widget.type === 'customComponentInstance' ? widget.customComponentId : widgetId,
+    widget.type === 'customComponentInstance' ? widget.id : rootId,
+    iteratorIndex,
+  );
 
-  const C = Components[widget.library][widget.component].component;
+  const C =
+    widget.type === 'widget' ? Components[widget.library][widget.component].component : 'div';
 
   return React.createElement(
     WidgetWrapper,

@@ -3,19 +3,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
-import { Widget, Variable, Page, Component, CustomComponent } from '@ui-studio/types';
+import {
+  Widget,
+  Variable,
+  Page,
+  Component,
+  CustomComponent,
+  CustomComponentInstance,
+} from '@ui-studio/types';
 import Functions from 'functions-pkg/build/Functions';
 
 import { KeyedObject, Store } from './types/store';
 import { updateTree } from './actions/updateTree';
 import { updateHoverElement, updateSelectedElement } from './actions/development';
 import { Components } from './Components';
-
-const removeNullParent = (n: KeyedObject<any>) =>
-  Object.keys(n).reduce((acc, cur) => {
-    if (n[cur].parent === null) return acc;
-    return { ...acc, [cur]: n[cur] };
-  }, {});
 
 export const DevCommunicator = () => {
   const dispatch = useDispatch();
@@ -29,23 +30,12 @@ export const DevCommunicator = () => {
       socket.on(
         e,
         (client: {
-          tree: KeyedObject<{ root: Page | CustomComponent; widgets: KeyedObject<Widget> }>;
+          tree: KeyedObject<{
+            root: Page | CustomComponent;
+            widgets: KeyedObject<Widget | CustomComponentInstance>;
+          }>;
           variables: KeyedObject<Variable>;
-        }) =>
-          dispatch(
-            updateTree({
-              ...client,
-              tree: Object.keys(client.tree).reduce((acc, cur) => {
-                return {
-                  ...acc,
-                  [cur]: {
-                    ...client.tree[cur],
-                    widgets: removeNullParent(client.tree[cur].widgets),
-                  },
-                };
-              }, {}),
-            }),
-          ),
+        }) => dispatch(updateTree(client)),
       );
     });
 

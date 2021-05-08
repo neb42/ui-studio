@@ -1,7 +1,8 @@
 export interface UpdateWidget {
   type: 'UPDATE_WIDGET';
   payload: {
-    id: string;
+    widgetId: string;
+    rootId: string | null;
     exposedProperties: any;
   };
 }
@@ -9,12 +10,14 @@ export interface UpdateWidget {
 export const UPDATE_WIDGET = 'UPDATE_WIDGET';
 
 export const updateWidget = (
-  id: string,
+  widgetId: string,
+  rootId: string | null,
   exposedProperties: { [key: string]: any },
 ): UpdateWidget => ({
   type: UPDATE_WIDGET,
   payload: {
-    id,
+    widgetId,
+    rootId,
     exposedProperties,
   },
 });

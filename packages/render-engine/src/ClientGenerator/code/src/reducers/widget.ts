@@ -1,4 +1,4 @@
-import { Widget } from '@ui-studio/types';
+import { CustomComponentInstance, Widget } from '@ui-studio/types';
 
 import { Store$Widget, KeyedObject } from '../types/store';
 import { UpdateWidget, UPDATE_WIDGET } from '../actions/updateWidget';
@@ -15,21 +15,47 @@ export const widget = (
 ): Store$Widget => {
   switch (action.type) {
     case UPDATE_WIDGET: {
+      const { widgetId, rootId, exposedProperties } = action.payload;
+      if (rootId) {
+        return {
+          ...state,
+          value: {
+            ...state.value,
+            [rootId]: {
+              ...state.value[rootId],
+              [widgetId]: exposedProperties,
+            },
+          },
+        };
+      }
       return {
         ...state,
         value: {
           ...state.value,
-          [action.payload.id]: action.payload.exposedProperties,
+          [widgetId]: exposedProperties,
         },
       };
     }
     case UPDATE_TREE: {
       const { tree } = action.payload;
 
-      const getWidgetValuesForRoot = (widgets: KeyedObject<Widget>) =>
-        Object.keys(widgets).reduce((acc, cur) => {
+      const getWidgetValuesForRoot = (
+        widgets: KeyedObject<Widget | CustomComponentInstance>,
+        rootId: string,
+      ): Store$Widget['value'] =>
+        Object.keys(widgets).reduce<Store$Widget['value']>((acc, cur) => {
           if (JSON.stringify(widgets[cur]) !== JSON.stringify(state.config[cur])) {
             // TODO populate exposed properties
+            const w = tree[rootId].widgets[cur];
+            if (w.type === 'customComponentInstance') {
+              return {
+                ...acc,
+                [cur]: getWidgetValuesForRoot(
+                  tree[w.customComponentId].widgets,
+                  w.customComponentId,
+                ),
+              };
+            }
             return { ...acc, [cur]: {} };
           }
           return { ...acc, [cur]: state.value[cur] };
@@ -42,7 +68,7 @@ export const widget = (
         value: Object.values(tree).reduce((acc, cur) => {
           return {
             ...acc,
-            ...getWidgetValuesForRoot(cur.widgets),
+            ...getWidgetValuesForRoot(cur.widgets, cur.root.id),
           };
         }, {}),
       };

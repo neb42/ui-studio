@@ -2,8 +2,16 @@ import { WidgetProp, WidgetProp$Iterable } from '@ui-studio/types';
 
 import { Store } from './types/store';
 
-export const getWidgetPropertyValue = (state: Store) => (widgetId: string, property: string) =>
-  state.widget.value?.[widgetId]?.[property] ?? null;
+export const getWidgetPropertyValue = (state: Store) => (
+  widgetId: string,
+  rootId: string | null,
+  property: string,
+) => {
+  if (rootId) {
+    return state.widget.value?.[rootId]?.[widgetId]?.[property] ?? null;
+  }
+  return state.widget.value?.[widgetId]?.[property] ?? null;
+};
 
 export const getVariableDefinitions = (state: Store) => state.variable.config;
 
@@ -57,7 +65,7 @@ export const getVariableArgs = (state: Store) => (variableId: string) => {
     }
 
     if (a.type === 'widget') {
-      return getWidgetPropertyValue(state)(a.widgetId, a.property);
+      return getWidgetPropertyValue(state)(a.widgetId, null, a.property);
     }
 
     return null;
@@ -66,16 +74,21 @@ export const getVariableArgs = (state: Store) => (variableId: string) => {
 
 export const getProp = (state: Store) => (
   widgetId: string,
+  rootId: string | null,
   prop: WidgetProp,
   iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
 ): any | null => {
   if (prop.mode === 'list') {
-    return prop.props.map((p) => getProp(state)(widgetId, p, iteratorIndex));
+    return prop.props.map((p) => getProp(state)(widgetId, rootId, p, iteratorIndex));
+  }
+
+  if (prop.mode === 'iterable') {
+    return getIterableValue(state)(widgetId, rootId, prop, iteratorIndex);
   }
 
   if (prop.mode === 'complex') {
     return Object.keys(prop.props).reduce(
-      (a, c) => ({ ...a, [c]: getProp(state)(widgetId, prop.props[c], iteratorIndex) }),
+      (a, c) => ({ ...a, [c]: getProp(state)(widgetId, rootId, prop.props[c], iteratorIndex) }),
       {},
     );
   }
@@ -88,7 +101,7 @@ export const getProp = (state: Store) => (
   }
 
   if (prop.mode === 'widget') {
-    return getWidgetPropertyValue(state)(prop.widgetId, prop.lookup);
+    return getWidgetPropertyValue(state)(prop.widgetId, rootId, prop.lookup);
   }
 
   if (prop.mode === 'static') {
@@ -102,15 +115,12 @@ export const getProp = (state: Store) => (
     return prop.value;
   }
 
-  if (prop.mode === 'iterable') {
-    return getIterableValue(state)(widgetId, prop, iteratorIndex);
-  }
-
   return null;
 };
 
 export const getIterableValue = (state: Store) => (
   sourceWidgetId: string,
+  rootId: string | null,
   widgetProp: WidgetProp$Iterable,
   iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
 ): any => {
@@ -119,6 +129,7 @@ export const getIterableValue = (state: Store) => (
     const widget = state.widget.config[widgetProp.widgetId];
     const iteratorValue = getProp(state)(
       widget.id,
+      rootId,
       widget.props[widgetProp.propKey],
       iteratorIndex,
     );
