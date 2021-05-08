@@ -8,7 +8,7 @@ import {
 } from 'selectors/tree';
 import { getSelectedRootId } from 'selectors/view';
 
-export const generateDefaultName = (state: State, regex: string) => {
+export const generateDefaultName = (state: Store, regex: string) => {
   const root = getSelectedRootElement(state);
   if (!root) throw Error();
   const widgets = getWidgetsForRoot(state, root.id);

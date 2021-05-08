@@ -88,7 +88,7 @@ export class WidgetModel {
   static getDefaultProp = (
     mode: Mode,
     config: ComponentConfig,
-    widgetProp?: WidgetProp = null, // TODO prefill with existing values
+    widgetProp: WidgetProp | null = null, // TODO prefill with existing values
   ): WidgetProp => {
     switch (mode) {
       case 'complex': {

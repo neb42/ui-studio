@@ -1,6 +1,6 @@
 import { combineReducers, Reducer } from 'redux';
-
 import { Store } from 'types/store';
+import { Action$Tree } from 'actions/tree';
 import { Action$Variable } from 'actions/variable';
 import { Action$View } from 'actions/view';
 

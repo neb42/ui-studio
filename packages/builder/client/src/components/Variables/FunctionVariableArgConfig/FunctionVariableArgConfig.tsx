@@ -9,11 +9,11 @@ import {
   FunctionVariable$StaticArg,
   FunctionVariable$VariableArg,
   FunctionVariable$WidgetArg,
+  CustomComponent,
 } from '@ui-studio/types';
-
 import { getVariables } from 'selectors/variable';
 import { getComponents } from 'selectors/configuration';
-import { getWidgetsInSelectedTree } from 'selectors/tree';
+import { getRoots, getWidgetsInSelectedTree } from 'selectors/tree';
 
 import * as Styles from './FunctionVariableArgConfig.styles';
 
@@ -91,6 +91,7 @@ const VariableConfig = ({
 };
 
 const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>): JSX.Element => {
+  const roots = useSelector(getRoots);
   const components = useSelector(getComponents);
 
   const handleWidgetIdChange = ({ value }: any) => {
@@ -102,17 +103,43 @@ const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>)
   };
 
   const widgets = useSelector(getWidgetsInSelectedTree).filter((w) => {
-    const comp = components.find((c) => c.key === w.component);
-    if (comp && comp.exposedProperties) return comp.exposedProperties.length > 0;
+    if (w.type === 'widget') {
+      const comp = components.find((c) => c.key === w.component);
+      if (comp && comp.exposedProperties) return comp.exposedProperties.length > 0;
+    }
+    if (w.type === 'customComponentInstance') {
+      const customComponent = roots.find(
+        (r): r is CustomComponent => r.id === w.customComponentId && r.type === 'customComponent',
+      );
+      if (customComponent && customComponent.exposedProperties)
+        return customComponent.exposedProperties.length > 0;
+    }
     return false;
   });
 
   const selectedWidget = widgets.find((w) => w.id === arg.widgetId);
-  const exposedPropertyOptions = selectedWidget
-    ? components
-        .find((c) => c.key === selectedWidget.component)
-        ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
-    : [];
+  const exposedPropertyOptions = (() => {
+    if (selectedWidget) {
+      if (selectedWidget.type === 'widget') {
+        return (
+          components
+            .find((c) => c.key === selectedWidget.component)
+            ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
+        );
+      }
+      if (selectedWidget.type === 'customComponentInstance') {
+        return (
+          roots
+            .find(
+              (r): r is CustomComponent =>
+                r.id === selectedWidget.customComponentId && r.type === 'customComponent',
+            )
+            ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
+        );
+      }
+    }
+    return [];
+  })();
 
   const widgetOptions = widgets.map((w) => ({ label: w.name, value: w.id }));
 

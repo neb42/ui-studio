@@ -140,7 +140,7 @@ export interface UpdateWidgetProps {
     rootId: string;
     widgetId: string;
     key: string;
-    prop: WidgetProp | WidgetProp[] | { [subKey: string]: WidgetProp };
+    prop: WidgetProp;
   };
 }
 
@@ -148,7 +148,7 @@ export const UPDATE_WIDGET_PROPS = 'UPDATE_WIDGET_PROPS';
 
 export const updateWidgetProps = (
   key: string,
-  prop: WidgetProp | WidgetProp[] | { [subKey: string]: WidgetProp },
+  prop: WidgetProp,
 ): TThunkAction<UpdateWidgetProps> => (
   dispatch: Dispatch<UpdateWidgetProps | SelectElement>,
   getState: TGetState,

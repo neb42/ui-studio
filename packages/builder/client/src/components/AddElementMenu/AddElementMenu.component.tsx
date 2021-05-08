@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Menu, ListItemIcon, MenuItem, Divider } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
-import { Component, Widget, CustomComponent } from '@ui-studio/types';
+import { Component, Widget, CustomComponent, CustomComponentInstance } from '@ui-studio/types';
 
 export type WidgetMenuItem = {
   key: string;
@@ -20,7 +20,7 @@ type Props = {
   };
   components: Component[];
   customComponents: CustomComponent[];
-  orphanedElements: Widget[];
+  orphanedElements: (Widget | CustomComponentInstance)[];
   rootIsCustomComponent: boolean;
   onAddWidget: (key: string, library: string) => any;
   onAddCustomComponentInstance: (id: string) => any;
@@ -130,6 +130,7 @@ export const AddElementMenuComponent = ({
       {showOrphanedElements &&
         orphanedElements.map((e) => {
           const Icon = (() => {
+            if (e.type === 'customComponentInstance') return Icons.AppsSharp;
             const comp = components.find((c) => c.key === e.component);
             if (!comp) throw Error();
             return (

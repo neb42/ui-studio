@@ -32,7 +32,12 @@ export const StaticConfig = ({
 
   const buildStaticWidgetProp = (v: string | number | boolean): WidgetProp$Static => {
     if (config.list || config.component === 'complex') {
-      return { mode: 'static', type: 'object', value: v.toString(), iterable: config.iterable };
+      return {
+        mode: 'static',
+        type: 'object',
+        value: v.toString(),
+        iterable: Boolean(config.iterable),
+      };
     }
     switch (config.type) {
       case 'string':
@@ -42,7 +47,12 @@ export const StaticConfig = ({
       case 'boolean':
         return { mode: 'static', type: 'boolean', value: Boolean(v), iterable: false };
       case 'object':
-        return { mode: 'static', type: 'object', value: v.toString(), iterable: config.iterable };
+        return {
+          mode: 'static',
+          type: 'object',
+          value: v.toString(),
+          iterable: Boolean(config.iterable),
+        };
       default:
         throw Error();
     }

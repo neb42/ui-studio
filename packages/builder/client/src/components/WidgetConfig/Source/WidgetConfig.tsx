@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import { WidgetProp$Static, WidgetProp$Variable, WidgetProp$Widget } from '@ui-studio/types';
-
-import { getWidgetsInSelectedTree } from 'selectors/tree';
+import {
+  WidgetProp$Static,
+  WidgetProp$Variable,
+  WidgetProp$Widget,
+  CustomComponent,
+} from '@ui-studio/types';
+import { getRoots, getWidgetsInSelectedTree } from 'selectors/tree';
 import { getComponents } from 'selectors/configuration';
 
 interface WidgetConfigProps {
@@ -12,6 +16,7 @@ interface WidgetConfigProps {
 }
 
 export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.Element => {
+  const roots = useSelector(getRoots);
   const components = useSelector(getComponents);
 
   if (widgetProp.mode !== 'widget')
@@ -33,16 +38,44 @@ export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.E
   };
 
   const widgets = useSelector(getWidgetsInSelectedTree).filter((w) => {
-    const comp = components.find((c) => c.key === w.component);
-    if (comp && comp.exposedProperties) return comp.exposedProperties.length > 0;
+    if (w.type === 'widget') {
+      const comp = components.find((c) => c.key === w.component);
+      if (comp && comp.exposedProperties) return comp.exposedProperties.length > 0;
+    }
+    if (w.type === 'customComponentInstance') {
+      const customComponent = roots.find(
+        (r): r is CustomComponent => r.id === w.customComponentId && r.type === 'customComponent',
+      );
+      if (customComponent && customComponent.exposedProperties)
+        return customComponent.exposedProperties.length > 0;
+    }
     return false;
   });
+
   const selectedWidget = widgets.find((w) => w.id === widgetProp.widgetId);
-  const exposedPropertyOptions = selectedWidget
-    ? components
-        .find((c) => c.key === selectedWidget.component)
-        ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
-    : [];
+
+  const exposedPropertyOptions = (() => {
+    if (selectedWidget) {
+      if (selectedWidget.type === 'widget') {
+        return (
+          components
+            .find((c) => c.key === selectedWidget.component)
+            ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
+        );
+      }
+      if (selectedWidget.type === 'customComponentInstance') {
+        return (
+          roots
+            .find(
+              (r): r is CustomComponent =>
+                r.id === selectedWidget.customComponentId && r.type === 'customComponent',
+            )
+            ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
+        );
+      }
+    }
+    return [];
+  })();
 
   return (
     <>

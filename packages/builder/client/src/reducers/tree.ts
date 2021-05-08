@@ -1,45 +1,19 @@
 import { Widget, CustomComponentInstance } from '@ui-studio/types';
-import {
-  UPDATE_ROOT_STYLE,
-  UPDATE_WIDGET_STYLE,
-  UpdateRootStyle,
-  UpdateWidgetStyle,
-} from 'actions/tree/styles';
-import {
-  ADD_WIDGET_EVENT,
-  UPDATE_WIDGET_EVENT,
-  REMOVE_WIDGET_EVENT,
-  AddWidgetEvent,
-  UpdateWidgetEvent,
-  RemoveWidgetEvent,
-} from 'actions/tree/event';
-import {
-  UPDATE_WIDGET_LAYOUT_CONFIG,
-  UPDATE_WIDGET_LAYOUT_TYPE,
-  UpdateWidgetLayoutType,
-  UpdateWidgetLayoutConfig,
-} from 'actions/tree/layout';
-import { ADD_ROOT, REMOVE_ROOT, AddRoot, RemoveRoot } from 'actions/tree/root';
+import { UPDATE_ROOT_STYLE, UPDATE_WIDGET_STYLE } from 'actions/tree/styles';
+import { ADD_WIDGET_EVENT, UPDATE_WIDGET_EVENT, REMOVE_WIDGET_EVENT } from 'actions/tree/event';
+import { UPDATE_WIDGET_LAYOUT_CONFIG, UPDATE_WIDGET_LAYOUT_TYPE } from 'actions/tree/layout';
+import { ADD_ROOT, REMOVE_ROOT } from 'actions/tree/root';
 import {
   ADD_WIDGET,
   REMOVE_WIDGET,
   UPDATE_WIDGET_PROPS,
   UPDATE_WIDGET_PARENT,
   UPDATE_WIDGET_POSITION,
-  AddWidget,
-  RemoveWidget,
-  UpdateWidgetProps,
-  UpdateWidgetParent,
-  UpdateWidgetPosition,
 } from 'actions/tree/widget';
-import {
-  UPDATE_ROOT_NAME,
-  UPDATE_WIDGET_NAME,
-  UpdateRootName,
-  UpdateWidgetName,
-} from 'actions/tree/name';
+import { UPDATE_ROOT_NAME, UPDATE_WIDGET_NAME } from 'actions/tree/name';
 import { REMOVE_VARIABLE, RemoveVariable } from 'actions/variable';
-import { INIT_CLIENT, InitClient } from 'actions/tree/init';
+import { INIT_CLIENT } from 'actions/tree/init';
+import { Action$Tree } from 'actions/tree';
 import { Store$Tree, KeyedObject } from 'types/store';
 import { LayoutModel } from 'models/layout';
 import { StylesModel } from 'models/styles';
@@ -49,25 +23,7 @@ const initialState: Store$Tree = {};
 
 export const tree = (
   state: Store$Tree = initialState,
-  action:
-    | UpdateRootStyle
-    | UpdateWidgetStyle
-    | AddWidgetEvent
-    | UpdateWidgetEvent
-    | RemoveWidgetEvent
-    | UpdateWidgetLayoutType
-    | UpdateWidgetLayoutConfig
-    | AddWidget
-    | RemoveWidget
-    | AddRoot
-    | RemoveRoot
-    | UpdateWidgetProps
-    | UpdateWidgetParent
-    | UpdateWidgetPosition
-    | UpdateRootName
-    | UpdateWidgetName
-    | InitClient
-    | RemoveVariable,
+  action: Action$Tree | RemoveVariable,
 ): Store$Tree => {
   switch (action.type) {
     case ADD_ROOT: {
