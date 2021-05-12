@@ -3,6 +3,8 @@ import { useTheme } from 'styled-components';
 import Tabs from '@faculty/adler-web-components/atoms/Tabs';
 import { Element } from '@ui-studio/types';
 import { ElementIcon } from 'components/ElementIcon';
+import { CustomComponentConfig } from 'components/CustomComponent/CustomComponentConfig';
+import { ExposedProperties } from 'components/CustomComponent/ExposedProperties';
 import { WidgetConfig } from 'components/WidgetConfig';
 import { LayoutConfig } from 'components/LayoutConfig';
 import { EventConfig } from 'components/EventConfig';
@@ -35,6 +37,10 @@ export const ElementConfigComponent = ({
 
   const tabHeaders = (() => {
     const th = [];
+    if (selectedElement.type === 'customComponent') {
+      th.push('Config');
+      th.push('Properties');
+    }
     if (hasConfig) th.push('Config');
     if (hasLayout) th.push('Layout');
     if (hasEvents) th.push('Events');
@@ -55,6 +61,12 @@ export const ElementConfigComponent = ({
         />
       </Styles.Header>
       <Styles.Body>
+        {selectedElement.type === 'customComponent' && isSelected('Config') && (
+          <CustomComponentConfig customComponent={selectedElement} />
+        )}
+        {selectedElement.type === 'customComponent' && isSelected('Properties') && (
+          <ExposedProperties customComponent={selectedElement} />
+        )}
         {hasConfig && !selectedElement.rootElement && isSelected('Config') && (
           <WidgetConfig widget={selectedElement} />
         )}
