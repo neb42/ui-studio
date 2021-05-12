@@ -12,6 +12,14 @@ import {
 } from 'actions/tree/widget';
 import { UPDATE_ROOT_NAME, UPDATE_WIDGET_NAME } from 'actions/tree/name';
 import { REMOVE_VARIABLE, RemoveVariable } from 'actions/variable';
+import {
+  ADD_EXPOSED_PROPERTY,
+  REMOVE_EXPOSED_PROPERTY,
+  UPDATE_EXPOSED_PROPERTY_KEY,
+  ADD_CUSTOM_COMPONENT_CONFIG,
+  UPDATE_CUSTOM_COMPONENT_CONFIG,
+  REMOVE_CUSTOM_COMPONENT_CONFIG,
+} from 'actions/tree/customComponent';
 import { INIT_CLIENT } from 'actions/tree/init';
 import { Action$Tree } from 'actions/tree';
 import { Store$Tree, KeyedObject } from 'types/store';
@@ -355,6 +363,153 @@ export const tree = (
           },
         };
       }, {});
+    }
+
+    case ADD_EXPOSED_PROPERTY: {
+      const { rootId, key, exposedProperty } = action.payload;
+      const customComponent = state[rootId].root;
+      if (customComponent.type !== 'customComponent') throw Error();
+      return {
+        ...state,
+        [rootId]: {
+          ...state[rootId],
+          root: {
+            ...customComponent,
+            exposedProperties: {
+              ...customComponent.exposedProperties,
+              [key]: exposedProperty,
+            },
+          },
+        },
+      };
+    }
+
+    case REMOVE_EXPOSED_PROPERTY: {
+      const { rootId, key } = action.payload;
+      const customComponent = state[rootId].root;
+      if (customComponent.type !== 'customComponent') throw Error();
+      const { [key]: _, ...exposedProperties } = customComponent.exposedProperties || {};
+      return {
+        ...state,
+        [rootId]: {
+          ...state[rootId],
+          root: {
+            ...customComponent,
+            exposedProperties,
+          },
+        },
+      };
+    }
+
+    case UPDATE_EXPOSED_PROPERTY_KEY: {
+      const { rootId, oldKey, newKey } = action.payload;
+
+      const foo = Object.keys(state).reduce<Store$Tree>((acc, cur) => {
+        return {
+          ...acc,
+          [cur]: {
+            ...state[cur],
+            widgets: Object.keys(state[cur].widgets).reduce((a, c) => {
+              const widget = state[cur].widgets[c];
+              return {
+                ...a,
+                [c]: {
+                  ...widget,
+                  props: Object.keys(widget.props || {}).reduce((aa, cc) => {
+                    const prop = widget.props[cc];
+                    if (prop.mode === 'widget' && prop.lookup === oldKey) {
+                      const propWidget = state[cur].widgets[prop.widgetId];
+                      if (
+                        propWidget.type === 'customComponentInstance' &&
+                        propWidget.customComponentId === rootId
+                      ) {
+                        return {
+                          ...aa,
+                          [cc]: {
+                            ...prop,
+                            lookup: newKey,
+                          },
+                        };
+                      }
+                    }
+                    return {
+                      ...aa,
+                      [cc]: prop,
+                    };
+                  }, {}),
+                },
+              };
+            }, {}),
+          },
+        };
+      }, {});
+
+      const customComponent = state[rootId].root;
+      if (customComponent.type !== 'customComponent') throw Error();
+      const { [oldKey]: exposedProperty, ...exposedProperties } =
+        customComponent.exposedProperties || {};
+      return {
+        ...foo,
+        [rootId]: {
+          ...foo[rootId],
+          root: {
+            ...customComponent,
+            exposedProperties: {
+              ...exposedProperties,
+              [newKey]: exposedProperty,
+            },
+          },
+        },
+      };
+    }
+
+    case ADD_CUSTOM_COMPONENT_CONFIG: {
+      const { rootId, config } = action.payload;
+      const { root } = state[rootId];
+      if (root.type !== 'customComponent') throw Error();
+      return {
+        ...state,
+        [rootId]: {
+          ...state[rootId],
+          root: {
+            ...root,
+            config: [...(root.config || []), config],
+          },
+        },
+      };
+    }
+    case UPDATE_CUSTOM_COMPONENT_CONFIG: {
+      const { rootId, key, config } = action.payload;
+      const { root } = state[rootId];
+      if (root.type !== 'customComponent') throw Error();
+      return {
+        ...state,
+        [rootId]: {
+          ...state[rootId],
+          root: {
+            ...root,
+            config: root.config?.map((c) => {
+              if (c.key === key) return config;
+              return c;
+            }),
+          },
+        },
+      };
+    }
+    case REMOVE_CUSTOM_COMPONENT_CONFIG: {
+      const { rootId, key } = action.payload;
+      const { root } = state[rootId];
+      if (root.type !== 'customComponent') throw Error();
+      return {
+        ...state,
+        [rootId]: {
+          ...state[rootId],
+          root: {
+            ...root,
+            config: root.config?.filter((c) => c.key !== key),
+          },
+        },
+      };
     }
 
     case INIT_CLIENT: {
