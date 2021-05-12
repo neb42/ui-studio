@@ -7,10 +7,21 @@ export const getWidgetPropertyValue = (state: Store) => (
   rootId: string | null,
   property: string,
 ) => {
-  if (rootId) {
-    return state.widget.value?.[rootId]?.[widgetId]?.[property] ?? null;
+  const widgetConfig = state.widget.config[widgetId];
+  const widgetValue = (() => {
+    if (rootId) {
+      return state.widget.value?.[rootId]?.[widgetId];
+    }
+    return state.widget.value?.[widgetId];
+  })();
+  if (widgetConfig.type === 'customComponentInstance') {
+    const root = state.root.config[widgetConfig.customComponentId];
+    if (root.type !== 'customComponent' || !root.exposedProperties) return null;
+    return state.widget.value[widgetId][root.exposedProperties[property].widgetId][
+      root.exposedProperties[property].property
+    ];
   }
-  return state.widget.value?.[widgetId]?.[property] ?? null;
+  return widgetValue?.[property] ?? null;
 };
 
 export const getVariableDefinitions = (state: Store) => state.variable.config;
