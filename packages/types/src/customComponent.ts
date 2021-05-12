@@ -4,6 +4,11 @@ import { Layout } from './layout';
 import { ComponentConfig, Component$Event } from './components';
 import { WidgetProp } from './widget';
 
+export type CustomComponent$ExposedProperties = {
+  widgetId: string;
+  property: string;
+};
+
 export type CustomComponent = {
   id: string;
   rootElement: true;
@@ -11,7 +16,7 @@ export type CustomComponent = {
   name: string;
   config?: ComponentConfig[];
   events?: Component$Event[];
-  exposedProperties?: string[];
+  exposedProperties?: Record<string, CustomComponent$ExposedProperties>;
   style: BaseStyle;
   hasChildren?: false;
   hasLayout?: false;
