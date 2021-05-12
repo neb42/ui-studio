@@ -14,7 +14,6 @@ export type ComponentConfig$Input = BaseComponentConfig & {
 
 export type ComponentConfig$Select = BaseComponentConfig & {
   component: 'select';
-  options: { key: string | number | boolean; label: string }[];
 } & (
     | { type: 'string'; options: { key: string; label: string }[] }
     | { type: 'number'; options: { key: number; label: string }[] }
