@@ -47,7 +47,7 @@ export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.E
         (r): r is CustomComponent => r.id === w.customComponentId && r.type === 'customComponent',
       );
       if (customComponent && customComponent.exposedProperties)
-        return customComponent.exposedProperties.length > 0;
+        return Object.keys(customComponent.exposedProperties).length > 0;
     }
     return false;
   });
@@ -64,14 +64,16 @@ export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.E
         );
       }
       if (selectedWidget.type === 'customComponentInstance') {
-        return (
-          roots
-            .find(
-              (r): r is CustomComponent =>
-                r.id === selectedWidget.customComponentId && r.type === 'customComponent',
-            )
-            ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
+        const customComponent = roots.find(
+          (r): r is CustomComponent =>
+            r.id === selectedWidget.customComponentId && r.type === 'customComponent',
         );
+        if (customComponent && customComponent.exposedProperties)
+          return Object.keys(customComponent.exposedProperties).map((p) => ({
+            value: p,
+            label: p,
+          }));
+        return [];
       }
     }
     return [];

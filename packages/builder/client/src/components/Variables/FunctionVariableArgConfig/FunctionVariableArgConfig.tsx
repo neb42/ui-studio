@@ -112,12 +112,13 @@ const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>)
         (r): r is CustomComponent => r.id === w.customComponentId && r.type === 'customComponent',
       );
       if (customComponent && customComponent.exposedProperties)
-        return customComponent.exposedProperties.length > 0;
+        return Object.keys(customComponent.exposedProperties).length > 0;
     }
     return false;
   });
 
   const selectedWidget = widgets.find((w) => w.id === arg.widgetId);
+
   const exposedPropertyOptions = (() => {
     if (selectedWidget) {
       if (selectedWidget.type === 'widget') {
@@ -128,14 +129,16 @@ const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>)
         );
       }
       if (selectedWidget.type === 'customComponentInstance') {
-        return (
-          roots
-            .find(
-              (r): r is CustomComponent =>
-                r.id === selectedWidget.customComponentId && r.type === 'customComponent',
-            )
-            ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
+        const customComponent = roots.find(
+          (r): r is CustomComponent =>
+            r.id === selectedWidget.customComponentId && r.type === 'customComponent',
         );
+        if (customComponent && customComponent.exposedProperties)
+          return Object.keys(customComponent.exposedProperties).map((p) => ({
+            value: p,
+            label: p,
+          }));
+        return [];
       }
     }
     return [];
