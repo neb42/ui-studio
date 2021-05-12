@@ -1,6 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Element, BaseStyle, CustomComponent, CustomComponentInstance } from '@ui-studio/types';
+import {
+  Element,
+  BaseStyle,
+  CustomComponent,
+  CustomComponentInstance,
+  ComponentConfig,
+} from '@ui-studio/types';
 import { generateDefaultName } from 'selectors/element';
+import { getSelectedRootElement } from 'selectors/tree';
 import { Store } from 'types/store';
 import { StylesModel } from 'models/styles';
 import { WidgetModel } from 'models/widget';
@@ -35,6 +42,31 @@ export class CustomComponentModel {
       style: StylesModel.getDefaultStyle(parentElement),
       layout: null,
       hasChildren: false,
+    };
+  };
+
+  static getDefaultCustomComponentConfig = (state: Store): ComponentConfig => {
+    const root = getSelectedRootElement(state);
+    if (!root || root.type !== 'customComponent') throw Error();
+
+    const key = uuidv4();
+
+    const label = (() => {
+      const pattern = new RegExp('Config ([0-9]*)');
+      const names = root.config?.map((c) => c.key) ?? [];
+      const matchingNames = names.filter((n) => pattern.test(n));
+      const indicies = matchingNames.map((n) => pattern.exec(n)?.[1]).filter((n) => n);
+      return `Config ${
+        indicies.length === 0 ? 1 : Math.max(...indicies.map((n) => Number(n))) + 1
+      }`;
+    })();
+
+    return {
+      key,
+      label,
+      defaultValue: '',
+      type: 'string',
+      component: 'input',
     };
   };
 }
