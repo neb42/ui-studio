@@ -1,7 +1,7 @@
 import { UpdateRootStyle, UpdateWidgetStyle } from 'actions/tree/styles';
 import { AddWidgetEvent, UpdateWidgetEvent, RemoveWidgetEvent } from 'actions/tree/event';
 import { UpdateWidgetLayoutType, UpdateWidgetLayoutConfig } from 'actions/tree/layout';
-import { ADD_ROOT, REMOVE_ROOT, AddRoot, RemoveRoot } from 'actions/tree/root';
+import { AddRoot, RemoveRoot } from 'actions/tree/root';
 import {
   AddWidget,
   RemoveWidget,
@@ -11,6 +11,14 @@ import {
 } from 'actions/tree/widget';
 import { UpdateRootName, UpdateWidgetName } from 'actions/tree/name';
 import { InitClient } from 'actions/tree/init';
+import {
+  AddExposedProperty,
+  UpdateExposedPropertyKey,
+  RemoveExposedProperty,
+  AddCustomComponentConfig,
+  UpdateCustomComponentConfig,
+  RemoveCustomComponentConfig,
+} from 'actions/tree/customComponent';
 
 export type Action$Tree =
   | UpdateRootStyle
@@ -29,4 +37,10 @@ export type Action$Tree =
   | UpdateWidgetPosition
   | UpdateRootName
   | UpdateWidgetName
-  | InitClient;
+  | InitClient
+  | AddExposedProperty
+  | UpdateExposedPropertyKey
+  | RemoveExposedProperty
+  | AddCustomComponentConfig
+  | UpdateCustomComponentConfig
+  | RemoveCustomComponentConfig;
