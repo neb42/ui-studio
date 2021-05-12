@@ -161,13 +161,28 @@ export const StaticConfig = ({
           throw Error();
       }
     case 'select': {
-      const v = config.options.find((o) => o.key === widgetProp.value);
+      // Types are weird
+      const v = (() => {
+        if (
+          (config.type === 'string' || config.type === 'object') &&
+          typeof widgetProp.value === 'string'
+        ) {
+          return config.options.find((o) => o.key === widgetProp.value);
+        }
+        if (config.type === 'number' && typeof widgetProp.value === 'number') {
+          return config.options.find((o) => o.key === widgetProp.value);
+        }
+        if (config.type === 'boolean' && typeof widgetProp.value === 'boolean') {
+          return config.options.find((o) => o.key === widgetProp.value);
+        }
+        throw Error();
+      })();
       return (
         <Select
           label={valueLabel}
           value={v ? { value: v.key, label: v.label } : null}
           onChange={handleSelectOnChange}
-          options={config.options.map((o) => ({ value: o.key, label: o.label }))}
+          options={config.options.map((o: any) => ({ value: o.key, label: o.label }))}
         />
       );
     }
