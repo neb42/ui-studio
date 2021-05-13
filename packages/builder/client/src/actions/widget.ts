@@ -12,6 +12,12 @@ import { getSelectedRootId, getSelectedElementId } from 'selectors/view';
 import { getElement, getRoots } from 'selectors/tree';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, SelectElement } from 'actions/view';
+import { UpdateWidgetName } from 'actions/name';
+import { UpdateWidgetStyle } from 'actions/styles';
+import { InitClient } from 'actions/init';
+import { RemoveVariable } from 'actions/variable';
+import { AddWidgetEvent, UpdateWidgetEvent, RemoveWidgetEvent } from 'actions/event';
+import { UpdateWidgetLayoutConfig, UpdateWidgetLayoutType } from 'actions/layout';
 import { WidgetModel } from 'models/widget';
 import { StylesModel } from 'models/styles';
 import { CustomComponentModel } from 'models/customComponent';
@@ -264,3 +270,19 @@ export const updateWidgetPosition = (
     },
   });
 };
+
+export type Action$Widget =
+  | AddWidget
+  | RemoveWidget
+  | UpdateWidgetProps
+  | UpdateWidgetParent
+  | UpdateWidgetPosition
+  | AddWidgetEvent
+  | UpdateWidgetEvent
+  | RemoveWidgetEvent
+  | UpdateWidgetName
+  | UpdateWidgetStyle
+  | UpdateWidgetLayoutConfig
+  | UpdateWidgetLayoutType
+  | InitClient
+  | RemoveVariable;

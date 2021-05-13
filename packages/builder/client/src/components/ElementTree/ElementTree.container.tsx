@@ -5,7 +5,7 @@ import { CustomComponentInstance, Widget } from '@ui-studio/types';
 import { getSelectedElement, getSelectedTree } from 'selectors/tree';
 import { getSelectedRootId } from 'selectors/view';
 import { selectElement, hoverElement } from 'actions/view';
-import { removeWidget, updateWidgetPosition } from 'actions/tree/widget';
+import { removeWidget, updateWidgetPosition } from 'actions/widget';
 
 import { ElementTreeComponent } from './ElementTree.component';
 

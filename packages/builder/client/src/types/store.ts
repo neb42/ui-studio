@@ -24,6 +24,12 @@ export type Store$Tree = KeyedObject<{
   widgets: KeyedObject<Widget | CustomComponentInstance>;
 }>;
 
+export type Store$Page = KeyedObject<Page>;
+
+export type Store$CustomComponent = KeyedObject<CustomComponent>;
+
+export type Store$Widget = KeyedObject<KeyedObject<Widget | CustomComponentInstance>>;
+
 export type Store$View = {
   tree: {
     rootId: string | null;
@@ -46,7 +52,9 @@ export type Store$Configuration = {
 };
 
 export interface Store {
-  tree: Store$Tree;
+  page: Store$Page;
+  customComponent: Store$CustomComponent;
+  widget: Store$Widget;
   view: Store$View;
   configuration: Store$Configuration;
   variable: Store$Variable;

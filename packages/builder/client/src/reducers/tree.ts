@@ -1,16 +1,18 @@
+export const foo = null;
+/*
 import { Widget, CustomComponentInstance } from '@ui-studio/types';
-import { UPDATE_ROOT_STYLE, UPDATE_WIDGET_STYLE } from 'actions/tree/styles';
-import { ADD_WIDGET_EVENT, UPDATE_WIDGET_EVENT, REMOVE_WIDGET_EVENT } from 'actions/tree/event';
-import { UPDATE_WIDGET_LAYOUT_CONFIG, UPDATE_WIDGET_LAYOUT_TYPE } from 'actions/tree/layout';
-import { ADD_ROOT, REMOVE_ROOT } from 'actions/tree/root';
+import { UPDATE_ROOT_STYLE, UPDATE_WIDGET_STYLE } from 'actions/styles';
+import { ADD_WIDGET_EVENT, UPDATE_WIDGET_EVENT, REMOVE_WIDGET_EVENT } from 'actions/event';
+import { UPDATE_WIDGET_LAYOUT_CONFIG, UPDATE_WIDGET_LAYOUT_TYPE } from 'actions/layout';
+import { ADD_ROOT, REMOVE_ROOT } from 'actions/root';
 import {
   ADD_WIDGET,
   REMOVE_WIDGET,
   UPDATE_WIDGET_PROPS,
   UPDATE_WIDGET_PARENT,
   UPDATE_WIDGET_POSITION,
-} from 'actions/tree/widget';
-import { UPDATE_ROOT_NAME, UPDATE_WIDGET_NAME } from 'actions/tree/name';
+} from 'actions/widget';
+import { UPDATE_ROOT_NAME, UPDATE_WIDGET_NAME } from 'actions/name';
 import { REMOVE_VARIABLE, RemoveVariable } from 'actions/variable';
 import {
   ADD_EXPOSED_PROPERTY,
@@ -19,9 +21,9 @@ import {
   ADD_CUSTOM_COMPONENT_CONFIG,
   UPDATE_CUSTOM_COMPONENT_CONFIG,
   REMOVE_CUSTOM_COMPONENT_CONFIG,
-} from 'actions/tree/customComponent';
-import { INIT_CLIENT } from 'actions/tree/init';
-import { Action$Tree } from 'actions/tree';
+} from 'actions/customComponent';
+import { INIT_CLIENT } from 'actions/init';
+import { Action$Tree } from 'actions';
 import { Store$Tree, KeyedObject } from 'types/store';
 import { LayoutModel } from 'models/layout';
 import { StylesModel } from 'models/styles';
@@ -519,3 +521,4 @@ export const tree = (
       return state;
   }
 };
+*/

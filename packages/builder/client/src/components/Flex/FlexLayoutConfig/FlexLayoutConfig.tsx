@@ -8,7 +8,7 @@ import {
   FlexAlignment,
   CustomComponentInstance,
 } from '@ui-studio/types';
-import { updateWidgetLayoutConfig } from 'actions/tree/layout';
+import { updateWidgetLayoutConfig } from 'actions/layout';
 import { AlignmentButton } from 'components/AlignmentButton';
 
 import * as Styles from './FlexLayoutConfig.styles';

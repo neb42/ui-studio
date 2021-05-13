@@ -70,3 +70,5 @@ export const updateWidgetLayoutType = (
     },
   });
 };
+
+export type Action$Layout = UpdateWidgetLayoutConfig | UpdateWidgetLayoutType;

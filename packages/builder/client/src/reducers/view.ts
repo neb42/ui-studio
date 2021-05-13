@@ -7,7 +7,7 @@ import {
   SELECT_VARIABLE,
   Action$View,
 } from 'actions/view';
-import { INIT_CLIENT, InitClient } from 'actions/tree/init';
+import { INIT_CLIENT, InitClient } from 'actions/init';
 import { Store$View } from 'types/store';
 
 const initialState: Store$View = {

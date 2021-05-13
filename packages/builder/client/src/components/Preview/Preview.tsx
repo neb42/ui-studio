@@ -5,18 +5,17 @@ import axios from 'axios';
 import { InitFunctions, Component, Page } from '@ui-studio/types';
 import { Store$Tree, Store$Variable, Store } from 'types/store';
 import { getVariables } from 'selectors/variable';
-import { getRoots, getRawTree } from 'selectors/tree';
+import { getRoots, getRawTree, getSelectedRootElement } from 'selectors/tree';
 import { getSelectedElementId, getHoverElementId, getPreviewSize } from 'selectors/view';
 import { initComponents, initFunctions } from 'actions/configuration';
-import { initClient } from 'actions/tree/init';
+import { initClient } from 'actions/init';
 import { selectRootElement, selectElement } from 'actions/view';
 
 import * as Styles from './Preview.styles';
 
 const getUrl = (state: Store) => {
-  const { rootId } = state.view.tree;
-  if (!rootId) return null;
-  const { root } = state.tree[rootId];
+  const root = getSelectedRootElement(state);
+  if (!root) return '';
   if (root.type === 'page') return `/${root.name}`;
   return `/__customComponent/${root.id}`;
 };

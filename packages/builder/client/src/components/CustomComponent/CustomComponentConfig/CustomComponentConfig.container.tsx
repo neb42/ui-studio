@@ -5,7 +5,7 @@ import {
   addCustomComponentConfig,
   updateCustomComponentConfig,
   removeCustomComponentConfig,
-} from 'actions/tree/customComponent';
+} from 'actions/customComponent';
 
 import { CustomComponentConfigComponent } from './CustomComponentConfig.component';
 

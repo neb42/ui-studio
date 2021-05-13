@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { GridAlignment, IGridCell, Widget, CustomComponentInstance } from '@ui-studio/types';
-import { updateWidgetLayoutConfig } from 'actions/tree/layout';
+import { updateWidgetLayoutConfig } from 'actions/layout';
 import { GridPreview } from 'components/Grid/GridPreview';
 import { GridTemplateControls } from 'components/Grid/GridTemplateControls';
 import { GridGap } from 'components/Grid/GridGap';

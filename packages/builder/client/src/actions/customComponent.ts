@@ -1,9 +1,65 @@
 import { Dispatch } from 'redux';
-import { ComponentConfig, CustomComponent$ExposedProperties } from '@ui-studio/types';
+import {
+  CustomComponent,
+  ComponentConfig,
+  CustomComponent$ExposedProperties,
+} from '@ui-studio/types';
+import { selectRootElement, SelectRootElement, selectElement, SelectElement } from 'actions/view';
 import { getSelectedRootId } from 'selectors/view';
-import { getSelectedRootElement } from 'selectors/tree';
+import { getRoots, getSelectedRootElement } from 'selectors/tree';
 import { CustomComponentModel } from 'models/customComponent';
 import { TGetState, TThunkAction } from 'types/store';
+import { UpdateCustomComponentName } from 'actions/name';
+import { UpdateCustomComponentStyle } from 'actions/styles';
+import { InitClient } from 'actions/init';
+
+export interface AddCustomComponent {
+  type: 'ADD_CUSTOM_COMPONENT';
+  payload: CustomComponent;
+}
+
+export const ADD_CUSTOM_COMPONENT = 'ADD_CUSTOM_COMPONENT';
+
+export const addCustomComponent = (): TThunkAction<AddCustomComponent> => (
+  dispatch: Dispatch<AddCustomComponent | SelectRootElement | SelectElement>,
+  getState: TGetState,
+) => {
+  const state = getState();
+  const customcomponent = CustomComponentModel.getDefaultCustomComponent(state);
+
+  dispatch(selectRootElement(customcomponent.id));
+  dispatch(selectElement(customcomponent.id));
+
+  return dispatch({
+    type: ADD_CUSTOM_COMPONENT,
+    payload: customcomponent,
+  });
+};
+
+export interface RemoveCustomComponent {
+  type: 'REMOVE_CUSTOM_COMPONENT';
+  payload: string;
+}
+
+export const REMOVE_CUSTOM_COMPONENT = 'REMOVE_CUSTOM_COMPONENT';
+
+export const removeCustomComponent = (rootId: string): TThunkAction<RemoveCustomComponent> => (
+  dispatch: Dispatch<RemoveCustomComponent | SelectRootElement | SelectElement>,
+  getState: TGetState,
+) => {
+  const state = getState();
+  const selectedRootElementId = getSelectedRootId(state);
+  if (selectedRootElementId === rootId) {
+    const firstRootId = getRoots(state).filter((p) => p.id !== selectedRootElementId)[0].id;
+    dispatch(selectRootElement(firstRootId));
+    dispatch(selectElement(firstRootId));
+  }
+
+  return dispatch({
+    type: REMOVE_CUSTOM_COMPONENT,
+    payload: rootId,
+  });
+};
 
 export interface AddExposedProperty {
   type: 'ADD_EXPOSED_PROPERTY';
@@ -204,3 +260,16 @@ export const removeCustomComponentConfig = (
     },
   });
 };
+
+export type Action$CustomComponent =
+  | AddCustomComponent
+  | RemoveCustomComponent
+  | AddExposedProperty
+  | UpdateExposedPropertyKey
+  | RemoveExposedProperty
+  | AddCustomComponentConfig
+  | UpdateCustomComponentConfig
+  | RemoveCustomComponentConfig
+  | UpdateCustomComponentName
+  | UpdateCustomComponentStyle
+  | InitClient;

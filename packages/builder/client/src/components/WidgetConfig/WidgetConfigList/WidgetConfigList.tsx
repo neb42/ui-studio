@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Widget, WidgetProp, CustomComponent, CustomComponentInstance } from '@ui-studio/types';
 import { getComponents } from 'selectors/configuration';
 import { getRoots } from 'selectors/tree';
-import { updateWidgetProps } from 'actions/tree/widget';
+import { updateWidgetProps } from 'actions/widget';
 import { WidgetConfigItem } from 'components/WidgetConfig/WidgetConfigItem';
 
 import * as Styles from './WidgetConfigList.styles';

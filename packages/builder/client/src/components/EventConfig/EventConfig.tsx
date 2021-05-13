@@ -17,7 +17,7 @@ import {
 import { getComponents, getActions } from 'selectors/configuration';
 import { getRoots } from 'selectors/tree';
 import { getVariables } from 'selectors/variable';
-import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/tree/event';
+import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/event';
 import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';
 
 import * as Styles from './EventConfig.styles';

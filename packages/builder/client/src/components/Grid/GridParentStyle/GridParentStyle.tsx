@@ -7,7 +7,7 @@ import {
   GridAlignment,
   CustomComponentInstance,
 } from '@ui-studio/types';
-import { updateWidgetStyle } from 'actions/tree/styles';
+import { updateWidgetStyle } from 'actions/styles';
 import { getUsedGridSpaceForSelectedElement } from 'selectors/grid';
 import { GridPreview } from 'components/Grid/GridPreview';
 import { GridAlignmentConfig } from 'components/Grid/GridAlignmentConfig';

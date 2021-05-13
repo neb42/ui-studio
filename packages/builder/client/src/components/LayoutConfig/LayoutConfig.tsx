@@ -4,7 +4,7 @@ import Select from '@faculty/adler-web-components/atoms/Select';
 import { Widget, CustomComponentInstance } from '@ui-studio/types';
 import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig';
 import { FlexLayoutConfig } from 'components/Flex/FlexLayoutConfig';
-import { updateWidgetLayoutType } from 'actions/tree/layout';
+import { updateWidgetLayoutType } from 'actions/layout';
 
 const layoutTypeOptions = [
   { value: 'basic', label: 'Basic' },

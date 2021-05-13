@@ -1,5 +1,4 @@
 import { Variable, StaticVariable, FunctionVariable } from '@ui-studio/types';
-
 import {
   Action$Variable,
   ADD_VARIABLE,
@@ -9,7 +8,7 @@ import {
   UPDATE_STATIC_VARIABLE,
   UPDATE_FUNCTION_VARIABLE,
 } from 'actions/variable';
-import { INIT_CLIENT, InitClient } from 'actions/tree/init';
+import { INIT_CLIENT, InitClient } from 'actions/init';
 import { Store$Variable } from 'types/store';
 
 const initialState: Store$Variable = {};

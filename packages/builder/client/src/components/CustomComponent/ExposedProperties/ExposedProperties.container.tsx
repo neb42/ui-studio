@@ -7,7 +7,7 @@ import {
   addExposedProperty,
   removeExposedProperty,
   updateExposedPropertyKey,
-} from 'actions/tree/customComponent';
+} from 'actions/customComponent';
 
 import { ExposedPropertiesComponent } from './ExposedProperties.component';
 

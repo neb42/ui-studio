@@ -5,7 +5,7 @@ import { Component, CustomComponent } from '@ui-studio/types';
 import { getOrphanedRootElements } from 'selectors/element';
 import { getSelectedElement, getRoots, getSelectedRootElement } from 'selectors/tree';
 import { getComponents } from 'selectors/configuration';
-import { addCustomComponentInstance, addWidget, updateWidgetParent } from 'actions/tree/widget';
+import { addCustomComponentInstance, addWidget, updateWidgetParent } from 'actions/widget';
 
 import { AddElementMenuComponent, WidgetMenuItem } from './AddElementMenu.component';
 
