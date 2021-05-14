@@ -79,6 +79,10 @@ export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.E
     return [];
   })();
 
+  React.useEffect(() => {
+    handleLookupChange({ value: exposedPropertyOptions[0]?.value });
+  }, [widgetProp.widgetId]);
+
   return (
     <>
       <Select

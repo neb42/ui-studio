@@ -146,6 +146,10 @@ const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>)
 
   const widgetOptions = widgets.map((w) => ({ label: w.name, value: w.id }));
 
+  React.useEffect(() => {
+    handlePropertyChange({ value: exposedPropertyOptions[0]?.value });
+  }, [arg.widgetId]);
+
   return (
     <>
       <Select
