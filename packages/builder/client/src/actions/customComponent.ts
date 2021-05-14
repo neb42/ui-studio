@@ -3,6 +3,7 @@ import {
   CustomComponent,
   ComponentConfig,
   CustomComponent$ExposedProperties,
+  CustomComponentInstance,
 } from '@ui-studio/types';
 import { selectRootElement, SelectRootElement, selectElement, SelectElement } from 'actions/view';
 import { getSelectedRootId } from 'selectors/view';
@@ -12,6 +13,7 @@ import { TGetState, TThunkAction } from 'types/store';
 import { UpdateCustomComponentName } from 'actions/name';
 import { UpdateCustomComponentStyle } from 'actions/styles';
 import { InitClient } from 'actions/init';
+import { removeWidget, RemoveWidget } from 'actions/widget';
 
 export interface AddCustomComponent {
   type: 'ADD_CUSTOM_COMPONENT';
@@ -44,7 +46,7 @@ export interface RemoveCustomComponent {
 export const REMOVE_CUSTOM_COMPONENT = 'REMOVE_CUSTOM_COMPONENT';
 
 export const removeCustomComponent = (rootId: string): TThunkAction<RemoveCustomComponent> => (
-  dispatch: Dispatch<RemoveCustomComponent | SelectRootElement | SelectElement>,
+  dispatch: Dispatch<RemoveCustomComponent | SelectRootElement | SelectElement | RemoveWidget>,
   getState: TGetState,
 ) => {
   const state = getState();
@@ -54,6 +56,23 @@ export const removeCustomComponent = (rootId: string): TThunkAction<RemoveCustom
     dispatch(selectRootElement(firstRootId));
     dispatch(selectElement(firstRootId));
   }
+
+  const customComponentInstances = Object.keys(state.widget).reduce<CustomComponentInstance[]>(
+    (acc, cur) => {
+      return [
+        ...acc,
+        ...Object.values(state.widget[cur]).filter(
+          (w): w is CustomComponentInstance =>
+            w.type === 'customComponentInstance' && w.customComponentId === rootId,
+        ),
+      ];
+    },
+    [],
+  );
+
+  customComponentInstances.forEach((c) => {
+    dispatch(removeWidget(c) as any); // TODO fix type
+  });
 
   return dispatch({
     type: REMOVE_CUSTOM_COMPONENT,
