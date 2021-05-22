@@ -8,6 +8,7 @@ export const getWidgetPropertyValue = (state: Store) => (
   property: string,
 ) => {
   const widgetConfig = state.widget.config[widgetId];
+  if (!widgetConfig) return null;
   const widgetValue = (() => {
     if (rootId) {
       return state.widget.value?.[rootId]?.[widgetId];
