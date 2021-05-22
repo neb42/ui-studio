@@ -16,6 +16,7 @@ import {
   WidgetProp$Iterable,
   TStyle,
   CustomComponentInstance,
+  WidgetProp$CustomComponentConfig,
 } from '@ui-studio/types';
 import { generateDefaultName, getNextPosition } from 'selectors/element';
 import { StylesModel } from 'models/styles';
@@ -167,6 +168,12 @@ export class WidgetModel {
           propKey: '',
           lookup: '',
         } as WidgetProp$Iterable;
+      }
+      case 'customComponentConfig': {
+        return {
+          mode: 'customComponentConfig',
+          configKey: '',
+        } as WidgetProp$CustomComponentConfig;
       }
       default:
         throw Error();

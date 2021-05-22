@@ -11,6 +11,7 @@ import * as Styles from './WidgetConfigItem.styles';
 
 interface WidgetConfigProps {
   widgetId: string;
+  rootType: 'page' | 'customComponent';
   widgetProp: WidgetProp;
   config: ComponentConfig;
   onChange: (prop: WidgetProp) => any;
@@ -18,6 +19,7 @@ interface WidgetConfigProps {
 
 export const WidgetConfigItem = ({
   widgetId,
+  rootType,
   widgetProp,
   config,
   onChange,
@@ -59,13 +61,17 @@ export const WidgetConfigItem = ({
   };
 
   const modeOptions = ((): Mode[] => {
-    const withOutIterable = ((): Mode[] => {
-      if (config.list) return ['list', 'static', 'variable'];
-      if (config.component === 'complex') return ['complex', 'static', 'variable'];
-      return ['static', 'variable', 'widget'];
-    })();
-    if (hasIterableParent) return [...withOutIterable, 'iterable'];
-    return withOutIterable;
+    const modes: Mode[] = ['static', 'variable'];
+
+    if (config.list) modes.push('list');
+    else if (config.component === 'complex') modes.push('complex');
+    else modes.push('widget');
+
+    if (hasIterableParent) modes.push('iterable');
+
+    if (rootType === 'customComponent') modes.push('customComponentConfig');
+
+    return modes;
   })();
 
   return (

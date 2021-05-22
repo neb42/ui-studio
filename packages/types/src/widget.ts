@@ -2,7 +2,14 @@ import { TStyle } from './style';
 import { Event } from './event';
 import { Layout } from './layout';
 
-export type Mode = 'complex' | 'list' | 'static' | 'variable' | 'widget' | 'iterable';
+export type Mode =
+  | 'complex'
+  | 'list'
+  | 'static'
+  | 'variable'
+  | 'widget'
+  | 'iterable'
+  | 'customComponentConfig';
 
 export type WidgetProp$Static = {
   mode: 'static';
@@ -27,16 +34,33 @@ export type WidgetProp$Widget = {
   iterable: false;
 };
 
+export type WidgetProp$CustomComponentConfig = {
+  mode: 'customComponentConfig';
+  configKey: string;
+};
+
 export type WidgetProp$Complex = {
   mode: 'complex';
-  props: { [key: string]: WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget };
+  props: {
+    [key: string]:
+      | WidgetProp$Static
+      | WidgetProp$Variable
+      | WidgetProp$Widget
+      | WidgetProp$CustomComponentConfig;
+  };
   iterable: false;
 };
 
 export type WidgetProp$List = {
   mode: 'list';
   iterable: boolean;
-  props: (WidgetProp$Static | WidgetProp$Variable | WidgetProp$Widget | WidgetProp$Complex)[];
+  props: (
+    | WidgetProp$Static
+    | WidgetProp$Variable
+    | WidgetProp$Widget
+    | WidgetProp$Complex
+    | WidgetProp$CustomComponentConfig
+  )[];
 };
 
 export type WidgetProp$Iterable = {
@@ -53,7 +77,8 @@ export type WidgetProp =
   | WidgetProp$Widget
   | WidgetProp$List
   | WidgetProp$Complex
-  | WidgetProp$Iterable;
+  | WidgetProp$Iterable
+  | WidgetProp$CustomComponentConfig;
 
 export interface Widget {
   id: string;

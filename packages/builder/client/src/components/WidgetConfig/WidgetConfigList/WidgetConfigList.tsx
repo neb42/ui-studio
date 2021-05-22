@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Widget, WidgetProp, CustomComponent, CustomComponentInstance } from '@ui-studio/types';
 import { getComponents } from 'selectors/configuration';
-import { getRoots } from 'selectors/tree';
+import { getRoots, getSelectedRootElement } from 'selectors/tree';
 import { updateWidgetProps } from 'actions/widget';
 import { WidgetConfigItem } from 'components/WidgetConfig/WidgetConfigItem';
 
@@ -14,6 +14,7 @@ interface WidgetConfigProps {
 
 export const WidgetConfigList = ({ widget }: WidgetConfigProps): JSX.Element => {
   const dispatch = useDispatch();
+  const root = useSelector(getSelectedRootElement);
   const roots = useSelector(getRoots);
   const components = useSelector(getComponents);
 
@@ -33,7 +34,7 @@ export const WidgetConfigList = ({ widget }: WidgetConfigProps): JSX.Element => 
     dispatch(updateWidgetProps(propKey, prop));
   };
 
-  if (!config) return <div />;
+  if (!root || !config) return <div />;
 
   return (
     <Styles.Container>
@@ -43,6 +44,7 @@ export const WidgetConfigList = ({ widget }: WidgetConfigProps): JSX.Element => 
           <>
             <WidgetConfigItem
               widgetId={widget.id}
+              rootType={root.type}
               widgetProp={widgetProp}
               onChange={handleOnChange(c.key)}
               config={c}

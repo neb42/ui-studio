@@ -1,4 +1,8 @@
-import { WidgetProp, WidgetProp$Iterable } from '@ui-studio/types';
+import {
+  WidgetProp,
+  WidgetProp$CustomComponentConfig,
+  WidgetProp$Iterable,
+} from '@ui-studio/types';
 
 import { Store } from './types/store';
 
@@ -84,6 +88,16 @@ export const getVariableArgs = (state: Store) => (variableId: string) => {
   });
 };
 
+export const getCustomComponentConfigProp = (state: Store) => (
+  rootId: string | null,
+  prop: WidgetProp$CustomComponentConfig,
+  iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
+): any | null => {
+  if (!rootId) return null;
+  const p = state.widget.config[rootId].props[prop.configKey];
+  return getProp(state)(rootId, null, p, iteratorIndex);
+};
+
 export const getProp = (state: Store) => (
   widgetId: string,
   rootId: string | null,
@@ -103,6 +117,10 @@ export const getProp = (state: Store) => (
       (a, c) => ({ ...a, [c]: getProp(state)(widgetId, rootId, prop.props[c], iteratorIndex) }),
       {},
     );
+  }
+
+  if (prop.mode === 'customComponentConfig') {
+    return getCustomComponentConfigProp(state)(rootId, prop, iteratorIndex);
   }
 
   if (prop.mode === 'variable') {
