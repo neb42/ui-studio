@@ -6,6 +6,8 @@ import {
   WidgetProp$Variable,
   WidgetProp$Widget,
   CustomComponent,
+  CustomComponentInstance,
+  Widget,
 } from '@ui-studio/types';
 import { getRoots, getWidgetsInSelectedTree } from 'selectors/tree';
 import { getComponents } from 'selectors/configuration';
@@ -29,32 +31,9 @@ export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.E
     iterable: false,
   });
 
-  const handleIdChange = ({ value }: any) => {
-    onChange(buildWidgetWidgetProps(value as string, widgetProp.lookup));
-  };
-
-  const handleLookupChange = ({ value }: any) => {
-    onChange(buildWidgetWidgetProps(widgetProp.widgetId, value as string));
-  };
-
-  const widgets = useSelector(getWidgetsInSelectedTree).filter((w) => {
-    if (w.type === 'widget') {
-      const comp = components.find((c) => c.key === w.component);
-      if (comp && comp.exposedProperties) return comp.exposedProperties.length > 0;
-    }
-    if (w.type === 'customComponentInstance') {
-      const customComponent = roots.find(
-        (r): r is CustomComponent => r.id === w.customComponentId && r.type === 'customComponent',
-      );
-      if (customComponent && customComponent.exposedProperties)
-        return Object.keys(customComponent.exposedProperties).length > 0;
-    }
-    return false;
-  });
-
-  const selectedWidget = widgets.find((w) => w.id === widgetProp.widgetId);
-
-  const exposedPropertyOptions = (() => {
+  const getExposedPropertyOptions = (
+    selectedWidget: Widget | CustomComponentInstance | undefined,
+  ) => {
     if (selectedWidget) {
       if (selectedWidget.type === 'widget') {
         return (
@@ -77,11 +56,36 @@ export const WidgetConfig = ({ widgetProp, onChange }: WidgetConfigProps): JSX.E
       }
     }
     return [];
-  })();
+  };
 
-  React.useEffect(() => {
-    handleLookupChange({ value: exposedPropertyOptions[0]?.value });
-  }, [widgetProp.widgetId]);
+  const widgets = useSelector(getWidgetsInSelectedTree).filter((w) => {
+    if (w.type === 'widget') {
+      const comp = components.find((c) => c.key === w.component);
+      if (comp && comp.exposedProperties) return comp.exposedProperties.length > 0;
+    }
+    if (w.type === 'customComponentInstance') {
+      const customComponent = roots.find(
+        (r): r is CustomComponent => r.id === w.customComponentId && r.type === 'customComponent',
+      );
+      if (customComponent && customComponent.exposedProperties)
+        return Object.keys(customComponent.exposedProperties).length > 0;
+    }
+    return false;
+  });
+
+  const handleIdChange = ({ value }: any) => {
+    const selectedWidget = widgets.find((w) => w.id === value);
+    const exposedPropertyOptions = getExposedPropertyOptions(selectedWidget);
+    onChange(buildWidgetWidgetProps(value as string, exposedPropertyOptions[0]?.value));
+  };
+
+  const handleLookupChange = ({ value }: any) => {
+    onChange(buildWidgetWidgetProps(widgetProp.widgetId, value as string));
+  };
+
+  const selectedWidget = widgets.find((w) => w.id === widgetProp.widgetId);
+
+  const exposedPropertyOptions = getExposedPropertyOptions(selectedWidget);
 
   return (
     <>
