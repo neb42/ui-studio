@@ -1,14 +1,18 @@
 import { Action } from 'redux';
 import { ThunkAction as TA } from 'redux-thunk';
-import { Widget, Variable, Page, CustomComponent } from '@ui-studio/types';
+import { Widget, Variable, Page, CustomComponent, CustomComponentInstance } from '@ui-studio/types';
+
+type WidgetValue = KeyedObject<any>;
+
+type CustomComponentInstanceValue = KeyedObject<KeyedObject<any>>;
 
 export interface KeyedObject<T> {
   [key: string]: T;
 }
 
 export interface Store$Widget {
-  config: KeyedObject<Widget>;
-  value: KeyedObject<KeyedObject<any>>;
+  config: KeyedObject<Widget | CustomComponentInstance>;
+  value: KeyedObject<WidgetValue | CustomComponentInstanceValue>;
 }
 
 export interface Store$Variable {

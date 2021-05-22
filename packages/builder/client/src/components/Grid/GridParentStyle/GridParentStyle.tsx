@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Widget, IGridStyle, TGridStyleLayout, GridAlignment } from '@ui-studio/types';
-
-import { updateWidgetStyle } from 'actions/tree/styles';
+import {
+  Widget,
+  IGridStyle,
+  TGridStyleLayout,
+  GridAlignment,
+  CustomComponentInstance,
+} from '@ui-studio/types';
+import { updateWidgetStyle } from 'actions/styles';
 import { getUsedGridSpaceForSelectedElement } from 'selectors/grid';
 import { GridPreview } from 'components/Grid/GridPreview';
 import { GridAlignmentConfig } from 'components/Grid/GridAlignmentConfig';
@@ -10,8 +15,8 @@ import { GridAlignmentConfig } from 'components/Grid/GridAlignmentConfig';
 import * as Styles from './GridParentStyle.styles';
 
 interface IGridParentStyle {
-  element: Widget;
-  parent: Widget;
+  element: Widget | CustomComponentInstance;
+  parent: Widget | CustomComponentInstance;
 }
 
 export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Element => {

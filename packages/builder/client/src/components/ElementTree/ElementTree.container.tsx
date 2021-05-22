@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { TreeSourcePosition, TreeDestinationPosition } from '@atlaskit/tree';
-import { Widget } from '@ui-studio/types';
-
+import { CustomComponentInstance, Widget } from '@ui-studio/types';
 import { getSelectedElement, getSelectedTree } from 'selectors/tree';
 import { getSelectedRootId } from 'selectors/view';
 import { selectElement, hoverElement } from 'actions/view';
-import { removeWidget, updateWidgetPosition } from 'actions/tree/widget';
+import { removeWidget, updateWidgetPosition } from 'actions/widget';
 
 import { ElementTreeComponent } from './ElementTree.component';
 
@@ -42,11 +41,11 @@ export const ElementTreeContainer = (): JSX.Element | null => {
     );
   };
 
-  const handleRemove = (widget: Widget) => {
+  const handleRemove = (widget: Widget | CustomComponentInstance) => {
     dispatch(removeWidget(widget));
   };
 
-  if (!tree) return null;
+  if (!rootId || !tree) return null;
 
   return (
     <ElementTreeComponent

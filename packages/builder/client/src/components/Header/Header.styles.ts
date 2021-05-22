@@ -19,7 +19,7 @@ export const Title = styled.div`
   align-items: center;
   height: 55px;
   font-size: 18px;
-  color: ${({ theme }) => theme.colors.secondary900};
+  color: ${({ theme }) => theme.colors.primary};
 
   & img {
     margin-right: 16px;

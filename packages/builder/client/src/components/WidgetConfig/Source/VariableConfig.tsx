@@ -8,7 +8,6 @@ import {
   WidgetProp$Variable,
   WidgetProp$Widget,
 } from '@ui-studio/types';
-
 import { getVariables } from 'selectors/variable';
 
 interface VariableConfigProps {

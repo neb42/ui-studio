@@ -1,62 +1,35 @@
 import { TStyle, BaseStyle } from './style';
 import { Event } from './event';
 import { Layout } from './layout';
+import { ComponentConfig, Component$Event } from './components';
+import { WidgetProp } from './widget';
+
+export type CustomComponent$ExposedProperties = {
+  widgetId: string;
+  property: string;
+};
 
 export type CustomComponent = {
   id: string;
+  rootElement: true;
   type: 'customComponent';
   name: string;
-  props: { [key: string]: any };
+  config?: ComponentConfig[];
+  events?: Component$Event[];
+  exposedProperties?: Record<string, CustomComponent$ExposedProperties>;
   style: BaseStyle;
+  hasChildren?: false;
+  hasLayout?: false;
 };
 
-export type CustomComponentWidgetProp$Static = {
-  mode: 'static';
-} & (
-  | { type: 'string'; value: string; iterable: false }
-  | { type: 'number'; value: number; iterable: false }
-  | { type: 'boolean'; value: boolean; iterable: false }
-  | { type: 'object'; value: string; iterable: boolean }
-);
-
-export type CustomComponentWidgetProp$CustomComponent = {
-  key: string;
-};
-
-export type CustomComponentWidgetProp$Complex = {
-  mode: 'complex';
-  props: { [key: string]: CustomComponentWidgetProp$Static };
-  iterable: false;
-};
-
-export type CustomComponentWidgetProp$List = {
-  mode: 'list';
-  iterable: boolean;
-  props: (CustomComponentWidgetProp$Static | CustomComponentWidgetProp$Complex)[];
-};
-
-export type CustomComponentWidgetProp$Iterable = {
-  mode: 'iterable';
-  iterable: false;
-  widgetId: string;
-  propKey: string;
-  lookup: string;
-};
-
-export type CustomComponentWidgetProp =
-  | CustomComponentWidgetProp$Static
-  | CustomComponentWidgetProp$List
-  | CustomComponentWidgetProp$Complex
-  | CustomComponentWidgetProp$Iterable;
-
-export type CustomComponentWidget = {
+export type CustomComponentInstance = {
   id: string;
-  type: 'ustomComponentWidget';
+  rootElement: false;
+  type: 'customComponentInstance';
   name: string;
   parent: string;
-  CustomComponent: string;
-  library: string;
-  props: { [key: string]: CustomComponentWidgetProp };
+  customComponentId: string;
+  props: { [key: string]: WidgetProp };
   events: {
     [key: string]: Event[];
   };

@@ -1,45 +1,29 @@
-import { Widget } from '@ui-studio/types';
-import {
-  UPDATE_ROOT_STYLE,
-  UPDATE_WIDGET_STYLE,
-  UpdateRootStyle,
-  UpdateWidgetStyle,
-} from 'actions/tree/styles';
-import {
-  ADD_WIDGET_EVENT,
-  UPDATE_WIDGET_EVENT,
-  REMOVE_WIDGET_EVENT,
-  AddWidgetEvent,
-  UpdateWidgetEvent,
-  RemoveWidgetEvent,
-} from 'actions/tree/event';
-import {
-  UPDATE_WIDGET_LAYOUT_CONFIG,
-  UPDATE_WIDGET_LAYOUT_TYPE,
-  UpdateWidgetLayoutType,
-  UpdateWidgetLayoutConfig,
-} from 'actions/tree/layout';
-import { ADD_ROOT, REMOVE_ROOT, AddRoot, RemoveRoot } from 'actions/tree/root';
+export const foo = null;
+/*
+import { Widget, CustomComponentInstance } from '@ui-studio/types';
+import { UPDATE_ROOT_STYLE, UPDATE_WIDGET_STYLE } from 'actions/styles';
+import { ADD_WIDGET_EVENT, UPDATE_WIDGET_EVENT, REMOVE_WIDGET_EVENT } from 'actions/event';
+import { UPDATE_WIDGET_LAYOUT_CONFIG, UPDATE_WIDGET_LAYOUT_TYPE } from 'actions/layout';
+import { ADD_ROOT, REMOVE_ROOT } from 'actions/root';
 import {
   ADD_WIDGET,
   REMOVE_WIDGET,
   UPDATE_WIDGET_PROPS,
   UPDATE_WIDGET_PARENT,
   UPDATE_WIDGET_POSITION,
-  AddWidget,
-  RemoveWidget,
-  UpdateWidgetProps,
-  UpdateWidgetParent,
-  UpdateWidgetPosition,
-} from 'actions/tree/widget';
-import {
-  UPDATE_ROOT_NAME,
-  UPDATE_WIDGET_NAME,
-  UpdateRootName,
-  UpdateWidgetName,
-} from 'actions/tree/name';
+} from 'actions/widget';
+import { UPDATE_ROOT_NAME, UPDATE_WIDGET_NAME } from 'actions/name';
 import { REMOVE_VARIABLE, RemoveVariable } from 'actions/variable';
-import { INIT_CLIENT, InitClient } from 'actions/tree/init';
+import {
+  ADD_EXPOSED_PROPERTY,
+  REMOVE_EXPOSED_PROPERTY,
+  UPDATE_EXPOSED_PROPERTY_KEY,
+  ADD_CUSTOM_COMPONENT_CONFIG,
+  UPDATE_CUSTOM_COMPONENT_CONFIG,
+  REMOVE_CUSTOM_COMPONENT_CONFIG,
+} from 'actions/customComponent';
+import { INIT_CLIENT } from 'actions/init';
+import { Action$Tree } from 'actions';
 import { Store$Tree, KeyedObject } from 'types/store';
 import { LayoutModel } from 'models/layout';
 import { StylesModel } from 'models/styles';
@@ -49,25 +33,7 @@ const initialState: Store$Tree = {};
 
 export const tree = (
   state: Store$Tree = initialState,
-  action:
-    | UpdateRootStyle
-    | UpdateWidgetStyle
-    | AddWidgetEvent
-    | UpdateWidgetEvent
-    | RemoveWidgetEvent
-    | UpdateWidgetLayoutType
-    | UpdateWidgetLayoutConfig
-    | AddWidget
-    | RemoveWidget
-    | AddRoot
-    | RemoveRoot
-    | UpdateWidgetProps
-    | UpdateWidgetParent
-    | UpdateWidgetPosition
-    | UpdateRootName
-    | UpdateWidgetName
-    | InitClient
-    | RemoveVariable,
+  action: Action$Tree | RemoveVariable,
 ): Store$Tree => {
   switch (action.type) {
     case ADD_ROOT: {
@@ -289,7 +255,7 @@ export const tree = (
     }
     case UPDATE_WIDGET_LAYOUT_TYPE: {
       const { rootId, widgetId, layoutType } = action.payload;
-      const widget: Widget = {
+      const widget = {
         ...state[rootId].widgets[widgetId],
         layout: LayoutModel.getDefaultLayout(layoutType),
       };
@@ -378,7 +344,7 @@ export const tree = (
           return { ...acc, [cur]: currentProp };
         }, {});
 
-      const doWidgets = (widgets: KeyedObject<Widget>) =>
+      const doWidgets = (widgets: KeyedObject<Widget | CustomComponentInstance>) =>
         Object.keys(widgets).reduce((acc, cur) => {
           const current = widgets[cur];
           return {
@@ -401,6 +367,153 @@ export const tree = (
       }, {});
     }
 
+    case ADD_EXPOSED_PROPERTY: {
+      const { rootId, key, exposedProperty } = action.payload;
+      const customComponent = state[rootId].root;
+      if (customComponent.type !== 'customComponent') throw Error();
+      return {
+        ...state,
+        [rootId]: {
+          ...state[rootId],
+          root: {
+            ...customComponent,
+            exposedProperties: {
+              ...customComponent.exposedProperties,
+              [key]: exposedProperty,
+            },
+          },
+        },
+      };
+    }
+
+    case REMOVE_EXPOSED_PROPERTY: {
+      const { rootId, key } = action.payload;
+      const customComponent = state[rootId].root;
+      if (customComponent.type !== 'customComponent') throw Error();
+      const { [key]: _, ...exposedProperties } = customComponent.exposedProperties || {};
+      return {
+        ...state,
+        [rootId]: {
+          ...state[rootId],
+          root: {
+            ...customComponent,
+            exposedProperties,
+          },
+        },
+      };
+    }
+
+    case UPDATE_EXPOSED_PROPERTY_KEY: {
+      const { rootId, oldKey, newKey } = action.payload;
+
+      const foo = Object.keys(state).reduce<Store$Tree>((acc, cur) => {
+        return {
+          ...acc,
+          [cur]: {
+            ...state[cur],
+            widgets: Object.keys(state[cur].widgets).reduce((a, c) => {
+              const widget = state[cur].widgets[c];
+              return {
+                ...a,
+                [c]: {
+                  ...widget,
+                  props: Object.keys(widget.props || {}).reduce((aa, cc) => {
+                    const prop = widget.props[cc];
+                    if (prop.mode === 'widget' && prop.lookup === oldKey) {
+                      const propWidget = state[cur].widgets[prop.widgetId];
+                      if (
+                        propWidget.type === 'customComponentInstance' &&
+                        propWidget.customComponentId === rootId
+                      ) {
+                        return {
+                          ...aa,
+                          [cc]: {
+                            ...prop,
+                            lookup: newKey,
+                          },
+                        };
+                      }
+                    }
+                    return {
+                      ...aa,
+                      [cc]: prop,
+                    };
+                  }, {}),
+                },
+              };
+            }, {}),
+          },
+        };
+      }, {});
+
+      const customComponent = state[rootId].root;
+      if (customComponent.type !== 'customComponent') throw Error();
+      const { [oldKey]: exposedProperty, ...exposedProperties } =
+        customComponent.exposedProperties || {};
+      return {
+        ...foo,
+        [rootId]: {
+          ...foo[rootId],
+          root: {
+            ...customComponent,
+            exposedProperties: {
+              ...exposedProperties,
+              [newKey]: exposedProperty,
+            },
+          },
+        },
+      };
+    }
+
+    case ADD_CUSTOM_COMPONENT_CONFIG: {
+      const { rootId, config } = action.payload;
+      const { root } = state[rootId];
+      if (root.type !== 'customComponent') throw Error();
+      return {
+        ...state,
+        [rootId]: {
+          ...state[rootId],
+          root: {
+            ...root,
+            config: [...(root.config || []), config],
+          },
+        },
+      };
+    }
+    case UPDATE_CUSTOM_COMPONENT_CONFIG: {
+      const { rootId, key, config } = action.payload;
+      const { root } = state[rootId];
+      if (root.type !== 'customComponent') throw Error();
+      return {
+        ...state,
+        [rootId]: {
+          ...state[rootId],
+          root: {
+            ...root,
+            config: root.config?.map((c) => {
+              if (c.key === key) return config;
+              return c;
+            }),
+          },
+        },
+      };
+    }
+    case REMOVE_CUSTOM_COMPONENT_CONFIG: {
+      const { rootId, key } = action.payload;
+      const { root } = state[rootId];
+      if (root.type !== 'customComponent') throw Error();
+      return {
+        ...state,
+        [rootId]: {
+          ...state[rootId],
+          root: {
+            ...root,
+            config: root.config?.filter((c) => c.key !== key),
+          },
+        },
+      };
+    }
+
     case INIT_CLIENT: {
       return action.payload.tree;
     }
@@ -408,3 +521,4 @@ export const tree = (
       return state;
   }
 };
+*/

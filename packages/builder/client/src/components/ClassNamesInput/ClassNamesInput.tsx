@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import { Element } from '@ui-studio/types';
-
-import { updateElementClassNames } from 'actions/tree/styles';
+import { updateElementClassNames } from 'actions/styles';
 
 import * as Styles from './ClassNamesInput.styles';
 

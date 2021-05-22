@@ -80,7 +80,7 @@ export const ElementTreeHeaderComponent = ({
         color={Button.colors.secondary}
         size={Button.sizes.medium}
         onClick={handleRemove}
-        disabled={Object.keys(pages).length === 1}
+        disabled={rootElement.type === 'page' && Object.keys(pages).length === 1}
       />
       <Menu keepMounted anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseAddMenu}>
         <MenuItem onClick={handleAddPage}>Page</MenuItem>

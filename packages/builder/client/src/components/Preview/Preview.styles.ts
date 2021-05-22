@@ -12,7 +12,7 @@ const screenSizeToWidthMap = {
 export const Container = styled.div`
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.colors.secondary900};
+  background-color: ${({ theme }) => theme.colors.primary};
 `;
 
 export const Iframe = styled.iframe<{ previewSize: ScreenSize }>`

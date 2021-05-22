@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Button from '@faculty/adler-web-components/atoms/Button';
 import { WidgetProp, WidgetProp$Complex, ComponentConfig } from '@ui-studio/types';
-
 import { StaticConfig } from 'components/WidgetConfig/Source/StaticConfig';
 import { VariableConfig } from 'components/WidgetConfig/Source/VariableConfig';
 import { WidgetConfig } from 'components/WidgetConfig/Source/WidgetConfig';
 import { IterableConfig } from 'components/WidgetConfig/Source/IterableConfig';
+import { CustomComponentConfig } from 'components/WidgetConfig/Source/CustomComponentConfig';
 
 import * as Styles from './WidgetConfigCard.styles';
 
@@ -55,6 +55,9 @@ const Single = ({ widgetId, widgetProp, config, onChange, label }: Props) => {
   }
   if (widgetProp.mode === 'iterable') {
     return <IterableConfig widgetId={widgetId} widgetProp={widgetProp} onChange={onChange} />;
+  }
+  if (widgetProp.mode === 'customComponentConfig') {
+    return <CustomComponentConfig config={config} widgetProp={widgetProp} onChange={onChange} />;
   }
   return null;
 };

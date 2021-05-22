@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import Graph from 'graph-data-structure';
-import { ElementTreeNode, Widget, Page, CustomComponent } from '@ui-studio/types';
+import { Widget, Page, CustomComponent, CustomComponentInstance } from '@ui-studio/types';
 
 import { Store, KeyedObject } from '../types/store';
 
@@ -10,10 +9,10 @@ import { WidgetBuilder } from './widget';
 
 const getElements = createSelector<
   Store,
-  KeyedObject<Widget>,
+  KeyedObject<Widget | CustomComponentInstance>,
   KeyedObject<Page | CustomComponent>,
   {
-    widgets: KeyedObject<Widget>;
+    widgets: KeyedObject<Widget | CustomComponentInstance>;
     pages: KeyedObject<Page | CustomComponent>;
   }
 >(
@@ -22,37 +21,39 @@ const getElements = createSelector<
   (widgets, pages) => ({ widgets, pages }),
 );
 
-export const useBuildTree = (): ElementTreeNode[] => {
-  const { widgets, pages } = useSelector(getElements);
+// UNUSED
+// export const useBuildTree = (): ElementTreeNode[] => {
+//   const { widgets, pages } = useSelector(getElements);
 
-  const all = { ...pages, ...widgets };
+//   const all = { ...pages, ...widgets };
 
-  const elementGraph = Graph();
-  Object.keys(all).forEach((k) => elementGraph.addNode(k));
-  Object.values(widgets).forEach((v) => elementGraph.addEdge(v.parent, v.id));
+//   const elementGraph = Graph();
+//   Object.keys(all).forEach((k) => elementGraph.addNode(k));
+//   Object.values(widgets).forEach((v) => elementGraph.addEdge(v.parent, v.id));
 
-  const buildTree = (node: string): ElementTreeNode => {
-    const element = all[node];
-    const children = elementGraph.adjacent(node);
-    return {
-      id: element.id,
-      name: element.name,
-      type: element.type,
-      position: element.type !== 'widget' ? 0 : element.position,
-      children: children
-        .map(buildTree)
-        .sort((a: ElementTreeNode, b: ElementTreeNode) => (a.position > b.position ? 1 : -1)),
-      element,
-    };
-  };
+//   const buildTree = (node: string): ElementTreeNode => {
+//     const element = all[node];
+//     const children = elementGraph.adjacent(node);
+//     return {
+//       id: element.id,
+//       name: element.name,
+//       type: element.type,
+//       position: element.rootElement ? 0 : element.position,
+//       children: children
+//         .map(buildTree)
+//         .sort((a: ElementTreeNode, b: ElementTreeNode) => (a.position > b.position ? 1 : -1)),
+//       element,
+//     };
+//   };
 
-  const elementTree: ElementTreeNode[] = Object.keys(pages).map(buildTree);
+//   const elementTree: ElementTreeNode[] = Object.keys(pages).map(buildTree);
 
-  return elementTree;
-};
+//   return elementTree;
+// };
 
 export const useChildrenMap = (
   nodeId: string,
+  rootId: string | null = null,
   iteratorIndex = {},
 ): React.FunctionComponentElement<any>[] => {
   const [childrenMap, setChildrenMap] = React.useState<
@@ -74,6 +75,7 @@ export const useChildrenMap = (
           [cur.id]: React.createElement(React.memo(WidgetBuilder), {
             key: `widget-builder-${cur.id}`,
             widgetId: cur.id,
+            rootId,
             iteratorIndex,
           }),
         };

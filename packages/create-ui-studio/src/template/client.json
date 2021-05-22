@@ -3,6 +3,7 @@
     "15c2be07-bb1b-4b99-ac6f-952aa1bc73fa": {
       "root": {
         "id": "15c2be07-bb1b-4b99-ac6f-952aa1bc73fa",
+        "rootElement": true,
         "type": "page",
         "name": "Home",
         "props": {},

@@ -14,8 +14,8 @@ const initialUnitValues = {
   px: 100,
   em: 1,
   auto: null,
-  mincontent: null,
-  maxcontent: null,
+  'min-content': null,
+  'max-content': null,
   minmax: null,
 } as const;
 

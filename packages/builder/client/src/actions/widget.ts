@@ -1,20 +1,39 @@
 import { Dispatch } from 'redux';
-import { Widget, WidgetProp, TStyle } from '@ui-studio/types';
-
+import {
+  Widget,
+  WidgetProp,
+  TStyle,
+  CustomComponent,
+  CustomComponentInstance,
+} from '@ui-studio/types';
 import { getNextPosition } from 'selectors/element';
 import { getComponents } from 'selectors/configuration';
 import { getSelectedRootId, getSelectedElementId } from 'selectors/view';
-import { getElement } from 'selectors/tree';
+import { getElement, getRoots } from 'selectors/tree';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, SelectElement } from 'actions/view';
+import { UpdateWidgetName } from 'actions/name';
+import { UpdateWidgetStyle } from 'actions/styles';
+import { InitClient } from 'actions/init';
+import { AddWidgetEvent, UpdateWidgetEvent, RemoveWidgetEvent } from 'actions/event';
+import { UpdateWidgetLayoutConfig, UpdateWidgetLayoutType } from 'actions/layout';
+import {
+  UpdateExposedPropertyKey,
+  RemoveCustomComponentConfig,
+  AddCustomComponent,
+} from 'actions/customComponent';
+import { AddPage } from 'actions/page';
 import { WidgetModel } from 'models/widget';
 import { StylesModel } from 'models/styles';
+import { CustomComponentModel } from 'models/customComponent';
+
+import { resetVariableFunctionArgsUsingWidget, resetWidgetPropsUsingWidget } from './foo';
 
 export interface AddWidget {
   type: 'ADD_WIDGET';
   payload: {
     rootId: string;
-    widget: Widget;
+    widget: Widget | CustomComponentInstance;
   };
 }
 
@@ -51,6 +70,42 @@ export const addWidget = (
   });
 };
 
+export const addCustomComponentInstance = (
+  customComponentId: string,
+  parentElementId: string,
+): TThunkAction<AddWidget> => (
+  dispatch: Dispatch<AddWidget | SelectElement>,
+  getState: TGetState,
+) => {
+  const state = getState();
+
+  const rootId = getSelectedRootId(state);
+  if (!rootId) throw Error();
+  const parentElement = getElement(state, rootId, parentElementId);
+  if (!parentElement) throw Error();
+
+  const customComponent = getRoots(state)
+    .filter((e): e is CustomComponent => e.type === 'customComponent')
+    .find((c) => c.id === customComponentId);
+  if (!customComponent) throw Error();
+
+  const widget = CustomComponentModel.getDefaultCustomComponentInstance(
+    state,
+    customComponent,
+    parentElement,
+  );
+
+  dispatch(selectElement(widget.id));
+
+  return dispatch({
+    type: ADD_WIDGET,
+    payload: {
+      rootId,
+      widget,
+    },
+  });
+};
+
 export interface RemoveWidget {
   type: 'REMOVE_WIDGET';
   payload: {
@@ -64,7 +119,10 @@ export interface RemoveWidget {
 
 export const REMOVE_WIDGET = 'REMOVE_WIDGET';
 
-export const removeWidget = (widget: Widget, del = false): TThunkAction<RemoveWidget> => (
+export const removeWidget = (
+  widget: Widget | CustomComponentInstance,
+  del = false,
+): TThunkAction<RemoveWidget> => (
   dispatch: Dispatch<RemoveWidget | SelectElement>,
   getState: TGetState,
 ) => {
@@ -76,6 +134,9 @@ export const removeWidget = (widget: Widget, del = false): TThunkAction<RemoveWi
   if (selectedElementId === widget.id) {
     dispatch(selectElement(null));
   }
+
+  dispatch(resetWidgetPropsUsingWidget(widget.id));
+  dispatch(resetVariableFunctionArgsUsingWidget(widget.id));
 
   return dispatch({
     type: REMOVE_WIDGET,
@@ -95,7 +156,7 @@ export interface UpdateWidgetProps {
     rootId: string;
     widgetId: string;
     key: string;
-    prop: WidgetProp | WidgetProp[] | { [subKey: string]: WidgetProp };
+    prop: WidgetProp;
   };
 }
 
@@ -103,7 +164,7 @@ export const UPDATE_WIDGET_PROPS = 'UPDATE_WIDGET_PROPS';
 
 export const updateWidgetProps = (
   key: string,
-  prop: WidgetProp | WidgetProp[] | { [subKey: string]: WidgetProp },
+  prop: WidgetProp,
 ): TThunkAction<UpdateWidgetProps> => (
   dispatch: Dispatch<UpdateWidgetProps | SelectElement>,
   getState: TGetState,
@@ -219,3 +280,22 @@ export const updateWidgetPosition = (
     },
   });
 };
+
+export type Action$Widget =
+  | AddWidget
+  | RemoveWidget
+  | UpdateWidgetProps
+  | UpdateWidgetParent
+  | UpdateWidgetPosition
+  | AddWidgetEvent
+  | UpdateWidgetEvent
+  | RemoveWidgetEvent
+  | UpdateWidgetName
+  | UpdateWidgetStyle
+  | UpdateWidgetLayoutConfig
+  | UpdateWidgetLayoutType
+  | InitClient
+  | UpdateExposedPropertyKey
+  | RemoveCustomComponentConfig
+  | AddPage
+  | AddCustomComponent;

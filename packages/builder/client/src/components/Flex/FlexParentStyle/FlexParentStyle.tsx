@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Slider from '@faculty/adler-web-components/atoms/Slider/Slider';
-import { Widget, FlexAlignment, IFlexStyle } from '@ui-studio/types';
-
-import { updateWidgetStyle } from 'actions/tree/styles';
+import { Widget, FlexAlignment, IFlexStyle, CustomComponentInstance } from '@ui-studio/types';
+import { updateWidgetStyle } from 'actions/styles';
 import { AlignmentButton } from 'components/AlignmentButton';
 
 import * as Styles from './FlexParentStyle.styles';
 
 interface FlexParentStyleProps {
-  element: Widget;
-  parent: Widget;
+  element: Widget | CustomComponentInstance;
+  parent: Widget | CustomComponentInstance;
 }
 
 export const FlexParentStyle = ({ element, parent }: FlexParentStyleProps): JSX.Element => {

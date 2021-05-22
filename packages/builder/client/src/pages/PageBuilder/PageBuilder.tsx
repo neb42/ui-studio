@@ -21,8 +21,6 @@ export const PageBuilder = (): JSX.Element => {
     }
   }, [JSON.stringify(rootElement)]);
 
-  const name = rootElement ? rootElement.name : '';
-
   return (
     <Styles.Container>
       <Header />
@@ -31,7 +29,7 @@ export const PageBuilder = (): JSX.Element => {
           {rootElement && <ElementTree />}
           <PopoverNavigation />
         </Styles.ColLeft>
-        <Preview pageName={name} />
+        <Preview />
         <ElementConfig key={rootElement?.id} />
       </Styles.Body>
     </Styles.Container>

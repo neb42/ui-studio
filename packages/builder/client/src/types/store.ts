@@ -8,6 +8,7 @@ import {
   Variable,
   Component,
   CustomComponent,
+  CustomComponentInstance,
 } from '@ui-studio/types';
 
 export interface KeyedObject<T> {
@@ -20,8 +21,14 @@ export type Store$Variable = KeyedObject<Variable>;
 
 export type Store$Tree = KeyedObject<{
   root: Page | CustomComponent;
-  widgets: KeyedObject<Widget>;
+  widgets: KeyedObject<Widget | CustomComponentInstance>;
 }>;
+
+export type Store$Page = KeyedObject<Page>;
+
+export type Store$CustomComponent = KeyedObject<CustomComponent>;
+
+export type Store$Widget = KeyedObject<KeyedObject<Widget | CustomComponentInstance>>;
 
 export type Store$View = {
   tree: {
@@ -45,7 +52,9 @@ export type Store$Configuration = {
 };
 
 export interface Store {
-  tree: Store$Tree;
+  page: Store$Page;
+  customComponent: Store$CustomComponent;
+  widget: Store$Widget;
   view: Store$View;
   configuration: Store$Configuration;
   variable: Store$Variable;

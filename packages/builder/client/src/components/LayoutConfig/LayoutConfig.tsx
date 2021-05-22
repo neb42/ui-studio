@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import { Widget } from '@ui-studio/types';
-
+import { Widget, CustomComponentInstance } from '@ui-studio/types';
 import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig';
 import { FlexLayoutConfig } from 'components/Flex/FlexLayoutConfig';
-import { updateWidgetLayoutType } from 'actions/tree/layout';
+import { updateWidgetLayoutType } from 'actions/layout';
 
 const layoutTypeOptions = [
   { value: 'basic', label: 'Basic' },
@@ -14,7 +13,7 @@ const layoutTypeOptions = [
 ];
 
 interface Props {
-  widget: Widget;
+  widget: Widget | CustomComponentInstance;
 }
 
 export const LayoutConfig = ({ widget }: Props): JSX.Element | null => {

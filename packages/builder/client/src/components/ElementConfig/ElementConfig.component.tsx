@@ -2,13 +2,14 @@ import * as React from 'react';
 import { useTheme } from 'styled-components';
 import Tabs from '@faculty/adler-web-components/atoms/Tabs';
 import { Element } from '@ui-studio/types';
-
 import { ElementIcon } from 'components/ElementIcon';
+import { CustomComponentConfig } from 'components/CustomComponent/CustomComponentConfig';
+import { ExposedProperties } from 'components/CustomComponent/ExposedProperties';
 import { WidgetConfig } from 'components/WidgetConfig';
 import { LayoutConfig } from 'components/LayoutConfig';
 import { EventConfig } from 'components/EventConfig';
 import { StyleConfig } from 'components/StyleConfig';
-import { EditName } from 'components/EditName/EditName';
+import { EditName } from 'components/EditName';
 
 import * as Styles from './ElementConfig.styles';
 
@@ -30,12 +31,16 @@ export const ElementConfigComponent = ({
   const theme = useTheme();
   const [tabIndex, setTabIndex] = React.useState(0);
 
-  if (selectedElement === null) {
+  if (!selectedElement) {
     return <Styles.Container>No element selected</Styles.Container>;
   }
 
   const tabHeaders = (() => {
     const th = [];
+    if (selectedElement.type === 'customComponent') {
+      th.push('Config');
+      th.push('Properties');
+    }
     if (hasConfig) th.push('Config');
     if (hasLayout) th.push('Layout');
     if (hasEvents) th.push('Events');
@@ -56,13 +61,19 @@ export const ElementConfigComponent = ({
         />
       </Styles.Header>
       <Styles.Body>
-        {hasConfig && selectedElement.type === 'widget' && isSelected('Config') && (
+        {selectedElement.type === 'customComponent' && isSelected('Config') && (
+          <CustomComponentConfig customComponent={selectedElement} />
+        )}
+        {selectedElement.type === 'customComponent' && isSelected('Properties') && (
+          <ExposedProperties customComponent={selectedElement} />
+        )}
+        {hasConfig && !selectedElement.rootElement && isSelected('Config') && (
           <WidgetConfig widget={selectedElement} />
         )}
-        {hasLayout && selectedElement.type === 'widget' && isSelected('Layout') && (
+        {hasLayout && !selectedElement.rootElement && isSelected('Layout') && (
           <LayoutConfig widget={selectedElement} />
         )}
-        {selectedElement.type === 'widget' && isSelected('Events') && (
+        {!selectedElement.rootElement && isSelected('Events') && (
           <EventConfig widget={selectedElement} />
         )}
         {isSelected('Styles') && (

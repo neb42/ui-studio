@@ -28,7 +28,7 @@ export const VariableList = () => {
           onClick={handleSelectVariable(v.id)}
           active={v.id === selectedVariableId}
         >
-          <Icon name="help" color={(theme) => theme.colors.secondary900} size={Icon.sizes.large} />
+          <Icon name="help" color={(theme) => theme.colors.primary} size={Icon.sizes.large} />
           <Styles.Name>{v.name}</Styles.Name>
           <Styles.Actions selected={selectedVariableId === v.id}>
             <Button

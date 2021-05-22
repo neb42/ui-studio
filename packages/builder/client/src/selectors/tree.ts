@@ -1,18 +1,37 @@
-import { Page, CustomComponent, Widget, Component, Element } from '@ui-studio/types';
+import {
+  Page,
+  CustomComponent,
+  Widget,
+  Component,
+  Element,
+  CustomComponentInstance,
+} from '@ui-studio/types';
 import { TreeItem } from '@atlaskit/tree';
 import { getComponents } from 'selectors/configuration';
 import { getSelectedRootId, getSelectedElementId } from 'selectors/view';
-import { Store } from 'types/store';
+import { Store, Store$Tree } from 'types/store';
 
-export const getRawTree = (state: Store): Store['tree'] => state.tree;
+export const getRoots = (state: Store): (Page | CustomComponent)[] => {
+  return [...Object.values(state.page), ...Object.values(state.customComponent)];
+};
 
-export const getRoots = (state: Store): (Page | CustomComponent)[] =>
-  Object.values(state.tree).map((t) => t.root);
+export const getRawTree = (state: Store): Store$Tree =>
+  getRoots(state).reduce((acc, cur) => {
+    return {
+      ...acc,
+      [cur.id]: {
+        root: cur,
+        widgets: state.widget[cur.id],
+      },
+    };
+  }, {});
 
-export const getWidgetsForRoot = (state: Store, rootId: string): Widget[] =>
-  Object.values(state.tree[rootId].widgets);
+export const getWidgetsForRoot = (
+  state: Store,
+  rootId: string,
+): (Widget | CustomComponentInstance)[] => Object.values(state.widget[rootId]);
 
-export const getWidgetsInSelectedTree = (state: Store): Widget[] => {
+export const getWidgetsInSelectedTree = (state: Store): (Widget | CustomComponentInstance)[] => {
   const rootId = getSelectedRootId(state);
   if (!rootId) return [];
   return getWidgetsForRoot(state, rootId);
@@ -21,20 +40,30 @@ export const getWidgetsInSelectedTree = (state: Store): Widget[] => {
 export const getSelectedRootElement = (state: Store): Page | CustomComponent | null => {
   const rootId = getSelectedRootId(state);
   if (!rootId) return null;
-  return state.tree[rootId].root;
+  if (rootId in state.page) return state.page[rootId];
+  if (rootId in state.customComponent) return state.customComponent[rootId];
+  throw Error();
 };
 
 export const getSelectedElement = (state: Store): Element | null => {
   const rootId = getSelectedRootId(state);
   const selectedElementId = getSelectedElementId(state);
   if (!rootId || !selectedElementId) return null;
-  const tree = state.tree[rootId];
-  if (rootId === selectedElementId) return tree.root;
-  return tree.widgets[selectedElementId];
+  if (rootId === selectedElementId) {
+    if (rootId in state.page) return state.page[rootId];
+    if (rootId in state.customComponent) return state.customComponent[rootId];
+  }
+  return state.widget[rootId][selectedElementId];
 };
 
 export const getTreeForRoot = (state: Store, rootId: string): Record<string, TreeItem> => {
-  const { root, widgets } = state.tree[rootId];
+  const root = (() => {
+    if (rootId in state.page) return state.page[rootId];
+    if (rootId in state.customComponent) return state.customComponent[rootId];
+    throw Error();
+  })();
+  const widgets = state.widget[rootId];
+
   const all = {
     [rootId]: root,
     ...widgets,
@@ -66,7 +95,7 @@ export const getTreeForRoot = (state: Store, rootId: string): Record<string, Tre
   }, {});
 
   Object.values(all).forEach((el) => {
-    if (el.type === 'widget') {
+    if (!el.rootElement) {
       if (el.parent && tree[el.parent]) {
         tree[el.parent].children = [...tree[el.parent].children, el.id];
       }
@@ -93,10 +122,12 @@ export const getSelectedTree = (state: Store): Record<string, TreeItem> => {
 };
 
 export const getElement = (state: Store, rootId: string, elementId: string): Element | null => {
-  const tree = state.tree[rootId];
   if (!rootId) return null;
-  if (rootId === elementId) return tree.root;
-  return tree.widgets[elementId];
+  if (rootId === elementId) {
+    if (rootId in state.page) return state.page[rootId];
+    if (rootId in state.customComponent) return state.customComponent[rootId];
+  }
+  return state.widget[rootId][elementId];
 };
 
 export const getParentElement = (
@@ -105,7 +136,7 @@ export const getParentElement = (
   elementId: string,
 ): Element | null => {
   const element = getElement(state, rootId, elementId);
-  if (!element || element.type !== 'widget') return null;
+  if (!element || element.rootElement) return null;
   return getElement(state, rootId, element.parent);
 };
 

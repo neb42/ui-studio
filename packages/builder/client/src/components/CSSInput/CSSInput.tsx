@@ -4,7 +4,7 @@ import AceEditor from 'react-ace';
 import { useTheme } from 'styled-components';
 import { Element } from '@ui-studio/types';
 
-import { updateElementCSS } from 'actions/tree/styles';
+import { updateElementCSS } from 'actions/styles';
 
 import * as Styles from './CSSInput.styles';
 

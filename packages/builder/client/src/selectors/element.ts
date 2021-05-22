@@ -1,4 +1,4 @@
-import { Element, Widget } from '@ui-studio/types';
+import { Element, Widget, CustomComponentInstance } from '@ui-studio/types';
 import { Store } from 'types/store';
 import {
   getWidgetsForRoot,
@@ -8,7 +8,7 @@ import {
 } from 'selectors/tree';
 import { getSelectedRootId } from 'selectors/view';
 
-export const generateDefaultName = (state: State, regex: string) => {
+export const generateDefaultName = (state: Store, regex: string) => {
   const root = getSelectedRootElement(state);
   if (!root) throw Error();
   const widgets = getWidgetsForRoot(state, root.id);
@@ -47,7 +47,7 @@ export const getNextPosition = (state: Store, parentId: string) => {
 //   return orphanedIds;
 // };
 
-export const getOrphanedRootElements = (state: Store): Widget[] => {
+export const getOrphanedRootElements = (state: Store): (Widget | CustomComponentInstance)[] => {
   const widgets = getWidgetsInSelectedTree(state);
   return widgets.filter((w) => w.parent === null);
 };
@@ -64,7 +64,7 @@ export const getAvailableIteratorKeys = (state: Store) => (
   const getBranch = (elementId: string): Element[] => {
     const element = getElement(state, rootId, elementId);
     if (!element) throw Error();
-    if (element.type !== 'widget' || !element.parent) return [element];
+    if (element.rootElement || !element.parent) return [element];
     const parentElements = getBranch(element.parent);
     return [...parentElements, element];
   };
@@ -72,7 +72,7 @@ export const getAvailableIteratorKeys = (state: Store) => (
   const parentElements = getBranch(widgetId);
   return parentElements.reduce<{ widgetId: string; widgetName: string; propKeys: string[] }[]>(
     (acc, cur) => {
-      if (cur.id === widgetId || cur.type !== 'widget') return acc;
+      if (cur.id === widgetId || cur.rootElement) return acc;
       const iterablePropKeys = Object.keys(cur.props).reduce<string[]>((a, c) => {
         const prop = cur.props[c];
         if (

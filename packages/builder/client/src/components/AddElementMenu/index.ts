@@ -1,1 +1,1 @@
-export { AddElementMenu } from './AddElementMenu';
+export { AddElementMenuContainer as AddElementMenu } from './AddElementMenu.container';

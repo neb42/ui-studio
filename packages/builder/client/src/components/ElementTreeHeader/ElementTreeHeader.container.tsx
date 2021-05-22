@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CustomComponent, Page } from '@ui-studio/types';
-
 import { selectRootElement } from 'actions/view';
-import { addPage, removeRoot } from 'actions/tree/root';
+import { addPage, removePage } from 'actions/page';
+import { addCustomComponent, removeCustomComponent } from 'actions/customComponent';
 import { getRoots, getSelectedRootElement } from 'selectors/tree';
 
 import { ElementTreeHeaderComponent } from './ElementTreeHeader.component';
@@ -26,12 +26,13 @@ export const ElementTreeHeaderContainer = (): JSX.Element => {
   };
 
   const handleOnAddCustomComponent = () => {
-    // dispatch(addCustomComponent());
+    dispatch(addCustomComponent());
   };
 
   const handleOnRemove = () => {
     if (rootElement) {
-      dispatch(removeRoot(rootElement.id));
+      if (rootElement.type === 'page') dispatch(removePage(rootElement.id));
+      if (rootElement.type === 'customComponent') dispatch(removeCustomComponent(rootElement.id));
     }
   };
 

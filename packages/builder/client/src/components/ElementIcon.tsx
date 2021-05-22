@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
 import { Element, Component } from '@ui-studio/types';
-
 import { getComponents } from 'selectors/configuration';
 
 const getIcon = (element: Element, components: Component[]) => {
   if (element.type === 'page') return Icons.WebSharp;
-  if (element.type === 'customComponent') return Icons.WebSharp;
+
+  if (element.type === 'customComponent' || element.type === 'customComponentInstance')
+    return Icons.AppsSharp;
 
   if (element.type === 'widget') {
     const icon = components.find((c) => c.key === element.component)?.icon ?? '';
