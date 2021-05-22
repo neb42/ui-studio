@@ -1,8 +1,10 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
 import { Variable, FunctionVariableArg } from '@ui-studio/types';
-import { TThunkAction } from 'types/store';
+import { TGetState, TThunkAction } from 'types/store';
 import { selectVariable, SelectVariable } from 'actions/view';
+
+import { resetVariableFunctionArgsUsingVariable, resetWidgetPropsUsingVariable } from './foo';
 
 interface AddVariable {
   type: 'ADD_VARIABLE';
@@ -37,10 +39,16 @@ export interface RemoveVariable {
 
 export const REMOVE_VARIABLE = 'REMOVE_VARIABLE';
 
-export const removeVariable = (id: string): RemoveVariable => ({
-  type: REMOVE_VARIABLE,
-  payload: id,
-});
+export const removeVariable = (id: string): TThunkAction<RemoveVariable> => (
+  dispatch: Dispatch<RemoveVariable>,
+) => {
+  dispatch(resetWidgetPropsUsingVariable(id));
+  dispatch(resetVariableFunctionArgsUsingVariable(id));
+  return dispatch({
+    type: REMOVE_VARIABLE,
+    payload: id,
+  });
+};
 
 interface UpdateVariableName {
   type: 'UPDATE_VARIABLE_NAME';
@@ -56,7 +64,10 @@ export const updateVariableName = (id: string, name: string): UpdateVariableName
 
 interface UpdateVariableType {
   type: 'UPDATE_VARIABLE_TYPE';
-  payload: { id: string; type: 'static' | 'function' };
+  payload: {
+    id: string;
+    type: 'static' | 'function';
+  };
 }
 
 export const UPDATE_VARIABLE_TYPE = 'UPDATE_VARIABLE_TYPE';
@@ -64,10 +75,14 @@ export const UPDATE_VARIABLE_TYPE = 'UPDATE_VARIABLE_TYPE';
 export const updateVariableType = (
   id: string,
   type: 'static' | 'function',
-): UpdateVariableType => ({
-  type: UPDATE_VARIABLE_TYPE,
-  payload: { id, type },
-});
+): TThunkAction<UpdateVariableType> => (dispatch: Dispatch<UpdateVariableType>) => {
+  dispatch(resetWidgetPropsUsingVariable(id));
+  dispatch(resetVariableFunctionArgsUsingVariable(id));
+  return dispatch({
+    type: UPDATE_VARIABLE_TYPE,
+    payload: { id, type },
+  });
+};
 
 interface UpdateStaticVariable$String {
   type: 'UPDATE_STATIC_VARIABLE';
@@ -124,13 +139,21 @@ export function updateStaticVariable(
   value: string,
 ): UpdateStaticVariable$Boolean;
 export function updateStaticVariable(id: string, valueType: any, value: any): any {
-  return {
-    type: UPDATE_STATIC_VARIABLE,
-    payload: {
-      id,
-      valueType,
-      value,
-    },
+  return (dispatch: Dispatch<UpdateStaticVariable>, getState: TGetState) => {
+    const state = getState();
+    const variable = state.variable[id];
+    if (variable.valueType !== valueType) {
+      dispatch(resetWidgetPropsUsingVariable(id));
+      dispatch(resetVariableFunctionArgsUsingVariable(id));
+    }
+    return dispatch({
+      type: UPDATE_STATIC_VARIABLE,
+      payload: {
+        id,
+        valueType,
+        value,
+      },
+    });
   };
 }
 
@@ -164,10 +187,22 @@ export const updateFunctionVariable = (
   },
 });
 
+export interface UpdateVariableFunctionArg {
+  type: 'UPDATE_VARIABLE_FUNCTION_ARG';
+  payload: {
+    variableId: string;
+    index: number;
+    arg: FunctionVariableArg;
+  };
+}
+
+export const UPDATE_VARIABLE_FUNCTION_ARG = 'UPDATE_VARIABLE_FUNCTION_ARG';
+
 export type Action$Variable =
   | AddVariable
   | RemoveVariable
   | UpdateVariableName
   | UpdateVariableType
   | UpdateStaticVariable
-  | UpdateFunctionVariable;
+  | UpdateFunctionVariable
+  | UpdateVariableFunctionArg;

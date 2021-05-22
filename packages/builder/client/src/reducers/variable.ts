@@ -7,13 +7,15 @@ import {
   UPDATE_VARIABLE_TYPE,
   UPDATE_STATIC_VARIABLE,
   UPDATE_FUNCTION_VARIABLE,
+  UPDATE_VARIABLE_FUNCTION_ARG,
 } from 'actions/variable';
 import { INIT_CLIENT, InitClient } from 'actions/init';
 import { Store$Variable } from 'types/store';
+import { VariableModel } from 'models/variable';
 
 const initialState: Store$Variable = {};
 
-export const variable = (
+export const variableReducer = (
   state: Store$Variable = initialState,
   action: Action$Variable | InitClient,
 ): Store$Variable => {
@@ -27,24 +29,9 @@ export const variable = (
     case REMOVE_VARIABLE: {
       return Object.keys(state).reduce((acc, cur) => {
         if (cur === action.payload) return acc;
-        const current = state[cur];
-        if (current.type === 'function') {
-          return {
-            ...acc,
-            [cur]: {
-              ...current,
-              args: current.args.map((a) => {
-                if (a.type === 'variable' && a.variableId === action.payload) {
-                  return { type: 'static', valueType: 'string', value: '' };
-                }
-                return a;
-              }),
-            },
-          };
-        }
         return {
           ...acc,
-          [cur]: current,
+          [cur]: state[cur],
         };
       }, {});
     }
@@ -58,32 +45,10 @@ export const variable = (
       };
     }
     case UPDATE_VARIABLE_TYPE: {
-      const defaultVariable: Variable = (() => {
-        if (action.payload.type === 'static') {
-          return {
-            id: action.payload.id,
-            name: state[action.payload.id].name,
-            type: 'static',
-            valueType: 'string',
-            value: '',
-          } as StaticVariable;
-        }
-        if (action.payload.type === 'function') {
-          return {
-            id: action.payload.id,
-            name: state[action.payload.id].name,
-            type: 'function',
-            functionId: '',
-            valueType: 'string',
-            trigger: 'auto',
-            args: [],
-          } as FunctionVariable;
-        }
-        throw Error('Invalid variable type');
-      })();
+      const { id, type } = action.payload;
       return {
         ...state,
-        [action.payload.id]: defaultVariable,
+        [id]: VariableModel.updateVariableType(state[id], type),
       };
     }
     case UPDATE_STATIC_VARIABLE: {
@@ -112,6 +77,24 @@ export const variable = (
         } as FunctionVariable,
       };
     }
+
+    case UPDATE_VARIABLE_FUNCTION_ARG: {
+      const { variableId, index, arg } = action.payload;
+
+      const variable = state[variableId];
+      if (variable.type !== 'function') throw new Error();
+      const args = [...variable.args];
+      args[index] = arg;
+
+      return {
+        ...state,
+        [variableId]: {
+          ...variable,
+          args,
+        },
+      };
+    }
+
     case INIT_CLIENT: {
       return action.payload.variables;
     }

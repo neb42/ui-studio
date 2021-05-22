@@ -3,7 +3,6 @@ import {
   CustomComponent,
   ComponentConfig,
   CustomComponent$ExposedProperties,
-  CustomComponentInstance,
 } from '@ui-studio/types';
 import { selectRootElement, SelectRootElement, selectElement, SelectElement } from 'actions/view';
 import { getSelectedRootId } from 'selectors/view';
@@ -13,7 +12,15 @@ import { TGetState, TThunkAction } from 'types/store';
 import { UpdateCustomComponentName } from 'actions/name';
 import { UpdateCustomComponentStyle } from 'actions/styles';
 import { InitClient } from 'actions/init';
-import { removeWidget, RemoveWidget } from 'actions/widget';
+import { RemoveWidget, UPDATE_WIDGET_PROPS, UpdateWidgetProps } from 'actions/widget';
+import { WidgetModel } from 'models/widget';
+
+import {
+  removeWidgetsUsingCustomComponent,
+  resetCustomComponentInstancesPropsFromCustomComponent,
+  resetWidgetPropsAndVariableFunctionArgsUsingCustomComponentExposedPropertyKey,
+  updateVariableFunctionArgUsingCustomComponentExposedPropertyKey,
+} from './foo';
 
 export interface AddCustomComponent {
   type: 'ADD_CUSTOM_COMPONENT';
@@ -57,22 +64,7 @@ export const removeCustomComponent = (rootId: string): TThunkAction<RemoveCustom
     dispatch(selectElement(firstRootId));
   }
 
-  const customComponentInstances = Object.keys(state.widget).reduce<CustomComponentInstance[]>(
-    (acc, cur) => {
-      return [
-        ...acc,
-        ...Object.values(state.widget[cur]).filter(
-          (w): w is CustomComponentInstance =>
-            w.type === 'customComponentInstance' && w.customComponentId === rootId,
-        ),
-      ];
-    },
-    [],
-  );
-
-  customComponentInstances.forEach((c) => {
-    dispatch(removeWidget(c) as any); // TODO fix type
-  });
+  dispatch(removeWidgetsUsingCustomComponent(rootId));
 
   return dispatch({
     type: REMOVE_CUSTOM_COMPONENT,
@@ -137,13 +129,17 @@ export interface RemoveExposedProperty {
 export const REMOVE_EXPOSED_PROPERTY = 'REMOVE_EXPOSED_PROPERTY';
 
 export const removeExposedProperty = (key: string): TThunkAction<RemoveExposedProperty> => (
-  dispatch: Dispatch<RemoveExposedProperty>,
+  dispatch: Dispatch<RemoveExposedProperty | UpdateWidgetProps>,
   getState: TGetState,
 ) => {
   const state = getState();
 
   const rootId = getSelectedRootId(state);
   if (!rootId) throw Error();
+
+  dispatch(
+    resetWidgetPropsAndVariableFunctionArgsUsingCustomComponentExposedPropertyKey(rootId, key),
+  );
 
   return dispatch({
     type: REMOVE_EXPOSED_PROPERTY,
@@ -177,6 +173,8 @@ export const updateExposedPropertyKey = (
   const rootId = getSelectedRootId(state);
   if (!rootId) throw Error();
 
+  dispatch(updateVariableFunctionArgUsingCustomComponentExposedPropertyKey(rootId, oldKey, newKey));
+
   return dispatch({
     type: UPDATE_EXPOSED_PROPERTY_KEY,
     payload: {
@@ -208,6 +206,8 @@ export const addCustomComponentConfig = (): TThunkAction<AddCustomComponentConfi
 
   const config = CustomComponentModel.getDefaultCustomComponentConfig(state);
 
+  dispatch(resetCustomComponentInstancesPropsFromCustomComponent(rootId, config));
+
   return dispatch({
     type: ADD_CUSTOM_COMPONENT_CONFIG,
     payload: {
@@ -232,13 +232,15 @@ export const updateCustomComponentConfig = (
   key: string,
   config: ComponentConfig,
 ): TThunkAction<UpdateCustomComponentConfig> => (
-  dispatch: Dispatch<UpdateCustomComponentConfig>,
+  dispatch: Dispatch<UpdateCustomComponentConfig | UpdateWidgetProps>,
   getState: TGetState,
 ) => {
   const state = getState();
 
   const rootId = getSelectedRootId(state);
   if (!rootId) throw Error();
+
+  dispatch(resetCustomComponentInstancesPropsFromCustomComponent(rootId, config));
 
   return dispatch({
     type: UPDATE_CUSTOM_COMPONENT_CONFIG,

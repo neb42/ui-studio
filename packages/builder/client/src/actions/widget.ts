@@ -15,12 +15,19 @@ import { selectElement, SelectElement } from 'actions/view';
 import { UpdateWidgetName } from 'actions/name';
 import { UpdateWidgetStyle } from 'actions/styles';
 import { InitClient } from 'actions/init';
-import { RemoveVariable } from 'actions/variable';
 import { AddWidgetEvent, UpdateWidgetEvent, RemoveWidgetEvent } from 'actions/event';
 import { UpdateWidgetLayoutConfig, UpdateWidgetLayoutType } from 'actions/layout';
+import {
+  UpdateExposedPropertyKey,
+  RemoveCustomComponentConfig,
+  AddCustomComponent,
+} from 'actions/customComponent';
+import { AddPage } from 'actions/page';
 import { WidgetModel } from 'models/widget';
 import { StylesModel } from 'models/styles';
 import { CustomComponentModel } from 'models/customComponent';
+
+import { resetVariableFunctionArgsUsingWidget, resetWidgetPropsUsingWidget } from './foo';
 
 export interface AddWidget {
   type: 'ADD_WIDGET';
@@ -127,6 +134,9 @@ export const removeWidget = (
   if (selectedElementId === widget.id) {
     dispatch(selectElement(null));
   }
+
+  dispatch(resetWidgetPropsUsingWidget(widget.id));
+  dispatch(resetVariableFunctionArgsUsingWidget(widget.id));
 
   return dispatch({
     type: REMOVE_WIDGET,
@@ -285,4 +295,7 @@ export type Action$Widget =
   | UpdateWidgetLayoutConfig
   | UpdateWidgetLayoutType
   | InitClient
-  | RemoveVariable;
+  | UpdateExposedPropertyKey
+  | RemoveCustomComponentConfig
+  | AddPage
+  | AddCustomComponent;

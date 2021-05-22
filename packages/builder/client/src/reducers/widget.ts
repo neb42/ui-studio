@@ -11,7 +11,13 @@ import {
   Action$Widget,
 } from 'actions/widget';
 import { UPDATE_WIDGET_NAME } from 'actions/name';
-import { REMOVE_VARIABLE, RemoveVariable } from 'actions/variable';
+import {
+  ADD_CUSTOM_COMPONENT,
+  REMOVE_EXPOSED_PROPERTY,
+  UPDATE_EXPOSED_PROPERTY_KEY,
+  REMOVE_CUSTOM_COMPONENT_CONFIG,
+} from 'actions/customComponent';
+import { ADD_PAGE } from 'actions/page';
 import { INIT_CLIENT } from 'actions/init';
 import { LayoutModel } from 'models/layout';
 import { StylesModel } from 'models/styles';
@@ -25,6 +31,14 @@ export const widgetReducer = (
   action: Action$Widget,
 ): Store$Widget => {
   switch (action.type) {
+    case ADD_PAGE:
+    case ADD_CUSTOM_COMPONENT: {
+      return {
+        ...state,
+        [action.payload.id]: {},
+      };
+    }
+
     case ADD_WIDGET: {
       const { rootId, widget } = action.payload;
       return {
@@ -35,8 +49,10 @@ export const widgetReducer = (
         },
       };
     }
+
     case REMOVE_WIDGET: {
       const { rootId, widgetId, parent, position, delete: del } = action.payload;
+
       return {
         ...state,
         [rootId]: Object.keys(state[rootId]).reduce((acc, cur) => {
@@ -65,6 +81,7 @@ export const widgetReducer = (
         }, {}),
       };
     }
+
     case UPDATE_WIDGET_NAME: {
       const { rootId, widgetId, name } = action.payload;
       return {
@@ -78,6 +95,7 @@ export const widgetReducer = (
         },
       };
     }
+
     case UPDATE_WIDGET_STYLE: {
       const { rootId, widgetId, style } = action.payload;
       return {
@@ -125,6 +143,7 @@ export const widgetReducer = (
         },
       };
     }
+
     case UPDATE_WIDGET_EVENT: {
       const { rootId, widgetId, eventKey, index, event } = action.payload;
       const events = state[rootId][widgetId].events[eventKey];
@@ -143,6 +162,7 @@ export const widgetReducer = (
         },
       };
     }
+
     case REMOVE_WIDGET_EVENT: {
       const { rootId, widgetId, eventKey, index } = action.payload;
       const events = state[rootId][widgetId].events[eventKey];
@@ -175,6 +195,7 @@ export const widgetReducer = (
         },
       };
     }
+
     case UPDATE_WIDGET_LAYOUT_TYPE: {
       const { rootId, widgetId, layoutType } = action.payload;
       const widget = {
@@ -225,6 +246,7 @@ export const widgetReducer = (
         },
       };
     }
+
     case UPDATE_WIDGET_POSITION: {
       const { rootId, widgetId, source, destination, style } = action.payload;
       const widgets = Object.keys(state[rootId].widgets).reduce((acc, cur) => {
@@ -249,28 +271,41 @@ export const widgetReducer = (
       };
     }
 
-    case REMOVE_VARIABLE: {
-      const doProps = (props: Widget['props']) =>
-        Object.keys(props).reduce((acc, cur) => {
+    case UPDATE_EXPOSED_PROPERTY_KEY: {
+      const { rootId, oldKey, newKey } = action.payload;
+
+      const doProps = (props: Widget['props'], currentRootId: string) =>
+        Object.keys(props).reduce<Widget['props']>((acc, cur) => {
           const currentProp = props[cur];
-          if (currentProp.mode === 'variable' && currentProp.variableId === action.payload) {
-            return {
-              mode: 'static',
-              type: 'string',
-              value: '',
-            };
+          if (currentProp.mode === 'widget' && currentProp.lookup === oldKey) {
+            const propWidget = state[currentRootId][currentProp.widgetId];
+            if (
+              propWidget.type === 'customComponentInstance' &&
+              propWidget.customComponentId === rootId
+            ) {
+              return {
+                ...acc,
+                [cur]: {
+                  ...currentProp,
+                  lookup: newKey,
+                },
+              };
+            }
           }
           return { ...acc, [cur]: currentProp };
         }, {});
 
-      const doWidgets = (widgets: KeyedObject<Widget | CustomComponentInstance>) =>
-        Object.keys(widgets).reduce((acc, cur) => {
+      const doWidgets = (
+        widgets: KeyedObject<Widget | CustomComponentInstance>,
+        currentRootId: string,
+      ) =>
+        Object.keys(widgets).reduce<KeyedObject<Widget | CustomComponentInstance>>((acc, cur) => {
           const current = widgets[cur];
           return {
             ...acc,
             [cur]: {
               ...current,
-              props: doProps(current.props),
+              props: doProps(current.props, currentRootId),
             },
           };
         }, {});
@@ -278,7 +313,37 @@ export const widgetReducer = (
       return Object.keys(state).reduce((acc, cur) => {
         return {
           ...acc,
-          [cur]: doWidgets(state[cur]),
+          [cur]: doWidgets(state[cur], cur),
+        };
+      }, {});
+    }
+
+    case REMOVE_CUSTOM_COMPONENT_CONFIG: {
+      const { rootId, key } = action.payload;
+
+      const doRoot = (currentRootId: string) =>
+        Object.keys(state[currentRootId]).reduce((acc, cur) => {
+          const widget = state[currentRootId][cur];
+          if (widget.type === 'customComponentInstance' && widget.customComponentId === rootId) {
+            const { [key]: _, ...props } = widget.props;
+            return {
+              ...acc,
+              [cur]: {
+                ...widget,
+                props,
+              },
+            };
+          }
+          return {
+            ...acc,
+            [cur]: widget,
+          };
+        }, {});
+
+      return Object.keys(state).reduce((acc, cur) => {
+        return {
+          ...acc,
+          [cur]: doRoot(cur),
         };
       }, {});
     }

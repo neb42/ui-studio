@@ -7,7 +7,7 @@ import { Action$CustomComponent } from 'actions/customComponent';
 import { Action$Configuration } from 'actions/configuration';
 import { Action$Widget } from 'actions/widget';
 
-import { variable } from './variable';
+import { variableReducer } from './variable';
 import { view } from './view';
 import { configuration } from './configuration';
 import { pageReducer } from './page';
@@ -26,7 +26,7 @@ const rootReducer: Reducer<Store, AllActions> = combineReducers({
   page: pageReducer,
   customComponent: customComponentReducer,
   widget: widgetReducer,
-  variable,
+  variable: variableReducer,
   view,
   configuration,
 });
