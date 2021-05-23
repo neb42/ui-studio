@@ -4,6 +4,7 @@ import { FlexParentStyle } from 'components/Flex/FlexParentStyle';
 import { GridParentStyle } from 'components/Grid/GridParentStyle';
 import { CSSInput } from 'components/CSSInput';
 import { ClassNamesInput } from 'components/ClassNamesInput';
+import { BackgroundColor } from 'components/BackgroundColor';
 
 interface Props {
   element: Element;
@@ -22,6 +23,7 @@ export const StyleConfig = ({ element, parentElement }: Props): JSX.Element | nu
         parentElement?.layout?.type === 'flex' && (
           <FlexParentStyle element={element} parent={parentElement} />
         )}
+      <BackgroundColor element={element} />
       <ClassNamesInput element={element} />
       <CSSInput element={element} />
     </>

@@ -49,6 +49,16 @@ export type Store$Configuration = {
   functions: FunctionDefinition[];
   actions: ActionDefinition[];
   components: Component[];
+  colors:
+    | {
+        type: 'swatch';
+        colors: string[][];
+      }
+    | {
+        type: 'block';
+        colors: string[];
+      }
+    | null;
 };
 
 export interface Store {

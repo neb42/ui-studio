@@ -1,17 +1,21 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
+import { Page } from '@ui-studio/types';
 
 import { Store } from '../types/store';
 import { updateHoverElement } from '../actions/development';
 
 import { useChildrenMap } from './tree';
 
-const PageWrapper = styled.div<{ css: string }>`
+const PageWrapper = styled.div<{ page: Page }>`
   height: 100%;
   width: 100%;
 
-  ${({ css }) => css}
+  ${({ page }) =>
+    page.style.backgroundColor ? `background-color: ${page.style.backgroundColor};` : ''}
+
+  ${({ page }) => page.style.css}
 `;
 
 export const PageBuilder = ({ pageId }: { pageId: string }): React.ReactElement<any> => {
@@ -27,7 +31,7 @@ export const PageBuilder = ({ pageId }: { pageId: string }): React.ReactElement<
       key: `page-wrapper-${page.id}`,
       className: page.style.classNames,
       onMouseLeave: handleMouseLeave,
-      css: page.style.css,
+      page,
     },
     children,
   );

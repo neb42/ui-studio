@@ -35,10 +35,10 @@ export interface UpdateWidgetStyle {
 
 export const UPDATE_WIDGET_STYLE = 'UPDATE_WIDGET_STYLE';
 
-const updateStyle = (
-  style: TStyle,
-): TThunkAction<UpdatePageStyle | UpdateCustomComponentStyle | UpdateWidgetStyle> => (
-  dispatch: Dispatch<UpdatePageStyle | UpdateCustomComponentStyle | UpdateWidgetStyle>,
+export type UpdateStyle = UpdatePageStyle | UpdateCustomComponentStyle | UpdateWidgetStyle;
+
+export const updateStyle = (style: TStyle): TThunkAction<UpdateStyle> => (
+  dispatch: Dispatch<UpdateStyle>,
   getState: TGetState,
 ) => {
   const state = getState();
@@ -56,7 +56,7 @@ const updateStyle = (
   }
   if (selectedElement.type === 'customComponent') {
     return dispatch({
-      type: UPDATE_PAGE_STYLE,
+      type: UPDATE_CUSTOM_COMPONENT_STYLE,
       payload: {
         rootId,
         style: style as BaseStyle,
@@ -99,22 +99,4 @@ export const updateElementCSS = (css: string): TThunkAction<any> => (
     css,
   };
   return dispatch(updateStyle(style));
-};
-
-export const updateWidgetStyle = (style: TStyle): TThunkAction<UpdateWidgetStyle> => (
-  dispatch: Dispatch<UpdateWidgetStyle>,
-  getState: TGetState,
-) => {
-  const state = getState();
-  const rootId = getSelectedRootId(state);
-  const widgetId = getSelectedElementId(state);
-  if (!rootId || !widgetId) throw Error();
-  return dispatch({
-    type: UPDATE_WIDGET_STYLE,
-    payload: {
-      rootId,
-      widgetId,
-      style,
-    },
-  });
 };

@@ -1,4 +1,6 @@
 import { InitFunctions, Component } from '@ui-studio/types';
+import { Store$Configuration } from 'types/store';
+import { InitClient } from 'actions/init';
 
 interface IInitFunctions {
   type: 'INIT_FUNCTIONS';
@@ -24,4 +26,4 @@ export const initComponents = (components: Component[]): IInitComponents => ({
   payload: components,
 });
 
-export type Action$Configuration = IInitFunctions | IInitComponents;
+export type Action$Configuration = IInitFunctions | IInitComponents | InitClient;

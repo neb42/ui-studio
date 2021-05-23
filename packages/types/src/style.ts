@@ -7,6 +7,7 @@ export interface BaseStyle {
   type: 'base';
   css: string;
   classNames: string;
+  backgroundColor?: string;
 }
 
 export type TGridStyleLayout = [[number, number], [number, number]];
@@ -18,6 +19,7 @@ export interface IGridStyle {
   columnAlignment: GridAlignment;
   css: string;
   classNames: string;
+  backgroundColor?: string;
 }
 
 export interface IFlexStyle {
@@ -26,11 +28,7 @@ export interface IFlexStyle {
   grow: number;
   css: string;
   classNames: string;
-}
-
-export interface IRootStyle {
-  css: string;
-  classNames: string;
+  backgroundColor?: string;
 }
 
 export type TStyle = BaseStyle | IGridStyle | IFlexStyle;

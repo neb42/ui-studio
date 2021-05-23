@@ -7,7 +7,7 @@ import {
   GridAlignment,
   CustomComponentInstance,
 } from '@ui-studio/types';
-import { updateWidgetStyle } from 'actions/styles';
+import { updateStyle } from 'actions/styles';
 import { getUsedGridSpaceForSelectedElement } from 'selectors/grid';
 import { GridPreview } from 'components/Grid/GridPreview';
 import { GridAlignmentConfig } from 'components/Grid/GridAlignmentConfig';
@@ -34,7 +34,7 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
       layout: grid,
     };
 
-    dispatch(updateWidgetStyle(style));
+    dispatch(updateStyle(style));
   };
 
   const handleUpdateRowAlignment = (alignment: GridAlignment) => {
@@ -45,7 +45,7 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
       rowAlignment: alignment,
     };
 
-    dispatch(updateWidgetStyle(style));
+    dispatch(updateStyle(style));
   };
 
   const handleUpdateColumnAlignment = (alignment: GridAlignment) => {
@@ -56,7 +56,7 @@ export const GridParentStyle = ({ element, parent }: IGridParentStyle): JSX.Elem
       columnAlignment: alignment,
     };
 
-    dispatch(updateWidgetStyle(style));
+    dispatch(updateStyle(style));
   };
 
   return (

@@ -13,7 +13,6 @@ import {
 import { UPDATE_WIDGET_NAME } from 'actions/name';
 import {
   ADD_CUSTOM_COMPONENT,
-  REMOVE_EXPOSED_PROPERTY,
   UPDATE_EXPOSED_PROPERTY_KEY,
   REMOVE_CUSTOM_COMPONENT_CONFIG,
 } from 'actions/customComponent';

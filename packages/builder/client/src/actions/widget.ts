@@ -13,7 +13,7 @@ import { getElement, getRoots } from 'selectors/tree';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectElement, SelectElement } from 'actions/view';
 import { UpdateWidgetName } from 'actions/name';
-import { UpdateWidgetStyle } from 'actions/styles';
+import { UpdateStyle } from 'actions/styles';
 import { InitClient } from 'actions/init';
 import { AddWidgetEvent, UpdateWidgetEvent, RemoveWidgetEvent } from 'actions/event';
 import { UpdateWidgetLayoutConfig, UpdateWidgetLayoutType } from 'actions/layout';
@@ -291,7 +291,7 @@ export type Action$Widget =
   | UpdateWidgetEvent
   | RemoveWidgetEvent
   | UpdateWidgetName
-  | UpdateWidgetStyle
+  | UpdateStyle
   | UpdateWidgetLayoutConfig
   | UpdateWidgetLayoutType
   | InitClient

@@ -2,10 +2,11 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import axios from 'axios';
-import { InitFunctions, Component, Page } from '@ui-studio/types';
-import { Store$Tree, Store$Variable, Store } from 'types/store';
+import { InitFunctions, Component } from '@ui-studio/types';
+import { Store$Tree, Store$Variable, Store, Store$Configuration } from 'types/store';
 import { getVariables } from 'selectors/variable';
 import { getRoots, getRawTree, getSelectedRootElement } from 'selectors/tree';
+import { getColorConfig } from 'selectors/configuration';
 import { getSelectedElementId, getHoverElementId, getPreviewSize } from 'selectors/view';
 import { initComponents, initFunctions } from 'actions/configuration';
 import { initClient } from 'actions/init';
@@ -24,6 +25,7 @@ export const Preview = (): JSX.Element => {
   const dispatch = useDispatch();
   const url = useSelector(getUrl);
   const roots = useSelector(getRoots);
+  const colorConfig = useSelector(getColorConfig);
   const previewSize = useSelector(getPreviewSize);
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
   const [previewServer, setPreviewServer] = React.useState<{
@@ -58,16 +60,30 @@ export const Preview = (): JSX.Element => {
   }, []);
 
   React.useEffect(() => {
-    socket.on('init-client', async (client: { tree: Store$Tree; variables: Store$Variable }) => {
-      await dispatch(initClient(client));
-      setIsLoaded(true);
-    });
+    socket.on(
+      'init-client',
+      async (client: {
+        tree: Store$Tree;
+        variables: Store$Variable;
+        colors: Store$Configuration['colors'];
+      }) => {
+        await dispatch(initClient(client));
+        setIsLoaded(true);
+      },
+    );
 
     socket.on('set-server', setPreviewServer);
 
     socket.on(
       'init-builder',
-      ({ functions, components }: { functions: InitFunctions; components: Component[] }) => {
+      ({
+        functions,
+        components,
+      }: {
+        functions: InitFunctions;
+        components: Component[];
+        colors: Store$Configuration['colors'];
+      }) => {
         dispatch(initFunctions(functions));
         dispatch(initComponents(components));
       },
@@ -93,7 +109,7 @@ export const Preview = (): JSX.Element => {
   }, [JSON.stringify(roots), url]);
 
   React.useEffect(() => {
-    if (isLoaded) socket.emit('elements-updated', { tree, variables });
+    if (isLoaded) socket.emit('elements-updated', { tree, variables, colors: colorConfig });
   }, [JSON.stringify(tree), JSON.stringify(variables)]);
 
   React.useEffect(() => {

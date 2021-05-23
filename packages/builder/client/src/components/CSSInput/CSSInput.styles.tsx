@@ -8,4 +8,5 @@ export const Container = styled.div`
 
 export const Header = styled.div`
   font-weight: 500;
+  color: ${({ theme }) => theme.colors.primary};
 `;

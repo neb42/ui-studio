@@ -58,6 +58,9 @@ const WidgetWrapper = styled.div<{ widget: Widget | CustomComponentInstance; isS
       `
       : ''}
 
+  ${({ widget }) =>
+    widget.style.backgroundColor ? `background-color: ${widget.style.backgroundColor};` : ''}
+
   ${({ widget }) => widget.style.css}
 
   ${({ theme, isSelected }) => (isSelected ? `border: 1px solid ${theme.colors.brand500};` : '')}
