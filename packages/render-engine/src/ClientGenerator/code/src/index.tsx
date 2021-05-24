@@ -22,6 +22,7 @@ const GlobalStyles = createGlobalStyle`
   #root {
     height: 100vh;
     width: 100vw;
+    overflow: hidden;
     background-color: #fff;
   }
 
