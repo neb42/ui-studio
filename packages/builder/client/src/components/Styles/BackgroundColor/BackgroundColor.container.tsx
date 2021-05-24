@@ -15,14 +15,17 @@ export const BackgroundColorContainer = ({ element }: Props) => {
     dispatch(
       updateStyle({
         ...element.style,
-        backgroundColor: color,
+        properties: {
+          ...element.style.properties,
+          backgroundColor: color,
+        },
       }),
     );
   };
   return (
     <ColorPicker
       header="Background color"
-      color={element.style.backgroundColor ?? ''}
+      color={element.style.properties.backgroundColor ?? ''}
       onColorChange={handleColorChange}
     />
   );

@@ -8,7 +8,7 @@ import { ExposedProperties } from 'components/CustomComponent/ExposedProperties'
 import { WidgetConfig } from 'components/WidgetConfig';
 import { LayoutConfig } from 'components/LayoutConfig';
 import { EventConfig } from 'components/EventConfig';
-import { StyleConfig } from 'components/StyleConfig';
+import { StyleConfig } from 'components/Styles/StyleConfig';
 import { EditName } from 'components/EditName';
 
 import * as Styles from './ElementConfig.styles';

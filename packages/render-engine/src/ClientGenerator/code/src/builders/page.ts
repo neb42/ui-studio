@@ -13,7 +13,12 @@ const PageWrapper = styled.div<{ page: Page }>`
   width: 100%;
 
   ${({ page }) =>
-    page.style.backgroundColor ? `background-color: ${page.style.backgroundColor};` : ''}
+    page.style.properties.backgroundColor
+      ? `background-color: ${page.style.properties.backgroundColor};`
+      : ''}
+
+  ${({ page }) =>
+    page.style.properties.overflow ? `overflow: ${page.style.properties.overflow};` : ''}
 
   ${({ page }) => page.style.css}
 `;

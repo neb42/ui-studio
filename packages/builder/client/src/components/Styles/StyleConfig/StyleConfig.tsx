@@ -2,9 +2,10 @@ import * as React from 'react';
 import { Element } from '@ui-studio/types';
 import { FlexParentStyle } from 'components/Flex/FlexParentStyle';
 import { GridParentStyle } from 'components/Grid/GridParentStyle';
-import { CSSInput } from 'components/CSSInput';
-import { ClassNamesInput } from 'components/ClassNamesInput';
-import { BackgroundColor } from 'components/BackgroundColor';
+import { CSSInput } from 'components/Styles/CSSInput';
+import { ClassNamesInput } from 'components/Styles/ClassNamesInput';
+import { BackgroundColor } from 'components/Styles/BackgroundColor';
+import { Overflow } from 'components/Styles/Overflow';
 
 interface Props {
   element: Element;
@@ -24,6 +25,7 @@ export const StyleConfig = ({ element, parentElement }: Props): JSX.Element | nu
           <FlexParentStyle element={element} parent={parentElement} />
         )}
       <BackgroundColor element={element} />
+      <Overflow element={element} />
       <ClassNamesInput element={element} />
       <CSSInput element={element} />
     </>

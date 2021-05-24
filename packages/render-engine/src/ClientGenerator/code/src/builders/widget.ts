@@ -59,7 +59,12 @@ const WidgetWrapper = styled.div<{ widget: Widget | CustomComponentInstance; isS
       : ''}
 
   ${({ widget }) =>
-    widget.style.backgroundColor ? `background-color: ${widget.style.backgroundColor};` : ''}
+    widget.style.properties.backgroundColor
+      ? `background-color: ${widget.style.properties.backgroundColor};`
+      : ''}
+
+  ${({ widget }) =>
+    widget.style.properties.overflow ? `overflow: ${widget.style.properties.overflow};` : ''}
 
   ${({ widget }) => widget.style.css}
 

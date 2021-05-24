@@ -26,6 +26,10 @@ export class StylesModel {
       ],
       rowAlignment: 'auto',
       columnAlignment: 'auto',
+      properties: {
+        backgroundColor: null,
+        overflow: 'visible',
+      },
     };
   };
 
@@ -36,6 +40,10 @@ export class StylesModel {
       grow: 0,
       css: '',
       classNames: '',
+      properties: {
+        backgroundColor: null,
+        overflow: 'visible',
+      },
     };
   };
 
@@ -44,6 +52,10 @@ export class StylesModel {
       type: 'base',
       css: '',
       classNames: '',
+      properties: {
+        backgroundColor: null,
+        overflow: 'visible',
+      },
     };
   };
 }
