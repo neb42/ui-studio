@@ -80,8 +80,8 @@ export const ColorPickerComponent = ({ header, color, colorConfig, onColorChange
         <Styles.Header>{header}</Styles.Header>
         <Styles.Swatch color={color} />
         <Styles.Value>{color}</Styles.Value>
-        {colorConfig && <ColorizeIcon onClick={handleOpenColorPicker(colorConfig.type)} />}
-        <PaletteIcon onClick={handleOpenColorPicker('picker')} />
+        {colorConfig && <PaletteIcon onClick={handleOpenColorPicker(colorConfig.type)} />}
+        <ColorizeIcon onClick={handleOpenColorPicker('picker')} />
       </Styles.Container>
       {colorPickerType &&
         ReactDOM.createPortal(
