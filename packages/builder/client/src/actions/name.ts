@@ -55,7 +55,7 @@ export const updateElementName = (
   }
   if (selectedElement.type === 'customComponent') {
     return dispatch({
-      type: UPDATE_PAGE_NAME,
+      type: UPDATE_CUSTOM_COMPONENT_NAME,
       payload: {
         rootId,
         name,
