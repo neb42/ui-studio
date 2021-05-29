@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { StyledComponent, DefaultTheme } from 'styled-components';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import { Element } from '@ui-studio/types';
-
 import { updateElementName } from 'actions/name';
 
 interface EditNameProps {
