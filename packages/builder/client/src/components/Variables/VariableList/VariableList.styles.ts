@@ -4,8 +4,35 @@ import Color from 'color';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  height: 100%;
+`;
+
+export const Header = styled.div`
+  grid-column: 1/-1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 55px;
+  padding: ${({ theme }) => theme.spacing.px.small}px ${({ theme }) => theme.spacing.px.regular}px;
+  background-color: ${({ theme }) => theme.header.background.color};
+  box-shadow: 0 5px 10px 0 ${({ theme }) => theme.header.boxshadow.color};
+`;
+
+export const HeaderTitle = styled.div`
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-weight: 500;
+`;
+
+export const VariableList = styled.div`
+  background-color: ${({ theme }) => theme.colors.background.lightAlt};
   overflow: auto;
+  padding: 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 export const VariableItem = styled.div<{ active: boolean }>`
@@ -15,18 +42,15 @@ export const VariableItem = styled.div<{ active: boolean }>`
   align-items: center;
   cursor: pointer;
   transition: background-color 300ms;
-  padding-left: 8px;
-  padding-right: 4px;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding: 8px;
   border-radius: 3px;
 
-  background-color: ${({ active }) =>
-    active ? Color('#fa7268').alpha(0.4).hsl().string() : 'none'};
+  background-color: ${({ active, theme }) =>
+    active ? Color(theme.colors.brand500).alpha(0.4).hsl().string() : 'none'};
 
   &:hover {
-    background-color: ${({ active }) =>
-      Color(active ? '#fa7268' : '#cfcfcf')
+    background-color: ${({ active, theme }) =>
+      Color(active ? theme.colors.brand500 : theme.colors.secondary300)
         .alpha(0.4)
         .hsl()
         .string()};

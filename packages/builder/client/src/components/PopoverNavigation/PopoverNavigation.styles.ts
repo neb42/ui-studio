@@ -1,8 +1,14 @@
 import styled, { keyframes } from 'styled-components';
 
+export const Container = styled.div`
+  & * {
+    border-radius: 0 !important;
+  }
+`;
+
 export const SegmentedControl = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   width: 100%;
   border: 1px solid ${({ theme }) => theme.colors.brand500};
   height: 45px;
