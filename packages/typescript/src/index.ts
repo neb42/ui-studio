@@ -28,7 +28,7 @@ export const Function = (): any => {
     target.registered.functions.push({
       name: propertyName,
       returnType: returnType ? returnType.name.toLowerCase() : 'object',
-      args: paramTypes.map((p, i) => ({
+      args: paramTypes.slice(1).map((p, i) => ({
         name: paramNames[i],
         type: p.name.toLowerCase(),
       })),
@@ -48,7 +48,7 @@ export const Action = (): any => {
     const paramTypes = Reflect.getMetadata('design:paramtypes', target, propertyName);
     target.registered.actions.push({
       name: propertyName,
-      args: paramTypes.map((p, i) => ({
+      args: paramTypes.slice(1).map((p, i) => ({
         name: paramNames[i],
         type: p.name.toLowerCase(),
       })),

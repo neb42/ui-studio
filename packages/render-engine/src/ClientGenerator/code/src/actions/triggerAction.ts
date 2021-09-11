@@ -26,7 +26,7 @@ export const ACTION_API_CALL_PENDING = 'ACTION_API_CALL_PENDING';
 export const ACTION_API_CALL_FULFILLED = 'ACTION_API_CALL_FULFILLED';
 export const ACTION_API_CALL_REJECTED = 'ACTION_API_CALL_REJECTED';
 
-export const triggerAction = (id: string, args: any) => async (
+export const triggerAction = (id: string, args: any, event?: any) => async (
   dispatch: Dispatch<TriggerAction$Pending | TriggerAction$Fulfilled | TriggerAction$Rejected>,
 ): Promise<void> => {
   try {
@@ -35,7 +35,7 @@ export const triggerAction = (id: string, args: any) => async (
       payload: { id },
     });
 
-    const { status } = await axios.post(`/api/action_${id}`, args);
+    const { status } = await axios.post(`/api/action_${id}`, { event, args });
 
     if (status !== 200) throw new Error(`Status code: ${status}`);
 

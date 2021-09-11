@@ -137,7 +137,7 @@ const useEventHandlers = (widget: Widget | CustomComponentInstance) => {
   return Object.keys(widget.events).reduce((acc, cur) => {
     return {
       ...acc,
-      [cur]: () => dispatch(handleEvent(widget.id, cur, history.push)),
+      [cur]: (event?: any) => dispatch(handleEvent(widget.id, cur, history.push, event)),
     };
   }, {});
 };

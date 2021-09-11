@@ -30,7 +30,7 @@ export const FUNCTION_API_CALL_PENDING = 'FUNCTION_API_CALL_PENDING';
 export const FUNCTION_API_CALL_FULFILLED = 'FUNCTION_API_CALL_FULFILLED';
 export const FUNCTION_API_CALL_REJECTED = 'FUNCTION_API_CALL_REJECTED';
 
-export const updateFunctionVariable = (id: string) => async (
+export const updateFunctionVariable = (id: string, event?: any) => async (
   dispatch: Dispatch<
     | UpdateFunctionVariable$Pending
     | UpdateFunctionVariable$Fulfilled
@@ -56,7 +56,7 @@ export const updateFunctionVariable = (id: string) => async (
     const {
       data: { data },
       status,
-    } = await axios.post(`/api/function_${functionId}`, args);
+    } = await axios.post(`/api/function_${functionId}`, { event, args });
 
     if (status !== 200) throw new Error(`Status code: ${status}`);
 

@@ -21,7 +21,8 @@ functions?.registered?.functions?.forEach(f => {
     `/function_${f.name}`,
     async (request, response, next) => {
       try {
-        const data = await functions[f.name](...request.body);
+        const { event, args } = request.body;
+        const data = await functions[f.name](event, ...args);
         response.status(200).send({ data });
       } catch (error) {
         next(error);
