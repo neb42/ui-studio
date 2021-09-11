@@ -10,7 +10,6 @@
     "url": "git+https://github.com/neb42/canvas.git"
   },
   "workspaces": [
-    "docs",
     "packages/*",
     "packages/builder/client"
   ],
