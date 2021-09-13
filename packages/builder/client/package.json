@@ -29,6 +29,7 @@
     "reselect": "^4.0.0",
     "socket.io-client": "^2.3.0",
     "styled-components": "^5.2.1",
+    "swagger-client": "^3.16.1",
     "uuid": "^8.3.2"
   },
   "scripts": {
@@ -79,6 +80,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.5",
     "eslint-plugin-react-hooks": "^4.0.8",
+    "openapi-types": "^9.3.0",
     "prettier": "^2.0.5",
     "prettier-eslint": "^11.0.0",
     "prettycli": "^1.4.3"

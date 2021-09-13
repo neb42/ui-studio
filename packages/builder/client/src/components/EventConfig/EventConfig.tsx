@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { OpenAPIV3 } from 'openapi-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
 import { AddSharp, DeleteSharp } from '@material-ui/icons';
@@ -8,17 +9,16 @@ import {
   Event$UpdateVariable,
   Event$TriggerAction,
   Event$NavigatePage,
-  FunctionVariableArg,
   Widget,
   Page,
   CustomComponentInstance,
   CustomComponent,
+  FunctionVariable$StaticArg,
 } from '@ui-studio/types';
-import { getComponents, getActions } from 'selectors/configuration';
+import { getComponents, getActions, getArgTypeLookUp } from 'selectors/configuration';
 import { getRoots } from 'selectors/tree';
 import { getVariables } from 'selectors/variable';
 import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/event';
-import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';
 
 import * as Styles from './EventConfig.styles';
 
@@ -55,54 +55,65 @@ const TriggerActionEventConfig = ({
   onChange,
 }: EventConfigInstanceProps<Event$TriggerAction>): JSX.Element => {
   const actions = useSelector(getActions);
-
-  const selectedAction = actions.find((a) => a.name === event.actionId);
+  const argTypeLookUp = useSelector(getArgTypeLookUp);
 
   const handleActionChange = ({ value }: any) => {
-    const newActionId = value as string;
-    const newSelectedAction = actions.find((a) => a.name === newActionId);
-    if (!newSelectedAction) return;
-    const args: FunctionVariableArg[] = newSelectedAction.args.map((a) => {
-      switch (a.type) {
-        case 'string':
-          return { type: 'static', valueType: 'string', value: '' };
-        case 'number':
-          return { type: 'static', valueType: 'number', value: 0 };
-        case 'boolean':
-          return { type: 'static', valueType: 'boolean', value: true };
-        default:
-          throw Error();
-      }
-    });
+    const newActionId = value as { method: OpenAPIV3.HttpMethods; path: string };
+    const staticArgTypeMap: {
+      [argType in 'string' | 'number' | 'boolean']: FunctionVariable$StaticArg;
+    } = {
+      string: { type: 'static', valueType: 'string', value: '' },
+      number: { type: 'static', valueType: 'number', value: 0 },
+      boolean: { type: 'static', valueType: 'boolean', value: true },
+    };
+    const args = {
+      path: Object.keys(argTypeLookUp.path[newActionId.path][newActionId.method]).reduce(
+        (acc, cur) => {
+          return {
+            ...acc,
+            [cur]: staticArgTypeMap[argTypeLookUp.path[newActionId.path][newActionId.method][cur]],
+          };
+        },
+        {},
+      ),
+      query: Object.keys(argTypeLookUp.query[newActionId.path][newActionId.method]).reduce(
+        (acc, cur) => {
+          return {
+            ...acc,
+            [cur]: staticArgTypeMap[argTypeLookUp.query[newActionId.path][newActionId.method][cur]],
+          };
+        },
+        {},
+      ),
+      body: Object.keys(argTypeLookUp.body[newActionId.path][newActionId.method]).reduce(
+        (acc, cur) => {
+          return {
+            ...acc,
+            [cur]: staticArgTypeMap[argTypeLookUp.body[newActionId.path][newActionId.method][cur]],
+          };
+        },
+        {},
+      ),
+    };
     onChange({ type: 'trigger-action', actionId: newActionId, args });
   };
 
-  const handleArgChange = (index: number) => (_: string, arg: FunctionVariableArg) => {
-    const newArgs = [...event.args];
-    newArgs[index] = arg;
-    onChange({ type: 'trigger-action', actionId: event.actionId, args: newArgs });
-  };
+  // const handleArgChange = (index: number) => (_: string, arg: FunctionVariableArg) => {
+  //   const newArgs = [...event.args];
+  //   newArgs[index] = arg;
+  //   onChange({ type: 'trigger-action', actionId: event.actionId, args: newArgs });
+  // };
 
-  const options = actions.map((a) => ({ value: a.name, label: a.name }));
+  const options = actions.map((a) => ({ value: a, label: `${a.method.toUpperCase()} ${a.path}` }));
 
   return (
-    <>
-      <Select
-        value={options.find((o) => o.value === event.actionId)}
-        options={options}
-        onChange={handleActionChange}
-      />
-      {selectedAction &&
-        selectedAction.args.map((a, i) => (
-          <FunctionVariableArgConfig
-            key={a.name}
-            onChange={handleArgChange(i)}
-            name={a.name}
-            valueType={a.type}
-            arg={event.args[i]}
-          />
-        ))}
-    </>
+    <Select
+      value={options.find(
+        (o) => o.value.method === event.actionId.method && o.value.path === event.actionId.path,
+      )}
+      options={options}
+      onChange={handleActionChange}
+    />
   );
 };
 
@@ -140,7 +151,15 @@ const buildDefaultEvent = (
     case 'update-variable':
       return { type: eventType, variableId: '' };
     case 'trigger-action':
-      return { type: eventType, actionId: '', args: [] };
+      return {
+        type: eventType,
+        actionId: { path: '', method: OpenAPIV3.HttpMethods.POST },
+        args: {
+          path: {},
+          query: {},
+          body: {},
+        },
+      };
     case 'navigate-page':
       return { type: eventType, pageId: '' };
     default:

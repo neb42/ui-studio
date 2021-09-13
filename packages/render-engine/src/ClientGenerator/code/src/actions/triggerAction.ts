@@ -1,24 +1,27 @@
-import axios from 'axios';
+import { Event$TriggerAction } from '@ui-studio/types';
 import { Dispatch } from 'redux';
+
+import { makeOpenAPIRequest } from '../openapi';
+import { GetState } from '../types/store';
 
 export interface TriggerAction$Pending {
   type: 'ACTION_API_CALL_PENDING';
   payload: {
-    id: string;
+    id: Event$TriggerAction['actionId'];
   };
 }
 
 export interface TriggerAction$Fulfilled {
   type: 'ACTION_API_CALL_FULFILLED';
   payload: {
-    id: string;
+    id: Event$TriggerAction['actionId'];
   };
 }
 
 export interface TriggerAction$Rejected {
   type: 'ACTION_API_CALL_REJECTED';
   payload: {
-    id: string;
+    id: Event$TriggerAction['actionId'];
   };
 }
 
@@ -26,27 +29,36 @@ export const ACTION_API_CALL_PENDING = 'ACTION_API_CALL_PENDING';
 export const ACTION_API_CALL_FULFILLED = 'ACTION_API_CALL_FULFILLED';
 export const ACTION_API_CALL_REJECTED = 'ACTION_API_CALL_REJECTED';
 
-export const triggerAction = (id: string, args: any, event?: any) => async (
+export const triggerAction = (eventInstance: Event$TriggerAction, event?: any) => async (
+  getState: GetState,
   dispatch: Dispatch<TriggerAction$Pending | TriggerAction$Fulfilled | TriggerAction$Rejected>,
 ): Promise<void> => {
   try {
     dispatch({
       type: ACTION_API_CALL_PENDING,
-      payload: { id },
+      payload: { id: eventInstance.actionId },
     });
 
-    const { status } = await axios.post(`/api/action_${id}`, { event, args });
+    const state = getState();
 
-    if (status !== 200) throw new Error(`Status code: ${status}`);
+    await makeOpenAPIRequest(
+      state,
+      eventInstance.actionId.path,
+      eventInstance.actionId.method,
+      eventInstance.args.path,
+      eventInstance.args.query,
+      eventInstance.args.body,
+      event,
+    );
 
     dispatch({
       type: ACTION_API_CALL_FULFILLED,
-      payload: { id },
+      payload: { id: eventInstance.actionId },
     });
   } catch {
     dispatch({
       type: ACTION_API_CALL_REJECTED,
-      payload: { id },
+      payload: { id: eventInstance.actionId },
     });
   }
 };

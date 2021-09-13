@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
-import { Variable, FunctionVariableArg } from '@ui-studio/types';
+import { OpenAPIV3 } from 'openapi-types';
+import { Variable, FunctionVariableArg, FunctionVariable } from '@ui-studio/types';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectVariable, SelectVariable } from 'actions/view';
 
@@ -161,10 +162,13 @@ interface UpdateFunctionVariable {
   type: 'UPDATE_FUNCTION_VARIABLE';
   payload: {
     id: string;
-    functionId: string;
+    functionId: {
+      path: string;
+      method: OpenAPIV3.HttpMethods;
+    };
     valueType: 'string' | 'number' | 'boolean' | 'object';
     trigger: 'auto' | 'event';
-    args: FunctionVariableArg[];
+    args: FunctionVariable['args'];
   };
 }
 
@@ -172,10 +176,13 @@ export const UPDATE_FUNCTION_VARIABLE = 'UPDATE_FUNCTION_VARIABLE';
 
 export const updateFunctionVariable = (
   id: string,
-  functionId: string,
+  functionId: {
+    path: string;
+    method: OpenAPIV3.HttpMethods;
+  },
   valueType: 'string' | 'number' | 'boolean' | 'object',
   trigger: 'auto' | 'event',
-  args: FunctionVariableArg[],
+  args: FunctionVariable['args'],
 ): UpdateFunctionVariable => ({
   type: UPDATE_FUNCTION_VARIABLE,
   payload: {
@@ -191,7 +198,8 @@ export interface UpdateVariableFunctionArg {
   type: 'UPDATE_VARIABLE_FUNCTION_ARG';
   payload: {
     variableId: string;
-    index: number;
+    argType: keyof FunctionVariable['args'];
+    argKey: string;
     arg: FunctionVariableArg;
   };
 }

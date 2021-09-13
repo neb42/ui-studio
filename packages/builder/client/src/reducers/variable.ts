@@ -79,18 +79,22 @@ export const variableReducer = (
     }
 
     case UPDATE_VARIABLE_FUNCTION_ARG: {
-      const { variableId, index, arg } = action.payload;
+      const { variableId, argType, argKey, arg } = action.payload;
 
       const variable = state[variableId];
       if (variable.type !== 'function') throw new Error();
-      const args = [...variable.args];
-      args[index] = arg;
 
       return {
         ...state,
         [variableId]: {
           ...variable,
-          args,
+          args: {
+            ...variable.args,
+            [argType]: {
+              ...variable.args[argType],
+              [argKey]: arg,
+            },
+          },
         },
       };
     }

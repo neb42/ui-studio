@@ -1,4 +1,5 @@
 import {
+  FunctionVariableArg,
   WidgetProp,
   WidgetProp$CustomComponentConfig,
   WidgetProp$Iterable,
@@ -67,25 +68,41 @@ export const getVariableValue = (state: Store) => (variableId: string, lookup: s
   return variable;
 };
 
-export const getVariableArgs = (state: Store) => (variableId: string) => {
-  const variable = getVariableDefinitions(state)[variableId];
-  if (variable.type !== 'function') return [];
-
-  return variable.args.map((a) => {
-    if (a.type === 'static') {
-      return a.value;
+export const resolveArgSet = (state: Store, args: Record<string, FunctionVariableArg>) => {
+  const resolveArg = (arg: FunctionVariableArg) => {
+    if (arg.type === 'static') {
+      return arg.value;
     }
 
-    if (a.type === 'variable') {
-      return getVariableValue(state)(a.variableId, null);
+    if (arg.type === 'variable') {
+      return getVariableValue(state)(arg.variableId, null);
     }
 
-    if (a.type === 'widget') {
-      return getWidgetPropertyValue(state)(a.widgetId, null, a.property);
+    if (arg.type === 'widget') {
+      return getWidgetPropertyValue(state)(arg.widgetId, null, arg.property);
     }
 
     return null;
-  });
+  };
+
+  return Object.keys(args).reduce<Record<string, any>>((acc, cur) => {
+    return {
+      ...acc,
+      [cur]: resolveArg(args[cur]),
+    };
+  }, {});
+};
+
+export const getVariableArgs = (state: Store) => (variableId: string) => {
+  const variable = getVariableDefinitions(state)[variableId];
+  if (variable.type !== 'function')
+    return {
+      path: {},
+      query: {},
+      body: {},
+    };
+
+  return variable.args;
 };
 
 export const getCustomComponentConfigProp = (state: Store) => (

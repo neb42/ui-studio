@@ -7,6 +7,7 @@ import {
   SELECT_VARIABLE,
   Action$View,
 } from 'actions/view';
+import { OPEN_MODAL, CLOSE_MODAL, OpenModal, CloseModal } from 'actions/modal';
 import { INIT_CLIENT, InitClient } from 'actions/init';
 import { Store$View } from 'types/store';
 
@@ -23,11 +24,20 @@ const initialState: Store$View = {
     size: 'monitor',
   },
   selectedView: 'preview',
+  modal: {
+    functionConfiguration: {
+      open: false,
+      type: null,
+      id: null,
+      path: null,
+      method: null,
+    },
+  },
 };
 
 export const view = (
   state: Store$View = initialState,
-  action: Action$View | InitClient,
+  action: Action$View | OpenModal<keyof Store$View['modal']> | CloseModal | InitClient,
 ): Store$View => {
   switch (action.type) {
     case SELECT_ROOT_ELEMENT: {
@@ -81,6 +91,24 @@ export const view = (
         preview: {
           size: action.payload.previewSize,
         },
+      };
+    }
+    case OPEN_MODAL: {
+      return {
+        ...state,
+        modal: {
+          ...initialState.modal,
+          [action.payload.key]: {
+            open: true,
+            ...action.payload.data,
+          },
+        },
+      };
+    }
+    case CLOSE_MODAL: {
+      return {
+        ...state,
+        modal: initialState.modal,
       };
     }
     case INIT_CLIENT: {

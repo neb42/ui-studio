@@ -1,3 +1,4 @@
+import { OpenAPIV3 } from 'openapi-types';
 import { Variable } from '@ui-studio/types';
 
 export class VariableModel {
@@ -49,10 +50,17 @@ export class VariableModel {
         id: variable.id,
         name: variable.name,
         type: 'function',
-        functionId: '',
+        functionId: {
+          path: '',
+          method: OpenAPIV3.HttpMethods.GET,
+        },
         valueType: variable.valueType,
         trigger: 'auto',
-        args: [],
+        args: {
+          path: {},
+          query: {},
+          body: {},
+        },
       };
     }
     throw new Error();

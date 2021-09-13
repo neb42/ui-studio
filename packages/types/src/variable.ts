@@ -1,3 +1,5 @@
+import { OpenAPIV3 } from 'openapi-types';
+
 export interface BaseVariable {
   id: string;
   name: string;
@@ -44,10 +46,17 @@ export type FunctionVariableArg =
 
 export interface FunctionVariable extends BaseVariable {
   type: 'function';
-  functionId: string;
+  functionId: {
+    path: string;
+    method: OpenAPIV3.HttpMethods;
+  };
   valueType: 'string' | 'number' | 'boolean' | 'object';
   trigger: 'auto' | 'event';
-  args: FunctionVariableArg[];
+  args: {
+    path: Record<string, FunctionVariableArg>;
+    query: Record<string, FunctionVariableArg>;
+    body: Record<string, FunctionVariableArg>;
+  };
 }
 
 export type Variable = FunctionVariable | StaticVariable;

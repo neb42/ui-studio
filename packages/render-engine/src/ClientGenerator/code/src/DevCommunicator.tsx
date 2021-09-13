@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import io from 'socket.io-client';
 import {
   Widget,
@@ -11,7 +12,6 @@ import {
   CustomComponent,
   CustomComponentInstance,
 } from '@ui-studio/types';
-import Functions from 'functions-pkg/build/Functions';
 
 import { KeyedObject, Store } from './types/store';
 import { updateTree } from './actions/updateTree';
@@ -39,8 +39,12 @@ export const DevCommunicator = () => {
       );
     });
 
+    (async () => {
+      const openAPIDef = await axios.get('/openapi');
+      socket.emit('init-api', openAPIDef);
+    })();
+
     socket.emit('init-builder', {
-      functions: new Functions().registered,
       components: Object.keys(Components).reduce<Component[]>((acc, cur) => {
         if (cur === 'functions-pkg') return acc;
         return [

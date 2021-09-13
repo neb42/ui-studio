@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import { store } from './store';
 import { getVariableDefinitions, getVariableArgs } from './selectors';
 import {
@@ -8,6 +6,7 @@ import {
   FUNCTION_API_CALL_REJECTED,
 } from './actions/updateFunctionVariable';
 import { Store } from './types/store';
+import { makeOpenAPIRequest } from './openapi';
 
 let currentValue: Store;
 
@@ -32,12 +31,15 @@ const handleChange = async () => {
           });
 
           const { functionId } = def;
-          const {
-            data: { data },
-            status,
-          } = await axios.post(`/api/function_${functionId}`, current);
 
-          if (status !== 200) throw new Error(`Status code: ${status}`);
+          const data = await makeOpenAPIRequest(
+            currentValue,
+            functionId.path,
+            functionId.method,
+            current?.path ?? {},
+            current?.query ?? {},
+            current?.body ?? {},
+          );
 
           store.dispatch({
             type: FUNCTION_API_CALL_FULFILLED,

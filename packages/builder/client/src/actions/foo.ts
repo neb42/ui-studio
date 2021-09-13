@@ -2,12 +2,15 @@ import { Dispatch } from 'redux';
 import {
   ComponentConfig,
   CustomComponentInstance,
+  FunctionVariable,
   FunctionVariable$StaticArg,
   Widget,
 } from '@ui-studio/types';
 import { TGetState, TThunkAction } from 'types/store';
 import { UPDATE_VARIABLE_FUNCTION_ARG, UpdateVariableFunctionArg } from 'actions/variable';
 import { WidgetModel } from 'models/widget';
+
+import { getArgTypeLookUp } from '../selectors/configuration';
 
 import { RemoveWidget, REMOVE_WIDGET, UpdateWidgetProps, UPDATE_WIDGET_PROPS } from './widget';
 
@@ -19,39 +22,45 @@ export const resetVariableFunctionArgsUsingWidget = (widgetId: string): any => (
 ) => {
   const state = getState();
 
+  const argTypeLookup = getArgTypeLookUp(state);
+
   Object.keys(state.variable).forEach((variableId) => {
     const variable = state.variable[variableId];
     if (variable.type === 'function') {
-      variable.args.forEach((a, i) => {
-        if (a.type === 'widget' && a.widgetId === widgetId) {
-          const arg: FunctionVariable$StaticArg = (() => {
-            const argConfig = state.configuration.functions.find(
-              (f) => f.name === variable.functionId,
-            )?.args[i];
-            if (!argConfig) throw new Error();
-            switch (argConfig.type) {
-              case 'string': {
-                return { type: 'static', valueType: 'string', value: '' } as const;
+      (Object.keys(variable.args) as (keyof FunctionVariable['args'])[]).forEach((argType) => {
+        Object.keys(variable.args[argType]).forEach((argKey) => {
+          const existingArg = variable.args[argType][argKey];
+          if (existingArg.type === 'widget' && existingArg.widgetId === widgetId) {
+            const arg: FunctionVariable$StaticArg = (() => {
+              const type =
+                argTypeLookup[argType][variable.functionId.path][variable.functionId.method][
+                  argKey
+                ];
+              switch (type) {
+                case 'string': {
+                  return { type: 'static', valueType: 'string', value: '' } as const;
+                }
+                case 'number': {
+                  return { type: 'static', valueType: 'number', value: 0 } as const;
+                }
+                case 'boolean': {
+                  return { type: 'static', valueType: 'boolean', value: true } as const;
+                }
+                default:
+                  throw new Error();
               }
-              case 'number': {
-                return { type: 'static', valueType: 'number', value: 0 } as const;
-              }
-              case 'boolean': {
-                return { type: 'static', valueType: 'boolean', value: true } as const;
-              }
-              default:
-                throw new Error();
-            }
-          })();
-          dispatch({
-            type: UPDATE_VARIABLE_FUNCTION_ARG,
-            payload: {
-              variableId,
-              index: i,
-              arg,
-            },
-          });
-        }
+            })();
+            dispatch({
+              type: UPDATE_VARIABLE_FUNCTION_ARG,
+              payload: {
+                variableId,
+                argType,
+                argKey,
+                arg,
+              },
+            });
+          }
+        });
       });
     }
   });
@@ -202,27 +211,28 @@ export const updateVariableFunctionArgUsingCustomComponentExposedPropertyKey = (
   Object.keys(state.variable).forEach((variableId) => {
     const variable = state.variable[variableId];
     if (variable.type === 'function') {
-      variable.args.forEach((a, i) => {
-        if (a.type === 'widget' && a.property === oldKey) {
-          const propWidget = widgetMap[a.widgetId];
-          if (
-            propWidget.type === 'customComponentInstance' &&
-            propWidget.customComponentId === customComponentId
-          ) {
-            const arg = {
-              ...a,
-              property: newKey,
-            };
-            dispatch({
-              type: UPDATE_VARIABLE_FUNCTION_ARG,
-              payload: {
-                variableId,
-                index: i,
-                arg,
-              },
-            });
+      (Object.keys(variable.args) as (keyof FunctionVariable['args'])[]).forEach((argType) => {
+        Object.keys(variable.args[argType]).forEach((argKey) => {
+          const existingArg = variable.args[argType][argKey];
+          if (existingArg.type === 'widget' && existingArg.property === oldKey) {
+            const propWidget = widgetMap[existingArg.widgetId];
+            if (
+              propWidget.type === 'customComponentInstance' &&
+              propWidget.customComponentId === customComponentId
+            ) {
+              const arg = { ...existingArg, property: newKey };
+              dispatch({
+                type: UPDATE_VARIABLE_FUNCTION_ARG,
+                payload: {
+                  variableId,
+                  argType,
+                  argKey,
+                  arg,
+                },
+              });
+            }
           }
-        }
+        });
       });
     }
   });
@@ -284,39 +294,45 @@ export const resetVariableFunctionArgsUsingVariable = (variableId: string): any 
 ) => {
   const state = getState();
 
+  const argTypeLookup = getArgTypeLookUp(state);
+
   Object.keys(state.variable).forEach((vId) => {
     const variable = state.variable[vId];
     if (variable.type === 'function') {
-      variable.args.forEach((a, i) => {
-        if (a.type === 'variable' && a.variableId === variableId) {
-          const arg: FunctionVariable$StaticArg = (() => {
-            const argConfig = state.configuration.functions.find(
-              (f) => f.name === variable.functionId,
-            )?.args[i];
-            if (!argConfig) throw new Error();
-            switch (argConfig.type) {
-              case 'string': {
-                return { type: 'static', valueType: 'string', value: '' } as const;
+      (Object.keys(variable.args) as (keyof FunctionVariable['args'])[]).forEach((argType) => {
+        Object.keys(variable.args[argType]).forEach((argKey) => {
+          const existingArg = variable.args[argType][argKey];
+          if (existingArg.type === 'variable' && existingArg.variableId === variableId) {
+            const arg: FunctionVariable$StaticArg = (() => {
+              const type =
+                argTypeLookup[argType][variable.functionId.path][variable.functionId.method][
+                  argKey
+                ];
+              switch (type) {
+                case 'string': {
+                  return { type: 'static', valueType: 'string', value: '' } as const;
+                }
+                case 'number': {
+                  return { type: 'static', valueType: 'number', value: 0 } as const;
+                }
+                case 'boolean': {
+                  return { type: 'static', valueType: 'boolean', value: true } as const;
+                }
+                default:
+                  throw new Error();
               }
-              case 'number': {
-                return { type: 'static', valueType: 'number', value: 0 } as const;
-              }
-              case 'boolean': {
-                return { type: 'static', valueType: 'boolean', value: true } as const;
-              }
-              default:
-                throw new Error();
-            }
-          })();
-          dispatch({
-            type: UPDATE_VARIABLE_FUNCTION_ARG,
-            payload: {
-              variableId: vId,
-              index: i,
-              arg,
-            },
-          });
-        }
+            })();
+            dispatch({
+              type: UPDATE_VARIABLE_FUNCTION_ARG,
+              payload: {
+                variableId,
+                argType,
+                argKey,
+                arg,
+              },
+            });
+          }
+        });
       });
     }
   });

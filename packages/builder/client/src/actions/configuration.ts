@@ -1,18 +1,27 @@
-import { InitFunctions, Component } from '@ui-studio/types';
-import { Store$Configuration } from 'types/store';
+import { Dispatch } from 'redux';
+import { OpenAPIV3 } from 'openapi-types';
+import SwaggerClient from 'swagger-client';
+import { Component } from '@ui-studio/types';
 import { InitClient } from 'actions/init';
+import { TThunkAction } from 'types/store';
 
-interface IInitFunctions {
-  type: 'INIT_FUNCTIONS';
-  payload: InitFunctions;
+interface IInitAPI {
+  type: 'INIT_API';
+  payload: OpenAPIV3.Document;
 }
 
-export const INIT_FUNCTIONS = 'INIT_FUNCTIONS';
+export const INIT_API = 'INIT_API';
 
-export const initFunctions = (functions: InitFunctions): IInitFunctions => ({
-  type: INIT_FUNCTIONS,
-  payload: functions,
-});
+export const initApi = (schema: OpenAPIV3.Document): TThunkAction<Promise<IInitAPI>> => async (
+  dispatch: Dispatch<IInitAPI>,
+) => {
+  const resolvedSchema = (await SwaggerClient.resolve({ spec: schema })).spec;
+
+  return dispatch({
+    type: INIT_API,
+    payload: resolvedSchema,
+  });
+};
 
 interface IInitComponents {
   type: 'INIT_COMPONENTS';
@@ -26,4 +35,4 @@ export const initComponents = (components: Component[]): IInitComponents => ({
   payload: components,
 });
 
-export type Action$Configuration = IInitFunctions | IInitComponents | InitClient;
+export type Action$Configuration = IInitAPI | IInitComponents | InitClient;
