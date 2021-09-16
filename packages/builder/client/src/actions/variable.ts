@@ -4,6 +4,7 @@ import { OpenAPIV3 } from 'openapi-types';
 import { Variable, FunctionVariableArg, FunctionVariable } from '@ui-studio/types';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectVariable, SelectVariable } from 'actions/view';
+import { VariableModel } from 'models/variable';
 
 import { resetVariableFunctionArgsUsingVariable, resetWidgetPropsUsingVariable } from './foo';
 
@@ -68,6 +69,7 @@ interface UpdateVariableType {
   payload: {
     id: string;
     type: 'static' | 'function';
+    openAPISchema: OpenAPIV3.Document;
   };
 }
 
@@ -76,12 +78,17 @@ export const UPDATE_VARIABLE_TYPE = 'UPDATE_VARIABLE_TYPE';
 export const updateVariableType = (
   id: string,
   type: 'static' | 'function',
-): TThunkAction<UpdateVariableType> => (dispatch: Dispatch<UpdateVariableType>) => {
+): TThunkAction<UpdateVariableType> => (
+  dispatch: Dispatch<UpdateVariableType>,
+  getState: TGetState,
+) => {
+  const state = getState();
+
   dispatch(resetWidgetPropsUsingVariable(id));
   dispatch(resetVariableFunctionArgsUsingVariable(id));
   return dispatch({
     type: UPDATE_VARIABLE_TYPE,
-    payload: { id, type },
+    payload: { id, type, openAPISchema: state.configuration.openAPISchema },
   });
 };
 
@@ -143,7 +150,7 @@ export function updateStaticVariable(id: string, valueType: any, value: any): an
   return (dispatch: Dispatch<UpdateStaticVariable>, getState: TGetState) => {
     const state = getState();
     const variable = state.variable[id];
-    if (variable.valueType !== valueType) {
+    if (VariableModel.getValueType(variable, state.configuration.openAPISchema) !== valueType) {
       dispatch(resetWidgetPropsUsingVariable(id));
       dispatch(resetVariableFunctionArgsUsingVariable(id));
     }
@@ -166,7 +173,6 @@ interface UpdateFunctionVariable {
       path: string;
       method: OpenAPIV3.HttpMethods;
     };
-    valueType: 'string' | 'number' | 'boolean' | 'object';
     trigger: 'auto' | 'event';
     args: FunctionVariable['args'];
   };
@@ -180,7 +186,6 @@ export const updateFunctionVariable = (
     path: string;
     method: OpenAPIV3.HttpMethods;
   },
-  valueType: 'string' | 'number' | 'boolean' | 'object',
   trigger: 'auto' | 'event',
   args: FunctionVariable['args'],
 ): UpdateFunctionVariable => ({
@@ -188,7 +193,6 @@ export const updateFunctionVariable = (
   payload: {
     id,
     functionId,
-    valueType,
     trigger,
     args,
   },

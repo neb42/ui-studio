@@ -53,23 +53,36 @@ export const initCode = async (): Promise<void> => {
     execSync('yarn build', { cwd: FUNCTIONS_PATH, stdio: 'inherit' });
   };
 
-  const installPackages = () => {
+  const installClientPackages = () => {
     console.log(`Installing client packages as ${clientPath}...`);
     execSync('yarn --force --prefer-offline', { cwd: clientPath, stdio: 'inherit' });
+  };
+
+  const installServerPackages = () => {
     console.log(`Installing server packages at ${serverPath}...`);
     execSync('yarn --force --prefer-offline', { cwd: serverPath, stdio: 'inherit' });
   };
 
-  installPackages();
-  buildFunctions();
-  startPreviewServer();
+  const startServer = () => {
+    console.log('Starting server...');
+    exec(`nodemon -w ${path.join(clientPath, 'api')} -x "yarn server -p ${PREVIEW_SERVER_PORT}"`, {
+      cwd: clientPath,
+    });
+  };
+
+  installClientPackages();
+  // installServerPackages();
+  // buildFunctions();
+  // startPreviewServer();
+  startServer();
   startPreviewClient();
 
   open(`http://localhost:${SERVER_PORT}`);
 
   fs.watch(path.join(FUNCTIONS_PATH, 'package.json'), { recursive: true }, () => {
-    installPackages();
-    buildFunctions();
+    installClientPackages();
+    // installServerPackages();
+    // buildFunctions();
   });
   fs.watch(path.join(FUNCTIONS_PATH, 'src'), { recursive: true }, buildFunctions);
 };

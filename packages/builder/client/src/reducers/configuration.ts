@@ -29,6 +29,7 @@ export const configuration = (
     case INIT_API: {
       return {
         ...state,
+        openAPISchema: action.payload,
         functions: Object.keys(action.payload.paths).reduce<Store$Configuration['functions']>(
           (acc, cur) => {
             const pathObj = action.payload.paths[cur];
@@ -39,11 +40,19 @@ export const configuration = (
           },
           [],
         ),
-        actions: Object.keys(action.payload.paths).reduce<Store$Configuration['functions']>(
+        actions: Object.keys(action.payload.paths).reduce<Store$Configuration['actions']>(
           (acc, cur) => {
             const pathObj = action.payload.paths[cur];
-            if (pathObj && !('get' in pathObj)) {
-              return [...acc, { path: cur, method: OpenAPIV3.HttpMethods.POST }];
+            if (pathObj) {
+              return [
+                ...acc,
+                ...(Object.keys(pathObj) as OpenAPIV3.HttpMethods[])
+                  .filter((m) => m !== OpenAPIV3.HttpMethods.GET)
+                  .map((method) => ({
+                    path: cur,
+                    method,
+                  })),
+              ];
             }
             return acc;
           },

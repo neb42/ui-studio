@@ -33,21 +33,22 @@ export const getArgTypeLookUp = (state: Store): ArgTypeLookup => {
       [path]: Object.keys(schema.paths?.[path] ?? {}).reduce((a, method) => {
         return {
           ...a,
-          [method]: schema.paths?.[path]?.[method as OpenAPIV3.HttpMethods]?.parameters
-            ?.filter(
-              (p): p is OpenAPIV3.ParameterObject =>
-                !('ref' in p) && (p as OpenAPIV3.ParameterObject).in === 'path',
-            )
-            ?.reduce((aa, cc) => {
-              let s = cc.schema;
-              if (!s) return aa;
-              if ('ref' in s) throw new Error('');
-              s = s as OpenAPIV3.SchemaObject;
-              return {
-                ...aa,
-                [cc.name]: s.type,
-              };
-            }, {}),
+          [method]:
+            schema.paths?.[path]?.[method as OpenAPIV3.HttpMethods]?.parameters
+              ?.filter(
+                (p): p is OpenAPIV3.ParameterObject =>
+                  !('ref' in p) && (p as OpenAPIV3.ParameterObject).in === 'path',
+              )
+              ?.reduce((aa, cc) => {
+                let s = cc.schema;
+                if (!s) return aa;
+                if ('ref' in s) throw new Error('');
+                s = s as OpenAPIV3.SchemaObject;
+                return {
+                  ...aa,
+                  [cc.name]: s.type,
+                };
+              }, {}) ?? {},
         };
       }, {}),
     };
@@ -59,21 +60,22 @@ export const getArgTypeLookUp = (state: Store): ArgTypeLookup => {
       [path]: Object.keys(schema.paths?.[path] ?? {}).reduce((a, method) => {
         return {
           ...a,
-          [method]: schema.paths?.[path]?.[method as OpenAPIV3.HttpMethods]?.parameters
-            ?.filter(
-              (p): p is OpenAPIV3.ParameterObject =>
-                !('ref' in p) && (p as OpenAPIV3.ParameterObject).in === 'query',
-            )
-            ?.reduce((aa, cc) => {
-              let s = cc.schema;
-              if (!s) return aa;
-              if ('ref' in s) throw new Error('');
-              s = s as OpenAPIV3.SchemaObject;
-              return {
-                ...aa,
-                [cc.name]: s.type,
-              };
-            }, {}),
+          [method]:
+            schema.paths?.[path]?.[method as OpenAPIV3.HttpMethods]?.parameters
+              ?.filter(
+                (p): p is OpenAPIV3.ParameterObject =>
+                  !('ref' in p) && (p as OpenAPIV3.ParameterObject).in === 'query',
+              )
+              ?.reduce((aa, cc) => {
+                let s = cc.schema;
+                if (!s) return aa;
+                if ('ref' in s) throw new Error('');
+                s = s as OpenAPIV3.SchemaObject;
+                return {
+                  ...aa,
+                  [cc.name]: s.type,
+                };
+              }, {}) ?? {},
         };
       }, {}),
     };
@@ -84,15 +86,27 @@ export const getArgTypeLookUp = (state: Store): ArgTypeLookup => {
       ...acc,
       [path]: Object.keys(schema.paths?.[path] ?? {}).reduce((a, method) => {
         let requestBody = schema.paths?.[path]?.[method as OpenAPIV3.HttpMethods]?.requestBody;
-        if (!requestBody) return a;
+        if (!requestBody)
+          return {
+            ...a,
+            [method]: {},
+          };
         if ('ref' in requestBody) throw new Error();
         requestBody = requestBody as OpenAPIV3.RequestBodyObject;
         let requestBodySchema = requestBody.content?.['application/json']?.schema;
-        if (!requestBodySchema) return a;
+        if (!requestBodySchema)
+          return {
+            ...a,
+            [method]: {},
+          };
         if ('ref' in requestBodySchema) throw new Error();
         requestBodySchema = requestBodySchema as OpenAPIV3.SchemaObject;
         const { properties } = requestBodySchema;
-        if (!properties) return a;
+        if (!properties)
+          return {
+            ...a,
+            [method]: {},
+          };
         return {
           ...a,
           [method]: Object.keys(properties).reduce((aa, argKey) => {

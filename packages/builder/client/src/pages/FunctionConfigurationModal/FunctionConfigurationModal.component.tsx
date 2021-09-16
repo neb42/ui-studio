@@ -6,8 +6,6 @@ import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariable
 import * as Styles from './FunctionConfigurationModal.styles';
 
 type Props = {
-  path: string;
-  method: OpenAPIV3.HttpMethods;
   schema: OpenAPIV3.OperationObject;
   config: FunctionVariable | Event$TriggerAction;
   onPathParamChange: (key: string, arg: FunctionVariableArg) => any;
@@ -16,8 +14,6 @@ type Props = {
 };
 
 export const FunctionConfigurationModalComponent = ({
-  path,
-  method,
   schema,
   config,
   onPathParamChange,
@@ -27,9 +23,6 @@ export const FunctionConfigurationModalComponent = ({
   if (!schema) throw new Error();
   return (
     <Styles.Container>
-      <span>
-        {method.toUpperCase()} {path}
-      </span>
       <span>Path parameters:</span>
       {schema.parameters
         ?.filter(

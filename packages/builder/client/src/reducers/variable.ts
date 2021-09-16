@@ -45,10 +45,10 @@ export const variableReducer = (
       };
     }
     case UPDATE_VARIABLE_TYPE: {
-      const { id, type } = action.payload;
+      const { id, type, openAPISchema } = action.payload;
       return {
         ...state,
-        [id]: VariableModel.updateVariableType(state[id], type),
+        [id]: VariableModel.updateVariableType(state[id], type, openAPISchema),
       };
     }
     case UPDATE_STATIC_VARIABLE: {

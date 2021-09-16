@@ -16,6 +16,7 @@ import {
 import { KeyedObject, Store } from './types/store';
 import { updateTree } from './actions/updateTree';
 import { updateHoverElement, updateSelectedElement } from './actions/development';
+import { initApi } from './actions/initApi';
 import { Components } from './Components';
 
 export const DevCommunicator = () => {
@@ -39,10 +40,11 @@ export const DevCommunicator = () => {
       );
     });
 
-    (async () => {
-      const openAPIDef = await axios.get('/openapi');
+    socket.on('set-open-api-endpoint', async (endpoint: string) => {
+      const { data: openAPIDef } = await axios.get(endpoint);
       socket.emit('init-api', openAPIDef);
-    })();
+      dispatch(initApi(openAPIDef));
+    });
 
     socket.emit('init-builder', {
       components: Object.keys(Components).reduce<Component[]>((acc, cur) => {

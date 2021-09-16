@@ -30,8 +30,8 @@ export const ACTION_API_CALL_FULFILLED = 'ACTION_API_CALL_FULFILLED';
 export const ACTION_API_CALL_REJECTED = 'ACTION_API_CALL_REJECTED';
 
 export const triggerAction = (eventInstance: Event$TriggerAction, event?: any) => async (
-  getState: GetState,
   dispatch: Dispatch<TriggerAction$Pending | TriggerAction$Fulfilled | TriggerAction$Rejected>,
+  getState: GetState,
 ): Promise<void> => {
   try {
     dispatch({

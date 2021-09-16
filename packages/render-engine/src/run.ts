@@ -26,7 +26,7 @@ export const run = async (source: string, dev: boolean): Promise<void> => {
   const pkgJson = JSON.parse(readFileSync(path.join(source, 'package.json')).toString());
   const deps = pkgJson.dependencies || {};
   const componentPackages: { name: string; version: string }[] = (
-    pkgJson.componentPackages || []
+    pkgJson.uiStudio.componentPackages || []
   ).map((p) => {
     if (!Object.keys(deps).includes(p))
       throw Error('Component package is not includes in dependencies');

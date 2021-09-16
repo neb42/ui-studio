@@ -10,6 +10,8 @@ import {
 import { getArgTypeLookUp, getFunctions } from 'selectors/configuration';
 import { updateFunctionVariable } from 'actions/variable';
 import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';
+import { Button } from '@faculty/adler-web-components';
+import { openFunctionConfigurationModal } from 'actions/modal';
 
 import * as Styles from './FunctionVariableConfig.styles';
 
@@ -32,7 +34,6 @@ export const FunctionVariableConfig = ({ variable }: Props) => {
       updateFunctionVariable(
         variable.id,
         variable.functionId,
-        variable.valueType,
         value as 'auto' | 'event',
         variable.args,
       ),
@@ -77,36 +78,22 @@ export const FunctionVariableConfig = ({ variable }: Props) => {
       ),
     };
 
-    dispatch(
-      updateFunctionVariable(
-        variable.id,
-        functionId,
-        // func.returnType,
-        'string',
-        variable.trigger,
-        defaultArgs,
-      ),
-    );
+    dispatch(updateFunctionVariable(variable.id, functionId, variable.trigger, defaultArgs));
   };
-
-  // const handleArgChange = (idx: number) => (argName: string, arg: FunctionVariableArg) => {
-  //   const args = [...variable.args];
-  //   args[idx] = arg;
-  //   dispatch(
-  //     updateFunctionVariable(
-  //       variable.id,
-  //       variable.functionId,
-  //       variable.valueType,
-  //       variable.trigger,
-  //       args,
-  //     ),
-  //   );
-  // };
 
   const functionIdOptions = functions.map((f) => ({
     value: f,
     label: `${f.method.toUpperCase()} ${f.path}`,
   }));
+
+  const handleOpenConfigureFunction = () =>
+    dispatch(
+      openFunctionConfigurationModal(
+        variable.id,
+        variable.functionId.path,
+        variable.functionId.method,
+      ),
+    );
 
   return (
     <>
@@ -125,6 +112,13 @@ export const FunctionVariableConfig = ({ variable }: Props) => {
         )}
         onChange={handleFunctionIdChange}
         options={functionIdOptions}
+      />
+      <Button
+        text="Configure function"
+        onClick={handleOpenConfigureFunction}
+        color={Button.colors.primary}
+        style={Button.styles.outline}
+        size={Button.sizes.medium}
       />
     </>
   );

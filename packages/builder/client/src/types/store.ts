@@ -43,13 +43,29 @@ export type Store$View = {
   };
   selectedView: 'preview' | 'variable' | 'css';
   modal: {
-    functionConfiguration: {
-      open: boolean;
-      type: 'function' | 'action' | null;
-      id: string | null;
-      path: string | null;
-      method: OpenAPIV3.HttpMethods | null;
-    };
+    functionConfiguration:
+      | {
+          open: true;
+          type: 'function';
+          id: string;
+          path: string;
+          method: OpenAPIV3.HttpMethods;
+        }
+      | {
+          open: true;
+          type: 'action';
+          // pageId, widgetId, eventKey, eventInstanceIndex
+          id: [string, string, string, number];
+          path: string;
+          method: OpenAPIV3.HttpMethods;
+        }
+      | {
+          open: false;
+          type: null;
+          id: null;
+          path: null;
+          method: null;
+        };
   };
 };
 

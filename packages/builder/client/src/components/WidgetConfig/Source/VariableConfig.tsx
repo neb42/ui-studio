@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { OpenAPIV3 } from 'openapi-types';
 import { useSelector } from 'react-redux';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
@@ -9,6 +10,8 @@ import {
   WidgetProp$Widget,
 } from '@ui-studio/types';
 import { getVariables } from 'selectors/variable';
+import { Store } from 'types/store';
+import { VariableModel } from 'models/variable';
 
 interface VariableConfigProps {
   widgetProp: WidgetProp$Variable;
@@ -23,6 +26,10 @@ export const VariableConfig = ({
 }: VariableConfigProps): JSX.Element => {
   if (widgetProp.mode !== 'variable')
     throw Error(`Trying to render variable config editor for ${widgetProp.mode} prop`);
+
+  const openAPISchema = useSelector<Store, OpenAPIV3.Document>(
+    (state) => state.configuration.openAPISchema,
+  );
 
   const buildVariableWidgetProps = (
     variableId: string,
@@ -47,8 +54,9 @@ export const VariableConfig = ({
   };
 
   const variables = Object.values(useSelector(getVariables)).filter((v) => {
-    if (config.list || config.component === 'complex') return v.valueType === 'object';
-    return v.valueType === config.type || v.valueType === 'object';
+    const valueType = VariableModel.getValueType(v, openAPISchema);
+    if (config.list || config.component === 'complex') return valueType === 'object';
+    return valueType === config.type || valueType === 'object';
   });
 
   const selectedVariableId = widgetProp.variableId;
@@ -58,7 +66,8 @@ export const VariableConfig = ({
     const newVariableId = value as string;
     const newVariable = variables.find((v) => v.id === newVariableId);
     if (newVariable === undefined) return;
-    onChange(buildVariableWidgetProps(newVariableId, newVariable.valueType, ''));
+    const valueType = VariableModel.getValueType(newVariable, openAPISchema);
+    onChange(buildVariableWidgetProps(newVariableId, valueType, ''));
   };
 
   const handleLookupChange = (value: string) => {

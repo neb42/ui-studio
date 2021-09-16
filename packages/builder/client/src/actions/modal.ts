@@ -8,7 +8,20 @@ export type OpenModal<T extends keyof Store$View['modal']> = {
   type: 'OPEN_MODAL';
   payload: {
     key: T;
-    data: Omit<Store$View['modal'][T], 'open'>;
+    data:
+      | {
+          type: 'function';
+          id: string;
+          path: string;
+          method: OpenAPIV3.HttpMethods;
+        }
+      | {
+          type: 'action';
+          // pageId, widgetId, eventKey, eventInstanceIndex
+          id: [string, string, string, number];
+          path: string;
+          method: OpenAPIV3.HttpMethods;
+        };
   };
 };
 
@@ -27,6 +40,26 @@ export const openFunctionConfigurationModal = (
     data: {
       type: 'function',
       id,
+      path,
+      method,
+    },
+  },
+});
+
+export const openActionConfigurationModal = (
+  pageId: string,
+  widgetId: string,
+  eventKey: string,
+  eventInstanceIndex: number,
+  path: string,
+  method: OpenAPIV3.HttpMethods,
+): OpenModal<'functionConfiguration'> => ({
+  type: OPEN_MODAL,
+  payload: {
+    key: 'functionConfiguration',
+    data: {
+      type: 'action',
+      id: [pageId, widgetId, eventKey, eventInstanceIndex],
       path,
       method,
     },

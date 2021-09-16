@@ -50,7 +50,7 @@ export interface FunctionVariable extends BaseVariable {
     path: string;
     method: OpenAPIV3.HttpMethods;
   };
-  valueType: 'string' | 'number' | 'boolean' | 'object';
+  lookup?: string;
   trigger: 'auto' | 'event';
   args: {
     path: Record<string, FunctionVariableArg>;

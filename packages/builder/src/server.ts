@@ -43,7 +43,13 @@ const run = async (): Promise<void> => {
     const clientJsonPath = path.join(FUNCTIONS_PATH, 'client.json');
     const clientJson = JSON.parse(readFileSync(clientJsonPath).toString());
 
+    const packageJsonPath = path.join(FUNCTIONS_PATH, 'package.json');
+    const packageJson = JSON.parse(readFileSync(packageJsonPath).toString());
+    const { openAPIEndpoint } = packageJson.uiStudio;
+
     socket.emit('init-client', clientJson);
+
+    socket.emit('set-open-api-endpoint', openAPIEndpoint);
 
     socket.emit('set-server', {
       host: 'http://localhost',
@@ -53,6 +59,10 @@ const run = async (): Promise<void> => {
 
     socket.on('init-builder', (r) => {
       socket.broadcast.emit('init-builder', r);
+    });
+
+    socket.on('init-api', (r) => {
+      socket.broadcast.emit('init-api', r);
     });
 
     socket.on('elements-updated', async (elements) => {

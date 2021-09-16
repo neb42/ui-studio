@@ -5,6 +5,26 @@ import { FunctionVariableArg } from '@ui-studio/types';
 import { Store } from './types/store';
 import { resolveArgSet } from './selectors';
 
+const isJson = (maybeJSON: unknown) => {
+  try {
+    let foo = typeof maybeJSON !== 'string' ? JSON.stringify(maybeJSON) : maybeJSON;
+
+    try {
+      foo = JSON.parse(foo);
+    } catch (e) {
+      return false;
+    }
+
+    if (typeof foo === 'object' && foo !== null) {
+      return true;
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+};
+
 export const makeOpenAPIRequest = async (
   state: Store,
   path: string,
@@ -27,7 +47,7 @@ export const makeOpenAPIRequest = async (
 
   const body = {
     ...resolveArgSet(state, bodyArgs),
-    __event__: event,
+    __event__: isJson(event) ? event : null,
   };
 
   if (method === OpenAPIV3.HttpMethods.TRACE) throw new Error('TRACE method not supported');
