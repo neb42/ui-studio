@@ -6,6 +6,7 @@
   "license": "MIT",
   "main": "build/index.js",
   "scripts": {
+    "server": "cd api && ./run.sh",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "build": "rm -rf build/* && tsc",
     "start": "ui-studio-builder"
@@ -14,9 +15,12 @@
     "react": "17.x",
     "react-dom": "17.x"
   },
-  "componentPackages": [
-    {{ #componentPackages }}
-    "{{{ name }}}"{{ ^last }}, {{ /last }}      
-    {{ /componentPackages }}
-  ]
+  "uiStudio": {
+    "openAPIEndpoint": "/api/v1/openapi.json",
+    "componentPackages": [
+      {{ #componentPackages }}
+      "{{{ name }}}"{{ ^last }}, {{ /last }}      
+      {{ /componentPackages }}
+    ]
+  }
 }
