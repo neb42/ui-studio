@@ -1,10 +1,13 @@
 import {
   FunctionVariableArg,
   WidgetProp,
-  WidgetProp$CustomComponentConfig,
-  WidgetProp$Iterable,
+  Value$CustomComponentConfig,
+  Value$Iterable,
+  Component,
 } from '@ui-studio/types';
+import { OpenAPIV3 } from 'openapi-types';
 
+import { Components } from './Components';
 import { Store } from './types/store';
 
 export const getWidgetPropertyValue = (state: Store) => (
@@ -37,13 +40,38 @@ const parseLookup = (variable: any, lookup: string) =>
 
 export const getVariableValue = (state: Store) => (variableId: string, lookup: string | null) => {
   let variable = state.variable.value[variableId];
+  const variableConfig = state.variable.config[variableId];
   if (!variable) return null;
 
-  if (state.variable.config[variableId].valueType === 'object' && typeof variable === 'string') {
-    try {
-      variable = JSON.parse(variable);
-    } catch {}
-  }
+  try {
+    if (variableConfig.type === 'static') {
+      if (variableConfig.valueType === 'object') {
+        if (typeof variable === 'string') {
+          variable = JSON.parse(variable);
+        }
+      }
+    }
+
+    if (variableConfig.type === 'function') {
+      const responses =
+        state.variable.openAPISchema.paths?.[variableConfig.functionId.path]?.[
+          variableConfig.functionId.method
+        ]?.responses;
+      if (!responses) throw new Error();
+      const responseCode = Object.keys(responses).find((c) => Number(c) >= 200 && Number(c) < 300);
+      if (!responseCode) throw new Error();
+      const response = responses[responseCode];
+      if ('ref' in response) throw new Error();
+      let schema = (response as OpenAPIV3.ResponseObject).content?.['application/json']?.schema;
+      if (!schema || 'ref' in schema) throw new Error();
+      schema = schema as OpenAPIV3.SchemaObject;
+      if (schema.type === 'object' || schema.type === 'array') {
+        if (typeof variable === 'string') {
+          variable = JSON.parse(variable);
+        }
+      }
+    }
+  } catch {}
 
   if (lookup && lookup.length > 0) {
     if (
@@ -70,15 +98,15 @@ export const getVariableValue = (state: Store) => (variableId: string, lookup: s
 
 export const resolveArgSet = (state: Store, args: Record<string, FunctionVariableArg>) => {
   const resolveArg = (arg: FunctionVariableArg) => {
-    if (arg.type === 'static') {
+    if (arg.mode === 'static') {
       return arg.value;
     }
 
-    if (arg.type === 'variable') {
+    if (arg.mode === 'variable') {
       return getVariableValue(state)(arg.variableId, null);
     }
 
-    if (arg.type === 'widget') {
+    if (arg.mode === 'widget') {
       return getWidgetPropertyValue(state)(arg.widgetId, null, arg.property);
     }
 
@@ -107,7 +135,7 @@ export const getVariableArgs = (state: Store) => (variableId: string) => {
 
 export const getCustomComponentConfigProp = (state: Store) => (
   rootId: string | null,
-  prop: WidgetProp$CustomComponentConfig,
+  prop: Value$CustomComponentConfig,
   iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
 ): any | null => {
   if (!rootId) return null;
@@ -141,22 +169,31 @@ export const getProp = (state: Store) => (
   }
 
   if (prop.mode === 'variable') {
-    if (prop.type === 'object') {
-      return getVariableValue(state)(prop.variableId, prop.lookup);
-    }
-    return getVariableValue(state)(prop.variableId, null);
+    return getVariableValue(state)(prop.variableId, prop.lookup || null);
   }
 
   if (prop.mode === 'widget') {
-    return getWidgetPropertyValue(state)(prop.widgetId, rootId, prop.lookup);
+    return getWidgetPropertyValue(state)(prop.widgetId, rootId, prop.property);
   }
 
   if (prop.mode === 'static') {
-    if (prop.type === 'object') {
-      try {
-        return JSON.parse(prop.value);
-      } catch {
-        return null;
+    if (typeof prop.value === 'string') {
+      const widget = state.widget.config[widgetId];
+      if (widget.type === 'widget') {
+        const component = Components[widget.library][widget.component];
+        const componentConfig = component.config?.find((c) => c.key === widget.component);
+        if (!componentConfig) throw new Error();
+        if (componentConfig.schema.type === 'object' || componentConfig.schema.type === 'array') {
+          try {
+            return JSON.parse(prop.value);
+          } catch {
+            return null;
+          }
+        }
+      }
+
+      if (widget.type === 'customComponentInstance') {
+        // TODO
       }
     }
     return prop.value;
@@ -168,7 +205,7 @@ export const getProp = (state: Store) => (
 export const getIterableValue = (state: Store) => (
   sourceWidgetId: string,
   rootId: string | null,
-  widgetProp: WidgetProp$Iterable,
+  widgetProp: Value$Iterable,
   iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
 ): any => {
   try {
