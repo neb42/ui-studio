@@ -11,11 +11,10 @@ export const Iterable: Component & { component: any } = {
   hasLayout: true,
   config: [
     {
-      component: 'input',
-      type: 'object',
-      defaultValue: '[]',
+      defaultValue: '',
       key: 'iterator',
       label: 'Iterator',
+      schema: { type: 'array', items: { type: 'string' } }, // TODO support any type
       iterable: true,
     },
   ],

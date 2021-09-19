@@ -11,11 +11,10 @@ export const Conditional: Component & { component: any } = {
   hasLayout: true,
   config: [
     {
-      component: 'input',
-      type: 'number',
       defaultValue: 0,
       key: 'activeIdx',
       label: 'Active index',
+      schema: { type: 'number' },
     },
   ],
   component: ({ activeIdx, children }: any) => {

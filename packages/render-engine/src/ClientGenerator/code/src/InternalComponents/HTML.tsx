@@ -9,11 +9,10 @@ export const HTML: Component & { component: any } = {
   icon: 'Code',
   config: [
     {
-      component: 'input',
-      type: 'string',
       defaultValue: '<div></div>',
       key: 'html',
       label: 'HTML',
+      schema: { type: 'string' },
     },
   ],
   component: ({ html }: { html: string }) => <div dangerouslySetInnerHTML={{ __html: html }} />,
