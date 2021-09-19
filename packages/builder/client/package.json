@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/builder-client",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "private": true,
   "proxy": "http://localhost:3002",
   "dependencies": {
