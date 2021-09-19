@@ -7,6 +7,7 @@ import {
   getElement,
 } from 'selectors/tree';
 import { getSelectedRootId } from 'selectors/view';
+import { OpenAPIV3 } from 'openapi-types';
 
 export const generateDefaultName = (state: Store, regex: string) => {
   const root = getSelectedRootElement(state);
@@ -73,11 +74,40 @@ export const getAvailableIteratorKeys = (state: Store) => (
   return parentElements.reduce<{ widgetId: string; widgetName: string; propKeys: string[] }[]>(
     (acc, cur) => {
       if (cur.id === widgetId || cur.rootElement) return acc;
+      const foo: Record<string, { schema: OpenAPIV3.SchemaObject; iterable: boolean }> = (() => {
+        if (cur.type === 'widget') {
+          const config = state.configuration.components.find((c) => c.key === cur.component);
+          if (!config || !config.config) return {};
+          return config.config.reduce((a, c) => {
+            return {
+              ...acc,
+              [c.key]: {
+                schema: c.schema,
+                iterable: c.iterable,
+              },
+            };
+          }, {});
+        }
+        if (cur.type === 'customComponentInstance') {
+          const config = state.customComponent[cur.customComponentId];
+          if (!config.config) return {};
+          return config.config.reduce((a, c) => {
+            return {
+              ...acc,
+              [c.key]: {
+                schema: c.schema,
+                iterable: c.iterable,
+              },
+            };
+          }, {});
+        }
+        throw new Error();
+      })();
       const iterablePropKeys = Object.keys(cur.props).reduce<string[]>((a, c) => {
         const prop = cur.props[c];
         if (
-          (prop.mode === 'list' || (prop.mode === 'static' && prop.type === 'object')) &&
-          prop.iterable
+          (prop.mode === 'list' || (prop.mode === 'static' && foo[c].schema.type === 'array')) &&
+          foo[c].iterable
         )
           return [...a, c];
         return a;

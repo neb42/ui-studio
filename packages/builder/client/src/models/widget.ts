@@ -7,16 +7,16 @@ import {
   Component$Event,
   Widget,
   WidgetProp,
-  WidgetProp$Static,
+  Value$Static,
   Mode,
-  WidgetProp$Widget,
-  WidgetProp$Variable,
-  WidgetProp$Complex,
-  WidgetProp$List,
-  WidgetProp$Iterable,
+  Value$Widget,
+  Value$Variable,
+  Value$Complex,
+  Value$List,
+  Value$Iterable,
   TStyle,
   CustomComponentInstance,
-  WidgetProp$CustomComponentConfig,
+  Value$CustomComponentConfig,
 } from '@ui-studio/types';
 import { generateDefaultName, getNextPosition } from 'selectors/element';
 import { StylesModel } from 'models/styles';
@@ -48,10 +48,7 @@ export class WidgetModel {
   };
 
   static getIsIterable = (config: ComponentConfig): boolean => {
-    if (config.list || (config.component !== 'complex' && config.type === 'object')) {
-      return Boolean(config.iterable);
-    }
-    return false;
+    return Boolean(config.iterable);
   };
 
   static getDefaultName = (state: Store, name: string): string => {
@@ -77,8 +74,7 @@ export class WidgetModel {
     return (
       config.reduce((acc, cur) => {
         const mode = (() => {
-          if (cur.list) return 'list';
-          if (cur.component === 'complex') return 'complex';
+          if (cur.schema.type === 'array' || cur.schema.type === 'object') return 'form';
           return 'static';
         })();
         return { ...acc, [cur.key]: WidgetModel.getDefaultProp(mode, cur) };
@@ -92,58 +88,40 @@ export class WidgetModel {
     widgetProp: WidgetProp | null = null, // TODO prefill with existing values
   ): WidgetProp => {
     switch (mode) {
-      case 'complex': {
-        if (config.component !== 'complex') throw Error();
-        return {
-          mode: 'complex',
-          props: config.config.reduce((acc, cur) => {
-            return {
-              ...acc,
-              [cur.key]: { mode: 'static', type: cur.type, value: cur.defaultValue },
-            };
-          }, {}),
-          iterable: false,
-        } as WidgetProp$Complex;
-      }
-      case 'list': {
-        return {
-          mode: 'list',
-          props: [],
-          iterable: WidgetModel.getIsIterable(config),
-        } as WidgetProp$List;
+      case 'form': {
+        if (config.schema.type === 'object') {
+          return {
+            mode: 'complex',
+            props: config.defaultValue,
+          } as Value$Complex;
+        }
+        if (config.schema.type === 'array') {
+          return {
+            mode: 'list',
+            props: [],
+          } as Value$List;
+        }
+        throw new Error();
       }
       case 'static': {
-        if (config.list) {
+        if (config.schema.type === 'array') {
           return {
             mode: 'static',
-            type: 'object',
             value: JSON.stringify([], null, 2),
-            iterable: WidgetModel.getIsIterable(config),
-          } as WidgetProp$Static;
+          } as Value$Static;
         }
-        if (config.component === 'complex') {
+        if (config.schema.type === 'object') {
+          const { properties } = config.schema;
+          if (!properties) throw new Error();
           return {
             mode: 'static',
-            type: 'object',
-            value: JSON.stringify(
-              config.config.reduce((acc, cur) => {
-                return {
-                  ...acc,
-                  [cur.key]: cur.defaultValue,
-                };
-              }, {}),
-              null,
-              2,
-            ),
-            iterable: WidgetModel.getIsIterable(config),
-          } as WidgetProp$Static;
+            value: config.defaultValue,
+          } as Value$Static;
         }
         return {
           mode: 'static',
-          type: config.type,
           value: config.defaultValue,
-          iterable: config.type === 'object' ? WidgetModel.getIsIterable(config) : false,
-        } as WidgetProp$Static;
+        } as Value$Static;
       }
       case 'variable': {
         return {
@@ -151,15 +129,15 @@ export class WidgetModel {
           type: 'string',
           variableId: '',
           iterable: false,
-        } as WidgetProp$Variable;
+        } as Value$Variable;
       }
       case 'widget': {
         return {
           mode: 'widget',
           widgetId: '',
-          lookup: '',
+          property: '',
           iterable: false,
-        } as WidgetProp$Widget;
+        } as Value$Widget;
       }
       case 'iterable': {
         return {
@@ -167,13 +145,13 @@ export class WidgetModel {
           widgetId: '',
           propKey: '',
           lookup: '',
-        } as WidgetProp$Iterable;
+        } as Value$Iterable;
       }
       case 'customComponentConfig': {
         return {
           mode: 'customComponentConfig',
           configKey: '',
-        } as WidgetProp$CustomComponentConfig;
+        } as Value$CustomComponentConfig;
       }
       default:
         throw Error();

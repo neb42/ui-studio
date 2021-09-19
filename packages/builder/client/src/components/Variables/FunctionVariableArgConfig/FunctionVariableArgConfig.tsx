@@ -6,9 +6,9 @@ import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import {
   FunctionVariableArg,
-  FunctionVariable$StaticArg,
-  FunctionVariable$VariableArg,
-  FunctionVariable$WidgetArg,
+  Value$Static,
+  Value$Variable,
+  Value$Widget,
   CustomComponent,
 } from '@ui-studio/types';
 import { getVariables } from 'selectors/variable';
@@ -29,20 +29,13 @@ interface IFoo<T extends FunctionVariableArg> {
   valueType: 'string' | 'number' | 'boolean';
 }
 
-const InputConfig = ({
-  name,
-  valueType,
-  arg,
-  onChange,
-}: IFoo<FunctionVariable$StaticArg>): JSX.Element => {
-  const handleStringValueChange = (value: string) =>
-    onChange({ type: 'static', valueType: 'string', value });
+const InputConfig = ({ name, valueType, arg, onChange }: IFoo<Value$Static>): JSX.Element => {
+  const handleStringValueChange = (value: string) => onChange({ mode: 'static', value });
 
-  const handleNumberValueChange = (value: number) =>
-    onChange({ type: 'static', valueType: 'number', value });
+  const handleNumberValueChange = (value: number) => onChange({ mode: 'static', value });
 
   const handleBooleanValueChange = ({ value }: any) =>
-    onChange({ type: 'static', valueType: 'boolean', value: value as boolean });
+    onChange({ mode: 'static', value: value as boolean });
 
   return (
     <>
@@ -64,14 +57,9 @@ const InputConfig = ({
   );
 };
 
-const VariableConfig = ({
-  name,
-  arg,
-  valueType,
-  onChange,
-}: IFoo<FunctionVariable$VariableArg>): JSX.Element => {
+const VariableConfig = ({ name, arg, valueType, onChange }: IFoo<Value$Variable>): JSX.Element => {
   const handleOnChange = ({ value }: any) => {
-    onChange({ type: 'variable', variableId: value as string });
+    onChange({ mode: 'variable', variableId: value as string });
   };
 
   const variables = Object.values(useSelector(getVariables)).filter(
@@ -90,16 +78,16 @@ const VariableConfig = ({
   );
 };
 
-const WidgetConfig = ({ name, arg, onChange }: IFoo<FunctionVariable$WidgetArg>): JSX.Element => {
+const WidgetConfig = ({ name, arg, onChange }: IFoo<Value$Widget>): JSX.Element => {
   const roots = useSelector(getRoots);
   const components = useSelector(getComponents);
 
   const handleWidgetIdChange = ({ value }: any) => {
-    onChange({ type: 'widget', widgetId: value as string, property: arg.property });
+    onChange({ mode: 'widget', widgetId: value as string, property: arg.property });
   };
 
   const handlePropertyChange = ({ value }: any) => {
-    onChange({ type: 'widget', widgetId: arg.widgetId, property: value as string });
+    onChange({ mode: 'widget', widgetId: arg.widgetId, property: value as string });
   };
 
   const widgets = useSelector(getWidgetsInSelectedTree).filter((w) => {
@@ -184,23 +172,23 @@ export const FunctionVariableArgConfig = ({
   const handleOnChange = (a: FunctionVariableArg) => onChange(name, a);
 
   const handleToggleMode = (m: 'static' | 'variable' | 'widget') => () => {
-    if (m === 'static') onChange(name, { type: 'static', valueType: 'string', value: '' });
-    if (m === 'variable') onChange(name, { type: 'variable', variableId: '' });
-    if (m === 'widget') onChange(name, { type: 'widget', widgetId: '', property: '' });
+    if (m === 'static') onChange(name, { mode: 'static', value: '' });
+    if (m === 'variable') onChange(name, { mode: 'variable', variableId: '' });
+    if (m === 'widget') onChange(name, { mode: 'widget', widgetId: '', property: '' });
   };
 
   const getColor = (m: 'static' | 'variable' | 'widget') =>
-    arg.type === m ? '#fa7268' : '#9c9c9c';
+    arg.mode === m ? '#fa7268' : '#9c9c9c';
 
   return (
     <Styles.Container>
-      {arg.type === 'static' && (
+      {arg.mode === 'static' && (
         <InputConfig name={name} valueType={valueType} arg={arg} onChange={handleOnChange} />
       )}
-      {arg.type === 'variable' && (
+      {arg.mode === 'variable' && (
         <VariableConfig name={name} valueType={valueType} arg={arg} onChange={handleOnChange} />
       )}
-      {arg.type === 'widget' && (
+      {arg.mode === 'widget' && (
         <WidgetConfig name={name} valueType={valueType} arg={arg} onChange={handleOnChange} />
       )}
       <Styles.ModeButtons>

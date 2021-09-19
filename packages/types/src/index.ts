@@ -15,3 +15,5 @@ export * from './variable';
 export * from './event';
 
 export * from './customComponent';
+
+export * from './value';

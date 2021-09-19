@@ -13,7 +13,7 @@ import {
   Page,
   CustomComponentInstance,
   CustomComponent,
-  FunctionVariable$StaticArg,
+  Value$Static,
 } from '@ui-studio/types';
 import { getComponents, getActions, getArgTypeLookUp } from 'selectors/configuration';
 import { getRoots } from 'selectors/tree';
@@ -73,11 +73,11 @@ const TriggerActionEventConfig = ({
   const handleActionChange = ({ value }: any) => {
     const newActionId = value as { method: OpenAPIV3.HttpMethods; path: string };
     const staticArgTypeMap: {
-      [argType in 'string' | 'number' | 'boolean']: FunctionVariable$StaticArg;
+      [argType in 'string' | 'number' | 'boolean']: Value$Static;
     } = {
-      string: { type: 'static', valueType: 'string', value: '' },
-      number: { type: 'static', valueType: 'number', value: 0 },
-      boolean: { type: 'static', valueType: 'boolean', value: true },
+      string: { mode: 'static', value: '' },
+      number: { mode: 'static', value: 0 },
+      boolean: { mode: 'static', value: true },
     };
     const args = {
       path: Object.keys(argTypeLookUp.path[newActionId.path][newActionId.method]).reduce(

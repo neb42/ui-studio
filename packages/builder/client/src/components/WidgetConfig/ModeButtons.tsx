@@ -5,8 +5,7 @@ import { Edit, Functions, Widgets, Settings, ViewComfy, AppsSharp } from '@mater
 import { Mode } from '@ui-studio/types';
 
 const iconMap = {
-  complex: Settings,
-  list: Settings,
+  form: Settings,
   static: Edit,
   variable: Functions,
   widget: Widgets,
@@ -15,8 +14,7 @@ const iconMap = {
 };
 
 const nameMap = {
-  complex: 'Form',
-  list: 'Form',
+  form: 'Form',
   static: 'Static',
   variable: 'Variable',
   widget: 'Widget property',
@@ -24,15 +22,13 @@ const nameMap = {
   customComponentConfig: 'Custom component config',
 };
 
-// const allModes: Mode[] = ['complex', 'list', 'static', 'variable', 'widget'];
 const allModes: Mode[] = [
   'customComponentConfig',
   'iterable',
   'widget',
   'variable',
   'static',
-  'list',
-  'complex',
+  'form',
 ];
 
 interface ModeButtonsProps {

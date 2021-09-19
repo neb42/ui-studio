@@ -276,7 +276,7 @@ export const widgetReducer = (
       const doProps = (props: Widget['props'], currentRootId: string) =>
         Object.keys(props).reduce<Widget['props']>((acc, cur) => {
           const currentProp = props[cur];
-          if (currentProp.mode === 'widget' && currentProp.lookup === oldKey) {
+          if (currentProp.mode === 'widget' && currentProp.property === oldKey) {
             const propWidget = state[currentRootId][currentProp.widgetId];
             if (
               propWidget.type === 'customComponentInstance' &&

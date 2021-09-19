@@ -39,6 +39,7 @@
     "eslint-plugin-react": "^7.20.5",
     "eslint-plugin-react-hooks": "^4.0.4",
     "lerna": "^3.22.1",
+    "openapi-types": "^9.3.0",
     "prettier": "^2.0.5",
     "prettier-eslint": "^11.0.0",
     "prettycli": "^1.4.3",

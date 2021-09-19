@@ -65,8 +65,8 @@ export class CustomComponentModel {
       key,
       label,
       defaultValue: '',
-      type: 'string',
-      component: 'input',
+      schema: { type: 'string' as const },
+      iterable: false,
     };
   };
 }

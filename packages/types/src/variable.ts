@@ -1,5 +1,7 @@
 import { OpenAPIV3 } from 'openapi-types';
 
+import { Value$Static, Value$Variable, Value$Widget } from './value';
+
 export interface BaseVariable {
   id: string;
   name: string;
@@ -17,32 +19,10 @@ export type StaticVariable = BaseVariable & {
 // export type LookupVariable = BaseVariable & {
 //   type: 'lookup';
 //   variableId: string;
-//   value: string;
+//   lookup: string;
 // };
 
-export type FunctionVariable$StaticArg = {
-  type: 'static';
-} & (
-  | { valueType: 'string'; value: string }
-  | { valueType: 'number'; value: number }
-  | { valueType: 'boolean'; value: boolean }
-);
-
-export interface FunctionVariable$VariableArg {
-  type: 'variable';
-  variableId: string;
-}
-
-export interface FunctionVariable$WidgetArg {
-  type: 'widget';
-  widgetId: string;
-  property: string;
-}
-
-export type FunctionVariableArg =
-  | FunctionVariable$StaticArg
-  | FunctionVariable$VariableArg
-  | FunctionVariable$WidgetArg;
+export type FunctionVariableArg = Value$Static | Value$Variable | Value$Widget;
 
 export interface FunctionVariable extends BaseVariable {
   type: 'function';

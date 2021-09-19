@@ -3,7 +3,7 @@ import {
   ComponentConfig,
   CustomComponentInstance,
   FunctionVariable,
-  FunctionVariable$StaticArg,
+  Value$Static,
   Widget,
 } from '@ui-studio/types';
 import { TGetState, TThunkAction } from 'types/store';
@@ -30,21 +30,21 @@ export const resetVariableFunctionArgsUsingWidget = (widgetId: string): any => (
       (Object.keys(variable.args) as (keyof FunctionVariable['args'])[]).forEach((argType) => {
         Object.keys(variable.args[argType]).forEach((argKey) => {
           const existingArg = variable.args[argType][argKey];
-          if (existingArg.type === 'widget' && existingArg.widgetId === widgetId) {
-            const arg: FunctionVariable$StaticArg = (() => {
+          if (existingArg.mode === 'widget' && existingArg.widgetId === widgetId) {
+            const arg: Value$Static = (() => {
               const type =
                 argTypeLookup[argType][variable.functionId.path][variable.functionId.method][
                   argKey
                 ];
               switch (type) {
                 case 'string': {
-                  return { type: 'static', valueType: 'string', value: '' } as const;
+                  return { mode: 'static', value: '' } as const;
                 }
                 case 'number': {
-                  return { type: 'static', valueType: 'number', value: 0 } as const;
+                  return { mode: 'static', value: 0 } as const;
                 }
                 case 'boolean': {
-                  return { type: 'static', valueType: 'boolean', value: true } as const;
+                  return { mode: 'static', value: true } as const;
                 }
                 default:
                   throw new Error();
@@ -214,7 +214,7 @@ export const updateVariableFunctionArgUsingCustomComponentExposedPropertyKey = (
       (Object.keys(variable.args) as (keyof FunctionVariable['args'])[]).forEach((argType) => {
         Object.keys(variable.args[argType]).forEach((argKey) => {
           const existingArg = variable.args[argType][argKey];
-          if (existingArg.type === 'widget' && existingArg.property === oldKey) {
+          if (existingArg.mode === 'widget' && existingArg.property === oldKey) {
             const propWidget = widgetMap[existingArg.widgetId];
             if (
               propWidget.type === 'customComponentInstance' &&
@@ -248,7 +248,7 @@ export const resetWidgetPropsAndVariableFunctionArgsUsingCustomComponentExposedP
     Object.values(state.widget[rId]).forEach((widget) => {
       Object.keys(widget.props).forEach((propKey) => {
         const prop = widget.props[propKey];
-        if (prop.mode === 'widget' && prop.lookup === key) {
+        if (prop.mode === 'widget' && prop.property === key) {
           const propWidget = state.widget[rId][prop.widgetId];
           if (
             propWidget.type === 'customComponentInstance' &&
@@ -302,21 +302,21 @@ export const resetVariableFunctionArgsUsingVariable = (variableId: string): any 
       (Object.keys(variable.args) as (keyof FunctionVariable['args'])[]).forEach((argType) => {
         Object.keys(variable.args[argType]).forEach((argKey) => {
           const existingArg = variable.args[argType][argKey];
-          if (existingArg.type === 'variable' && existingArg.variableId === variableId) {
-            const arg: FunctionVariable$StaticArg = (() => {
+          if (existingArg.mode === 'variable' && existingArg.variableId === variableId) {
+            const arg: Value$Static = (() => {
               const type =
                 argTypeLookup[argType][variable.functionId.path][variable.functionId.method][
                   argKey
                 ];
               switch (type) {
                 case 'string': {
-                  return { type: 'static', valueType: 'string', value: '' } as const;
+                  return { mode: 'static', value: '' } as const;
                 }
                 case 'number': {
-                  return { type: 'static', valueType: 'number', value: 0 } as const;
+                  return { mode: 'static', value: 0 } as const;
                 }
                 case 'boolean': {
-                  return { type: 'static', valueType: 'boolean', value: true } as const;
+                  return { mode: 'static', value: true } as const;
                 }
                 default:
                   throw new Error();

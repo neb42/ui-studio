@@ -2,11 +2,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { OpenAPIV3 } from 'openapi-types';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import {
-  FunctionVariable,
-  FunctionVariableArg,
-  FunctionVariable$StaticArg,
-} from '@ui-studio/types';
+import { FunctionVariable, FunctionVariableArg, Value$Static } from '@ui-studio/types';
 import { getArgTypeLookUp, getFunctions } from 'selectors/configuration';
 import { updateFunctionVariable } from 'actions/variable';
 import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';
@@ -42,11 +38,11 @@ export const FunctionVariableConfig = ({ variable }: Props) => {
   const handleFunctionIdChange = ({ value }: any) => {
     const functionId = value as { method: OpenAPIV3.HttpMethods; path: string };
     const staticArgTypeMap: {
-      [argType in 'string' | 'number' | 'boolean']: FunctionVariable$StaticArg;
+      [argType in 'string' | 'number' | 'boolean']: Value$Static;
     } = {
-      string: { type: 'static', valueType: 'string', value: '' },
-      number: { type: 'static', valueType: 'number', value: 0 },
-      boolean: { type: 'static', valueType: 'boolean', value: true },
+      string: { mode: 'static', value: '' },
+      number: { mode: 'static', value: 0 },
+      boolean: { mode: 'static', value: true },
     };
     const defaultArgs = {
       path: Object.keys(argTypeLookUp.path[functionId.path][functionId.method]).reduce(

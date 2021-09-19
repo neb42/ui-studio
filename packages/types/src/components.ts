@@ -1,37 +1,12 @@
-export type BaseComponentConfig = {
+import { OpenAPIV3 } from 'openapi-types';
+
+export type ComponentConfig = {
   key: string;
   label: string;
   defaultValue: any;
-} & (
-  | { type: 'string' | 'number' | 'boolean'; iterable?: false; list?: false }
-  | { type: 'string' | 'number' | 'boolean'; iterable?: boolean; list: true }
-  | { type: 'object'; iterable?: boolean; list?: boolean }
-);
-
-export type ComponentConfig$Input = BaseComponentConfig & {
-  component: 'input';
+  iterable?: boolean;
+  schema: OpenAPIV3.SchemaObject;
 };
-
-export type ComponentConfig$Select = BaseComponentConfig & {
-  component: 'select';
-} & (
-    | { type: 'string'; options: { key: string; label: string }[] }
-    | { type: 'number'; options: { key: number; label: string }[] }
-    | { type: 'boolean'; options: { key: boolean; label: string }[] }
-    | { type: 'object'; options: { key: string; label: string }[] }
-  );
-
-export type ComponentConfig$Complex = {
-  key: string;
-  label: string;
-  component: 'complex';
-  config: (ComponentConfig$Input | ComponentConfig$Select)[];
-} & ({ list: true; iterable?: boolean } | { list?: false; iterable?: false });
-
-export type ComponentConfig =
-  | ComponentConfig$Input
-  | ComponentConfig$Select
-  | ComponentConfig$Complex;
 
 export type Component$Event = {
   key: string;
