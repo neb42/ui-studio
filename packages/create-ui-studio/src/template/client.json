@@ -10,7 +10,11 @@
         "style": {
           "type": "base",
           "css": "",
-          "classNames": ""
+          "classNames": "",
+          "properties": {
+            "overflow": "auto",
+            "backgroundColor": "#ffffff"
+          }
         }
       },
       "widgets": {}
