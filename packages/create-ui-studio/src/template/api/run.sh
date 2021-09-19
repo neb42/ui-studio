@@ -24,6 +24,11 @@ while test $# -gt 0; do
   esac
 done
 
+pyenv virtualenv 3.9 ui-studio-server
+pyenv activate ui-studio-server
+
+poetry install
+
 gunicorn \
   -k uvicorn.workers.UvicornWorker \
   --bind "localhost:${PORT}" \
