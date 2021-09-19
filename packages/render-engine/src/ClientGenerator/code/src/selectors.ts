@@ -178,22 +178,10 @@ export const getProp = (state: Store) => (
 
   if (prop.mode === 'static') {
     if (typeof prop.value === 'string') {
-      const widget = state.widget.config[widgetId];
-      if (widget.type === 'widget') {
-        const component = Components[widget.library][widget.component];
-        const componentConfig = component.config?.find((c) => c.key === widget.component);
-        if (!componentConfig) throw new Error();
-        if (componentConfig.schema.type === 'object' || componentConfig.schema.type === 'array') {
-          try {
-            return JSON.parse(prop.value);
-          } catch {
-            return null;
-          }
-        }
-      }
-
-      if (widget.type === 'customComponentInstance') {
-        // TODO
+      try {
+        return JSON.parse(prop.value);
+      } catch {
+        return prop.value;
       }
     }
     return prop.value;
