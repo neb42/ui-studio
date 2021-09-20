@@ -10,6 +10,7 @@ import {
   Value$Widget,
 } from '@ui-studio/types';
 import { OpenAPIV3 } from 'openapi-types';
+import { Button } from '@faculty/adler-web-components';
 
 import { StaticValue } from './StaticValue.component';
 import { VariableValue } from './VariableValue.component';
@@ -30,29 +31,75 @@ type Props = {
     | Value$CustomComponentConfig;
   schema: OpenAPIV3.SchemaObject;
   handleValueChange: (value: Props['value']) => any;
+  root: boolean;
 };
 
-export const ValueItem = ({ mode, schema, value, handleValueChange }: Props) => {
+export const ValueItem = ({ mode, schema, value, handleValueChange, root }: Props) => {
   if (mode === 'form') {
     if (schema.type === 'array') {
       if (value.mode !== 'list') throw new Error();
       if ('ref' in schema.items) throw new Error();
       const items = schema.items as OpenAPIV3.SchemaObject;
+
+      const handleDeletePropFromList = (index: number) => () => {
+        if (value.mode !== 'list') throw Error();
+        handleValueChange({
+          ...value,
+          props: value.props.filter((_, i) => i !== index),
+        } as Value$List);
+      };
+
       return (
         <>
           {value.props.map((v, i) => {
             if (items.type === 'object') {
               if (v.mode !== 'complex') throw new Error();
               return (
-                <Styles.ValueItem key={i}>
-                  <ValueItem mode="form" schema={items} value={v} handleValueChange={() => {}} />
+                <Styles.ValueItem key={i} root={root} direction="row">
+                  <ValueItem
+                    mode="form"
+                    schema={items}
+                    value={v}
+                    handleValueChange={(val) =>
+                      handleValueChange({
+                        ...value,
+                        props: value.props.map((p, j) => (j === i ? (val as Value$Complex) : p)),
+                      })
+                    }
+                    root={false}
+                  />
+                  <Button
+                    icon="delete"
+                    onClick={handleDeletePropFromList(i)}
+                    color={Button.colors.danger}
+                    style={Button.styles.naked}
+                    size={Button.sizes.medium}
+                  />
                 </Styles.ValueItem>
               );
             }
             if (v.mode !== 'static') throw new Error();
             return (
-              <Styles.ValueItem key={i}>
-                <ValueItem mode="static" schema={items} value={v} handleValueChange={() => {}} />
+              <Styles.ValueItem key={i} root={root} direction="row">
+                <ValueItem
+                  mode="static"
+                  schema={items}
+                  value={v}
+                  handleValueChange={(val) =>
+                    handleValueChange({
+                      ...value,
+                      props: value.props.map((p, j) => (j === i ? (val as Value$Static) : p)),
+                    })
+                  }
+                  root={false}
+                />
+                <Button
+                  icon="delete"
+                  onClick={handleDeletePropFromList(i)}
+                  color={Button.colors.danger}
+                  style={Button.styles.naked}
+                  size={Button.sizes.medium}
+                />
               </Styles.ValueItem>
             );
           })}
@@ -65,7 +112,7 @@ export const ValueItem = ({ mode, schema, value, handleValueChange }: Props) => 
       const { properties } = schema;
       if (!properties) throw new Error();
       return (
-        <Styles.ValueItem>
+        <Styles.ValueItem root={root} direction="column">
           {Object.keys(properties).map((key) => {
             const nestedSchema = properties[key];
             if (!nestedSchema || 'ref' in nestedSchema) throw new Error();
@@ -75,7 +122,13 @@ export const ValueItem = ({ mode, schema, value, handleValueChange }: Props) => 
                 mode="static"
                 schema={nestedSchema as OpenAPIV3.NonArraySchemaObject}
                 value={value.props[key]}
-                handleValueChange={() => {}}
+                handleValueChange={(v) =>
+                  handleValueChange({
+                    ...value,
+                    props: { ...value.props, [key]: v as Value$Static },
+                  })
+                }
+                root={false}
               />
             );
           })}
@@ -88,7 +141,7 @@ export const ValueItem = ({ mode, schema, value, handleValueChange }: Props) => 
 
   if (mode === 'static')
     return (
-      <Styles.ValueItem>
+      <Styles.ValueItem root={root} direction="column">
         <StaticValue
           schema={schema}
           value={value as Value$Static}
@@ -99,7 +152,7 @@ export const ValueItem = ({ mode, schema, value, handleValueChange }: Props) => 
 
   if (mode === 'variable')
     return (
-      <Styles.ValueItem>
+      <Styles.ValueItem root={root} direction="column">
         <VariableValue
           schema={schema}
           value={value as Value$Variable}
@@ -110,20 +163,20 @@ export const ValueItem = ({ mode, schema, value, handleValueChange }: Props) => 
 
   if (mode === 'widget')
     return (
-      <Styles.ValueItem>
+      <Styles.ValueItem root={root} direction="column">
         <WidgetValue value={value as Value$Widget} handleValueChange={handleValueChange} />
       </Styles.ValueItem>
     );
   if (mode === 'iterable')
     return (
-      <Styles.ValueItem>
+      <Styles.ValueItem root={root} direction="column">
         <IterableValue value={value as Value$Iterable} handleValueChange={handleValueChange} />
       </Styles.ValueItem>
     );
 
   if (mode === 'customComponentConfig')
     return (
-      <Styles.ValueItem>
+      <Styles.ValueItem root={root} direction="column">
         <CustomComponentValue
           schema={schema}
           value={value as Value$CustomComponentConfig}
