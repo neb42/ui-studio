@@ -16,32 +16,6 @@ import { Button } from '@faculty/adler-web-components';
 import * as Styles from './ValueConfig.styles';
 import { ValueItem } from './ValueItem.component';
 
-type Foo =
-  | {
-      mode: 'form';
-      value: Value$List | Value$Complex;
-    }
-  | {
-      mode: 'static';
-      value: Value$Static;
-    }
-  | {
-      mode: 'variable';
-      value: Value$Variable;
-    }
-  | {
-      mode: 'widget';
-      value: Value$Widget;
-    }
-  | {
-      mode: 'iterable';
-      value: Value$Iterable;
-    }
-  | {
-      mode: 'customComponentConfig';
-      value: Value$CustomComponentConfig;
-    };
-
 type Props = {
   mode: Mode;
   value:
@@ -81,21 +55,20 @@ export const ValueConfigComponent = ({
 }: Props) => {
   const handleAddPropToList = () => {
     if (value.mode !== 'list') throw Error();
-    const newProp = {
-      mode: schema.type === 'object' ? 'complex' : 'static',
-      value: defaultValue,
-    };
+    if (schema.type !== 'array' || 'ref' in schema.items) throw new Error();
+    const newProp =
+      (schema.items as OpenAPIV3.SchemaObject).type === 'object'
+        ? {
+            mode: 'complex',
+            props: defaultValue,
+          }
+        : {
+            mode: 'static',
+            value: defaultValue,
+          };
     handleValueChange({
       ...value,
       props: [...value.props, newProp],
-    } as Value$List);
-  };
-
-  const handleDeletePropFromList = (index: number) => () => {
-    if (value.mode !== 'list') throw Error();
-    handleValueChange({
-      ...value,
-      props: value.props.filter((_, i) => i !== index),
     } as Value$List);
   };
 
@@ -103,7 +76,13 @@ export const ValueConfigComponent = ({
     <Styles.Container>
       <Styles.Name>{name}</Styles.Name>
       <ModeButtons mode={mode} modeOptions={modeOptions} onModeChange={handleModeChange} />
-      <ValueItem mode={mode} value={value} schema={schema} handleValueChange={handleValueChange} />
+      <ValueItem
+        mode={mode}
+        value={value}
+        schema={schema}
+        handleValueChange={handleValueChange}
+        root
+      />
       {schema.type === 'array' && mode === 'form' && (
         <Button
           text="Add list item"
