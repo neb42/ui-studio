@@ -248,7 +248,7 @@ export const widgetReducer = (
 
     case UPDATE_WIDGET_POSITION: {
       const { rootId, widgetId, source, destination, style } = action.payload;
-      const widgets = Object.keys(state[rootId].widgets).reduce((acc, cur) => {
+      const widgets = Object.keys(state[rootId]).reduce((acc, cur) => {
         const widget = WidgetModel.updatePosition(
           state[rootId][cur],
           widgetId,
