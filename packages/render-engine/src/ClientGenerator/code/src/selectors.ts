@@ -40,6 +40,7 @@ export const getVariableValue = (state: Store) => (variableId: string, lookup: s
   let variable = state.variable.value[variableId];
   const variableConfig = state.variable.config[variableId];
 
+  if (!variableConfig) return null;
   if (!variable && variableConfig.type !== 'lookup') return null;
 
   try {
