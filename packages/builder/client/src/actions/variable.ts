@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
 import { OpenAPIV3 } from 'openapi-types';
-import { Variable, FunctionVariableArg, FunctionVariable } from '@ui-studio/types';
+import { Variable, FunctionVariableArg, FunctionVariable, LookupVariable } from '@ui-studio/types';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectVariable, SelectVariable } from 'actions/view';
 import { VariableModel } from 'models/variable';
@@ -150,7 +150,10 @@ export function updateStaticVariable(id: string, valueType: any, value: any): an
   return (dispatch: Dispatch<UpdateStaticVariable>, getState: TGetState) => {
     const state = getState();
     const variable = state.variable[id];
-    if (VariableModel.getValueType(variable, state.configuration.openAPISchema) !== valueType) {
+    if (
+      VariableModel.getValueType(variable, state.configuration.openAPISchema, state.variable) !==
+      valueType
+    ) {
       dispatch(resetWidgetPropsUsingVariable(id));
       dispatch(resetVariableFunctionArgsUsingVariable(id));
     }
@@ -210,6 +213,21 @@ export interface UpdateVariableFunctionArg {
 
 export const UPDATE_VARIABLE_FUNCTION_ARG = 'UPDATE_VARIABLE_FUNCTION_ARG';
 
+interface UpdateLookupVariable {
+  type: 'UPDATE_LOOKUP_VARIABLE';
+  payload: LookupVariable;
+}
+
+export const UPDATE_LOOKUP_VARIABLE = 'UPDATE_LOOKUP_VARIABLE';
+
+export const updateLookupVariable = (
+  id: string,
+  variable: LookupVariable,
+): UpdateLookupVariable => ({
+  type: UPDATE_LOOKUP_VARIABLE,
+  payload: variable,
+});
+
 export type Action$Variable =
   | AddVariable
   | RemoveVariable
@@ -217,4 +235,5 @@ export type Action$Variable =
   | UpdateVariableType
   | UpdateStaticVariable
   | UpdateFunctionVariable
-  | UpdateVariableFunctionArg;
+  | UpdateVariableFunctionArg
+  | UpdateLookupVariable;

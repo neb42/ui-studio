@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { getVariables } from 'selectors/variable';
 import { Store } from 'types/store';
 import { Select } from '@faculty/adler-web-components';
+import { getResponseSchemaForEndpoint, getSchemaForLookup } from 'utils/openapi';
 
 import * as Styles from './ValueConfig.styles';
 
@@ -44,17 +45,41 @@ export const VariableValue = ({ value, schema, handleValueChange }: Props) => {
     (state) => state.configuration.openAPISchema,
   );
 
-  const variables = Object.values(useSelector(getVariables)).filter((v) => {
-    if (v.type === 'static') {
-      if (v.valueType === 'number' && schema.type === 'integer') return true;
-      if (v.valueType === schema.type) return true;
+  const allVariables = useSelector(getVariables);
+  const variables = Object.values(allVariables).filter((v) => {
+    try {
+      if (v.type === 'static') {
+        if (v.valueType === 'number' && schema.type === 'integer') return true;
+        if (v.valueType === schema.type) return true;
+        return false;
+      }
+
+      if (v.type === 'function') {
+        const functionVariableSchema = getResponseSchemaForEndpoint(
+          openAPISchema,
+          v.functionId.path,
+          v.functionId.method,
+        );
+        if (!functionVariableSchema) return false;
+
+        return compareSchemas(schema, functionVariableSchema);
+      }
+
+      if (v.type === 'lookup') {
+        const referencedVariable = allVariables[v.variableId];
+        if (referencedVariable.type !== 'function') throw new Error();
+        const responseSchema = getResponseSchemaForEndpoint(
+          openAPISchema,
+          referencedVariable.functionId.path,
+          referencedVariable.functionId.method,
+        );
+        const lookupSchema = getSchemaForLookup(responseSchema, v.lookup);
+        return compareSchemas(schema, lookupSchema);
+      }
+    } catch {
       return false;
     }
-
-    const functionVariableSchema = openAPISchema.paths?.[v.functionId.path]?.[v.functionId.method];
-    if (!functionVariableSchema) return false;
-
-    return compareSchemas(schema, functionVariableSchema);
+    return false;
   });
 
   const selectedVariableId = value.variableId;

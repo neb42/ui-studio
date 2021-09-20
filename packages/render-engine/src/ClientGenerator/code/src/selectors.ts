@@ -3,11 +3,12 @@ import {
   WidgetProp,
   Value$CustomComponentConfig,
   Value$Iterable,
-  Component,
 } from '@ui-studio/types';
 import { OpenAPIV3 } from 'openapi-types';
 
 import { Components } from './Components';
+import { getResponseSchemaForEndpoint } from './openapi';
+import { lookupValue } from './parseLookup';
 import { Store } from './types/store';
 
 export const getWidgetPropertyValue = (state: Store) => (
@@ -35,9 +36,6 @@ export const getWidgetPropertyValue = (state: Store) => (
 
 export const getVariableDefinitions = (state: Store) => state.variable.config;
 
-const parseLookup = (variable: any, lookup: string) =>
-  lookup.split('.').reduce((acc, cur) => (cur.length > 0 ? acc[cur] : acc), variable);
-
 export const getVariableValue = (state: Store) => (variableId: string, lookup: string | null) => {
   let variable = state.variable.value[variableId];
   const variableConfig = state.variable.config[variableId];
@@ -53,23 +51,20 @@ export const getVariableValue = (state: Store) => (variableId: string, lookup: s
     }
 
     if (variableConfig.type === 'function') {
-      const responses =
-        state.variable.openAPISchema.paths?.[variableConfig.functionId.path]?.[
-          variableConfig.functionId.method
-        ]?.responses;
-      if (!responses) throw new Error();
-      const responseCode = Object.keys(responses).find((c) => Number(c) >= 200 && Number(c) < 300);
-      if (!responseCode) throw new Error();
-      const response = responses[responseCode];
-      if ('ref' in response) throw new Error();
-      let schema = (response as OpenAPIV3.ResponseObject).content?.['application/json']?.schema;
-      if (!schema || 'ref' in schema) throw new Error();
-      schema = schema as OpenAPIV3.SchemaObject;
+      const schema = getResponseSchemaForEndpoint(
+        state.variable.openAPISchema,
+        variableConfig.functionId.path,
+        variableConfig.functionId.method,
+      );
       if (schema.type === 'object' || schema.type === 'array') {
         if (typeof variable === 'string') {
           variable = JSON.parse(variable);
         }
       }
+    }
+
+    if (variableConfig.type === 'lookup') {
+      variable = getVariableValue(state)(variableConfig.variableId, variableConfig.lookup);
     }
   } catch {}
 
@@ -81,14 +76,14 @@ export const getVariableValue = (state: Store) => (variableId: string, lookup: s
       try {
         return {
           ...variable,
-          value: parseLookup(variable.value, lookup),
+          value: lookupValue(variable.value, lookup),
         };
       } catch {
         return { ...variable, error: true, value: null };
       }
     }
     try {
-      return parseLookup(variable, lookup);
+      return lookupValue(variable, lookup);
     } catch {
       return null;
     }

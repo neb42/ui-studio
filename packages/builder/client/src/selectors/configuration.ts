@@ -1,6 +1,7 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { Component, FunctionVariable } from '@ui-studio/types';
 import { Store, Store$Configuration } from 'types/store';
+import { get2xxResponseSchema } from 'utils/openapi';
 
 export const getComponents = (state: Store): Component[] => state.configuration.components;
 
@@ -129,3 +130,6 @@ export const getArgTypeLookUp = (state: Store): ArgTypeLookup => {
     body: BODY,
   };
 };
+
+export const getOpenAPISchema = (state: Store): OpenAPIV3.Document =>
+  state.configuration.openAPISchema;

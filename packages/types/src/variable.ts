@@ -16,11 +16,11 @@ export type StaticVariable = BaseVariable & {
     | { valueType: 'object'; value: string }
   );
 
-// export type LookupVariable = BaseVariable & {
-//   type: 'lookup';
-//   variableId: string;
-//   lookup: string;
-// };
+export type LookupVariable = BaseVariable & {
+  type: 'lookup';
+  variableId: string;
+  lookup: string;
+};
 
 export type FunctionVariableArg = Value$Static | Value$Variable | Value$Widget;
 
@@ -30,7 +30,6 @@ export interface FunctionVariable extends BaseVariable {
     path: string;
     method: OpenAPIV3.HttpMethods;
   };
-  lookup?: string;
   trigger: 'auto' | 'event';
   args: {
     path: Record<string, FunctionVariableArg>;
@@ -39,4 +38,4 @@ export interface FunctionVariable extends BaseVariable {
   };
 }
 
-export type Variable = FunctionVariable | StaticVariable;
+export type Variable = FunctionVariable | StaticVariable | LookupVariable;

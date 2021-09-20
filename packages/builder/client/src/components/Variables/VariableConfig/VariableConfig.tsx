@@ -2,17 +2,18 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
-
 import { updateVariableName, updateVariableType } from 'actions/variable';
 import { getSelectedVariable } from 'selectors/variable';
 import { StaticVariableConfig } from 'components/Variables/StaticVariableConfig';
 import { FunctionVariableConfig } from 'components/Variables/FunctionVariableConfig';
+import { LookupVariableConfig } from 'components/Variables/LookupVariableConfig';
 
 import * as Styles from './VariableConfig.styles';
 
 const variableTypeOptions = [
   { value: 'static', label: 'Static' },
   { value: 'function', label: 'Function' },
+  { value: 'lookup', label: 'Lookup' },
 ];
 
 export const VariableConfig = () => {
@@ -51,6 +52,7 @@ export const VariableConfig = () => {
       {selectedVariable?.type === 'function' && (
         <FunctionVariableConfig variable={selectedVariable} />
       )}
+      {selectedVariable?.type === 'lookup' && <LookupVariableConfig variable={selectedVariable} />}
     </Styles.Container>
   );
 };

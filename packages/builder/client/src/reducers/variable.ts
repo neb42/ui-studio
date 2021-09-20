@@ -1,4 +1,4 @@
-import { Variable, StaticVariable, FunctionVariable } from '@ui-studio/types';
+import { StaticVariable, FunctionVariable } from '@ui-studio/types';
 import {
   Action$Variable,
   ADD_VARIABLE,
@@ -8,6 +8,7 @@ import {
   UPDATE_STATIC_VARIABLE,
   UPDATE_FUNCTION_VARIABLE,
   UPDATE_VARIABLE_FUNCTION_ARG,
+  UPDATE_LOOKUP_VARIABLE,
 } from 'actions/variable';
 import { INIT_CLIENT, InitClient } from 'actions/init';
 import { Store$Variable } from 'types/store';
@@ -48,7 +49,7 @@ export const variableReducer = (
       const { id, type, openAPISchema } = action.payload;
       return {
         ...state,
-        [id]: VariableModel.updateVariableType(state[id], type, openAPISchema),
+        [id]: VariableModel.updateVariableType(state[id], type, openAPISchema, state),
       };
     }
     case UPDATE_STATIC_VARIABLE: {
@@ -75,6 +76,13 @@ export const variableReducer = (
           ...v,
           ...action.payload,
         } as FunctionVariable,
+      };
+    }
+
+    case UPDATE_LOOKUP_VARIABLE: {
+      return {
+        ...state,
+        [action.payload.id]: action.payload,
       };
     }
 

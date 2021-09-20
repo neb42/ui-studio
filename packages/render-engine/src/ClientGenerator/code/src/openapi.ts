@@ -61,3 +61,27 @@ export const makeOpenAPIRequest = async (
 
   return data;
 };
+
+export const get2xxResponseSchema = (
+  responses: OpenAPIV3.ResponsesObject,
+  content = 'application/json',
+): OpenAPIV3.SchemaObject => {
+  const responseCode = Object.keys(responses).find((c) => Number(c) >= 200 && Number(c) < 300);
+  if (!responseCode) throw new Error();
+  const response = responses[responseCode];
+  if ('ref' in response) throw new Error();
+  const schema = (response as OpenAPIV3.ResponseObject).content?.[content]?.schema;
+  if (!schema || 'ref' in schema) throw new Error();
+  return schema as OpenAPIV3.SchemaObject;
+};
+
+export const getResponseSchemaForEndpoint = (
+  spec: OpenAPIV3.Document,
+  path: string,
+  method: OpenAPIV3.HttpMethods,
+): OpenAPIV3.SchemaObject => {
+  const endpoint = spec.paths?.[path]?.[method];
+  const responses = endpoint?.responses;
+  if (!responses) throw new Error();
+  return get2xxResponseSchema(responses);
+};

@@ -1,14 +1,17 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { Variable } from '@ui-studio/types';
+import { getResponseSchemaForEndpoint, getSchemaForLookup, getSchemaType } from 'utils/openapi';
+import { Store$Variable } from 'types/store';
 
 export class VariableModel {
   static updateVariableType(
     variable: Variable,
     type: Variable['type'],
     openAPISchema: OpenAPIV3.Document,
+    allVariables: Store$Variable,
   ): Variable {
     if (type === 'static') {
-      const existingValueType = VariableModel.getValueType(variable, openAPISchema);
+      const existingValueType = VariableModel.getValueType(variable, openAPISchema, allVariables);
       switch (existingValueType) {
         case 'string': {
           return {
@@ -50,6 +53,7 @@ export class VariableModel {
           throw new Error();
       }
     }
+
     if (type === 'function') {
       return {
         id: variable.id,
@@ -67,47 +71,56 @@ export class VariableModel {
         },
       };
     }
+
+    if (type === 'lookup') {
+      return {
+        id: variable.id,
+        name: variable.name,
+        type: 'lookup',
+        variableId: '',
+        lookup: '',
+      };
+    }
+
     throw new Error();
   }
 
   static getValueType(
     variable: Variable,
     openAPISchema: OpenAPIV3.Document,
+    allVariables: Store$Variable,
   ): 'string' | 'number' | 'boolean' | 'object' {
     if (variable.type === 'static') return variable.valueType;
 
-    const functionSchema = (() => {
-      const responses =
-        openAPISchema.paths?.[variable.functionId.path]?.[variable.functionId.method]?.responses;
-      if (!responses) throw new Error();
-      const responseCode = Object.keys(responses).find((c) => Number(c) >= 200 && Number(c) < 300);
-      if (!responseCode) throw new Error();
-      const response = responses[responseCode];
-      if ('ref' in response) throw new Error();
-      const schema = (response as OpenAPIV3.ResponseObject).content?.['application/json']?.schema;
-      if (!schema || 'ref' in schema) throw new Error();
-      return schema as OpenAPIV3.SchemaObject;
-    })();
+    if (variable.type === 'function') {
+      const responseSchema = getResponseSchemaForEndpoint(
+        openAPISchema,
+        variable.functionId.path,
+        variable.functionId.method,
+      );
 
-    const validateValueType = (
-      valueType: OpenAPIV3.SchemaObject['type'],
-    ): 'string' | 'number' | 'boolean' | 'object' => {
-      if (!valueType) throw new Error();
-      if (valueType === 'array') throw new Error('Array types not supported');
-      if (valueType === 'integer') return 'number';
-      return valueType;
-    };
-
-    const functionRootType = validateValueType(functionSchema.type);
-
-    if (variable.lookup && functionRootType === 'object') {
-      const { properties } = functionSchema;
-      if (!properties || 'ref' in properties) throw new Error();
-      const nestedSchema = properties[variable.lookup];
-      if (!nestedSchema || 'ref' in nestedSchema) throw new Error();
-      return validateValueType((nestedSchema as OpenAPIV3.SchemaObject).type);
+      const schemaType = getSchemaType(responseSchema);
+      if (schemaType === 'array') throw new Error();
+      return schemaType;
     }
 
-    return functionRootType;
+    if (variable.type === 'lookup') {
+      const referencedVariable = allVariables[variable.variableId];
+      if (referencedVariable.type !== 'function') throw new Error();
+
+      const responseSchema = getResponseSchemaForEndpoint(
+        openAPISchema,
+        referencedVariable.functionId.path,
+        referencedVariable.functionId.method,
+      );
+
+      const lookupSchema = getSchemaForLookup(responseSchema, variable.lookup);
+
+      const schemaType = getSchemaType(lookupSchema);
+      if (schemaType === 'array') throw new Error();
+      return schemaType;
+    }
+
+    throw new Error();
   }
 }
