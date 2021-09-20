@@ -46,10 +46,13 @@ export const Example: Component & { component: any } = {
         complexSelect: { mode: 'static', value: 'Option 2' },
       },
       schema: {
-        type: 'object',
-        properties: {
-          complexInput: { type: 'string' },
-          complexSelect: { type: 'string', enum: ['Option 1', 'Option 2'] },
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            complexInput: { type: 'string' },
+            complexSelect: { type: 'string', enum: ['Option 1', 'Option 2'] },
+          },
         },
       },
     },
