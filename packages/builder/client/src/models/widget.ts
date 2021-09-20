@@ -115,7 +115,13 @@ export class WidgetModel {
           if (!properties) throw new Error();
           return {
             mode: 'static',
-            value: config.defaultValue,
+            value: (() => {
+              try {
+                return JSON.stringify(config.defaultValue, null, 2);
+              } catch {
+                return config.defaultValue;
+              }
+            })(),
           } as Value$Static;
         }
         return {
