@@ -5,8 +5,6 @@ import { OpenAPIV3 } from 'openapi-types';
 import { useTheme } from 'styled-components';
 import { Checkbox, Input, Select } from '@faculty/adler-web-components';
 
-import * as Styles from './ValueConfig.styles';
-
 type Props = {
   value: Value$Static;
   schema: OpenAPIV3.SchemaObject;
@@ -18,19 +16,29 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
   const [hasFocus, setHasFocus] = React.useState(false);
 
   const handleInputOnChange = (v: string) => handleValueChange({ ...value, value: v });
+  const handleJSONOnChange = (v: string) => {
+    try {
+      handleValueChange({ ...value, value: JSON.parse(v) });
+    } catch {
+      handleValueChange({ ...value, value: v });
+    }
+  };
   const handleSelectOnChange = ({ value: v }: any) => {
     handleValueChange({ ...value, value: v });
   };
   const handleCheckboxOnChange = (v: boolean) => handleValueChange({ ...value, value: v });
 
   if (schema.type === 'array' || schema.type === 'object') {
-    if (typeof value.value !== 'string') throw new Error();
+    const valueString = (() => {
+      if (typeof value.value === 'object') return JSON.stringify(value.value);
+      return value.value.toString();
+    })();
     return (
       <AceEditor
         mode="json"
         theme="chrome"
-        defaultValue={value.value}
-        onChange={handleInputOnChange}
+        defaultValue={valueString}
+        onChange={handleJSONOnChange}
         editorProps={{ $blockScrolling: true }}
         width="100%"
         height="300px"
