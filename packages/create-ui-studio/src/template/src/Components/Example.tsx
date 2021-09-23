@@ -27,8 +27,8 @@ export const Example: Component & { component: any } = {
       key: 'complex',
       label: 'Complex',
       defaultValue: {
-        complexInput: { mode: 'static', value: 'Default complex input' },
-        complexSelect: { mode: 'static', value: 'Option 2' },
+        complexInput: 'Default complex input',
+        complexSelect: 'Option 2',
       },
       schema: {
         type: 'object',
@@ -42,8 +42,8 @@ export const Example: Component & { component: any } = {
       key: 'complexList',
       label: 'Complex list',
       defaultValue: {
-        complexInput: { mode: 'static', value: 'Default complex input' },
-        complexSelect: { mode: 'static', value: 'Option 2' },
+        complexInput: 'Default complex input',
+        complexSelect: 'Option 2',
       },
       schema: {
         type: 'array',

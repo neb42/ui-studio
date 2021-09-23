@@ -92,7 +92,13 @@ export class WidgetModel {
         if (config.schema.type === 'object') {
           return {
             mode: 'complex',
-            props: config.defaultValue,
+            props: Object.keys(config.defaultValue).reduce(
+              (acc, cur) => ({
+                ...acc,
+                [cur]: { mode: 'static', value: config.defaultValue[cur] },
+              }),
+              {},
+            ),
           } as Value$Complex;
         }
         if (config.schema.type === 'array') {
