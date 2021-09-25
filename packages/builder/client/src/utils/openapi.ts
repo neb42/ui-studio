@@ -60,3 +60,26 @@ export const getResponseSchemaForEndpoint = (
   if (!responses) throw new Error();
   return get2xxResponseSchema(responses);
 };
+
+export const compareSchemas = (a: OpenAPIV3.SchemaObject, b: OpenAPIV3.SchemaObject): boolean => {
+  if (a.type !== b.type) return false;
+  if (a.type === 'array' && b.type === 'array') {
+    const { items: itemsA } = a;
+    const { items: itemsB } = b;
+    if ('ref' in itemsA || 'ref' in itemsB) throw new Error();
+    return compareSchemas(a.items as OpenAPIV3.SchemaObject, b.items as OpenAPIV3.SchemaObject);
+  }
+  if (a.type === 'object' && b.type === 'object') {
+    const aKeys = Object.keys(a.properties || {}).sort();
+    const bKeys = Object.keys(b.properties || {}).sort();
+    if (JSON.stringify(aKeys) !== JSON.stringify(bKeys)) return false;
+
+    return Object.keys(a.properties || {}).every((k) => {
+      const aSchema = a.properties?.[k];
+      const bSchema = b.properties?.[k];
+      if (!aSchema || !bSchema || 'ref' in aSchema || 'ref' in bSchema) throw new Error();
+      return compareSchemas(aSchema as OpenAPIV3.SchemaObject, bSchema as OpenAPIV3.SchemaObject);
+    });
+  }
+  return true;
+};
