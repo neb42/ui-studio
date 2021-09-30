@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomComponent } from '@ui-studio/types';
+import { CustomComponent, ExposedProperty } from '@ui-studio/types';
 import { getWidgetsInSelectedTree } from 'selectors/tree';
 import { getComponents } from 'selectors/configuration';
 import {
@@ -21,17 +21,20 @@ export const ExposedPropertiesContainer = ({ customComponent }: Props) => {
   const components = useSelector(getComponents);
   const widgets = useSelector(getWidgetsInSelectedTree);
 
-  const availableExposedProperties = widgets.reduce<Record<string, string[]>>((acc, cur) => {
-    if (cur.type === 'widget') {
-      const component = components.find((c) => c.key === cur.component);
-      if (component?.exposedProperties && component.exposedProperties.length > 0)
-        return {
-          ...acc,
-          [cur.id]: component.exposedProperties || [],
-        };
-    }
-    return acc;
-  }, {});
+  const availableExposedProperties = widgets.reduce<Record<string, ExposedProperty[]>>(
+    (acc, cur) => {
+      if (cur.type === 'widget') {
+        const component = components.find((c) => c.key === cur.component);
+        if (component?.exposedProperties && component.exposedProperties.length > 0)
+          return {
+            ...acc,
+            [cur.id]: component.exposedProperties || [],
+          };
+      }
+      return acc;
+    },
+    {},
+  );
 
   const handleAddExposedProperty = (widgetId: string, property: string) =>
     dispatch(addExposedProperty(widgetId, property));

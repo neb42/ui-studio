@@ -13,6 +13,11 @@ export type Component$Event = {
   label: string;
 };
 
+export type ExposedProperty = {
+  property: string;
+  schema: OpenAPIV3.SchemaObject;
+};
+
 export interface Component {
   key: string;
   name: string;
@@ -21,7 +26,7 @@ export interface Component {
   icon: string;
   hasChildren?: boolean;
   hasLayout?: boolean;
-  exposedProperties?: string[];
+  exposedProperties?: ExposedProperty[];
   events?: Component$Event[];
   config?: ComponentConfig[];
 }

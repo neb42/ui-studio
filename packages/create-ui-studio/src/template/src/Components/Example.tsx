@@ -57,7 +57,7 @@ export const Example: Component & { component: any } = {
       },
     },
   ],
-  exposedProperties: ['exampleProperty'],
+  exposedProperties: [{ property: 'exampleProperty', schema: { type: 'string' } }],
   component: ({ onClick, list, complex, input, complexList }: any) => {
     const json = (() => {
       try {

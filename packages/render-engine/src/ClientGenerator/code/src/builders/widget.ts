@@ -180,7 +180,7 @@ export const WidgetBuilder: React.FC<any> = ({
   };
   */
 
-  const handleExposedPropetyUpdate = (ep: { [key: string]: any }) => {
+  const handleExposedPropertyUpdate = (ep: { [key: string]: any }) => {
     dispatch(updateWidget(widget.id, rootId, ep));
   };
 
@@ -195,7 +195,7 @@ export const WidgetBuilder: React.FC<any> = ({
       loading,
       error,
       exposedProperties,
-      onExposedPropertiesChange: handleExposedPropetyUpdate,
+      onExposedPropertiesChange: handleExposedPropertyUpdate,
     },
   );
 

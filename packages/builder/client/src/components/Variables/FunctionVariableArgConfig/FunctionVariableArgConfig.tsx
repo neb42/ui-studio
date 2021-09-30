@@ -113,7 +113,7 @@ const WidgetConfig = ({ name, arg, onChange }: IFoo<Value$Widget>): JSX.Element 
         return (
           components
             .find((c) => c.key === selectedWidget.component)
-            ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
+            ?.exposedProperties?.map((p) => ({ value: p.property, label: p.property })) ?? []
         );
       }
       if (selectedWidget.type === 'customComponentInstance') {

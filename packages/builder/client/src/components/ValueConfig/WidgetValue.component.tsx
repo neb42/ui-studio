@@ -1,63 +1,113 @@
 import * as React from 'react';
 import { CustomComponent, CustomComponentInstance, Value$Widget, Widget } from '@ui-studio/types';
 import { useSelector } from 'react-redux';
+import { Select } from '@faculty/adler-web-components';
 import { getRoots, getWidgetsInSelectedTree } from 'selectors/tree';
 import { getComponents } from 'selectors/configuration';
-import { Select } from '@faculty/adler-web-components';
-
-import * as Styles from './ValueConfig.styles';
+import { Store, Store$Widget } from 'types/store';
+import { compareSchemas } from 'utils/openapi';
+import { OpenAPIV3 } from 'openapi-types';
 
 type Props = {
   value: Value$Widget;
+  schema: OpenAPIV3.SchemaObject;
   handleValueChange: (value: Value$Widget) => any;
 };
 
-// TODO: check if exposed properties match the schema
-
-export const WidgetValue = ({ value, handleValueChange }: Props) => {
+export const WidgetValue = ({ schema, value, handleValueChange }: Props) => {
   const roots = useSelector(getRoots);
   const components = useSelector(getComponents);
+  const allWidgets = useSelector<Store, Store$Widget>((state) => state.widget);
 
   const widgets = useSelector(getWidgetsInSelectedTree).filter((w) => {
-    if (w.type === 'widget') {
-      const comp = components.find((c) => c.key === w.component);
-      if (comp && comp.exposedProperties) return comp.exposedProperties.length > 0;
-    }
-    if (w.type === 'customComponentInstance') {
+    const handleWidget = (widget: Widget) => {
+      const comp = components.find((c) => c.key === widget.component);
+      const matchingExposedProperties =
+        comp?.exposedProperties?.filter((p) => compareSchemas(p.schema, schema)) ?? [];
+      return matchingExposedProperties.length > 0;
+    };
+
+    const handleAddCustomComponentInstance = (customComponentInstance: CustomComponentInstance) => {
       const customComponent = roots.find(
-        (r): r is CustomComponent => r.id === w.customComponentId && r.type === 'customComponent',
+        (r): r is CustomComponent =>
+          r.id === customComponentInstance.customComponentId && r.type === 'customComponent',
       );
-      if (customComponent && customComponent.exposedProperties)
-        return Object.keys(customComponent.exposedProperties).length > 0;
+      if (!customComponent || !customComponent.exposedProperties) return false;
+      const ep = customComponent.exposedProperties;
+      const availableExposedProperties = Object.keys(
+        customComponent?.exposedProperties || {},
+      ).filter((p) => {
+        const widget = allWidgets[customComponent.id][ep[p].widgetId];
+        if (widget.type === 'customComponentInstance') return false; // TODO handle this
+        const comp = components.find((c) => c.key === widget.component);
+        if (!comp) return false;
+        const widgetEp = comp.exposedProperties?.find((pp) => pp.property === ep[p].property);
+        if (!widgetEp) return false;
+        return compareSchemas(widgetEp.schema, schema);
+      });
+      return availableExposedProperties.length > 0;
+    };
+
+    if (w.type === 'widget') {
+      return handleWidget(w);
     }
+
+    if (w.type === 'customComponentInstance') {
+      return handleAddCustomComponentInstance(w);
+    }
+
     return false;
   });
 
   const getExposedPropertyOptions = (
     selectedWidget: Widget | CustomComponentInstance | undefined,
   ) => {
-    if (selectedWidget) {
-      if (selectedWidget.type === 'widget') {
-        return (
-          components
-            .find((c) => c.key === selectedWidget.component)
-            ?.exposedProperties?.map((p) => ({ value: p, label: p })) ?? []
-        );
-      }
-      if (selectedWidget.type === 'customComponentInstance') {
-        const customComponent = roots.find(
-          (r): r is CustomComponent =>
-            r.id === selectedWidget.customComponentId && r.type === 'customComponent',
-        );
-        if (customComponent && customComponent.exposedProperties)
-          return Object.keys(customComponent.exposedProperties).map((p) => ({
-            value: p,
-            label: p,
-          }));
+    const raw = (() => {
+      if (selectedWidget) {
+        const handleWidget = (widget: Widget) => {
+          const comp = components.find((c) => c.key === widget.component);
+          const matchingExposedProperties =
+            comp?.exposedProperties?.filter((p) => compareSchemas(p.schema, schema)) ?? [];
+          return matchingExposedProperties;
+        };
+
+        const handleAddCustomComponentInstance = (
+          customComponentInstance: CustomComponentInstance,
+        ) => {
+          const customComponent = roots.find(
+            (r): r is CustomComponent =>
+              r.id === customComponentInstance.customComponentId && r.type === 'customComponent',
+          );
+          if (!customComponent || !customComponent.exposedProperties) return [];
+          const ep = customComponent.exposedProperties;
+          const matchingExposedProperties = Object.keys(ep)
+            .filter((p) => {
+              const widget = allWidgets[customComponent.id][ep[p].widgetId];
+              if (widget.type === 'customComponentInstance') return []; // TODO handle this
+              const comp = components.find((c) => c.key === widget.component);
+              if (!comp) return [];
+              const widgetEp = comp.exposedProperties?.find((pp) => pp.property === ep[p].property);
+              if (!widgetEp) return [];
+              return compareSchemas(widgetEp.schema, schema);
+            })
+            .map((key) => ep[key]);
+          return matchingExposedProperties;
+        };
+
+        if (selectedWidget.type === 'widget') {
+          return handleWidget(selectedWidget);
+        }
+
+        if (selectedWidget.type === 'customComponentInstance') {
+          return handleAddCustomComponentInstance(selectedWidget);
+        }
+
         return [];
       }
-    }
-    return [];
+      return [];
+    })();
+
+    return raw.map((r: typeof raw[number]) => ({ label: r.property, value: r.property }));
   };
 
   const handleWidgetChange = ({ value: v }: any) => {

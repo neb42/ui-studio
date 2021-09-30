@@ -164,7 +164,11 @@ export const ValueItem = ({ mode, schema, value, handleValueChange, root }: Prop
   if (mode === 'widget')
     return (
       <Styles.ValueItem root={root} direction="column">
-        <WidgetValue value={value as Value$Widget} handleValueChange={handleValueChange} />
+        <WidgetValue
+          schema={schema}
+          value={value as Value$Widget}
+          handleValueChange={handleValueChange}
+        />
       </Styles.ValueItem>
     );
   if (mode === 'iterable')
