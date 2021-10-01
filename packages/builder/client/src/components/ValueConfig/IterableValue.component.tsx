@@ -2,19 +2,17 @@ import * as React from 'react';
 import { Value$Iterable } from '@ui-studio/types';
 import { Input, Select } from '@faculty/adler-web-components';
 import { useSelector } from 'react-redux';
+import { OpenAPIV3 } from 'openapi-types';
 import { getAvailableIteratorKeys } from 'selectors/element';
-
-import * as Styles from './ValueConfig.styles';
 
 type Props = {
   value: Value$Iterable;
+  schema: OpenAPIV3.SchemaObject;
   handleValueChange: (value: Value$Iterable) => any;
 };
 
-// TODO typesafe iterables
-
-export const IterableValue = ({ value, handleValueChange }: Props) => {
-  const iterables = useSelector(getAvailableIteratorKeys)(value.widgetId);
+export const IterableValue = ({ value, schema, handleValueChange }: Props) => {
+  const iterables = useSelector(getAvailableIteratorKeys)(value.widgetId, schema);
 
   const handleWidgetChange = ({ value: v }: any) => {
     handleValueChange({

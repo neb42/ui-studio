@@ -8,6 +8,7 @@ import {
 } from 'selectors/tree';
 import { getSelectedRootId } from 'selectors/view';
 import { OpenAPIV3 } from 'openapi-types';
+import { compareSchemas } from 'utils/openapi';
 
 export const generateDefaultName = (state: Store, regex: string) => {
   const root = getSelectedRootElement(state);
@@ -55,6 +56,7 @@ export const getOrphanedRootElements = (state: Store): (Widget | CustomComponent
 
 export const getAvailableIteratorKeys = (state: Store) => (
   widgetId: string,
+  schema?: OpenAPIV3.SchemaObject,
 ): {
   widgetId: string;
   widgetName: string;
@@ -74,7 +76,10 @@ export const getAvailableIteratorKeys = (state: Store) => (
   return parentElements.reduce<{ widgetId: string; widgetName: string; propKeys: string[] }[]>(
     (acc, cur) => {
       if (cur.id === widgetId || cur.rootElement) return acc;
-      const foo: Record<string, { schema: OpenAPIV3.SchemaObject; iterable: boolean }> = (() => {
+      const propSchemaLookup: Record<
+        string,
+        { schema: OpenAPIV3.SchemaObject; iterable: boolean }
+      > = (() => {
         if (cur.type === 'widget') {
           const config = state.configuration.components.find((c) => c.key === cur.component);
           if (!config || !config.config) return {};
@@ -104,10 +109,16 @@ export const getAvailableIteratorKeys = (state: Store) => (
         throw new Error();
       })();
       const iterablePropKeys = Object.keys(cur.props).reduce<string[]>((a, c) => {
-        const prop = cur.props[c];
+        // const prop = cur.props[c];
+        // if (
+        //   (prop.mode === 'list' ||
+        //     (prop.mode === 'static' && propSchemaLookup[c].schema.type === 'array')) &&
+        //   propSchemaLookup[c].iterable
+        // )
         if (
-          (prop.mode === 'list' || (prop.mode === 'static' && foo[c].schema.type === 'array')) &&
-          foo[c].iterable
+          propSchemaLookup[c].schema.type === 'array' &&
+          propSchemaLookup[c].iterable &&
+          (!schema || compareSchemas(propSchemaLookup[c].schema, schema))
         )
           return [...a, c];
         return a;

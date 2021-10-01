@@ -174,7 +174,11 @@ export const ValueItem = ({ mode, schema, value, handleValueChange, root }: Prop
   if (mode === 'iterable')
     return (
       <Styles.ValueItem root={root} direction="column">
-        <IterableValue value={value as Value$Iterable} handleValueChange={handleValueChange} />
+        <IterableValue
+          schema={schema}
+          value={value as Value$Iterable}
+          handleValueChange={handleValueChange}
+        />
       </Styles.ValueItem>
     );
 
