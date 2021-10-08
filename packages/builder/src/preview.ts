@@ -29,11 +29,6 @@ export const initCode = async (): Promise<void> => {
     if (stderr) console.error(`stderr: ${stderr}`);
   };
 
-  const initApi = () => {
-    console.log('Initialising api...');
-    execSync('yarn api:init', { cwd: REPO_PATH, stdio: 'inherit' });
-  };
-
   const startApi = () => {
     console.log('Initialising api...');
     exec(`yarn api:dev -p ${PREVIEW_SERVER_PORT}`, { cwd: REPO_PATH });
@@ -54,10 +49,9 @@ export const initCode = async (): Promise<void> => {
     execSync('yarn --force --prefer-offline', { cwd: clientPath, stdio: 'inherit' });
   };
 
-  initApi();
+  startApi();
   installClientPackages();
   buildComponents();
-  startApi();
   startPreviewClient();
 
   open(`http://localhost:${SERVER_PORT}`);
