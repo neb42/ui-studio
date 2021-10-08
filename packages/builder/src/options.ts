@@ -7,7 +7,7 @@ const { argv } = yargs
   .option('path', {
     alias: 'p',
     type: 'string',
-    description: 'Path to functions package',
+    description: 'Path to repo',
   })
   .option('port', {
     alias: 'P',
@@ -34,14 +34,14 @@ export const getOptions = async () => {
     });
   if (!SERVER_PORT)
     SERVER_PORT = await getPort({ port: argv.port || Number(process.env.SERVER_PORT) || 3002 });
-  const FUNCTIONS_PATH = argv.path || process.env.FUNCTIONS_PATH || process.cwd();
-  const GENERATED_CODE_PATH = path.join(FUNCTIONS_PATH, '.ui-studio');
+  const REPO_PATH = argv.path || process.env.REPO_PATH || process.cwd();
+  const GENERATED_CODE_PATH = path.join(REPO_PATH, '.ui-studio');
 
   return {
     PREVIEW_CLIENT_PORT,
     PREVIEW_SERVER_PORT,
     SERVER_PORT,
     GENERATED_CODE_PATH,
-    FUNCTIONS_PATH,
+    REPO_PATH,
   };
 };

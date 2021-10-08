@@ -112,6 +112,7 @@ const addPackages = (directory: string, templates: string[], runner: 'npm' | 'ya
     { name: '@types/node', version: '^12.0.0' },
     { name: '@types/react', version: '^16.9.53' },
     { name: '@types/react-dom', version: '^16.9.8' },
+    { name: 'openapi-types', version: '^9.3.0' },
   ];
 
   const add = runner === 'yarn' ? 'yarn add' : 'npm install';

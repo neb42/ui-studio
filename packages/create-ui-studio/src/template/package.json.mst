@@ -6,7 +6,9 @@
   "license": "MIT",
   "main": "build/index.js",
   "scripts": {
-    "server": "cd api && ./run.sh",
+    "api:init": "cd api && ./init.sh",
+    "api:dev": "cd api && ./run.sh",
+    "api:prod": "cd api && ./run.sh",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "build": "rm -rf build/* && tsc",
     "start": "ui-studio-builder"
