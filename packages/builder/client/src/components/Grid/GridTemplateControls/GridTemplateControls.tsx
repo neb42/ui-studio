@@ -2,7 +2,7 @@ import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import AddSharp from '@mui/icons-material/AddSharp';
 import DeleteSharp from '@mui/icons-material/DeleteSharp';
-import Input from '@faculty/adler-web-components/atoms/Input';
+import TextField from '@mui/material/TextField';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import { IGridCell, GridUnit } from '@ui-studio/types';
 
@@ -42,11 +42,11 @@ export const GridTemplateControls = ({
     updateConfig(config.filter((_, i) => i !== idx));
   };
 
-  const handleValueChange = (idx: number) => (value: string) => {
+  const handleValueChange = (idx: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     updateConfig(
       config.map((r, i) => {
         if (i === idx) {
-          return { ...r, value: Number(value) };
+          return { ...r, value: Number(event.target.value) };
         }
         return r;
       }),
@@ -78,8 +78,8 @@ export const GridTemplateControls = ({
       {config.map((c, i) => (
         <Styles.Cell key={i} showValueControl={showValueControl(c.unit)}>
           {showValueControl(c.unit) && (
-            <Input
-              type="number"
+            <TextField
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
               value={c.value || ''}
               onChange={handleValueChange(i)}
               disabled={c.value === null}

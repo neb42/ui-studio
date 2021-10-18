@@ -1,11 +1,10 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { useTheme } from 'styled-components';
 import AceEditor from 'react-ace';
+import TextField from '@mui/material/TextField';
 import { StaticVariable } from '@ui-studio/types';
-import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import { useDispatch } from 'react-redux';
-
 import { updateStaticVariable } from 'actions/variable';
 
 const valueTypeOptions = [
@@ -37,11 +36,11 @@ export const StaticVariableConfig = ({ variable }: Props) => {
     if (v === 'object') dispatch(updateStaticVariable(variable.id, 'object', ''));
   };
 
-  const handleStringValueChange = (value: string) =>
-    dispatch(updateStaticVariable(variable.id, 'string', value));
+  const handleStringValueChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    dispatch(updateStaticVariable(variable.id, 'string', event.target.value));
 
-  const handleNumberValueChange = (value: number) =>
-    dispatch(updateStaticVariable(variable.id, 'number', Number(value)));
+  const handleNumberValueChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    dispatch(updateStaticVariable(variable.id, 'number', Number(event.target.value)));
 
   const handleBooleanValueChange = ({ value }: any) =>
     dispatch(updateStaticVariable(variable.id, 'boolean', value as boolean));
@@ -58,12 +57,12 @@ export const StaticVariableConfig = ({ variable }: Props) => {
         options={valueTypeOptions}
       />
       {variable.valueType === 'string' && (
-        <Input label="Value" value={variable.value} onChange={handleStringValueChange} />
+        <TextField label="Value" value={variable.value} onChange={handleStringValueChange} />
       )}
       {variable.valueType === 'number' && (
-        <Input
+        <TextField
           label="Value"
-          type="number"
+          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
           value={variable.value}
           onChange={handleNumberValueChange}
         />

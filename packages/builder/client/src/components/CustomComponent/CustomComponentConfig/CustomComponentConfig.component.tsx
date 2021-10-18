@@ -5,7 +5,7 @@ import AddSharp from '@mui/icons-material/AddSharp';
 import DeleteSharp from '@mui/icons-material/DeleteSharp';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
-import Input from '@faculty/adler-web-components/atoms/Input';
+import TextField from '@mui/material/TextField';
 import { ComponentConfig } from '@ui-studio/types';
 import { OpenAPIV3 } from 'openapi-types';
 
@@ -48,8 +48,8 @@ export const CustomComponentConfigComponent = ({
 
   const handleRemoveConfig = (key: string) => () => onRemoveConfig(key);
 
-  const handleNameChange = (key: string) => (value: string) => {
-    onUpdateName(key, value);
+  const handleNameChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    onUpdateName(key, event.target.value);
   };
 
   const handleModeChange = (key: string) => ({ value }: any) => {
@@ -67,18 +67,23 @@ export const CustomComponentConfigComponent = ({
   const handleInputBooleanDefaultValueChange = (key: string) => (value: boolean) =>
     onUpdateDefaultValue(key, value);
 
-  const handleInputNonBooleanDefaultValueChange = (key: string) => (value: string | number) =>
-    onUpdateDefaultValue(key, value);
+  const handleInputNonBooleanDefaultValueChange = (key: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => onUpdateDefaultValue(key, event.target.value);
 
-  const handleSelectBooleanTrueValueChange = (key: string) => (value: string) => {
+  const handleSelectBooleanTrueValueChange = (key: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const falseValue = { label: 'False', key: false };
-    const options = [{ label: value, key: true }, falseValue];
+    const options = [{ label: event.target.value, key: true }, falseValue];
     onUpdateSelectOptions(key, options);
   };
 
-  const handleSelectBooleanFalseValueChange = (key: string) => (value: string) => {
+  const handleSelectBooleanFalseValueChange = (key: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const trueValue = { label: 'True', key: true };
-    const options = [trueValue, { label: value, key: false }];
+    const options = [trueValue, { label: event.target.value, key: false }];
     onUpdateSelectOptions(key, options);
   };
 
@@ -99,7 +104,7 @@ export const CustomComponentConfigComponent = ({
     onUpdateSelectOptions(key, options);
   };
 
-  const handleUpdateSelectOption = (key: string, idx: number) => (value: string | number) => {
+  const handleUpdateSelectOption = (key: string, idx: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const configItem = getConfigItem(key);
     const options = (() => {
       if (configItem.schema.type === 'array') {
@@ -112,7 +117,7 @@ export const CustomComponentConfigComponent = ({
       if (e === false) return { label: 'False', key: false };
       return { label: e, key: e };
     });
-    options[idx] = { label: value.toString(), key: value };
+    options[idx] = { label: event.target.value.toString(), key: event.target.value };
     onUpdateSelectOptions(key, options);
   };
 
@@ -181,7 +186,7 @@ export const CustomComponentConfigComponent = ({
             <IconButton onClick={handleRemoveConfig(c.key)} size="small">
               <DeleteSharp />
             </IconButton>
-            <Input label="Name" value={c.label} onChange={handleNameChange(c.key)} />
+            <TextField label="Name" value={c.label} onChange={handleNameChange(c.key)} />
             <Select
               label="Mode"
               onChange={handleModeChange(c.key)}
@@ -218,8 +223,8 @@ export const CustomComponentConfigComponent = ({
               Iterable
             </Checkbox>
             {control === 'input' && type !== 'boolean' && (
-              <Input
-                type={type}
+              <TextField
+                inputProps={type === 'number' ? { inputMode: 'numeric', pattern: '[0-9]*' } : {}}
                 label="Default value"
                 value={c.defaultValue}
                 onChange={handleInputNonBooleanDefaultValueChange(c.key)}
@@ -236,15 +241,15 @@ export const CustomComponentConfigComponent = ({
             )}
             {control === 'select' && type === 'boolean' && (
               <>
-                <Input
+                <TextField
                   label="True label"
                   value={options.find((v) => v.key === true)?.label ?? ''}
-                  onChange={handleSelectBooleanTrueValueChange}
+                  onChange={handleSelectBooleanTrueValueChange(c.key)}
                 />
-                <Input
+                <TextField
                   label="False label"
                   value={options.find((v) => v.key === false)?.label ?? ''}
-                  onChange={handleSelectBooleanFalseValueChange}
+                  onChange={handleSelectBooleanFalseValueChange(c.key)}
                 />
               </>
             )}
@@ -252,7 +257,7 @@ export const CustomComponentConfigComponent = ({
               <>
                 {options.map((o: any, ii: any) => (
                   <Styles.SelectOption key={ii}>
-                    <Input
+                    <TextField
                       type={type}
                       value={o.label}
                       onChange={handleUpdateSelectOption(c.key, ii)}

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Value$Iterable } from '@ui-studio/types';
-import { Input, Select } from '@faculty/adler-web-components';
+import { Select } from '@faculty/adler-web-components';
+import TextField from '@mui/material/TextField';
 import { useSelector } from 'react-redux';
 import { OpenAPIV3 } from 'openapi-types';
 import { getAvailableIteratorKeys } from 'selectors/element';
@@ -32,10 +33,10 @@ export const IterableValue = ({ id, value, schema, handleValueChange }: Props) =
     });
   };
 
-  const handleLookupChange = (v: string) => {
+  const handleLookupChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleValueChange({
       ...value,
-      lookup: v,
+      lookup: event.target.value,
     });
   };
 
@@ -73,7 +74,7 @@ export const IterableValue = ({ id, value, schema, handleValueChange }: Props) =
         onChange={handlePropKeyChange}
         options={propKeyOptions}
       />
-      <Input label="Property" onChange={handleLookupChange} value={value.lookup} />
+      <TextField label="Property" onChange={handleLookupChange} value={value.lookup} />
     </>
   );
 };

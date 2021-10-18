@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Input, Select } from '@faculty/adler-web-components';
+import { Select } from '@faculty/adler-web-components';
+import TextField from '@mui/material/TextField';
 import { FunctionVariable, LookupVariable } from '@ui-studio/types';
 
 type Props = {
@@ -17,6 +18,9 @@ export const LookupVariableConfigComponent = ({
 }: Props) => {
   const options = availableVariables.map((v) => ({ value: v.id, label: v.name }));
 
+  const handleLookupChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    onLookupChange(event.target.value);
+
   const handleVariableChange = ({ value }: any) => onVariableIdChange(value as string);
 
   return (
@@ -26,7 +30,7 @@ export const LookupVariableConfigComponent = ({
         value={options.find((o) => o.value === variable.variableId)}
         onChange={handleVariableChange}
       />
-      <Input value={variable.lookup} onChange={onLookupChange} />
+      <TextField value={variable.lookup} onChange={handleLookupChange} />
     </>
   );
 };

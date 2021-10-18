@@ -1,8 +1,8 @@
 import * as React from 'react';
+import TextField from '@mui/material/TextField';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import { Select$Option } from '@faculty/adler-web-components/types/Select';
 import { CustomComponent$ExposedProperties, ExposedProperty } from '@ui-studio/types';
-import Input from '@faculty/adler-web-components/atoms/Input';
 
 import * as Styles from './ExposedProperties.styles';
 
@@ -62,9 +62,9 @@ export const ExposedPropertiesComponent = ({
     removedProperties.map((k) => onRemoveExposedProperty(k));
   };
 
-  const handleInputOnChange = (idx: number) => (value: string) => {
+  const handleInputOnChange = (idx: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const oldKey = Object.keys(selectedExposedProperties)[idx];
-    onUpdateExposedPropertyKey(oldKey, value);
+    onUpdateExposedPropertyKey(oldKey, event.target.value);
   };
 
   return (
@@ -80,7 +80,7 @@ export const ExposedPropertiesComponent = ({
         onChange={handleSelectOnChange as any}
       />
       {Object.keys(selectedExposedProperties).map((k, i) => (
-        <Input
+        <TextField
           key={i}
           value={k}
           label={`${widgetIdNameMap[selectedExposedProperties[k].widgetId]} - ${

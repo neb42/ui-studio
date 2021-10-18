@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Input from '@faculty/adler-web-components/atoms/Input';
+import TextField from '@mui/material/TextField';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import { updateVariableName, updateVariableType } from 'actions/variable';
 import { getSelectedVariable } from 'selectors/variable';
@@ -20,9 +20,9 @@ export const VariableConfig = () => {
   const dispatch = useDispatch();
   const selectedVariable = useSelector(getSelectedVariable);
 
-  const handleOnNameChange = (name: string) => {
+  const handleOnNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (selectedVariable) {
-      dispatch(updateVariableName(selectedVariable.id, name));
+      dispatch(updateVariableName(selectedVariable.id, event.target.value));
     }
   };
 
@@ -36,11 +36,12 @@ export const VariableConfig = () => {
 
   return (
     <Styles.Container>
-      <Input
+      <TextField
         label="Name"
         value={selectedVariable.name}
         onChange={handleOnNameChange}
-        error={selectedVariable.name.length === 0 ? 'Required' : undefined}
+        error={selectedVariable.name.length === 0}
+        helperText="Required"
       />
       <Select
         label="Type"
