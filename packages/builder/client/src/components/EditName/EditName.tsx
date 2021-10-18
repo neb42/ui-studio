@@ -12,7 +12,6 @@ interface EditNameProps {
 
 export const EditName = ({ element, component }: EditNameProps) => {
   const dispatch = useDispatch();
-  const input = React.useRef<TextField | null>(null);
   const [hover, setHover] = React.useState(false);
   const [focus, setFocus] = React.useState(false);
 
@@ -26,7 +25,6 @@ export const EditName = ({ element, component }: EditNameProps) => {
     <Component onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
       {hover || focus ? (
         <TextField
-          ref={input}
           value={element.name}
           onChange={handleOnChange}
           onFocus={(event) => {
