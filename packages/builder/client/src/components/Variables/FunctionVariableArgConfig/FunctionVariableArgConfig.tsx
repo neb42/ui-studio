@@ -20,14 +20,11 @@ export const FunctionVariableArgConfig = ({ name, schema, arg, onChange }: Props
       onChange(name, a as FunctionVariableArg);
   };
 
-  const handleModeChange = (m: Mode) => () => {
+  const handleModeChange = (m: Mode) => {
     if (m === 'static') onChange(name, { mode: 'static', value: '' });
     if (m === 'variable') onChange(name, { mode: 'variable', variableId: '' });
     if (m === 'widget') onChange(name, { mode: 'widget', widgetId: '', property: '' });
   };
-
-  const getColor = (m: 'static' | 'variable' | 'widget') =>
-    arg.mode === m ? '#fa7268' : '#9c9c9c';
 
   return (
     <Styles.Container>
