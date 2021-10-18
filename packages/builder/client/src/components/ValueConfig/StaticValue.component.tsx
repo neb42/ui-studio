@@ -15,7 +15,14 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
   const theme = useTheme();
   const [hasFocus, setHasFocus] = React.useState(false);
 
-  const handleInputOnChange = (v: string) => handleValueChange({ ...value, value: v });
+  const handleInputOnChange = (v: string) => {
+    if (schema.type === 'number' || schema.type === 'integer') {
+      handleValueChange({ ...value, value: Number(v) });
+    } else {
+      handleValueChange({ ...value, value: v });
+    }
+  };
+
   const handleJSONOnChange = (v: string) => {
     try {
       handleValueChange({ ...value, value: JSON.parse(v) });
@@ -23,9 +30,11 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
       handleValueChange({ ...value, value: v });
     }
   };
+
   const handleSelectOnChange = ({ value: v }: any) => {
     handleValueChange({ ...value, value: v });
   };
+
   const handleCheckboxOnChange = (v: boolean) => handleValueChange({ ...value, value: v });
 
   if (schema.type === 'array' || schema.type === 'object') {
@@ -81,9 +90,9 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
     return <Input onChange={handleInputOnChange} value={value.value} />;
   }
 
-  if (schema.type === 'number') {
+  if (schema.type === 'number' || schema.type === 'integer') {
     if (typeof value.value !== 'number') throw new Error();
-    return <Input onChange={handleInputOnChange} value={value.value} />;
+    return <Input type="number" onChange={handleInputOnChange} value={value.value} />;
   }
 
   if (schema.type === 'boolean') {
