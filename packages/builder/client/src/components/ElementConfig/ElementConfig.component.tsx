@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useTheme } from 'styled-components';
-import Tabs from '@faculty/adler-web-components/atoms/Tabs';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import { Element } from '@ui-studio/types';
 import { ElementIcon } from 'components/ElementIcon';
 import { CustomComponentConfig } from 'components/CustomComponent/CustomComponentConfig';
@@ -48,6 +49,10 @@ export const ElementConfigComponent = ({
     return th;
   })();
 
+  const handleTabChange = (_: any, newValue: number) => {
+    setTabIndex(newValue);
+  };
+
   const isSelected = (key: string) => tabHeaders.findIndex((k) => k === key) === tabIndex;
 
   return (
@@ -55,10 +60,11 @@ export const ElementConfigComponent = ({
       <Styles.Header>
         <ElementIcon element={selectedElement} color={theme.colors.text.secondary} />
         <EditName element={selectedElement} component={Styles.ComponentName} />
-        <Tabs
-          tabHeaders={tabHeaders.map((k) => ({ content: k }))}
-          onTabChange={(_, idx: number) => setTabIndex(idx)}
-        />
+        <Tabs value={tabIndex} onChange={handleTabChange}>
+          {tabHeaders.map((h) => (
+            <Tab key={h} label={h} />
+          ))}
+        </Tabs>
       </Styles.Header>
       <Styles.Body>
         {selectedElement.type === 'customComponent' && isSelected('Config') && (
