@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Modal } from '@faculty/adler-web-components';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import { OpenAPIV3 } from 'openapi-types';
 import { Event$TriggerAction, FunctionVariable, FunctionVariableArg } from '@ui-studio/types';
 import { closeModal } from 'actions/modal';
@@ -89,18 +91,24 @@ export const FunctionConfigurationModalContainer = ({}: Props) => {
     handleArgChange('body', argKey, arg);
 
   return (
-    <Modal
+    <Dialog
       title={`${modalConfig.method.toUpperCase()} ${modalConfig.path}`}
-      show={modalConfig.open}
-      onHide={handleCloseModal}
+      open={modalConfig.open}
+      onClose={handleCloseModal}
+      scroll="paper"
     >
-      <FunctionConfigurationModalComponent
-        schema={schema}
-        config={config}
-        onPathParamChange={handlePathParamChange}
-        onQueryStringParamChange={handleQueryStringParamChange}
-        onBodyParamChange={handleBodyParamChange}
-      />
-    </Modal>
+      <DialogTitle>
+        {modalConfig.method.toUpperCase()} {modalConfig.path}
+      </DialogTitle>
+      <DialogContent dividers>
+        <FunctionConfigurationModalComponent
+          schema={schema}
+          config={config}
+          onPathParamChange={handlePathParamChange}
+          onQueryStringParamChange={handleQueryStringParamChange}
+          onBodyParamChange={handleBodyParamChange}
+        />
+      </DialogContent>
+    </Dialog>
   );
 };
