@@ -1,4 +1,6 @@
 import * as React from 'react';
+import IconButton from '@mui/material/IconButton';
+import DeleteSharp from '@mui/icons-material/DeleteSharp';
 import {
   Mode,
   Value$Complex,
@@ -10,7 +12,6 @@ import {
   Value$Widget,
 } from '@ui-studio/types';
 import { OpenAPIV3 } from 'openapi-types';
-import { Button } from '@faculty/adler-web-components';
 
 import { StaticValue } from './StaticValue.component';
 import { VariableValue } from './VariableValue.component';
@@ -70,13 +71,9 @@ export const ValueItem = ({ id, mode, schema, value, handleValueChange, root }: 
                     }
                     root={false}
                   />
-                  <Button
-                    icon="delete"
-                    onClick={handleDeletePropFromList(i)}
-                    color={Button.colors.danger}
-                    style={Button.styles.naked}
-                    size={Button.sizes.medium}
-                  />
+                  <IconButton onClick={handleDeletePropFromList(i)} size="small">
+                    <DeleteSharp />
+                  </IconButton>
                 </Styles.ValueItem>
               );
             }
@@ -96,13 +93,9 @@ export const ValueItem = ({ id, mode, schema, value, handleValueChange, root }: 
                   }
                   root={false}
                 />
-                <Button
-                  icon="delete"
-                  onClick={handleDeletePropFromList(i)}
-                  color={Button.colors.danger}
-                  style={Button.styles.naked}
-                  size={Button.sizes.medium}
-                />
+                <IconButton onClick={handleDeletePropFromList(i)} size="small">
+                  <DeleteSharp />
+                </IconButton>
               </Styles.ValueItem>
             );
           })}

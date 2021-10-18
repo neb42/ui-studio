@@ -1,5 +1,8 @@
 import * as React from 'react';
-import Button from '@faculty/adler-web-components/atoms/Button';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import AddSharp from '@mui/icons-material/AddSharp';
+import DeleteSharp from '@mui/icons-material/DeleteSharp';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
 import Input from '@faculty/adler-web-components/atoms/Input';
@@ -175,13 +178,9 @@ export const CustomComponentConfigComponent = ({
 
         return (
           <Styles.ConfigItem key={c.key}>
-            <Button
-              icon="delete"
-              color={Button.colors.secondary}
-              style={Button.styles.naked}
-              size={Button.sizes.medium}
-              onClick={handleRemoveConfig(c.key)}
-            />
+            <IconButton onClick={handleRemoveConfig(c.key)} size="small">
+              <DeleteSharp />
+            </IconButton>
             <Input label="Name" value={c.label} onChange={handleNameChange(c.key)} />
             <Select
               label="Mode"
@@ -258,36 +257,26 @@ export const CustomComponentConfigComponent = ({
                       value={o.label}
                       onChange={handleUpdateSelectOption(c.key, ii)}
                     />
-                    <Button
-                      icon="delete"
-                      color={Button.colors.secondary}
-                      style={Button.styles.naked}
-                      size={Button.sizes.medium}
-                      onClick={handleRemoveSelectOption(c.key, ii)}
-                    />
+                    <IconButton onClick={handleRemoveSelectOption(c.key, ii)} size="small">
+                      <DeleteSharp />
+                    </IconButton>
                   </Styles.SelectOption>
                 ))}
                 <Button
-                  icon="add"
-                  text="Add select option"
-                  color={Button.colors.primary}
-                  style={Button.styles.outline}
-                  size={Button.sizes.small}
+                  variant="outlined"
                   onClick={handleAddSelectOption(c.key)}
-                />
+                  startIcon={<AddSharp />}
+                >
+                  Add select option
+                </Button>
               </>
             )}
           </Styles.ConfigItem>
         );
       })}
-      <Button
-        icon="add"
-        text="Add component config"
-        color={Button.colors.primary}
-        style={Button.styles.outline}
-        size={Button.sizes.medium}
-        onClick={onAddConfig}
-      />
+      <Button variant="outlined" onClick={onAddConfig} startIcon={<AddSharp />}>
+        Add component config
+      </Button>
       <div style={{ height: 24 }} />
     </Styles.Container>
   );

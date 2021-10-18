@@ -1,5 +1,7 @@
 import * as React from 'react';
-import Button from '@faculty/adler-web-components/atoms/Button';
+import IconButton from '@mui/material/IconButton';
+import AddSharp from '@mui/icons-material/AddSharp';
+import DeleteSharp from '@mui/icons-material/DeleteSharp';
 import Input from '@faculty/adler-web-components/atoms/Input';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import { IGridCell, GridUnit } from '@ui-studio/types';
@@ -69,13 +71,9 @@ export const GridTemplateControls = ({
     <Styles.Container>
       <Styles.Header>
         <Styles.Name>{name}s</Styles.Name>
-        <Button
-          icon="add"
-          onClick={handleAdd}
-          style={Button.styles.naked}
-          color={Button.colors.secondary}
-          size={Button.sizes.medium}
-        />
+        <IconButton onClick={handleAdd} size="small">
+          <AddSharp />
+        </IconButton>
       </Styles.Header>
       {config.map((c, i) => (
         <Styles.Cell key={i} showValueControl={showValueControl(c.unit)}>
@@ -92,14 +90,9 @@ export const GridTemplateControls = ({
             onChange={handleUnitChange(i)}
             options={units.map((u) => ({ value: u, label: u }))}
           />
-          <Button
-            icon="delete"
-            onClick={handleRemove(i)}
-            style={Button.styles.naked}
-            color={Button.colors.secondary}
-            size={Button.sizes.medium}
-            disabled={config.length === 1}
-          />
+          <IconButton onClick={handleRemove(i)} disabled={config.length === 1} size="small">
+            <DeleteSharp />
+          </IconButton>
         </Styles.Cell>
       ))}
     </Styles.Container>

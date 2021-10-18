@@ -1,4 +1,6 @@
 import * as React from 'react';
+import Button from '@mui/material/Button';
+import AddSharp from '@mui/icons-material/AddSharp';
 import {
   Mode,
   Value$Complex,
@@ -11,7 +13,6 @@ import {
 } from '@ui-studio/types';
 import { ModeButtons } from 'components/WidgetConfig/ModeButtons';
 import { OpenAPIV3 } from 'openapi-types';
-import { Button } from '@faculty/adler-web-components';
 
 import * as Styles from './ValueConfig.styles';
 import { ValueItem } from './ValueItem.component';
@@ -87,14 +88,9 @@ export const ValueConfigComponent = ({
         root
       />
       {schema.type === 'array' && mode === 'form' && (
-        <Button
-          text="Add list item"
-          icon="add"
-          onClick={handleAddPropToList}
-          style={Button.styles.outline}
-          color={Button.colors.primary}
-          size={Button.sizes.medium}
-        />
+        <Button variant="outlined" onClick={handleAddPropToList} startIcon={<AddSharp />}>
+          Add list item
+        </Button>
       )}
     </Styles.Container>
   );

@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import IconButton from '@mui/material/IconButton';
+import AddSharp from '@mui/icons-material/AddSharp';
+import DeleteSharp from '@mui/icons-material/DeleteSharp';
 import Icon from '@faculty/adler-web-components/atoms/Icon';
-import Button from '@faculty/adler-web-components/atoms/Button';
 import { Variable } from '@ui-studio/types';
 import { addVariable, removeVariable } from 'actions/variable';
 import { selectVariable } from 'actions/view';
@@ -25,13 +27,9 @@ export const VariableList = () => {
     <Styles.Container>
       <Styles.Header>
         <Styles.HeaderTitle>Variables</Styles.HeaderTitle>
-        <Button
-          icon="add"
-          color={Button.colors.secondary}
-          style={Button.styles.naked}
-          size={Button.sizes.medium}
-          onClick={handleAddVariable}
-        />
+        <IconButton onClick={handleAddVariable} size="small">
+          <AddSharp />
+        </IconButton>
       </Styles.Header>
       <Styles.VariableList>
         {variables.map((v) => (
@@ -43,13 +41,9 @@ export const VariableList = () => {
             <Icon name="help" color={(theme) => theme.colors.primary} size={Icon.sizes.large} />
             <Styles.Name>{v.name}</Styles.Name>
             <Styles.Actions selected={selectedVariableId === v.id}>
-              <Button
-                icon="delete"
-                style={Button.styles.naked}
-                color={Button.colors.secondary}
-                size={Button.sizes.medium}
-                onClick={handleDeleteVariable(v.id)}
-              />
+              <IconButton onClick={handleDeleteVariable(v.id)} size="small">
+                <DeleteSharp />
+              </IconButton>
             </Styles.Actions>
           </Styles.VariableItem>
         ))}

@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Button from '@mui/material/Button';
 import { OpenAPIV3 } from 'openapi-types';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import { FunctionVariable, FunctionVariableArg, Value$Static } from '@ui-studio/types';
 import { getArgTypeLookUp, getFunctions } from 'selectors/configuration';
 import { updateFunctionVariable } from 'actions/variable';
-import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';
-import { Button } from '@faculty/adler-web-components';
 import { openFunctionConfigurationModal } from 'actions/modal';
-
-import * as Styles from './FunctionVariableConfig.styles';
 
 const triggerOptions = [
   { value: 'auto', label: 'Auto' },
@@ -109,13 +106,9 @@ export const FunctionVariableConfig = ({ variable }: Props) => {
         onChange={handleFunctionIdChange}
         options={functionIdOptions}
       />
-      <Button
-        text="Configure function"
-        onClick={handleOpenConfigureFunction}
-        color={Button.colors.primary}
-        style={Button.styles.outline}
-        size={Button.sizes.medium}
-      />
+      <Button variant="outlined" onClick={handleOpenConfigureFunction}>
+        Configure function
+      </Button>
     </>
   );
 };

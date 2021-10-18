@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Menu, MenuItem } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import AddSharp from '@mui/icons-material/AddSharp';
+import DeleteSharp from '@mui/icons-material/DeleteSharp';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import Button from '@faculty/adler-web-components/atoms/Button';
 import { Page, CustomComponent } from '@ui-studio/types';
 
 import * as Styles from './ElementTreeHeader.styles';
@@ -67,21 +69,16 @@ export const ElementTreeHeaderComponent = ({
         ]}
       />
       <div />
-      <Button
-        icon="add"
-        style={Button.styles.naked}
-        color={Button.colors.secondary}
-        size={Button.sizes.medium}
-        onClick={handleOpenAddMenu}
-      />
-      <Button
-        icon="delete"
-        style={Button.styles.naked}
-        color={Button.colors.secondary}
-        size={Button.sizes.medium}
+      <IconButton onClick={handleOpenAddMenu} size="small">
+        <AddSharp />
+      </IconButton>
+      <IconButton
         onClick={handleRemove}
         disabled={rootElement.type === 'page' && Object.keys(pages).length === 1}
-      />
+        size="small"
+      >
+        <DeleteSharp />
+      </IconButton>
       <Menu keepMounted anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseAddMenu}>
         <MenuItem onClick={handleAddPage}>Page</MenuItem>
         <MenuItem onClick={handleAddCustomComponent}>Component</MenuItem>

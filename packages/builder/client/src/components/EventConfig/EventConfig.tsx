@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { OpenAPIV3 } from 'openapi-types';
 import { useDispatch, useSelector } from 'react-redux';
+import Button from '@mui/material/Button';
 import { IconButton } from '@mui/material';
 import { AddSharp, DeleteSharp } from '@mui/icons-material';
 import Select from '@faculty/adler-web-components/atoms/Select';
@@ -19,7 +20,6 @@ import { getComponents, getActions, getArgTypeLookUp } from 'selectors/configura
 import { getRoots } from 'selectors/tree';
 import { getVariables } from 'selectors/variable';
 import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/event';
-import { Button } from '@faculty/adler-web-components';
 import { openActionConfigurationModal } from 'actions/modal';
 import { getSelectedRootId } from 'selectors/view';
 import { EventModel } from 'models/event';
@@ -104,13 +104,9 @@ const TriggerActionEventConfig = ({
         options={options}
         onChange={handleActionChange}
       />
-      <Button
-        text="Configure function"
-        onClick={handleOpenConfigureFunction}
-        color={Button.colors.primary}
-        style={Button.styles.outline}
-        size={Button.sizes.medium}
-      />
+      <Button variant="outlined" onClick={handleOpenConfigureFunction}>
+        Configure function
+      </Button>
     </>
   );
 };

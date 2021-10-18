@@ -35,7 +35,7 @@ export const ElementIcon = ({ element, color }: IElementIcon): JSX.Element => {
 };
 
 export const ElementIconButton = ({ element, color, onClick }: IElementIconButton): JSX.Element => (
-  <IconButton onClick={onClick} size="large">
+  <IconButton onClick={onClick} size="small">
     <ElementIcon element={element} color={color} />
   </IconButton>
 );
