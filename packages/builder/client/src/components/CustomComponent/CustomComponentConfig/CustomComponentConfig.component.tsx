@@ -4,7 +4,8 @@ import IconButton from '@mui/material/IconButton';
 import AddSharp from '@mui/icons-material/AddSharp';
 import DeleteSharp from '@mui/icons-material/DeleteSharp';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 import { ComponentConfig } from '@ui-studio/types';
 import { OpenAPIV3 } from 'openapi-types';
@@ -60,12 +61,15 @@ export const CustomComponentConfigComponent = ({
     onUpdateType(key, value);
   };
 
-  const handleListChange = (key: string) => (value: boolean) => onUpdateList(key, value);
+  const handleListChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) =>
+    onUpdateList(key, event.target.checked);
 
-  const handleIterableChange = (key: string) => (value: boolean) => onUpdateIterable(key, value);
+  const handleIterableChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) =>
+    onUpdateIterable(key, event.target.checked);
 
-  const handleInputBooleanDefaultValueChange = (key: string) => (value: boolean) =>
-    onUpdateDefaultValue(key, value);
+  const handleInputBooleanDefaultValueChange = (key: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => onUpdateDefaultValue(key, event.target.checked);
 
   const handleInputNonBooleanDefaultValueChange = (key: string) => (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -104,7 +108,9 @@ export const CustomComponentConfigComponent = ({
     onUpdateSelectOptions(key, options);
   };
 
-  const handleUpdateSelectOption = (key: string, idx: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpdateSelectOption = (key: string, idx: number) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const configItem = getConfigItem(key);
     const options = (() => {
       if (configItem.schema.type === 'array') {
@@ -211,17 +217,20 @@ export const CustomComponentConfigComponent = ({
                 label: m.replace(/^\w/, (w) => w.toUpperCase()),
               }))}
             />
-            <Checkbox controlled checked={Boolean(list)} onChange={handleListChange(c.key)}>
-              List
-            </Checkbox>
-            <Checkbox
-              controlled
-              checked={Boolean(c.iterable)}
-              disabled={!list}
-              onChange={handleIterableChange(c.key)}
-            >
-              Iterable
-            </Checkbox>
+            <FormControlLabel
+              label="List"
+              control={<Checkbox checked={Boolean(list)} onChange={handleListChange(c.key)} />}
+            />
+            <FormControlLabel
+              label="Iterable"
+              control={
+                <Checkbox
+                  checked={Boolean(c.iterable)}
+                  disabled={!list}
+                  onChange={handleIterableChange(c.key)}
+                />
+              }
+            />
             {control === 'input' && type !== 'boolean' && (
               <TextField
                 inputProps={type === 'number' ? { inputMode: 'numeric', pattern: '[0-9]*' } : {}}
@@ -231,13 +240,15 @@ export const CustomComponentConfigComponent = ({
               />
             )}
             {control === 'input' && type === 'boolean' && (
-              <Checkbox
-                controlled
-                checked={c.defaultValue}
-                onChange={handleInputBooleanDefaultValueChange(c.key)}
-              >
-                Default value
-              </Checkbox>
+              <FormControlLabel
+                label="Default value"
+                control={
+                  <Checkbox
+                    checked={c.defaultValue}
+                    onChange={handleInputBooleanDefaultValueChange(c.key)}
+                  />
+                }
+              />
             )}
             {control === 'select' && type === 'boolean' && (
               <>

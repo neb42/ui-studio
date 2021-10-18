@@ -1,10 +1,12 @@
 import * as React from 'react';
 import AceEditor from 'react-ace';
-import TextField from '@mui/material/TextField';
-import { Value$Static } from '@ui-studio/types';
-import { OpenAPIV3 } from 'openapi-types';
 import { useTheme } from 'styled-components';
-import { Checkbox, Select } from '@faculty/adler-web-components';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { OpenAPIV3 } from 'openapi-types';
+import { Value$Static } from '@ui-studio/types';
+import { Select } from '@faculty/adler-web-components';
 
 type Props = {
   value: Value$Static;
@@ -36,7 +38,8 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
     handleValueChange({ ...value, value: v });
   };
 
-  const handleCheckboxOnChange = (v: boolean) => handleValueChange({ ...value, value: v });
+  const handleCheckboxOnChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    handleValueChange({ ...value, value: event.target.checked });
 
   if (schema.type === 'array' || schema.type === 'object') {
     const valueString = (() => {
@@ -105,9 +108,10 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
   if (schema.type === 'boolean') {
     if (typeof value.value !== 'boolean') throw new Error();
     return (
-      <Checkbox checked={value.value} onChange={handleCheckboxOnChange} controlled>
-        label
-      </Checkbox>
+      <FormControlLabel
+        label="Label"
+        control={<Checkbox checked={value.value} onChange={handleCheckboxOnChange} />}
+      />
     );
   }
 

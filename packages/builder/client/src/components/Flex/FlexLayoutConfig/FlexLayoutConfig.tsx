@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Select from '@faculty/adler-web-components/atoms/Select';
-import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import {
   Widget,
   FlexJustification,
@@ -39,8 +40,8 @@ export const FlexLayoutConfig = ({ widget }: FlexLayoutConfigProps): JSX.Element
     dispatch(updateWidgetLayoutConfig('justify', value as FlexJustification));
   };
 
-  const handleUpdateWrap = (wrap: boolean) => {
-    dispatch(updateWidgetLayoutConfig('wrap', wrap));
+  const handleUpdateWrap = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(updateWidgetLayoutConfig('wrap', event.target.checked));
   };
 
   const { direction } = widget.layout;
@@ -75,9 +76,10 @@ export const FlexLayoutConfig = ({ widget }: FlexLayoutConfigProps): JSX.Element
         />
       </Styles.Field>
       <Styles.Field>
-        <Checkbox checked={widget.layout.wrap} onChange={handleUpdateWrap} controlled>
-          Wrap
-        </Checkbox>
+        <FormControlLabel
+          label="Wrap"
+          control={<Checkbox checked={widget.layout.wrap} onChange={handleUpdateWrap} />}
+        />
       </Styles.Field>
     </Styles.Container>
   );
