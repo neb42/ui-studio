@@ -7,6 +7,6 @@ export const Text: Component & { component: any } = {
   category: 'Text',
   icon: 'TextFieldsSharp',
   library: 'internal',
-  config: [{ component: 'input', key: 'text', label: 'Text', type: 'string', defaultValue: '' }],
+  config: [{ key: 'text', label: 'Text', schema: { type: 'string' }, defaultValue: '' }],
   component: ({ text }: { text: string }) => <span>{text}</span>,
 };

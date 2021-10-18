@@ -20,7 +20,7 @@ export const handleEvent = (
         break;
       }
       case 'trigger-action': {
-        dispatch(triggerAction(ei.actionId, ei.args, event));
+        dispatch(triggerAction(ei, event));
         break;
       }
       case 'navigate-page': {

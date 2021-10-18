@@ -1,10 +1,9 @@
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
+import { OpenAPIV3 } from 'openapi-types';
 import {
   Page,
   Widget,
-  FunctionDefinition,
-  ActionDefinition,
   Variable,
   Component,
   CustomComponent,
@@ -43,11 +42,37 @@ export type Store$View = {
     size: ScreenSize;
   };
   selectedView: 'preview' | 'variable' | 'css';
+  modal: {
+    functionConfiguration:
+      | {
+          open: true;
+          type: 'function';
+          id: string;
+          path: string;
+          method: OpenAPIV3.HttpMethods;
+        }
+      | {
+          open: true;
+          type: 'action';
+          // pageId, widgetId, eventKey, eventInstanceIndex
+          id: [string, string, string, number];
+          path: string;
+          method: OpenAPIV3.HttpMethods;
+        }
+      | {
+          open: false;
+          type: null;
+          id: null;
+          path: null;
+          method: null;
+        };
+  };
 };
 
 export type Store$Configuration = {
-  functions: FunctionDefinition[];
-  actions: ActionDefinition[];
+  openAPISchema: OpenAPIV3.Document;
+  functions: { path: string; method: OpenAPIV3.HttpMethods }[];
+  actions: { path: string; method: OpenAPIV3.HttpMethods }[];
   components: Component[];
   colors:
     | {

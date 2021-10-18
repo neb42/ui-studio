@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import { Select$Option } from '@faculty/adler-web-components/types/Select';
-import { CustomComponent$ExposedProperties } from '@ui-studio/types';
+import { CustomComponent$ExposedProperties, ExposedProperty } from '@ui-studio/types';
 import Input from '@faculty/adler-web-components/atoms/Input';
 
 import * as Styles from './ExposedProperties.styles';
@@ -9,7 +9,7 @@ import * as Styles from './ExposedProperties.styles';
 type Props = {
   widgetIdNameMap: Record<string, string>;
   selectedExposedProperties: Record<string, CustomComponent$ExposedProperties>;
-  availableExposedProperties: Record<string, string[]>;
+  availableExposedProperties: Record<string, ExposedProperty[]>;
   onAddExposedProperty: (widgetId: string, property: string) => any;
   onRemoveExposedProperty: (key: string) => any;
   onUpdateExposedPropertyKey: (oldKey: string, newKey: string) => any;
@@ -27,8 +27,8 @@ export const ExposedPropertiesComponent = ({
     (widgetId) => ({
       label: widgetIdNameMap[widgetId],
       options: availableExposedProperties[widgetId].map((p) => ({
-        value: { widgetId, property: p },
-        label: p,
+        value: { widgetId, property: p.property },
+        label: p.property,
       })),
     }),
   );

@@ -17,10 +17,6 @@ class FilePathBuilder {
 
   public = '';
 
-  server = '';
-
-  serverSrc = '';
-
   init = (root: string = process.cwd()) => {
     this.app = root;
 
@@ -32,9 +28,6 @@ class FilePathBuilder {
     this.components = path.join(this.clientSrc, 'components');
     this.reducers = path.join(this.clientSrc, 'reducers');
     this.pages = path.join(this.clientSrc, 'pages');
-
-    this.server = path.join(this.base, 'server');
-    this.serverSrc = path.join(this.server, 'src');
   };
 }
 

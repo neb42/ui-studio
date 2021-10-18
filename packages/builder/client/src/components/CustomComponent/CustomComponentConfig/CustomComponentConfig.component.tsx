@@ -3,7 +3,8 @@ import Button from '@faculty/adler-web-components/atoms/Button';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
 import Input from '@faculty/adler-web-components/atoms/Input';
-import { ComponentConfig, ComponentConfig$Select } from '@ui-studio/types';
+import { ComponentConfig } from '@ui-studio/types';
+import { OpenAPIV3 } from 'openapi-types';
 
 import * as Styles from './CustomComponentConfig.styles';
 
@@ -17,7 +18,10 @@ type Props = {
   onUpdateList: (key: string, value: boolean) => any;
   onUpdateIterable: (key: string, value: boolean) => any;
   onUpdateDefaultValue: (key: string, value: any) => any;
-  onUpdateSelectOptions: (key: string, options: ComponentConfig$Select['options']) => any;
+  onUpdateSelectOptions: (
+    key: string,
+    options: { key: string | number | boolean; label: string }[],
+  ) => any;
 };
 
 // Currently not supporting complex components or object types
@@ -64,166 +68,218 @@ export const CustomComponentConfigComponent = ({
     onUpdateDefaultValue(key, value);
 
   const handleSelectBooleanTrueValueChange = (key: string) => (value: string) => {
-    const configItem = getConfigItem(key);
-    if (configItem.component !== 'select' || configItem.type !== 'boolean') throw Error();
-    const falseValue = configItem.options.find((o) => o.key === false) as {
-      key: boolean;
-      label: string;
-    };
-    if (!falseValue || typeof falseValue.key !== 'boolean') throw Error();
+    const falseValue = { label: 'False', key: false };
     const options = [{ label: value, key: true }, falseValue];
     onUpdateSelectOptions(key, options);
   };
 
   const handleSelectBooleanFalseValueChange = (key: string) => (value: string) => {
-    const configItem = getConfigItem(key);
-    if (configItem.component !== 'select' || configItem.type !== 'boolean') throw Error();
-    const trueValue = configItem.options.find((o) => o.key === true) as {
-      key: boolean;
-      label: string;
-    };
-    if (!trueValue || typeof trueValue.key !== 'boolean') throw Error();
+    const trueValue = { label: 'True', key: true };
     const options = [trueValue, { label: value, key: false }];
     onUpdateSelectOptions(key, options);
   };
 
   const handleAddSelectOption = (key: string) => () => {
     const configItem = getConfigItem(key);
-    if (configItem.component !== 'select' || configItem.type === 'boolean') throw Error();
-    const options = [...configItem.options, { label: '', key: '' }];
-    onUpdateSelectOptions(key, options as ComponentConfig$Select['options']);
+    const existingOptions = (() => {
+      if (configItem.schema.type === 'array') {
+        if ('ref' in configItem.schema.items) throw new Error();
+        return (configItem.schema.items as OpenAPIV3.SchemaObject).enum || [];
+      }
+      return configItem.schema.enum || [];
+    })().map((e) => {
+      if (e === true) return { label: 'True', key: true };
+      if (e === false) return { label: 'False', key: false };
+      return { label: e, key: e };
+    });
+    const options = [...existingOptions, { label: '', key: '' }];
+    onUpdateSelectOptions(key, options);
   };
 
   const handleUpdateSelectOption = (key: string, idx: number) => (value: string | number) => {
     const configItem = getConfigItem(key);
-    if (configItem.component !== 'select' || configItem.type === 'boolean') throw Error();
-    const options = [...configItem.options];
-    if (configItem.type === 'string')
-      options[idx] = { label: value.toString(), key: value.toString() };
-    if (configItem.type === 'number')
-      options[idx] = { label: value.toString(), key: Number(value) };
-    onUpdateSelectOptions(key, options as ComponentConfig$Select['options']);
+    const options = (() => {
+      if (configItem.schema.type === 'array') {
+        if ('ref' in configItem.schema.items) throw new Error();
+        return (configItem.schema.items as OpenAPIV3.SchemaObject).enum || [];
+      }
+      return configItem.schema.enum || [];
+    })().map((e) => {
+      if (e === true) return { label: 'True', key: true };
+      if (e === false) return { label: 'False', key: false };
+      return { label: e, key: e };
+    });
+    options[idx] = { label: value.toString(), key: value };
+    onUpdateSelectOptions(key, options);
   };
 
   const handleRemoveSelectOption = (key: string, idx: number) => () => {
     const configItem = getConfigItem(key);
-    if (configItem.component !== 'select' || configItem.type === 'boolean') throw Error();
-    const options = [...configItem.options].filter((_, i) => i !== idx);
-    onUpdateSelectOptions(key, options as ComponentConfig$Select['options']);
+    const options = (() => {
+      if (configItem.schema.type === 'array') {
+        if ('ref' in configItem.schema.items) throw new Error();
+        return (configItem.schema.items as OpenAPIV3.SchemaObject).enum || [];
+      }
+      return configItem.schema.enum || [];
+    })()
+      .map((e) => {
+        if (e === true) return { label: 'True', key: true };
+        if (e === false) return { label: 'False', key: false };
+        return { label: e, key: e };
+      })
+      .filter((_, i) => i !== idx);
+    onUpdateSelectOptions(key, options);
   };
 
   return (
     <Styles.Container>
-      {config.map((c) => (
-        <Styles.ConfigItem key={c.key}>
-          <Button
-            icon="delete"
-            color={Button.colors.secondary}
-            style={Button.styles.naked}
-            size={Button.sizes.medium}
-            onClick={handleRemoveConfig(c.key)}
-          />
-          <Input label="Name" value={c.label} onChange={handleNameChange(c.key)} />
-          <Select
-            label="Mode"
-            onChange={handleModeChange(c.key)}
-            value={{
-              value: c.component,
-              label: c.component.replace(/^\w/, (w) => w.toUpperCase()),
-            }}
-            options={['input', 'select'].map((m) => ({
-              value: m,
-              label: m.replace(/^\w/, (w) => w.toUpperCase()),
-            }))}
-          />
-          {c.component !== 'complex' && (
-            <>
-              <Select
-                label="Type"
-                onChange={handleTypeChange(c.key)}
-                value={{
-                  value: c.type,
-                  label: c.type.replace(/^\w/, (w) => w.toUpperCase()),
-                }}
-                options={['string', 'number', 'boolean'].map((m) => ({
-                  value: m,
-                  label: m.replace(/^\w/, (w) => w.toUpperCase()),
-                }))}
-              />
-              <Checkbox controlled checked={Boolean(c.list)} onChange={handleListChange(c.key)}>
-                List
-              </Checkbox>
-              <Checkbox
-                controlled
-                checked={Boolean(c.iterable)}
-                disabled={!c.list && c.type !== 'object'}
-                onChange={handleIterableChange(c.key)}
-              >
-                Iterable
-              </Checkbox>
-            </>
-          )}
-          {c.component === 'input' && c.type !== 'boolean' && (
-            <Input
-              type={c.type}
-              label="Default value"
-              value={c.defaultValue}
-              onChange={handleInputNonBooleanDefaultValueChange(c.key)}
+      {config.map((c) => {
+        const configItem = getConfigItem(c.key);
+
+        const control = (() => {
+          if (configItem.schema.type === 'array') {
+            return 'enum' in (configItem.schema as OpenAPIV3.ArraySchemaObject).items
+              ? 'select'
+              : 'input';
+          }
+          return 'enum' in configItem.schema ? 'select' : 'input';
+        })();
+
+        const type = (() => {
+          const rawType = (() => {
+            if (configItem.schema.type === 'array') {
+              if ('ref' in configItem.schema.items) throw new Error();
+              return (configItem.schema.items as OpenAPIV3.NonArraySchemaObject).type;
+            }
+            return configItem.schema.type;
+          })();
+          if (!rawType) throw new Error();
+          if (rawType === 'integer') return 'number';
+          if (rawType === 'string' || rawType === 'number' || rawType === 'boolean') return rawType;
+          throw new Error();
+        })();
+
+        const list = configItem.schema.type === 'array';
+
+        const options = (() => {
+          if (configItem.schema.type === 'array') {
+            if ('ref' in configItem.schema.items) throw new Error();
+            return (configItem.schema.items as OpenAPIV3.SchemaObject).enum || [];
+          }
+          return configItem.schema.enum || [];
+        })().map((e) => {
+          if (e === true) return { label: 'True', key: true };
+          if (e === false) return { label: 'False', key: false };
+          return { label: e, key: e };
+        });
+
+        return (
+          <Styles.ConfigItem key={c.key}>
+            <Button
+              icon="delete"
+              color={Button.colors.secondary}
+              style={Button.styles.naked}
+              size={Button.sizes.medium}
+              onClick={handleRemoveConfig(c.key)}
             />
-          )}
-          {c.component === 'input' && c.type === 'boolean' && (
+            <Input label="Name" value={c.label} onChange={handleNameChange(c.key)} />
+            <Select
+              label="Mode"
+              onChange={handleModeChange(c.key)}
+              value={{
+                value: control,
+                label: control.replace(/^\w/, (w) => w.toUpperCase()),
+              }}
+              options={['input', 'select'].map((m) => ({
+                value: m,
+                label: m.replace(/^\w/, (w) => w.toUpperCase()),
+              }))}
+            />
+            <Select
+              label="Type"
+              onChange={handleTypeChange(c.key)}
+              value={{
+                value: type,
+                label: type.replace(/^\w/, (w) => w.toUpperCase()),
+              }}
+              options={['string', 'number', 'boolean'].map((m) => ({
+                value: m,
+                label: m.replace(/^\w/, (w) => w.toUpperCase()),
+              }))}
+            />
+            <Checkbox controlled checked={Boolean(list)} onChange={handleListChange(c.key)}>
+              List
+            </Checkbox>
             <Checkbox
               controlled
-              checked={c.defaultValue}
-              onChange={handleInputBooleanDefaultValueChange(c.key)}
+              checked={Boolean(c.iterable)}
+              disabled={!list}
+              onChange={handleIterableChange(c.key)}
             >
-              Default value
+              Iterable
             </Checkbox>
-          )}
-          {c.component === 'select' && c.type === 'boolean' && (
-            <>
+            {control === 'input' && type !== 'boolean' && (
               <Input
-                label="True label"
-                value={c.options.find((v) => v.key === true)?.label ?? ''}
-                onChange={handleSelectBooleanTrueValueChange}
+                type={type}
+                label="Default value"
+                value={c.defaultValue}
+                onChange={handleInputNonBooleanDefaultValueChange(c.key)}
               />
-              <Input
-                label="False label"
-                value={c.options.find((v) => v.key === false)?.label ?? ''}
-                onChange={handleSelectBooleanFalseValueChange}
-              />
-            </>
-          )}
-          {c.component === 'select' && c.type !== 'boolean' && (
-            <>
-              {c.options.map((o: any, ii: any) => (
-                <Styles.SelectOption key={ii}>
-                  <Input
-                    type={c.type}
-                    value={o.label}
-                    onChange={handleUpdateSelectOption(c.key, ii)}
-                  />
-                  <Button
-                    icon="delete"
-                    color={Button.colors.secondary}
-                    style={Button.styles.naked}
-                    size={Button.sizes.medium}
-                    onClick={handleRemoveSelectOption(c.key, ii)}
-                  />
-                </Styles.SelectOption>
-              ))}
-              <Button
-                icon="add"
-                text="Add select option"
-                color={Button.colors.primary}
-                style={Button.styles.outline}
-                size={Button.sizes.small}
-                onClick={handleAddSelectOption(c.key)}
-              />
-            </>
-          )}
-        </Styles.ConfigItem>
-      ))}
+            )}
+            {control === 'input' && type === 'boolean' && (
+              <Checkbox
+                controlled
+                checked={c.defaultValue}
+                onChange={handleInputBooleanDefaultValueChange(c.key)}
+              >
+                Default value
+              </Checkbox>
+            )}
+            {control === 'select' && type === 'boolean' && (
+              <>
+                <Input
+                  label="True label"
+                  value={options.find((v) => v.key === true)?.label ?? ''}
+                  onChange={handleSelectBooleanTrueValueChange}
+                />
+                <Input
+                  label="False label"
+                  value={options.find((v) => v.key === false)?.label ?? ''}
+                  onChange={handleSelectBooleanFalseValueChange}
+                />
+              </>
+            )}
+            {control === 'select' && type !== 'boolean' && (
+              <>
+                {options.map((o: any, ii: any) => (
+                  <Styles.SelectOption key={ii}>
+                    <Input
+                      type={type}
+                      value={o.label}
+                      onChange={handleUpdateSelectOption(c.key, ii)}
+                    />
+                    <Button
+                      icon="delete"
+                      color={Button.colors.secondary}
+                      style={Button.styles.naked}
+                      size={Button.sizes.medium}
+                      onClick={handleRemoveSelectOption(c.key, ii)}
+                    />
+                  </Styles.SelectOption>
+                ))}
+                <Button
+                  icon="add"
+                  text="Add select option"
+                  color={Button.colors.primary}
+                  style={Button.styles.outline}
+                  size={Button.sizes.small}
+                  onClick={handleAddSelectOption(c.key)}
+                />
+              </>
+            )}
+          </Styles.ConfigItem>
+        );
+      })}
       <Button
         icon="add"
         text="Add component config"

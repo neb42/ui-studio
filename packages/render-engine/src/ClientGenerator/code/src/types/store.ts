@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import { ThunkAction as TA } from 'redux-thunk';
+import { OpenAPIV3 } from 'openapi-types';
 import { Widget, Variable, Page, CustomComponent, CustomComponentInstance } from '@ui-studio/types';
 
 type WidgetValue = KeyedObject<any>;
@@ -16,6 +17,7 @@ export interface Store$Widget {
 }
 
 export interface Store$Variable {
+  openAPISchema: OpenAPIV3.Document;
   config: KeyedObject<Variable>;
   value: KeyedObject<KeyedObject<any>>;
 }

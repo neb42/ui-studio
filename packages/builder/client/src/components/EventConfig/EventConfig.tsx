@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { OpenAPIV3 } from 'openapi-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
 import { AddSharp, DeleteSharp } from '@material-ui/icons';
@@ -8,17 +9,20 @@ import {
   Event$UpdateVariable,
   Event$TriggerAction,
   Event$NavigatePage,
-  FunctionVariableArg,
   Widget,
   Page,
   CustomComponentInstance,
   CustomComponent,
+  Value$Static,
 } from '@ui-studio/types';
-import { getComponents, getActions } from 'selectors/configuration';
+import { getComponents, getActions, getArgTypeLookUp } from 'selectors/configuration';
 import { getRoots } from 'selectors/tree';
 import { getVariables } from 'selectors/variable';
 import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/event';
-import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';
+import { Button } from '@faculty/adler-web-components';
+import { openActionConfigurationModal } from 'actions/modal';
+import { getSelectedRootId } from 'selectors/view';
+import { EventModel } from 'models/event';
 
 import * as Styles from './EventConfig.styles';
 
@@ -53,55 +57,60 @@ const UpdateVariableEventConfig = ({
 const TriggerActionEventConfig = ({
   event,
   onChange,
-}: EventConfigInstanceProps<Event$TriggerAction>): JSX.Element => {
+  pageId,
+  widgetId,
+  eventKey,
+  eventInstanceIndex,
+}: EventConfigInstanceProps<Event$TriggerAction> & {
+  pageId: string;
+  widgetId: string;
+  eventKey: string;
+  eventInstanceIndex: number;
+}): JSX.Element => {
+  const dispatch = useDispatch();
   const actions = useSelector(getActions);
-
-  const selectedAction = actions.find((a) => a.name === event.actionId);
+  const argTypeLookUp = useSelector(getArgTypeLookUp);
 
   const handleActionChange = ({ value }: any) => {
-    const newActionId = value as string;
-    const newSelectedAction = actions.find((a) => a.name === newActionId);
-    if (!newSelectedAction) return;
-    const args: FunctionVariableArg[] = newSelectedAction.args.map((a) => {
-      switch (a.type) {
-        case 'string':
-          return { type: 'static', valueType: 'string', value: '' };
-        case 'number':
-          return { type: 'static', valueType: 'number', value: 0 };
-        case 'boolean':
-          return { type: 'static', valueType: 'boolean', value: true };
-        default:
-          throw Error();
-      }
-    });
+    const newActionId = value as { method: OpenAPIV3.HttpMethods; path: string };
+    const args = EventModel.getDefaultFunctionArgs(
+      argTypeLookUp,
+      newActionId.path,
+      newActionId.method,
+    );
     onChange({ type: 'trigger-action', actionId: newActionId, args });
   };
 
-  const handleArgChange = (index: number) => (_: string, arg: FunctionVariableArg) => {
-    const newArgs = [...event.args];
-    newArgs[index] = arg;
-    onChange({ type: 'trigger-action', actionId: event.actionId, args: newArgs });
-  };
+  const options = actions.map((a) => ({ value: a, label: `${a.method.toUpperCase()} ${a.path}` }));
 
-  const options = actions.map((a) => ({ value: a.name, label: a.name }));
+  const handleOpenConfigureFunction = () =>
+    dispatch(
+      openActionConfigurationModal(
+        pageId,
+        widgetId,
+        eventKey,
+        eventInstanceIndex,
+        event.actionId.path,
+        event.actionId.method,
+      ),
+    );
 
   return (
     <>
       <Select
-        value={options.find((o) => o.value === event.actionId)}
+        value={options.find(
+          (o) => o.value.method === event.actionId.method && o.value.path === event.actionId.path,
+        )}
         options={options}
         onChange={handleActionChange}
       />
-      {selectedAction &&
-        selectedAction.args.map((a, i) => (
-          <FunctionVariableArgConfig
-            key={a.name}
-            onChange={handleArgChange(i)}
-            name={a.name}
-            valueType={a.type}
-            arg={event.args[i]}
-          />
-        ))}
+      <Button
+        text="Configure function"
+        onClick={handleOpenConfigureFunction}
+        color={Button.colors.primary}
+        style={Button.styles.outline}
+        size={Button.sizes.medium}
+      />
     </>
   );
 };
@@ -140,7 +149,15 @@ const buildDefaultEvent = (
     case 'update-variable':
       return { type: eventType, variableId: '' };
     case 'trigger-action':
-      return { type: eventType, actionId: '', args: [] };
+      return {
+        type: eventType,
+        actionId: { path: '', method: OpenAPIV3.HttpMethods.POST },
+        args: {
+          path: {},
+          query: {},
+          body: {},
+        },
+      };
     case 'navigate-page':
       return { type: eventType, pageId: '' };
     default:
@@ -152,9 +169,10 @@ interface EventConfigProps {
   widget: Widget | CustomComponentInstance;
 }
 
-export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
+export const EventConfig = ({ widget }: EventConfigProps): JSX.Element | null => {
   const dispatch = useDispatch();
 
+  const rootId = useSelector(getSelectedRootId);
   const roots = useSelector(getRoots);
   const components = useSelector(getComponents);
 
@@ -192,6 +210,8 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
 
   const eventTypeOptions = eventTypes.map((et) => ({ value: et.key, label: et.label }));
 
+  if (!rootId) return null;
+
   return (
     <Styles.Container>
       {eventConfig.map((e) => (
@@ -214,7 +234,14 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element => {
                 <UpdateVariableEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
               )}
               {ee.type === 'trigger-action' && (
-                <TriggerActionEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
+                <TriggerActionEventConfig
+                  event={ee}
+                  onChange={handleEventChange(e.key, i)}
+                  pageId={rootId}
+                  widgetId={widget.id}
+                  eventKey={e.key}
+                  eventInstanceIndex={i}
+                />
               )}
               {ee.type === 'navigate-page' && (
                 <NavigatePageEventConfig event={ee} onChange={handleEventChange(e.key, i)} />

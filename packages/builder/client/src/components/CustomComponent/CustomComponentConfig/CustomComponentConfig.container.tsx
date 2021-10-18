@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import { CustomComponent, ComponentConfig, ComponentConfig$Select } from '@ui-studio/types';
+import { CustomComponent, ComponentConfig } from '@ui-studio/types';
 import {
   addCustomComponentConfig,
   updateCustomComponentConfig,
   removeCustomComponentConfig,
 } from 'actions/customComponent';
+import { OpenAPIV3 } from 'openapi-types';
 
 import { CustomComponentConfigComponent } from './CustomComponentConfig.component';
 
@@ -15,12 +16,12 @@ type Props = {
 
 const getDefaultDefaultValue = (
   mode: 'input' | 'select',
-  type: 'string' | 'number' | 'boolean' | 'object',
+  type: OpenAPIV3.SchemaObject['type'],
   options?: any[],
 ) => {
   if (mode === 'input') {
     if (type === 'string') return '';
-    if (type === 'number') return 0;
+    if (type === 'number' || type === 'integer') return 0;
     if (type === 'boolean') return true;
   }
   if (mode === 'select') return options?.[0] ?? null;
@@ -33,7 +34,7 @@ export const CustomComponentConfigContainer = ({ customComponent }: Props): JSX.
   const getConfigItem = (key: string) => {
     const configItem = customComponent.config?.find((c) => c.key === key);
     if (!configItem) throw Error();
-    if (configItem.component === 'complex') throw Error();
+    if (configItem.schema.type === 'object') throw Error();
     return configItem;
   };
 
@@ -53,18 +54,29 @@ export const CustomComponentConfigContainer = ({ customComponent }: Props): JSX.
 
   const handleUpdateMode = (key: string, mode: 'input' | 'select') => {
     const configItem = getConfigItem(key);
-    const config = (() => {
+    const config: ComponentConfig = (() => {
       if (mode === 'input') {
-        const defaultValue = getDefaultDefaultValue(mode, configItem.type);
+        const defaultValue = getDefaultDefaultValue(mode, configItem.schema.type);
+        const s = (() => {
+          if (configItem.schema.type === 'array') {
+            if ('ref' in configItem.schema.items) throw new Error();
+            return {
+              type: 'array' as const,
+              items: { type: (configItem.schema.items as OpenAPIV3.NonArraySchemaObject).type },
+            };
+          }
+          return { type: configItem.schema.type };
+        })();
         return {
           ...configItem,
           component: mode,
           defaultValue,
+          schema: s,
         };
       }
       if (mode === 'select') {
         const options = (() => {
-          if (configItem.type === 'boolean') {
+          if (configItem.schema.type === 'boolean') {
             return [
               { label: 'True', key: true },
               { label: 'False', key: false },
@@ -72,31 +84,62 @@ export const CustomComponentConfigContainer = ({ customComponent }: Props): JSX.
           }
           return [];
         })();
-        const defaultValue = getDefaultDefaultValue(mode, configItem.type, options);
+        const defaultValue = getDefaultDefaultValue(mode, configItem.schema.type, options);
+        const s: OpenAPIV3.SchemaObject = (() => {
+          if (configItem.schema.type === 'array') {
+            if ('ref' in configItem.schema.items) throw new Error();
+            return {
+              type: 'array' as const,
+              items: {
+                type: (configItem.schema.items as OpenAPIV3.NonArraySchemaObject).type,
+                enum: options.map((o) => o.key),
+              },
+            };
+          }
+          return {
+            type: configItem.schema.type,
+            enum: options.map((o) => o.key),
+          };
+        })();
         return {
           ...configItem,
-          component: mode,
           defaultValue,
-          options,
+          schema: s,
         };
       }
       throw Error();
     })();
-    dispatch(updateCustomComponentConfig(key, config as ComponentConfig));
+    dispatch(updateCustomComponentConfig(key, config));
   };
 
   const handleUpdateType = (key: string, type: 'string' | 'number' | 'boolean') => {
     const configItem = getConfigItem(key);
-    const config = (() => {
-      if (configItem.component === 'input') {
-        const defaultValue = getDefaultDefaultValue(configItem.component, type);
+    const control = (() => {
+      if (configItem.schema.type === 'array') {
+        return 'enum' in (configItem.schema as OpenAPIV3.ArraySchemaObject).items
+          ? 'select'
+          : 'input';
+      }
+      return 'enum' in configItem.schema ? 'select' : 'input';
+    })();
+
+    const config: ComponentConfig = (() => {
+      if (control === 'input') {
+        const defaultValue = getDefaultDefaultValue(control, type);
         return {
           ...configItem,
           type,
           defaultValue,
+          schema:
+            configItem.schema.type === 'array'
+              ? {
+                  type: 'array' as const,
+                  items: { type },
+                }
+              : { type },
         };
       }
-      if (configItem.component === 'select') {
+      if (control === 'select') {
         const options = (() => {
           if (type === 'boolean') {
             return [
@@ -106,35 +149,58 @@ export const CustomComponentConfigContainer = ({ customComponent }: Props): JSX.
           }
           return [];
         })();
-        const defaultValue = getDefaultDefaultValue(configItem.component, type, options);
+        const defaultValue = getDefaultDefaultValue(control, type, options);
         return {
           ...configItem,
-          type,
           defaultValue,
           options,
+          schema:
+            configItem.schema.type === 'array'
+              ? {
+                  type: 'array' as const,
+                  items: { type, enum: options.map((o) => o.key) },
+                }
+              : {
+                  type,
+                  enum: options.map((o) => o.key),
+                },
         };
       }
       throw Error();
     })();
+
     dispatch(updateCustomComponentConfig(key, config as ComponentConfig));
   };
 
   const handleUpdateList = (key: string, value: boolean) => {
     const configItem = getConfigItem(key);
+    const schema = value
+      ? {
+          type: 'array' as const,
+          items: configItem.schema,
+        }
+      : ((configItem.schema as OpenAPIV3.ArraySchemaObject).items as OpenAPIV3.SchemaObject);
     dispatch(
       updateCustomComponentConfig(key, {
         ...configItem,
-        list: value,
-      } as ComponentConfig),
+        schema,
+      }),
     );
   };
 
   const handleUpdateIterable = (key: string, value: boolean) => {
     const configItem = getConfigItem(key);
+    const s = configItem.schema.type === 'array' ? configItem.schema.items : configItem.schema;
     dispatch(
       updateCustomComponentConfig(key, {
         ...configItem,
         iterable: value,
+        schema: value
+          ? {
+              type: 'array',
+              items: s,
+            }
+          : s,
       } as ComponentConfig),
     );
   };
@@ -149,12 +215,21 @@ export const CustomComponentConfigContainer = ({ customComponent }: Props): JSX.
     );
   };
 
-  const handleUpdateSelectOptions = (key: string, options: ComponentConfig$Select['options']) => {
+  const handleUpdateSelectOptions = (
+    key: string,
+    options: { key: string | number | boolean; label: string }[],
+  ) => {
     const configItem = getConfigItem(key);
     dispatch(
       updateCustomComponentConfig(key, {
         ...configItem,
-        options,
+        schema:
+          configItem.schema.type === 'array'
+            ? {
+                ...configItem.schema,
+                items: { ...configItem.schema.items, enum: options.map((o) => o.key) },
+              }
+            : { ...configItem.schema, enum: options.map((o) => o.key) },
       } as ComponentConfig),
     );
   };

@@ -3,3 +3,5 @@ build
 .ui-studio
 .env
 yarn-error.log
+
+**/*.pyc

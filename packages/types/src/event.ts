@@ -1,3 +1,5 @@
+import { OpenAPIV3 } from 'openapi-types';
+
 import { FunctionVariableArg } from './variable';
 
 export interface Event$UpdateVariable {
@@ -12,8 +14,15 @@ export interface Event$UpdateVariable {
 
 export interface Event$TriggerAction {
   type: 'trigger-action';
-  actionId: string;
-  args: FunctionVariableArg[];
+  actionId: {
+    path: string;
+    method: OpenAPIV3.HttpMethods;
+  };
+  args: {
+    path: Record<string, FunctionVariableArg>;
+    query: Record<string, FunctionVariableArg>;
+    body: Record<string, FunctionVariableArg>;
+  };
 }
 
 export interface Event$NavigatePage {

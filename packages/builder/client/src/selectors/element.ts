@@ -7,6 +7,8 @@ import {
   getElement,
 } from 'selectors/tree';
 import { getSelectedRootId } from 'selectors/view';
+import { OpenAPIV3 } from 'openapi-types';
+import { compareSchemas } from 'utils/openapi';
 
 export const generateDefaultName = (state: Store, regex: string) => {
   const root = getSelectedRootElement(state);
@@ -54,6 +56,7 @@ export const getOrphanedRootElements = (state: Store): (Widget | CustomComponent
 
 export const getAvailableIteratorKeys = (state: Store) => (
   widgetId: string,
+  schema?: OpenAPIV3.SchemaObject,
 ): {
   widgetId: string;
   widgetName: string;
@@ -73,13 +76,50 @@ export const getAvailableIteratorKeys = (state: Store) => (
   return parentElements.reduce<{ widgetId: string; widgetName: string; propKeys: string[] }[]>(
     (acc, cur) => {
       if (cur.id === widgetId || cur.rootElement) return acc;
+      const propSchemaLookup: Record<
+        string,
+        { schema: OpenAPIV3.SchemaObject; iterable: boolean }
+      > = (() => {
+        if (cur.type === 'widget') {
+          const config = state.configuration.components.find((c) => c.key === cur.component);
+          if (!config || !config.config) return {};
+          return config.config.reduce((a, c) => {
+            return {
+              ...acc,
+              [c.key]: {
+                schema: c.schema,
+                iterable: c.iterable,
+              },
+            };
+          }, {});
+        }
+        if (cur.type === 'customComponentInstance') {
+          const config = state.customComponent[cur.customComponentId];
+          if (!config.config) return {};
+          return config.config.reduce((a, c) => {
+            return {
+              ...acc,
+              [c.key]: {
+                schema: c.schema,
+                iterable: c.iterable,
+              },
+            };
+          }, {});
+        }
+        throw new Error();
+      })();
       const iterablePropKeys = Object.keys(cur.props).reduce<string[]>((a, c) => {
-        const prop = cur.props[c];
-        if (
-          (prop.mode === 'list' || (prop.mode === 'static' && prop.type === 'object')) &&
-          prop.iterable
-        )
-          return [...a, c];
+        const iterableSchema = propSchemaLookup[c].schema;
+        if (iterableSchema.type === 'array' && propSchemaLookup[c].iterable) {
+          const iterableArrayItemSchema = (iterableSchema as OpenAPIV3.ArraySchemaObject).items;
+          if ('ref' in iterableArrayItemSchema) throw new Error();
+          if (
+            !schema ||
+            compareSchemas(iterableArrayItemSchema as OpenAPIV3.SchemaObject, schema)
+          ) {
+            return [...a, c];
+          }
+        }
         return a;
       }, []);
       if (iterablePropKeys.length === 0) return acc;

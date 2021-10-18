@@ -1,4 +1,4 @@
-import { Variable, StaticVariable, FunctionVariable } from '@ui-studio/types';
+import { StaticVariable, FunctionVariable } from '@ui-studio/types';
 import {
   Action$Variable,
   ADD_VARIABLE,
@@ -8,6 +8,7 @@ import {
   UPDATE_STATIC_VARIABLE,
   UPDATE_FUNCTION_VARIABLE,
   UPDATE_VARIABLE_FUNCTION_ARG,
+  UPDATE_LOOKUP_VARIABLE,
 } from 'actions/variable';
 import { INIT_CLIENT, InitClient } from 'actions/init';
 import { Store$Variable } from 'types/store';
@@ -45,10 +46,10 @@ export const variableReducer = (
       };
     }
     case UPDATE_VARIABLE_TYPE: {
-      const { id, type } = action.payload;
+      const { id, type, openAPISchema } = action.payload;
       return {
         ...state,
-        [id]: VariableModel.updateVariableType(state[id], type),
+        [id]: VariableModel.updateVariableType(state[id], type, openAPISchema, state),
       };
     }
     case UPDATE_STATIC_VARIABLE: {
@@ -78,19 +79,30 @@ export const variableReducer = (
       };
     }
 
+    case UPDATE_LOOKUP_VARIABLE: {
+      return {
+        ...state,
+        [action.payload.id]: action.payload,
+      };
+    }
+
     case UPDATE_VARIABLE_FUNCTION_ARG: {
-      const { variableId, index, arg } = action.payload;
+      const { variableId, argType, argKey, arg } = action.payload;
 
       const variable = state[variableId];
       if (variable.type !== 'function') throw new Error();
-      const args = [...variable.args];
-      args[index] = arg;
 
       return {
         ...state,
         [variableId]: {
           ...variable,
-          args,
+          args: {
+            ...variable.args,
+            [argType]: {
+              ...variable.args[argType],
+              [argKey]: arg,
+            },
+          },
         },
       };
     }

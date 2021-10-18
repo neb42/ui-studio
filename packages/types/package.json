@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/types",
-  "version": "0.1.16",
+  "version": "0.1.25",
   "private": false,
   "homepage": "https://github.com/neb42/canvas/tree/master/packages/types#readme",
   "main": "build/index.js",
@@ -15,5 +15,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "9030fec9098e03a803e0bd1dfb46833e8dbd7e3d"
+  "gitHead": "9030fec9098e03a803e0bd1dfb46833e8dbd7e3d",
+  "devDependencies": {
+    "openapi-types": "^9.3.0"
+  }
 }

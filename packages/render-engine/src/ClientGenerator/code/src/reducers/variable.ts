@@ -7,6 +7,7 @@ import {
   FUNCTION_API_CALL_FULFILLED,
   FUNCTION_API_CALL_REJECTED,
 } from '../actions/updateFunctionVariable';
+import { InitApi, INIT_API } from '../actions/initApi';
 import { UpdateStaticVariable, UPDATE_STATIC_VARIABLE } from '../actions/updateStaticVariable';
 import { UpdateTree, UPDATE_TREE } from '../actions/updateTree';
 
@@ -15,9 +16,15 @@ type Action$Variable =
   | UpdateFunctionVariable$Fulfilled
   | UpdateFunctionVariable$Rejected
   | UpdateStaticVariable
-  | UpdateTree;
+  | UpdateTree
+  | InitApi;
 
 const initialState: Store$Variable = {
+  openAPISchema: {
+    openapi: '3.0.2',
+    info: { title: '', version: '0.0.0' },
+    paths: {},
+  },
   config: {},
   value: {},
 };
@@ -27,6 +34,12 @@ export const variable = (
   action: Action$Variable,
 ): Store$Variable => {
   switch (action.type) {
+    case INIT_API: {
+      return {
+        ...state,
+        openAPISchema: action.payload,
+      };
+    }
     case FUNCTION_API_CALL_PENDING: {
       return {
         ...state,

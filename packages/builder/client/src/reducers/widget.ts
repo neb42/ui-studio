@@ -248,7 +248,7 @@ export const widgetReducer = (
 
     case UPDATE_WIDGET_POSITION: {
       const { rootId, widgetId, source, destination, style } = action.payload;
-      const widgets = Object.keys(state[rootId].widgets).reduce((acc, cur) => {
+      const widgets = Object.keys(state[rootId]).reduce((acc, cur) => {
         const widget = WidgetModel.updatePosition(
           state[rootId][cur],
           widgetId,
@@ -276,7 +276,7 @@ export const widgetReducer = (
       const doProps = (props: Widget['props'], currentRootId: string) =>
         Object.keys(props).reduce<Widget['props']>((acc, cur) => {
           const currentProp = props[cur];
-          if (currentProp.mode === 'widget' && currentProp.lookup === oldKey) {
+          if (currentProp.mode === 'widget' && currentProp.property === oldKey) {
             const propWidget = state[currentRootId][currentProp.widgetId];
             if (
               propWidget.type === 'customComponentInstance' &&

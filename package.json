@@ -16,8 +16,11 @@
   "scripts": {
     "lerna": "lerna",
     "build": "lerna run build",
-    "prepublish": "yarn build",
-    "publish": "lerna publish"
+    "deploy": "yarn build && lerna publish",
+    "deploy:prepatch": "yarn build && lerna publish prepatch",
+    "deploy:patch": "yarn build && lerna publish patch",
+    "deploy:minor": "yarn build && lerna publish minor",
+    "deploy:major": "yarn build && lerna publish major"
   },
   "devDependencies": {
     "@faculty/eslint-config-base": "^0.0.104",
@@ -36,6 +39,7 @@
     "eslint-plugin-react": "^7.20.5",
     "eslint-plugin-react-hooks": "^4.0.4",
     "lerna": "^3.22.1",
+    "openapi-types": "^9.3.0",
     "prettier": "^2.0.5",
     "prettier-eslint": "^11.0.0",
     "prettycli": "^1.4.3",

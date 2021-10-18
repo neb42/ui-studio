@@ -22,6 +22,7 @@ export const BackgroundColorContainer = ({ element }: Props) => {
       }),
     );
   };
+
   return (
     <ColorPicker
       header="Background color"

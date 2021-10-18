@@ -13,12 +13,7 @@ import { getOptions } from './options';
 import { initCode } from './preview';
 
 const run = async (): Promise<void> => {
-  const {
-    SERVER_PORT,
-    FUNCTIONS_PATH,
-    PREVIEW_CLIENT_PORT,
-    PREVIEW_SERVER_PORT,
-  } = await getOptions();
+  const { SERVER_PORT, REPO_PATH, PREVIEW_CLIENT_PORT, PREVIEW_SERVER_PORT } = await getOptions();
 
   await initCode();
 
@@ -40,10 +35,16 @@ const run = async (): Promise<void> => {
   io.origins('*:*');
 
   io.on('connection', (socket) => {
-    const clientJsonPath = path.join(FUNCTIONS_PATH, 'client.json');
+    const clientJsonPath = path.join(REPO_PATH, 'client.json');
     const clientJson = JSON.parse(readFileSync(clientJsonPath).toString());
 
+    const packageJsonPath = path.join(REPO_PATH, 'package.json');
+    const packageJson = JSON.parse(readFileSync(packageJsonPath).toString());
+    const { openAPIEndpoint } = packageJson.uiStudio;
+
     socket.emit('init-client', clientJson);
+
+    socket.emit('set-open-api-endpoint', openAPIEndpoint);
 
     socket.emit('set-server', {
       host: 'http://localhost',
@@ -53,6 +54,10 @@ const run = async (): Promise<void> => {
 
     socket.on('init-builder', (r) => {
       socket.broadcast.emit('init-builder', r);
+    });
+
+    socket.on('init-api', (r) => {
+      socket.broadcast.emit('init-api', r);
     });
 
     socket.on('elements-updated', async (elements) => {

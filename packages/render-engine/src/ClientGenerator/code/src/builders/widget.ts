@@ -68,7 +68,7 @@ const WidgetWrapper = styled.div<{ widget: Widget | CustomComponentInstance; isS
 
   ${({ widget }) => widget.style.css}
 
-  ${({ theme, isSelected }) => (isSelected ? `border: 1px solid ${theme.colors.brand500};` : '')}
+  ${({ isSelected }) => (isSelected ? 'border: 1px solid #000;' : '')}
 `;
 
 const useGetProps = (
@@ -180,7 +180,7 @@ export const WidgetBuilder: React.FC<any> = ({
   };
   */
 
-  const handleExposedPropetyUpdate = (ep: { [key: string]: any }) => {
+  const handleExposedPropertyUpdate = (ep: { [key: string]: any }) => {
     dispatch(updateWidget(widget.id, rootId, ep));
   };
 
@@ -195,7 +195,7 @@ export const WidgetBuilder: React.FC<any> = ({
       loading,
       error,
       exposedProperties,
-      onExposedPropertiesChange: handleExposedPropetyUpdate,
+      onExposedPropertiesChange: handleExposedPropertyUpdate,
     },
   );
 

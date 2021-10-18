@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { Dispatch } from 'redux';
 
+import { makeOpenAPIRequest } from '../openapi';
 import { getVariableDefinitions, getVariableArgs } from '../selectors';
 import { GetState } from '../types/store';
 
@@ -53,12 +53,16 @@ export const updateFunctionVariable = (id: string, event?: any) => async (
 
     const { functionId } = variableDef;
     const args = getVariableArgs(state)(id);
-    const {
-      data: { data },
-      status,
-    } = await axios.post(`/api/function_${functionId}`, { event, args });
 
-    if (status !== 200) throw new Error(`Status code: ${status}`);
+    const data = await makeOpenAPIRequest(
+      state,
+      functionId.path,
+      functionId.method,
+      args.path,
+      args.query,
+      args.body,
+      event,
+    );
 
     dispatch({
       type: FUNCTION_API_CALL_FULFILLED,

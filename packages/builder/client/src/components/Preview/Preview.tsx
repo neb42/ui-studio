@@ -2,13 +2,14 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import axios from 'axios';
-import { InitFunctions, Component } from '@ui-studio/types';
+import { OpenAPIV3 } from 'openapi-types';
+import { Component } from '@ui-studio/types';
 import { Store$Tree, Store$Variable, Store, Store$Configuration } from 'types/store';
 import { getVariables } from 'selectors/variable';
 import { getRoots, getRawTree, getSelectedRootElement } from 'selectors/tree';
 import { getColorConfig } from 'selectors/configuration';
 import { getSelectedElementId, getHoverElementId, getPreviewSize } from 'selectors/view';
-import { initComponents, initFunctions } from 'actions/configuration';
+import { initComponents, initApi } from 'actions/configuration';
 import { initClient } from 'actions/init';
 import { selectRootElement, selectElement } from 'actions/view';
 
@@ -76,18 +77,14 @@ export const Preview = (): JSX.Element => {
 
     socket.on(
       'init-builder',
-      ({
-        functions,
-        components,
-      }: {
-        functions: InitFunctions;
-        components: Component[];
-        colors: Store$Configuration['colors'];
-      }) => {
-        dispatch(initFunctions(functions));
+      ({ components }: { components: Component[]; colors: Store$Configuration['colors'] }) => {
         dispatch(initComponents(components));
       },
     );
+
+    socket.on('init-api', (openAPIDef: OpenAPIV3.Document) => {
+      dispatch(initApi(openAPIDef));
+    });
 
     socket.on('select-element', (response: { id: string | null }) => {
       if (response.id !== selectedElementId) dispatch(selectElement(response.id));

@@ -1,9 +1,14 @@
 import {
+  FunctionVariableArg,
   WidgetProp,
-  WidgetProp$CustomComponentConfig,
-  WidgetProp$Iterable,
+  Value$CustomComponentConfig,
+  Value$Iterable,
 } from '@ui-studio/types';
+import { OpenAPIV3 } from 'openapi-types';
 
+import { Components } from './Components';
+import { getResponseSchemaForEndpoint } from './openapi';
+import { lookupValue } from './parseLookup';
 import { Store } from './types/store';
 
 export const getWidgetPropertyValue = (state: Store) => (
@@ -31,18 +36,39 @@ export const getWidgetPropertyValue = (state: Store) => (
 
 export const getVariableDefinitions = (state: Store) => state.variable.config;
 
-const parseLookup = (variable: any, lookup: string) =>
-  lookup.split('.').reduce((acc, cur) => (cur.length > 0 ? acc[cur] : acc), variable);
-
 export const getVariableValue = (state: Store) => (variableId: string, lookup: string | null) => {
   let variable = state.variable.value[variableId];
-  if (!variable) return null;
+  const variableConfig = state.variable.config[variableId];
 
-  if (state.variable.config[variableId].valueType === 'object' && typeof variable === 'string') {
-    try {
-      variable = JSON.parse(variable);
-    } catch {}
-  }
+  if (!variableConfig) return null;
+  if (!variable && variableConfig.type !== 'lookup') return null;
+
+  try {
+    if (variableConfig.type === 'static') {
+      if (variableConfig.valueType === 'object') {
+        if (typeof variable === 'string') {
+          variable = JSON.parse(variable);
+        }
+      }
+    }
+
+    if (variableConfig.type === 'function') {
+      const schema = getResponseSchemaForEndpoint(
+        state.variable.openAPISchema,
+        variableConfig.functionId.path,
+        variableConfig.functionId.method,
+      );
+      if (schema.type === 'object' || schema.type === 'array') {
+        if (typeof variable === 'string') {
+          variable = JSON.parse(variable);
+        }
+      }
+    }
+
+    if (variableConfig.type === 'lookup') {
+      variable = getVariableValue(state)(variableConfig.variableId, variableConfig.lookup);
+    }
+  } catch {}
 
   if (lookup && lookup.length > 0) {
     if (
@@ -52,14 +78,14 @@ export const getVariableValue = (state: Store) => (variableId: string, lookup: s
       try {
         return {
           ...variable,
-          value: parseLookup(variable.value, lookup),
+          value: lookupValue(variable.value, lookup),
         };
       } catch {
         return { ...variable, error: true, value: null };
       }
     }
     try {
-      return parseLookup(variable, lookup);
+      return lookupValue(variable, lookup);
     } catch {
       return null;
     }
@@ -67,30 +93,53 @@ export const getVariableValue = (state: Store) => (variableId: string, lookup: s
   return variable;
 };
 
-export const getVariableArgs = (state: Store) => (variableId: string) => {
-  const variable = getVariableDefinitions(state)[variableId];
-  if (variable.type !== 'function') return [];
-
-  return variable.args.map((a) => {
-    if (a.type === 'static') {
-      return a.value;
+export const resolveArgSet = (state: Store, args: Record<string, FunctionVariableArg>) => {
+  const resolveArg = (arg: FunctionVariableArg) => {
+    if (arg.mode === 'static') {
+      return arg.value;
     }
 
-    if (a.type === 'variable') {
-      return getVariableValue(state)(a.variableId, null);
+    if (arg.mode === 'variable') {
+      const v = getVariableValue(state)(arg.variableId, null);
+      if (
+        JSON.stringify(Object.keys(v).sort()) ===
+        JSON.stringify(['error', 'loading', 'value'].sort())
+      ) {
+        return v.value;
+      }
+      return v;
     }
 
-    if (a.type === 'widget') {
-      return getWidgetPropertyValue(state)(a.widgetId, null, a.property);
+    if (arg.mode === 'widget') {
+      return getWidgetPropertyValue(state)(arg.widgetId, null, arg.property);
     }
 
     return null;
-  });
+  };
+
+  return Object.keys(args).reduce<Record<string, any>>((acc, cur) => {
+    return {
+      ...acc,
+      [cur]: resolveArg(args[cur]),
+    };
+  }, {});
+};
+
+export const getVariableArgs = (state: Store) => (variableId: string) => {
+  const variable = getVariableDefinitions(state)[variableId];
+  if (variable.type !== 'function')
+    return {
+      path: {},
+      query: {},
+      body: {},
+    };
+
+  return variable.args;
 };
 
 export const getCustomComponentConfigProp = (state: Store) => (
   rootId: string | null,
-  prop: WidgetProp$CustomComponentConfig,
+  prop: Value$CustomComponentConfig,
   iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
 ): any | null => {
   if (!rootId) return null;
@@ -124,22 +173,19 @@ export const getProp = (state: Store) => (
   }
 
   if (prop.mode === 'variable') {
-    if (prop.type === 'object') {
-      return getVariableValue(state)(prop.variableId, prop.lookup);
-    }
-    return getVariableValue(state)(prop.variableId, null);
+    return getVariableValue(state)(prop.variableId, prop.lookup || null);
   }
 
   if (prop.mode === 'widget') {
-    return getWidgetPropertyValue(state)(prop.widgetId, rootId, prop.lookup);
+    return getWidgetPropertyValue(state)(prop.widgetId, rootId, prop.property);
   }
 
   if (prop.mode === 'static') {
-    if (prop.type === 'object') {
+    if (typeof prop.value === 'string') {
       try {
         return JSON.parse(prop.value);
       } catch {
-        return null;
+        return prop.value;
       }
     }
     return prop.value;
@@ -151,7 +197,7 @@ export const getProp = (state: Store) => (
 export const getIterableValue = (state: Store) => (
   sourceWidgetId: string,
   rootId: string | null,
-  widgetProp: WidgetProp$Iterable,
+  widgetProp: Value$Iterable,
   iteratorIndex: { [widgetId: string]: { [prop: string]: number } },
 ): any => {
   try {

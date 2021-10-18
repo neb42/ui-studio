@@ -1,8 +1,10 @@
 import { Dispatch } from 'redux';
 import { v4 as uuidv4 } from 'uuid';
-import { Variable, FunctionVariableArg } from '@ui-studio/types';
+import { OpenAPIV3 } from 'openapi-types';
+import { Variable, FunctionVariableArg, FunctionVariable, LookupVariable } from '@ui-studio/types';
 import { TGetState, TThunkAction } from 'types/store';
 import { selectVariable, SelectVariable } from 'actions/view';
+import { VariableModel } from 'models/variable';
 
 import { resetVariableFunctionArgsUsingVariable, resetWidgetPropsUsingVariable } from './foo';
 
@@ -67,6 +69,7 @@ interface UpdateVariableType {
   payload: {
     id: string;
     type: 'static' | 'function';
+    openAPISchema: OpenAPIV3.Document;
   };
 }
 
@@ -75,12 +78,17 @@ export const UPDATE_VARIABLE_TYPE = 'UPDATE_VARIABLE_TYPE';
 export const updateVariableType = (
   id: string,
   type: 'static' | 'function',
-): TThunkAction<UpdateVariableType> => (dispatch: Dispatch<UpdateVariableType>) => {
+): TThunkAction<UpdateVariableType> => (
+  dispatch: Dispatch<UpdateVariableType>,
+  getState: TGetState,
+) => {
+  const state = getState();
+
   dispatch(resetWidgetPropsUsingVariable(id));
   dispatch(resetVariableFunctionArgsUsingVariable(id));
   return dispatch({
     type: UPDATE_VARIABLE_TYPE,
-    payload: { id, type },
+    payload: { id, type, openAPISchema: state.configuration.openAPISchema },
   });
 };
 
@@ -142,7 +150,10 @@ export function updateStaticVariable(id: string, valueType: any, value: any): an
   return (dispatch: Dispatch<UpdateStaticVariable>, getState: TGetState) => {
     const state = getState();
     const variable = state.variable[id];
-    if (variable.valueType !== valueType) {
+    if (
+      VariableModel.getValueType(variable, state.configuration.openAPISchema, state.variable) !==
+      valueType
+    ) {
       dispatch(resetWidgetPropsUsingVariable(id));
       dispatch(resetVariableFunctionArgsUsingVariable(id));
     }
@@ -161,10 +172,12 @@ interface UpdateFunctionVariable {
   type: 'UPDATE_FUNCTION_VARIABLE';
   payload: {
     id: string;
-    functionId: string;
-    valueType: 'string' | 'number' | 'boolean' | 'object';
+    functionId: {
+      path: string;
+      method: OpenAPIV3.HttpMethods;
+    };
     trigger: 'auto' | 'event';
-    args: FunctionVariableArg[];
+    args: FunctionVariable['args'];
   };
 }
 
@@ -172,16 +185,17 @@ export const UPDATE_FUNCTION_VARIABLE = 'UPDATE_FUNCTION_VARIABLE';
 
 export const updateFunctionVariable = (
   id: string,
-  functionId: string,
-  valueType: 'string' | 'number' | 'boolean' | 'object',
+  functionId: {
+    path: string;
+    method: OpenAPIV3.HttpMethods;
+  },
   trigger: 'auto' | 'event',
-  args: FunctionVariableArg[],
+  args: FunctionVariable['args'],
 ): UpdateFunctionVariable => ({
   type: UPDATE_FUNCTION_VARIABLE,
   payload: {
     id,
     functionId,
-    valueType,
     trigger,
     args,
   },
@@ -191,12 +205,28 @@ export interface UpdateVariableFunctionArg {
   type: 'UPDATE_VARIABLE_FUNCTION_ARG';
   payload: {
     variableId: string;
-    index: number;
+    argType: keyof FunctionVariable['args'];
+    argKey: string;
     arg: FunctionVariableArg;
   };
 }
 
 export const UPDATE_VARIABLE_FUNCTION_ARG = 'UPDATE_VARIABLE_FUNCTION_ARG';
+
+interface UpdateLookupVariable {
+  type: 'UPDATE_LOOKUP_VARIABLE';
+  payload: LookupVariable;
+}
+
+export const UPDATE_LOOKUP_VARIABLE = 'UPDATE_LOOKUP_VARIABLE';
+
+export const updateLookupVariable = (
+  id: string,
+  variable: LookupVariable,
+): UpdateLookupVariable => ({
+  type: UPDATE_LOOKUP_VARIABLE,
+  payload: variable,
+});
 
 export type Action$Variable =
   | AddVariable
@@ -205,4 +235,5 @@ export type Action$Variable =
   | UpdateVariableType
   | UpdateStaticVariable
   | UpdateFunctionVariable
-  | UpdateVariableFunctionArg;
+  | UpdateVariableFunctionArg
+  | UpdateLookupVariable;

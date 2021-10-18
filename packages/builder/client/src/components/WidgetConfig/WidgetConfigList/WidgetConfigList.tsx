@@ -41,16 +41,14 @@ export const WidgetConfigList = ({ widget }: WidgetConfigProps): JSX.Element => 
       {config.map((c) => {
         const widgetProp = widget.props[c.key];
         return (
-          <>
-            <WidgetConfigItem
-              widgetId={widget.id}
-              rootType={root.type}
-              widgetProp={widgetProp}
-              onChange={handleOnChange(c.key)}
-              config={c}
-            />
-            <Styles.Divider />
-          </>
+          <WidgetConfigItem
+            key={c.key}
+            widgetId={widget.id}
+            rootType={root.type}
+            widgetProp={widgetProp}
+            onChange={handleOnChange(c.key)}
+            config={c}
+          />
         );
       })}
     </Styles.Container>

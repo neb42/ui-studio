@@ -1,3 +1,7 @@
+import { OpenAPIV3 } from 'openapi-types';
+
+import { Value$Static, Value$Variable, Value$Widget } from './value';
+
 export interface BaseVariable {
   id: string;
   name: string;
@@ -12,42 +16,26 @@ export type StaticVariable = BaseVariable & {
     | { valueType: 'object'; value: string }
   );
 
-// export type LookupVariable = BaseVariable & {
-//   type: 'lookup';
-//   variableId: string;
-//   value: string;
-// };
-
-export type FunctionVariable$StaticArg = {
-  type: 'static';
-} & (
-  | { valueType: 'string'; value: string }
-  | { valueType: 'number'; value: number }
-  | { valueType: 'boolean'; value: boolean }
-);
-
-export interface FunctionVariable$VariableArg {
-  type: 'variable';
+export type LookupVariable = BaseVariable & {
+  type: 'lookup';
   variableId: string;
-}
+  lookup: string;
+};
 
-export interface FunctionVariable$WidgetArg {
-  type: 'widget';
-  widgetId: string;
-  property: string;
-}
-
-export type FunctionVariableArg =
-  | FunctionVariable$StaticArg
-  | FunctionVariable$VariableArg
-  | FunctionVariable$WidgetArg;
+export type FunctionVariableArg = Value$Static | Value$Variable | Value$Widget;
 
 export interface FunctionVariable extends BaseVariable {
   type: 'function';
-  functionId: string;
-  valueType: 'string' | 'number' | 'boolean' | 'object';
+  functionId: {
+    path: string;
+    method: OpenAPIV3.HttpMethods;
+  };
   trigger: 'auto' | 'event';
-  args: FunctionVariableArg[];
+  args: {
+    path: Record<string, FunctionVariableArg>;
+    query: Record<string, FunctionVariableArg>;
+    body: Record<string, FunctionVariableArg>;
+  };
 }
 
-export type Variable = FunctionVariable | StaticVariable;
+export type Variable = FunctionVariable | StaticVariable | LookupVariable;
