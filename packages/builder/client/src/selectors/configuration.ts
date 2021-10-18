@@ -13,7 +13,7 @@ export const getFunctions = (state: Store): { path: string; method: OpenAPIV3.Ht
 export const getColorConfig = (state: Store): Store$Configuration['colors'] =>
   state.configuration.colors;
 
-type ArgTypeLookup = {
+export type ArgTypeLookup = {
   [argType in keyof FunctionVariable['args']]: {
     [path: string]: {
       [key in OpenAPIV3.HttpMethods]: {

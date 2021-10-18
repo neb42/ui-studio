@@ -22,6 +22,7 @@ import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/ev
 import { Button } from '@faculty/adler-web-components';
 import { openActionConfigurationModal } from 'actions/modal';
 import { getSelectedRootId } from 'selectors/view';
+import { EventModel } from 'models/event';
 
 import * as Styles from './EventConfig.styles';
 
@@ -72,42 +73,11 @@ const TriggerActionEventConfig = ({
 
   const handleActionChange = ({ value }: any) => {
     const newActionId = value as { method: OpenAPIV3.HttpMethods; path: string };
-    const staticArgTypeMap: {
-      [argType in 'string' | 'number' | 'boolean']: Value$Static;
-    } = {
-      string: { mode: 'static', value: '' },
-      number: { mode: 'static', value: 0 },
-      boolean: { mode: 'static', value: true },
-    };
-    const args = {
-      path: Object.keys(argTypeLookUp.path[newActionId.path][newActionId.method]).reduce(
-        (acc, cur) => {
-          return {
-            ...acc,
-            [cur]: staticArgTypeMap[argTypeLookUp.path[newActionId.path][newActionId.method][cur]],
-          };
-        },
-        {},
-      ),
-      query: Object.keys(argTypeLookUp.query[newActionId.path][newActionId.method]).reduce(
-        (acc, cur) => {
-          return {
-            ...acc,
-            [cur]: staticArgTypeMap[argTypeLookUp.query[newActionId.path][newActionId.method][cur]],
-          };
-        },
-        {},
-      ),
-      body: Object.keys(argTypeLookUp.body[newActionId.path][newActionId.method]).reduce(
-        (acc, cur) => {
-          return {
-            ...acc,
-            [cur]: staticArgTypeMap[argTypeLookUp.body[newActionId.path][newActionId.method][cur]],
-          };
-        },
-        {},
-      ),
-    };
+    const args = EventModel.getDefaultFunctionArgs(
+      argTypeLookUp,
+      newActionId.path,
+      newActionId.method,
+    );
     onChange({ type: 'trigger-action', actionId: newActionId, args });
   };
 

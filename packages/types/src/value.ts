@@ -39,3 +39,12 @@ export type Value$Complex = {
     // [key: string]: Value$Static | Value$Variable | Value$Widget | Value$CustomComponentConfig;
   };
 };
+
+export type Value =
+  | Value$Widget
+  | Value$Static
+  | Value$Variable
+  | Value$List
+  | Value$Complex
+  | Value$Iterable
+  | Value$CustomComponentConfig;
