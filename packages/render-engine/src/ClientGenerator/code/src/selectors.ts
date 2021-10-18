@@ -100,7 +100,14 @@ export const resolveArgSet = (state: Store, args: Record<string, FunctionVariabl
     }
 
     if (arg.mode === 'variable') {
-      return getVariableValue(state)(arg.variableId, null);
+      const v = getVariableValue(state)(arg.variableId, null);
+      if (
+        JSON.stringify(Object.keys(v).sort()) ===
+        JSON.stringify(['error', 'loading', 'value'].sort())
+      ) {
+        return v.value;
+      }
+      return v;
     }
 
     if (arg.mode === 'widget') {
