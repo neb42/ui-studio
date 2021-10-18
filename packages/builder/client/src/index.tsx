@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
-import { defaultTokens, ThemeProvider } from '@faculty/adler-tokens';
+import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles';
 
 import 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
@@ -13,6 +13,7 @@ import 'ace-builds/src-noconflict/worker-css';
 import 'ace-builds/src-noconflict/theme-chrome';
 import 'ace-builds/src-noconflict/ext-language_tools';
 
+import { adlerTheme } from './adlerTheme';
 import store from './store';
 import App from './App';
 
@@ -72,16 +73,20 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
+const theme = createTheme(adlerTheme);
+
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={defaultTokens}>
-      <Provider store={store}>
-        <GlobalStyles />
-        <Router>
-          <App />
-        </Router>
-      </Provider>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>
+          <GlobalStyles />
+          <Router>
+            <App />
+          </Router>
+        </Provider>
+      </ThemeProvider>
+    </StyledEngineProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
