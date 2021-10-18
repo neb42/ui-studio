@@ -29,12 +29,12 @@ export const FlexParentStyle = ({ element, parent }: FlexParentStyleProps): JSX.
     dispatch(updateStyle(style));
   };
 
-  const handleUpdateGrow = (_: Event, grow: number) => {
-    if (element.style.type !== 'flex') throw Error();
+  const handleUpdateGrow = (_: Event, grow: number | number[]) => {
+    if (element.style.type !== 'flex' || Array.isArray(grow)) throw Error();
 
     const style: IFlexStyle = {
       ...element.style,
-      grow,
+      grow: grow as number,
     };
 
     dispatch(updateStyle(style));
