@@ -20,6 +20,7 @@ import { CustomComponentValue } from './CustomComponentValue.component';
 import * as Styles from './ValueConfig.styles';
 
 type Props = {
+  id: string;
   mode: Mode;
   value:
     | Value$List
@@ -34,7 +35,7 @@ type Props = {
   root: boolean;
 };
 
-export const ValueItem = ({ mode, schema, value, handleValueChange, root }: Props) => {
+export const ValueItem = ({ id, mode, schema, value, handleValueChange, root }: Props) => {
   if (mode === 'form') {
     if (schema.type === 'array') {
       if (value.mode !== 'list') throw new Error();
@@ -57,6 +58,7 @@ export const ValueItem = ({ mode, schema, value, handleValueChange, root }: Prop
               return (
                 <Styles.ValueItem key={i} root={root} direction="row">
                   <ValueItem
+                    id={id}
                     mode="form"
                     schema={items}
                     value={v}
@@ -82,6 +84,7 @@ export const ValueItem = ({ mode, schema, value, handleValueChange, root }: Prop
             return (
               <Styles.ValueItem key={i} root={root} direction="row">
                 <ValueItem
+                  id={id}
                   mode="static"
                   schema={items}
                   value={v}
@@ -119,6 +122,7 @@ export const ValueItem = ({ mode, schema, value, handleValueChange, root }: Prop
             return (
               <ValueItem
                 key={key}
+                id={id}
                 mode="static"
                 schema={nestedSchema as OpenAPIV3.NonArraySchemaObject}
                 value={value.props[key]}
@@ -175,6 +179,7 @@ export const ValueItem = ({ mode, schema, value, handleValueChange, root }: Prop
     return (
       <Styles.ValueItem root={root} direction="column">
         <IterableValue
+          id={id}
           schema={schema}
           value={value as Value$Iterable}
           handleValueChange={handleValueChange}

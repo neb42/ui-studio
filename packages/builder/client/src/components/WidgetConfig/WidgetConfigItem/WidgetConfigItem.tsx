@@ -51,6 +51,7 @@ export const WidgetConfigItem = ({
 
   return (
     <ValueConfig
+      id={widgetId}
       name={config.label}
       schema={config.schema}
       defaultValue={config.defaultValue}

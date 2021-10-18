@@ -17,6 +17,7 @@ import * as Styles from './ValueConfig.styles';
 import { ValueItem } from './ValueItem.component';
 
 type Props = {
+  id: string;
   mode: Mode;
   value:
     | Value$List
@@ -44,6 +45,7 @@ type Props = {
 };
 
 export const ValueConfigComponent = ({
+  id,
   name,
   schema,
   mode,
@@ -77,6 +79,7 @@ export const ValueConfigComponent = ({
       <Styles.Name>{name}</Styles.Name>
       <ModeButtons mode={mode} modeOptions={modeOptions} onModeChange={handleModeChange} />
       <ValueItem
+        id={id}
         mode={mode}
         value={value}
         schema={schema}

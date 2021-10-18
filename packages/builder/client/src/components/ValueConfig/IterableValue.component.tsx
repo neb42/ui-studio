@@ -6,13 +6,14 @@ import { OpenAPIV3 } from 'openapi-types';
 import { getAvailableIteratorKeys } from 'selectors/element';
 
 type Props = {
+  id: string;
   value: Value$Iterable;
   schema: OpenAPIV3.SchemaObject;
   handleValueChange: (value: Value$Iterable) => any;
 };
 
-export const IterableValue = ({ value, schema, handleValueChange }: Props) => {
-  const iterables = useSelector(getAvailableIteratorKeys)(value.widgetId, schema);
+export const IterableValue = ({ id, value, schema, handleValueChange }: Props) => {
+  const iterables = useSelector(getAvailableIteratorKeys)(id);
 
   const handleWidgetChange = ({ value: v }: any) => {
     handleValueChange({
@@ -51,10 +52,11 @@ export const IterableValue = ({ value, schema, handleValueChange }: Props) => {
   const propKeyValue = { label: value.propKey, value: value.propKey };
 
   React.useEffect(() => {
-    handleValueChange({
-      ...value,
-      propKey: propKeyOptions[0].value,
-    });
+    if (value.widgetId && propKeyOptions.length > 0)
+      handleValueChange({
+        ...value,
+        propKey: propKeyOptions[0].value,
+      });
   }, [value.widgetId]);
 
   return (

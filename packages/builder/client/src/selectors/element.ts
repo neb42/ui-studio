@@ -109,18 +109,17 @@ export const getAvailableIteratorKeys = (state: Store) => (
         throw new Error();
       })();
       const iterablePropKeys = Object.keys(cur.props).reduce<string[]>((a, c) => {
-        // const prop = cur.props[c];
-        // if (
-        //   (prop.mode === 'list' ||
-        //     (prop.mode === 'static' && propSchemaLookup[c].schema.type === 'array')) &&
-        //   propSchemaLookup[c].iterable
-        // )
-        if (
-          propSchemaLookup[c].schema.type === 'array' &&
-          propSchemaLookup[c].iterable &&
-          (!schema || compareSchemas(propSchemaLookup[c].schema, schema))
-        )
-          return [...a, c];
+        const iterableSchema = propSchemaLookup[c].schema;
+        if (iterableSchema.type === 'array' && propSchemaLookup[c].iterable) {
+          const iterableArrayItemSchema = (iterableSchema as OpenAPIV3.ArraySchemaObject).items;
+          if ('ref' in iterableArrayItemSchema) throw new Error();
+          if (
+            !schema ||
+            compareSchemas(iterableArrayItemSchema as OpenAPIV3.SchemaObject, schema)
+          ) {
+            return [...a, c];
+          }
+        }
         return a;
       }, []);
       if (iterablePropKeys.length === 0) return acc;
