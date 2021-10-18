@@ -9,6 +9,7 @@ declare module '@mui/material/styles' {
     fonts: AdlerTheme['fonts'];
     header: AdlerTheme['header'];
     boxshadow: AdlerTheme['boxshadow'];
+    input: AdlerTheme['input'];
   }
   // allow configuration using `createTheme`
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -17,6 +18,7 @@ declare module '@mui/material/styles' {
     fonts: AdlerTheme['fonts'];
     header: AdlerTheme['header'];
     boxshadow: AdlerTheme['boxshadow'];
+    input: AdlerTheme['input'];
   }
 }
 
@@ -27,5 +29,6 @@ declare module 'styled-components' {
     fonts: AdlerTheme['fonts'];
     header: AdlerTheme['header'];
     boxshadow: AdlerTheme['boxshadow'];
+    input: AdlerTheme['input'];
   }
 }

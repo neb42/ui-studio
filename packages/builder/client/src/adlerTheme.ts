@@ -5,4 +5,5 @@ export const adlerTheme = {
   fonts: defaultTokens.fonts,
   header: defaultTokens.header,
   boxshadow: defaultTokens.boxshadow,
+  input: defaultTokens.input,
 };
