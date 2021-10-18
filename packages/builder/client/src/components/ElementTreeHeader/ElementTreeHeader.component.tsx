@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem } from '@mui/material';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import Button from '@faculty/adler-web-components/atoms/Button';
 import { Page, CustomComponent } from '@ui-studio/types';

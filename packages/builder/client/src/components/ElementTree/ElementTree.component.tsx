@@ -7,8 +7,8 @@ import Tree, {
   TreeDestinationPosition,
   ItemId,
 } from '@atlaskit/tree';
-import { IconButton } from '@material-ui/core';
-import { ClearSharp, AddSharp } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { ClearSharp, AddSharp } from '@mui/icons-material';
 import { Widget, Element, CustomComponentInstance } from '@ui-studio/types';
 import { ElementIcon } from 'components/ElementIcon';
 import { ElementTreeHeader } from 'components/ElementTreeHeader';

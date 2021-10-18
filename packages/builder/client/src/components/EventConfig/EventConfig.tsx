@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { OpenAPIV3 } from 'openapi-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton } from '@material-ui/core';
-import { AddSharp, DeleteSharp } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { AddSharp, DeleteSharp } from '@mui/icons-material';
 import Select from '@faculty/adler-web-components/atoms/Select';
 import {
   Event,

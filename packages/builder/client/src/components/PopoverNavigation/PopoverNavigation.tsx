@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelectedView } from 'selectors/view';
 import { selectView } from 'actions/view';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import FunctionsIcon from '@material-ui/icons/Functions';
-import StyleIcon from '@material-ui/icons/Style';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import FunctionsIcon from '@mui/icons-material/Functions';
+import StyleIcon from '@mui/icons-material/Style';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import * as Styles from './PopoverNavigation.styles';
 

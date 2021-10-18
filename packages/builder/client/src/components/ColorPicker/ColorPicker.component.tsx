@@ -2,8 +2,8 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { ColorResult, ChromePicker, TwitterPicker, SwatchesPicker } from 'react-color';
 import { Store$Configuration } from 'types/store';
-import PaletteIcon from '@material-ui/icons/Palette';
-import ColorizeIcon from '@material-ui/icons/Colorize';
+import PaletteIcon from '@mui/icons-material/Palette';
+import ColorizeIcon from '@mui/icons-material/Colorize';
 
 import * as Styles from './ColorPicker.styles';
 

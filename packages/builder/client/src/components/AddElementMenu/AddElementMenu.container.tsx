@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import * as Icons from '@material-ui/icons';
+import * as Icons from '@mui/icons-material';
 import { Component, CustomComponent } from '@ui-studio/types';
 import { getOrphanedRootElements } from 'selectors/element';
 import { getSelectedElement, getRoots, getSelectedRootElement } from 'selectors/tree';

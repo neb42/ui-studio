@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { IconButton } from '@material-ui/core';
-import * as Icons from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import * as Icons from '@mui/icons-material';
 import { Element, Component } from '@ui-studio/types';
 import { getComponents } from 'selectors/configuration';
 
@@ -35,7 +35,7 @@ export const ElementIcon = ({ element, color }: IElementIcon): JSX.Element => {
 };
 
 export const ElementIconButton = ({ element, color, onClick }: IElementIconButton): JSX.Element => (
-  <IconButton onClick={onClick}>
+  <IconButton onClick={onClick} size="large">
     <ElementIcon element={element} color={color} />
   </IconButton>
 );
