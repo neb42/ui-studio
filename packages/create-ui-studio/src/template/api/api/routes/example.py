@@ -41,5 +41,5 @@ def get_example_model_with_id(id: str):
     status_code=status.HTTP_201_CREATED,
     name="example_action",
 )
-def example_action():
+def example_action(body: models.ExampleModel):
     print("Do something")
