@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import Slider from '@faculty/adler-web-components/atoms/Slider/Slider';
+import Slider from '@mui/material/Slider';
 import { Widget, FlexAlignment, IFlexStyle, CustomComponentInstance } from '@ui-studio/types';
 import { updateStyle } from 'actions/styles';
 import { AlignmentButton } from 'components/AlignmentButton';
@@ -29,7 +29,7 @@ export const FlexParentStyle = ({ element, parent }: FlexParentStyleProps): JSX.
     dispatch(updateStyle(style));
   };
 
-  const handleUpdateGrow = (grow: number) => {
+  const handleUpdateGrow = (_: Event, grow: number) => {
     if (element.style.type !== 'flex') throw Error();
 
     const style: IFlexStyle = {
@@ -46,13 +46,7 @@ export const FlexParentStyle = ({ element, parent }: FlexParentStyleProps): JSX.
     <Styles.Container>
       <Styles.Field>
         <Styles.FieldHeader>Grow</Styles.FieldHeader>
-        <Slider
-          value={grow}
-          onChangeComplete={handleUpdateGrow}
-          minValue={0}
-          maxValue={10}
-          step={1}
-        />
+        <Slider value={grow} onChange={handleUpdateGrow} step={1} marks min={1} max={10} />
       </Styles.Field>
       <Styles.Field>
         <Styles.FieldHeader>Alignment</Styles.FieldHeader>
