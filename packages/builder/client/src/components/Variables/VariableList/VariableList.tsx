@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import IconButton from '@mui/material/IconButton';
 import AddSharp from '@mui/icons-material/AddSharp';
 import DeleteSharp from '@mui/icons-material/DeleteSharp';
-import Icon from '@faculty/adler-web-components/atoms/Icon';
 import { Variable } from '@ui-studio/types';
 import { addVariable, removeVariable } from 'actions/variable';
 import { selectVariable } from 'actions/view';
@@ -38,7 +37,6 @@ export const VariableList = () => {
             onClick={handleSelectVariable(v.id)}
             active={v.id === selectedVariableId}
           >
-            <Icon name="help" color={(theme) => theme.colors.primary} size={Icon.sizes.large} />
             <Styles.Name>{v.name}</Styles.Name>
             <Styles.Actions selected={selectedVariableId === v.id}>
               <IconButton onClick={handleDeleteVariable(v.id)} size="small">
