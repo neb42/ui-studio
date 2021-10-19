@@ -63,7 +63,13 @@ export const ValueConfigComponent = ({
       (schema.items as OpenAPIV3.SchemaObject).type === 'object'
         ? {
             mode: 'complex',
-            props: defaultValue,
+            props: Object.keys(defaultValue).reduce(
+              (acc, cur) => ({
+                ...acc,
+                [cur]: { mode: 'static', value: defaultValue[cur] },
+              }),
+              {},
+            ),
           }
         : {
             mode: 'static',
