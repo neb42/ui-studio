@@ -5,7 +5,7 @@ export const Container = styled.div`
   grid-template-columns: auto 1fr auto auto;
   align-items: center;
   height: 55px;
-  padding: ${({ theme }) => theme.spacing(2)}px ${({ theme }) => theme.spacing(4)}px;
+  padding: ${({ theme }) => theme.spacing(2)} ${({ theme }) => theme.spacing(4)};
   background-color: ${({ theme }) => theme.header.background.color};
   box-shadow: 0 5px 10px 0 ${({ theme }) => theme.header.boxshadow.color};
 
@@ -14,6 +14,6 @@ export const Container = styled.div`
   }
 
   & button {
-    padding: ${({ theme }) => theme.spacing(2)}px;
+    padding: ${({ theme }) => theme.spacing(2)};
   }
 `;

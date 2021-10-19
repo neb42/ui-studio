@@ -15,7 +15,7 @@ export const Header = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 55px;
-  padding: ${({ theme }) => theme.spacing(2)}px ${({ theme }) => theme.spacing(4)}px;
+  padding: ${({ theme }) => theme.spacing(2)} ${({ theme }) => theme.spacing(4)};
   background-color: ${({ theme }) => theme.header.background.color};
   box-shadow: 0 5px 10px 0 ${({ theme }) => theme.header.boxshadow.color};
 `;
