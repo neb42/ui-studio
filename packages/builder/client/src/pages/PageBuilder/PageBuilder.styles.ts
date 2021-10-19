@@ -14,7 +14,7 @@ export const Body = styled.div`
 `;
 
 export const ColLeft = styled.div`
-  border-right: 1px solid ${({ theme }) => theme.colors.secondary300};
+  border-right: 1px solid ${({ theme }) => theme.palette.info.main};
 `;
 
 export const PopoverContainer = styled.div`

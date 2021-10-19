@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100%;
-  border-left: 1px solid ${({ theme }) => theme.colors.secondary300};
+  border-left: 1px solid ${({ theme }) => theme.palette.info.main};
   overflow: hidden;
 `;
 

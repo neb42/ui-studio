@@ -5,8 +5,8 @@ export const Container = styled.div`
   align-items: center;
   grid-template-columns: 1fr 1fr 1fr;
   padding: 0 16px;
-  background-color: ${({ theme }) => theme.colors.background.light};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.secondary300};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.info.main};
+  background-image: linear-gradient(to bottom left, #ba68c880, #fff);
 
   & > *:nth-child(2) {
     justify-self: center;
