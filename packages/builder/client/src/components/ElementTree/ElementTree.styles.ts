@@ -32,11 +32,11 @@ export const TreeItemLabel = styled.div<{ active: boolean }>`
   border-radius: 3px;
 
   background-color: ${({ active, theme }) =>
-    active ? Color(theme.colors.brand500).alpha(0.4).hsl().string() : 'none'};
+    active ? Color(theme.palette.primary.light).alpha(0.4).hsl().string() : 'none'};
 
   &:hover {
     background-color: ${({ active, theme }) =>
-      Color(active ? theme.colors.brand500 : theme.colors.secondary300)
+      Color(active ? theme.palette.primary.light : theme.palette.info.main)
         .alpha(0.4)
         .hsl()
         .string()};

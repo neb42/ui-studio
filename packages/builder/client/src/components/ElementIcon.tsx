@@ -21,17 +21,19 @@ const getIcon = (element: Element, components: Component[]) => {
 
 interface IElementIcon {
   element: Element;
-  color: string;
+  color?: string;
+  [x: string]: any;
 }
 
 interface IElementIconButton extends IElementIcon {
   onClick: (event?: React.MouseEvent) => any;
 }
 
-export const ElementIcon = ({ element, color }: IElementIcon): JSX.Element => {
+export const ElementIcon = ({ element, color, ...other }: IElementIcon): JSX.Element => {
   const components = useSelector(getComponents);
   const Icon = getIcon(element, components);
-  return <Icon style={{ color }} fontSize="small" />;
+  const style = color ? { color } : {};
+  return <Icon style={style} fontSize="small" {...other} />;
 };
 
 export const ElementIconButton = ({ element, color, onClick }: IElementIconButton): JSX.Element => (

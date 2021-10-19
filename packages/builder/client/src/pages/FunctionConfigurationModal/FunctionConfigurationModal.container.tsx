@@ -2,6 +2,7 @@ import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Drawer from '@mui/material/Drawer';
 import { OpenAPIV3 } from 'openapi-types';
 import { Event$TriggerAction, FunctionVariable, FunctionVariableArg } from '@ui-studio/types';
 import { closeModal } from 'actions/modal';
@@ -91,12 +92,7 @@ export const FunctionConfigurationModalContainer = ({}: Props) => {
     handleArgChange('body', argKey, arg);
 
   return (
-    <Dialog
-      title={`${modalConfig.method.toUpperCase()} ${modalConfig.path}`}
-      open={modalConfig.open}
-      onClose={handleCloseModal}
-      scroll="paper"
-    >
+    <Drawer open={modalConfig.open} onClose={handleCloseModal} anchor="right">
       <DialogTitle>
         {modalConfig.method.toUpperCase()} {modalConfig.path}
       </DialogTitle>
@@ -109,6 +105,6 @@ export const FunctionConfigurationModalContainer = ({}: Props) => {
           onBodyParamChange={handleBodyParamChange}
         />
       </DialogContent>
-    </Dialog>
+    </Drawer>
   );
 };

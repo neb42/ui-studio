@@ -50,44 +50,36 @@ export const FlexLayoutConfig = ({ widget }: FlexLayoutConfigProps): JSX.Element
   const { direction } = widget.layout;
   return (
     <Styles.Container>
-      <Styles.Field>
-        <Styles.FieldHeader>Direction</Styles.FieldHeader>
-        <FormControl fullWidth>
-          <Select value={direction} onChange={handleUpdateDirection}>
-            {directionOptions.map((o) => (
-              <MenuItem key={o.value} value={o.value}>
-                {o.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Styles.Field>
-      <Styles.Field>
-        <Styles.FieldHeader>Alignment</Styles.FieldHeader>
-        <AlignmentButton
-          layoutType="flex"
-          direction={direction}
-          alignmentType="align"
-          value={widget.layout.align}
-          onChange={handleUpdateAlignment}
-        />
-      </Styles.Field>
-      <Styles.Field>
-        <Styles.FieldHeader>Justification</Styles.FieldHeader>
-        <AlignmentButton
-          layoutType="flex"
-          direction={direction}
-          alignmentType="justify"
-          value={widget.layout.justify}
-          onChange={handleUpdateJustification}
-        />
-      </Styles.Field>
-      <Styles.Field>
-        <FormControlLabel
-          label="Wrap"
-          control={<Checkbox checked={widget.layout.wrap} onChange={handleUpdateWrap} />}
-        />
-      </Styles.Field>
+      <FormControl fullWidth>
+        <InputLabel>Direction</InputLabel>
+        <Select label="Direction" value={direction} onChange={handleUpdateDirection}>
+          {directionOptions.map((o) => (
+            <MenuItem key={o.value} value={o.value}>
+              {o.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <AlignmentButton
+        label="Alignment"
+        layoutType="flex"
+        direction={direction}
+        alignmentType="align"
+        value={widget.layout.align}
+        onChange={handleUpdateAlignment}
+      />
+      <AlignmentButton
+        label="Justification"
+        layoutType="flex"
+        direction={direction}
+        alignmentType="justify"
+        value={widget.layout.justify}
+        onChange={handleUpdateJustification}
+      />
+      <FormControlLabel
+        label="Wrap"
+        control={<Checkbox checked={widget.layout.wrap} onChange={handleUpdateWrap} />}
+      />
     </Styles.Container>
   );
 };

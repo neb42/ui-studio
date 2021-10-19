@@ -2,8 +2,10 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { StyledComponent, DefaultTheme } from 'styled-components';
 import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import { Element } from '@ui-studio/types';
 import { updateElementName } from 'actions/name';
+import { ElementIcon } from 'components/ElementIcon';
 
 interface EditNameProps {
   element: Element;
@@ -12,33 +14,27 @@ interface EditNameProps {
 
 export const EditName = ({ element, component }: EditNameProps) => {
   const dispatch = useDispatch();
-  const [hover, setHover] = React.useState(false);
-  const [focus, setFocus] = React.useState(false);
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(updateElementName(event.target.value));
   };
 
-  const Component = component || 'span';
-
   return (
-    <Component onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-      {hover || focus ? (
-        <TextField
-          size="small"
-          variant="standard"
-          value={element.name}
-          onChange={handleOnChange}
-          onFocus={(event) => {
-            setFocus(true);
-            setHover(false);
-            event.target.select();
-          }}
-          onBlur={() => setFocus(false)}
-        />
-      ) : (
-        element.name
-      )}
-    </Component>
+    <TextField
+      size="medium"
+      variant="standard"
+      value={element.name}
+      onChange={handleOnChange}
+      onFocus={(event) => {
+        event.target.select();
+      }}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <ElementIcon element={element} sx={{ color: 'action.active', ml: 1 }} />
+          </InputAdornment>
+        ),
+      }}
+    />
   );
 };

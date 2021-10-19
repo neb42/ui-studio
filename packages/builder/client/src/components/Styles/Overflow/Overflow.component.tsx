@@ -2,6 +2,7 @@ import * as React from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Element } from '@ui-studio/types';
+import { Outline } from 'components/Outline';
 
 import * as Styles from './Overflow.styles';
 
@@ -12,19 +13,27 @@ type Props = {
 
 export const OverflowComponent = ({ overflow, onOverflowChange }: Props) => {
   const handleOnChange = (_: React.MouseEvent<HTMLElement>, value: string) => {
-    onOverflowChange(value as Element['style']['properties']['overflow']);
+    if (value !== null) onOverflowChange(value as Element['style']['properties']['overflow']);
   };
 
   return (
-    <Styles.Container>
-      <Styles.Header>Overflow</Styles.Header>
-      <ToggleButtonGroup color="primary" value={overflow} exclusive onChange={handleOnChange}>
-        {['visible', 'hidden', 'auto', 'scroll'].map((o) => (
-          <ToggleButton key={o} value={o}>
-            {o}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-    </Styles.Container>
+    <Outline label="Overflow">
+      <Styles.Container>
+        <ToggleButtonGroup
+          color="primary"
+          value={overflow}
+          exclusive
+          onChange={handleOnChange}
+          size="small"
+          fullWidth
+        >
+          {['visible', 'hidden', 'auto', 'scroll'].map((o) => (
+            <ToggleButton key={o} value={o}>
+              {o}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+      </Styles.Container>
+    </Outline>
   );
 };

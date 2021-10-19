@@ -65,7 +65,7 @@ export const ModeButtons = ({
 
   return (
     <SpeedDial
-      ariaLabel="SpeedDial example"
+      ariaLabel="Mode speed dial"
       icon={<CurrentIcon />}
       onClose={handleClose}
       onOpen={handleOpen}

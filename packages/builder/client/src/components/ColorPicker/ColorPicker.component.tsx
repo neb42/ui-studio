@@ -1,11 +1,13 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { ColorResult, ChromePicker, TwitterPicker, SwatchesPicker } from 'react-color';
-import { Store$Configuration } from 'types/store';
+import IconButton from '@mui/material/IconButton';
 import PaletteIcon from '@mui/icons-material/Palette';
 import ColorizeIcon from '@mui/icons-material/Colorize';
+import { Store$Configuration } from 'types/store';
 
 import * as Styles from './ColorPicker.styles';
+import { Outline } from 'components/Outline';
 
 type Props = {
   header: string;
@@ -76,13 +78,20 @@ export const ColorPickerComponent = ({ header, color, colorConfig, onColorChange
 
   return (
     <>
+        <Outline label={header}>
       <Styles.Container>
-        <Styles.Header>{header}</Styles.Header>
         <Styles.Swatch color={color} />
         <Styles.Value>{color}</Styles.Value>
-        {colorConfig && <PaletteIcon onClick={handleOpenColorPicker(colorConfig.type)} />}
-        <ColorizeIcon onClick={handleOpenColorPicker('picker')} />
+        {colorConfig && (
+          <IconButton onClick={handleOpenColorPicker(colorConfig.type)} size="small">
+            <PaletteIcon onClick={handleOpenColorPicker(colorConfig.type)} />
+          </IconButton>
+        )}
+        <IconButton onClick={handleOpenColorPicker('picker')} size="small">
+          <ColorizeIcon />
+        </IconButton>
       </Styles.Container>
+      </Outline>
       {colorPickerType &&
         ReactDOM.createPortal(
           <Styles.ColorPickerWrapper ref={portalRef} x={pos.x} y={pos.y}>

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 
-import * as Styles from './GridGap.styles';
-
 interface GridGapProps {
   name: 'column' | 'row';
   gap: number;
@@ -14,13 +12,11 @@ export const GridGap = ({ name, gap, updateGap }: GridGapProps): JSX.Element => 
     updateGap(Number(event.target.value));
 
   return (
-    <Styles.Container>
-      <Styles.Name>{name} gap</Styles.Name>
-      <TextField
-        value={gap}
-        onChange={handleOnChange}
-        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-      />
-    </Styles.Container>
+    <TextField
+      label={`${name.charAt(0).toUpperCase() + name.slice(1)} gap`}
+      value={gap}
+      onChange={handleOnChange}
+      inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+    />
   );
 };

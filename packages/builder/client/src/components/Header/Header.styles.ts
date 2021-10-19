@@ -5,7 +5,6 @@ export const Container = styled.div`
   align-items: center;
   grid-template-columns: 1fr 1fr 1fr;
   padding: 0 16px;
-  height: 55px;
   background-color: ${({ theme }) => theme.colors.background.light};
   border-bottom: 1px solid ${({ theme }) => theme.colors.secondary300};
 

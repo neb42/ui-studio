@@ -59,7 +59,7 @@ export const ElementTreeHeaderComponent = ({
   return (
     <Styles.Container>
       <FormControl fullWidth>
-        <Select value={rootElement.id} onChange={handleOnChange}>
+        <Select value={rootElement.id} onChange={handleOnChange} size="small">
           <ListSubheader>Pages</ListSubheader>
           {pages.map((o) => (
             <MenuItem key={o.id} value={o.id}>

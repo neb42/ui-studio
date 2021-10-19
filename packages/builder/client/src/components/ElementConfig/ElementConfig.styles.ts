@@ -9,22 +9,10 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.div`
-  display: grid;
-  grid-template-columns: 20px auto;
-  grid-column-gap: ${({ theme }) => theme.spacing(2)};
-  align-items: center;
-  padding: ${({ theme }) => theme.spacing(2)} ${({ theme }) => theme.spacing(4)};
-  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
   background-color: ${({ theme }) => theme.header.background.color};
   box-shadow: 0 5px 10px 0 ${({ theme }) => theme.header.boxshadow.color};
-
-  & > *:last-child {
-    grid-column: 1/-1;
-  }
-
-  & button {
-    padding: ${({ theme }) => theme.spacing(2)};
-  }
 `;
 
 export const ComponentName = styled.span`

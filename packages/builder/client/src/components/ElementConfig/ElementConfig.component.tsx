@@ -58,7 +58,6 @@ export const ElementConfigComponent = ({
   return (
     <Styles.Container>
       <Styles.Header>
-        <ElementIcon element={selectedElement} color={theme.colors.text.secondary} />
         <EditName element={selectedElement} component={Styles.ComponentName} />
         <Tabs value={tabIndex} onChange={handleTabChange}>
           {tabHeaders.map((h) => (

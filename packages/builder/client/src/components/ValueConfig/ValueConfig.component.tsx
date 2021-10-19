@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import AddSharp from '@mui/icons-material/AddSharp';
+import Typography from '@mui/material/Typography';
 import {
   Mode,
   Value$Complex,
@@ -83,7 +84,7 @@ export const ValueConfigComponent = ({
 
   return (
     <Styles.Container>
-      <Styles.Name>{name}</Styles.Name>
+      <Typography variant="body1">{name}</Typography>
       <ModeButtons mode={mode} modeOptions={modeOptions} onModeChange={handleModeChange} />
       <ValueItem
         id={id}

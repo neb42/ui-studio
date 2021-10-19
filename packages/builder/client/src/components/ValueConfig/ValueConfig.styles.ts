@@ -1,3 +1,4 @@
+import Color from 'color';
 import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
@@ -38,8 +39,24 @@ export const ValueItem = styled.span<{ root?: boolean; direction: 'row' | 'colum
   ${({ root }) =>
     root
       ? css`
-          border-left: 6px solid #00000025;
+          border-left: 6px solid ${({ theme }) => theme.palette.info.light};
           padding: 4px;
+          padding-top: 0;
         `
       : ''}
+
+  transition: background-color 300ms, border-color 300ms;
+
+  &:hover {
+    background-color: ${({ theme }) => Color(theme.palette.info.light).alpha(0.3).hsl().string()};
+  }
+
+  &:focus-within {
+    border-color: ${({ theme }) => theme.palette.primary.light};
+    background-color: ${({ theme }) => Color(theme.palette.info.light).alpha(0.3).hsl().string()};
+  }
+
+  & button {
+    margin-top: 4px;
+  }
 `;

@@ -17,9 +17,11 @@ export const ClassNamesInput = ({ element }: Props): JSX.Element => {
     dispatch(updateElementClassNames(event.target.value));
 
   return (
-    <Styles.Container>
-      <Styles.Header>Class names</Styles.Header>
-      <TextField onChange={handleOnChange} value={element.style.classNames} />
-    </Styles.Container>
+    <TextField
+      label="Class names"
+      fullWidth
+      onChange={handleOnChange}
+      value={element.style.classNames}
+    />
   );
 };

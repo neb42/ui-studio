@@ -71,7 +71,7 @@ export const ValueItem = ({ id, mode, schema, value, handleValueChange, root }: 
                     }
                     root={false}
                   />
-                  <IconButton onClick={handleDeletePropFromList(i)} size="small">
+                  <IconButton onClick={handleDeletePropFromList(i)} size="small" sx={{ mt: 4 }}>
                     <DeleteSharp />
                   </IconButton>
                 </Styles.ValueItem>

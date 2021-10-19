@@ -57,11 +57,11 @@ export const Grid = styled.div`
       .join(' ')};
 `;
 
-const getColor = ({ theme, readOnly, active, disabled }: ICell) => {
-  if (readOnly) return theme.colors.brand500;
-  if (active) return theme.colors.brand500;
-  if (disabled) return theme.colors.secondary600;
-  return theme.colors.secondary300;
+const getColor = ({ theme, readOnly, active, disabled }: any) => {
+  if (readOnly) return theme.palette.primary.main;
+  if (active) return theme.palette.primary.main;
+  if (disabled) return theme.palette.info.main;
+  return theme.palette.info.light;
 };
 
 export const Cell = styled.div`

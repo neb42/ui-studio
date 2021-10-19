@@ -20,7 +20,7 @@ export const ScreenSizeSelection = () => {
   };
 
   const getColor = (size: ScreenSize) =>
-    size === previewSize ? theme.colors.brand500 : theme.colors.secondary500;
+    size === previewSize ? theme.palette.primary.main : theme.colors.secondary500;
 
   return (
     <Styles.Container>

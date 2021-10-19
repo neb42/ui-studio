@@ -12,8 +12,12 @@ import 'ace-builds/src-noconflict/mode-css';
 import 'ace-builds/src-noconflict/worker-css';
 import 'ace-builds/src-noconflict/theme-chrome';
 import 'ace-builds/src-noconflict/ext-language_tools';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
-import { adlerTheme } from './adlerTheme';
+import { themeSettings } from './theme';
 import store from './store';
 import App from './App';
 
@@ -56,10 +60,10 @@ const GlobalStyles = createGlobalStyle`
     }
 
     & .MuiFab-primary {
-      background-color: #1c1c1c;
+      background-color: ${({ theme }) => theme.palette.info.dark};
 
       &:hover {
-        background-color: #1c1c1c;
+        background-color: ${({ theme }) => theme.palette.info.dark};
       }
     }
 
@@ -73,7 +77,7 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-const theme = createTheme(adlerTheme);
+const theme = createTheme(themeSettings);
 
 ReactDOM.render(
   <React.StrictMode>

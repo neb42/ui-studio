@@ -25,6 +25,7 @@ export const PopoverNavigation = (): JSX.Element => {
           value={view}
           exclusive
           onChange={handleSelectView}
+          color="primary"
         >
           <ToggleButton value="preview">
             <AccountTreeIcon />
