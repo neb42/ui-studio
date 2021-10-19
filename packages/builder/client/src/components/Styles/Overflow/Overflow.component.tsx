@@ -1,6 +1,7 @@
 import * as React from 'react';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Element } from '@ui-studio/types';
-import { SegmentedControl } from '@faculty/adler-web-components/atoms/SegmentedControl';
 
 import * as Styles from './Overflow.styles';
 
@@ -10,18 +11,20 @@ type Props = {
 };
 
 export const OverflowComponent = ({ overflow, onOverflowChange }: Props) => {
-  const handleOnChange = (value: string) => {
+  const handleOnChange = (_: React.MouseEvent<HTMLElement>, value: string) => {
     onOverflowChange(value as Element['style']['properties']['overflow']);
   };
 
   return (
     <Styles.Container>
       <Styles.Header>Overflow</Styles.Header>
-      <SegmentedControl name="overflowPicker" value={overflow} controlled onChange={handleOnChange}>
+      <ToggleButtonGroup color="primary" value={overflow} exclusive onChange={handleOnChange}>
         {['visible', 'hidden', 'auto', 'scroll'].map((o) => (
-          <SegmentedControl.Item key={o} label={o} name={o} value={o} />
+          <ToggleButton key={o} value={o}>
+            {o}
+          </ToggleButton>
         ))}
-      </SegmentedControl>
+      </ToggleButtonGroup>
     </Styles.Container>
   );
 };
