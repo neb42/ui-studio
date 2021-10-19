@@ -25,6 +25,8 @@ export const EditName = ({ element, component }: EditNameProps) => {
     <Component onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
       {hover || focus ? (
         <TextField
+          size="small"
+          variant="standard"
           value={element.name}
           onChange={handleOnChange}
           onFocus={(event) => {
