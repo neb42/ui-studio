@@ -3,10 +3,13 @@ import AceEditor from 'react-ace';
 import { useTheme } from 'styled-components';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { OpenAPIV3 } from 'openapi-types';
 import { Value$Static } from '@ui-studio/types';
-import { Select } from '@faculty/adler-web-components';
 
 type Props = {
   value: Value$Static;
@@ -15,6 +18,7 @@ type Props = {
 };
 
 export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
+  console.log(value, schema)
   const theme = useTheme();
   const [hasFocus, setHasFocus] = React.useState(false);
 
@@ -34,8 +38,8 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
     }
   };
 
-  const handleSelectOnChange = ({ value: v }: any) => {
-    handleValueChange({ ...value, value: v });
+  const handleSelectOnChange = (event: SelectChangeEvent) => {
+    handleValueChange({ ...value, value: event.target.value });
   };
 
   const handleCheckboxOnChange = (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -84,11 +88,15 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
     if ('enum' in schema) {
       const options = schema.enum?.map((e) => ({ value: e, label: e })) ?? [];
       return (
-        <Select
-          value={options.find((o) => o.value === value.value)}
-          options={options}
-          onChange={handleSelectOnChange}
-        />
+        <FormControl fullWidth>
+          <Select value={value.value} onChange={handleSelectOnChange}>
+            {options.map((o) => (
+              <MenuItem key={o.value} value={o.value}>
+                {o.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       );
     }
     return <TextField onChange={handleInputOnChange} value={value.value} />;

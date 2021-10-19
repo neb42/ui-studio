@@ -1,7 +1,10 @@
 import * as React from 'react';
-import { CustomComponent, CustomComponentInstance, Value$Widget, Widget } from '@ui-studio/types';
 import { useSelector } from 'react-redux';
-import { Select } from '@faculty/adler-web-components';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { CustomComponent, CustomComponentInstance, Value$Widget, Widget } from '@ui-studio/types';
 import { getRoots, getWidgetsInSelectedTree } from 'selectors/tree';
 import { getComponents } from 'selectors/configuration';
 import { Store, Store$Widget } from 'types/store';
@@ -110,20 +113,21 @@ export const WidgetValue = ({ schema, value, handleValueChange }: Props) => {
     return raw.map((r: typeof raw[number]) => ({ label: r.property, value: r.property }));
   };
 
-  const handleWidgetChange = ({ value: v }: any) => {
+  const handleWidgetChange = (event: SelectChangeEvent) => {
+    const v = event.target.value as string;
     const selectedWidget = widgets.find((w) => w.id === v);
     const exposedPropertyOptions = getExposedPropertyOptions(selectedWidget);
     handleValueChange({
       ...value,
-      widgetId: v as string,
+      widgetId: v,
       property: exposedPropertyOptions[0]?.value,
     });
   };
 
-  const handlePropertyChange = ({ value: v }: any) => {
+  const handlePropertyChange = (event: SelectChangeEvent) => {
     handleValueChange({
       ...value,
-      property: v as string,
+      property: event.target.value as string,
     });
   };
 
@@ -133,18 +137,26 @@ export const WidgetValue = ({ schema, value, handleValueChange }: Props) => {
 
   return (
     <>
-      <Select
-        label="Widget"
-        value={selectedWidget ? { value: selectedWidget.id, label: selectedWidget.name } : null}
-        onChange={handleWidgetChange}
-        options={widgets.map((w) => ({ value: w.id, label: w.name }))}
-      />
-      <Select
-        label="Widget property"
-        value={{ value: value.property, label: value.property }}
-        onChange={handlePropertyChange}
-        options={exposedPropertyOptions}
-      />
+      <FormControl fullWidth>
+        <InputLabel>Widget</InputLabel>
+        <Select value={selectedWidget?.id} label="Widget" onChange={handleWidgetChange}>
+          {widgets.map((w) => (
+            <MenuItem key={w.id} value={w.id}>
+              {w.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl fullWidth>
+        <InputLabel>Widget property</InputLabel>
+        <Select value={value.property} label="Widget property" onChange={handlePropertyChange}>
+          {exposedPropertyOptions.map((o) => (
+            <MenuItem key={o.value} value={o.value}>
+              {o.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </>
   );
 };

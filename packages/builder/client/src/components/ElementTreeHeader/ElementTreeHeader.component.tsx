@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { Menu, MenuItem } from '@mui/material';
+import InputLabel from '@mui/material/InputLabel';
+import ListSubheader from '@mui/material/ListSubheader';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import IconButton from '@mui/material/IconButton';
 import AddSharp from '@mui/icons-material/AddSharp';
 import DeleteSharp from '@mui/icons-material/DeleteSharp';
-import Select from '@faculty/adler-web-components/atoms/Select';
 import { Page, CustomComponent } from '@ui-studio/types';
 
 import * as Styles from './ElementTreeHeader.styles';
@@ -32,8 +36,8 @@ export const ElementTreeHeaderComponent = ({
     setAnchorEl(event.currentTarget);
   const handleCloseAddMenu = () => setAnchorEl(null);
 
-  const handleOnChange = ({ value }: any) => {
-    onRootChange(value as string);
+  const handleOnChange = (event: SelectChangeEvent) => {
+    onRootChange(event.target.value as string);
   };
 
   const handleAddPage = () => {
@@ -54,20 +58,22 @@ export const ElementTreeHeaderComponent = ({
 
   return (
     <Styles.Container>
-      <Select
-        value={{ label: rootElement.name, value: rootElement.id }}
-        onChange={handleOnChange}
-        options={[
-          {
-            label: 'Pages',
-            options: pages.map((p) => ({ value: p.id, label: p.name })),
-          },
-          {
-            label: 'Components',
-            options: customComponents.map((p) => ({ value: p.id, label: p.name })),
-          },
-        ]}
-      />
+      <FormControl fullWidth>
+        <Select value={rootElement.id} onChange={handleOnChange}>
+          <ListSubheader>Pages</ListSubheader>
+          {pages.map((o) => (
+            <MenuItem key={o.id} value={o.id}>
+              {o.name}
+            </MenuItem>
+          ))}
+          <ListSubheader>Components</ListSubheader>
+          {customComponents.map((o) => (
+            <MenuItem key={o.id} value={o.id}>
+              {o.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <div />
       <IconButton onClick={handleOpenAddMenu} size="small">
         <AddSharp />

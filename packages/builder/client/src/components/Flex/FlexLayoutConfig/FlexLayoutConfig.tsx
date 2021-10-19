@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import Select from '@faculty/adler-web-components/atoms/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {
@@ -28,8 +31,8 @@ export const FlexLayoutConfig = ({ widget }: FlexLayoutConfigProps): JSX.Element
 
   if (widget.layout?.type !== 'flex') throw Error();
 
-  const handleUpdateDirection = ({ value }: any) => {
-    dispatch(updateWidgetLayoutConfig('direction', value as 'row' | 'column'));
+  const handleUpdateDirection = (event: SelectChangeEvent) => {
+    dispatch(updateWidgetLayoutConfig('direction', event.target.value as 'row' | 'column'));
   };
 
   const handleUpdateAlignment = (value: string) => {
@@ -49,11 +52,15 @@ export const FlexLayoutConfig = ({ widget }: FlexLayoutConfigProps): JSX.Element
     <Styles.Container>
       <Styles.Field>
         <Styles.FieldHeader>Direction</Styles.FieldHeader>
-        <Select
-          value={directionOptions.find((o) => o.value === direction)}
-          onChange={handleUpdateDirection}
-          options={directionOptions}
-        />
+        <FormControl fullWidth>
+          <Select value={direction} onChange={handleUpdateDirection}>
+            {directionOptions.map((o) => (
+              <MenuItem key={o.value} value={o.value}>
+                {o.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Styles.Field>
       <Styles.Field>
         <Styles.FieldHeader>Alignment</Styles.FieldHeader>

@@ -1,9 +1,12 @@
 import * as React from 'react';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import IconButton from '@mui/material/IconButton';
 import AddSharp from '@mui/icons-material/AddSharp';
 import DeleteSharp from '@mui/icons-material/DeleteSharp';
 import TextField from '@mui/material/TextField';
-import Select from '@faculty/adler-web-components/atoms/Select';
 import { IGridCell, GridUnit } from '@ui-studio/types';
 
 import * as Styles from './GridTemplateControls.styles';
@@ -53,12 +56,12 @@ export const GridTemplateControls = ({
     );
   };
 
-  const handleUnitChange = (idx: number) => ({ value }: any) => {
-    const v = value as GridUnit;
+  const handleUnitChange = (idx: number) => (event: SelectChangeEvent) => {
+    const v = event.target.value as GridUnit;
     updateConfig(
       config.map((r, i) => {
         if (i === idx) {
-          return { ...r, unit: value, value: initialUnitValues[v] };
+          return { ...r, unit: v, value: initialUnitValues[v] };
         }
         return r;
       }),
@@ -85,11 +88,15 @@ export const GridTemplateControls = ({
               disabled={c.value === null}
             />
           )}
-          <Select
-            value={{ value: c.unit, label: c.unit }}
-            onChange={handleUnitChange(i)}
-            options={units.map((u) => ({ value: u, label: u }))}
-          />
+          <FormControl fullWidth>
+            <Select value={c.unit} onChange={handleUnitChange(i)}>
+              {units.map((u) => (
+                <MenuItem key={u} value={u}>
+                  {u}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <IconButton onClick={handleRemove(i)} disabled={config.length === 1} size="small">
             <DeleteSharp />
           </IconButton>

@@ -1,9 +1,12 @@
 import * as React from 'react';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import AddSharp from '@mui/icons-material/AddSharp';
 import DeleteSharp from '@mui/icons-material/DeleteSharp';
-import Select from '@faculty/adler-web-components/atoms/Select';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
@@ -53,12 +56,12 @@ export const CustomComponentConfigComponent = ({
     onUpdateName(key, event.target.value);
   };
 
-  const handleModeChange = (key: string) => ({ value }: any) => {
-    onUpdateMode(key, value);
+  const handleModeChange = (key: string) => (event: SelectChangeEvent) => {
+    onUpdateMode(key, event.target.value as 'input' | 'select');
   };
 
-  const handleTypeChange = (key: string) => ({ value }: any) => {
-    onUpdateType(key, value);
+  const handleTypeChange = (key: string) => (event: SelectChangeEvent) => {
+    onUpdateType(key, event.target.value as 'string' | 'number' | 'boolean');
   };
 
   const handleListChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -193,30 +196,26 @@ export const CustomComponentConfigComponent = ({
               <DeleteSharp />
             </IconButton>
             <TextField label="Name" value={c.label} onChange={handleNameChange(c.key)} />
-            <Select
-              label="Mode"
-              onChange={handleModeChange(c.key)}
-              value={{
-                value: control,
-                label: control.replace(/^\w/, (w) => w.toUpperCase()),
-              }}
-              options={['input', 'select'].map((m) => ({
-                value: m,
-                label: m.replace(/^\w/, (w) => w.toUpperCase()),
-              }))}
-            />
-            <Select
-              label="Type"
-              onChange={handleTypeChange(c.key)}
-              value={{
-                value: type,
-                label: type.replace(/^\w/, (w) => w.toUpperCase()),
-              }}
-              options={['string', 'number', 'boolean'].map((m) => ({
-                value: m,
-                label: m.replace(/^\w/, (w) => w.toUpperCase()),
-              }))}
-            />
+            <FormControl fullWidth>
+              <InputLabel>Mode</InputLabel>
+              <Select value={control} label="Mode" onChange={handleModeChange(c.key)}>
+                {['input', 'select'].map((m) => (
+                  <MenuItem key={m} value={m}>
+                    {m.replace(/^\w/, (w) => w.toUpperCase())}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel>Type</InputLabel>
+              <Select value={type} label="Type" onChange={handleTypeChange(c.key)}>
+                {['string', 'number', 'boolean'].map((m) => (
+                  <MenuItem key={m} value={m}>
+                    {m.replace(/^\w/, (w) => w.toUpperCase())}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <FormControlLabel
               label="List"
               control={<Checkbox checked={Boolean(list)} onChange={handleListChange(c.key)} />}

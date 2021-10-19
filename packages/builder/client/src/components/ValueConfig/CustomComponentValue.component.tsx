@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Value$CustomComponentConfig } from '@ui-studio/types';
 import { useSelector } from 'react-redux';
-import { getSelectedRootElement } from 'selectors/tree';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { OpenAPIV3 } from 'openapi-types';
-import { Select } from '@faculty/adler-web-components';
-
-import * as Styles from './ValueConfig.styles';
+import { Value$CustomComponentConfig } from '@ui-studio/types';
+import { getSelectedRootElement } from 'selectors/tree';
 
 type Props = {
   value: Value$CustomComponentConfig;
@@ -42,8 +43,8 @@ export const CustomComponentValue = ({ value, schema, handleValueChange }: Props
   if (!customComponent || customComponent.type !== 'customComponent' || schema.type === 'object')
     throw new Error();
 
-  const handleChange = ({ value: v }: any) => {
-    handleValueChange({ mode: 'customComponentConfig', configKey: v });
+  const handleChange = (event: SelectChangeEvent) => {
+    handleValueChange({ mode: 'customComponentConfig', configKey: event.target.value });
   };
 
   const options =
@@ -56,12 +57,20 @@ export const CustomComponentValue = ({ value, schema, handleValueChange }: Props
 
   return (
     <>
-      <Select
-        label={`${customComponent.name} config`}
-        value={options.find((o) => o.value === value.configKey)}
-        onChange={handleChange}
-        options={options}
-      />
+      <FormControl fullWidth>
+        <InputLabel>{customComponent.name} config</InputLabel>
+        <Select
+          value={value.configKey}
+          label={`${customComponent.name} config`}
+          onChange={handleChange}
+        >
+          {options.map((o) => (
+            <MenuItem key={o.value} value={o.value}>
+              {o.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </>
   );
 };

@@ -3,8 +3,11 @@ import { useDispatch } from 'react-redux';
 import { useTheme } from 'styled-components';
 import AceEditor from 'react-ace';
 import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { StaticVariable } from '@ui-studio/types';
-import Select from '@faculty/adler-web-components/atoms/Select';
 import { updateStaticVariable } from 'actions/variable';
 
 const valueTypeOptions = [
@@ -15,8 +18,8 @@ const valueTypeOptions = [
 ];
 
 const booleanOptions = [
-  { value: true, label: 'True' },
-  { value: false, label: 'False' },
+  { value: 1, label: 'True' },
+  { value: 0, label: 'False' },
 ];
 
 interface Props {
@@ -28,8 +31,10 @@ export const StaticVariableConfig = ({ variable }: Props) => {
   const dispatch = useDispatch();
   const [hasFocus, setHasFocus] = React.useState(false);
 
-  const handleValueTypeChange = ({ value }: any) => {
-    const v = value as 'string' | 'number' | 'boolean' | 'object';
+  const handleValueTypeChange = (
+    event: SelectChangeEvent<'string' | 'number' | 'boolean' | 'object'>,
+  ) => {
+    const v = event.target.value as 'string' | 'number' | 'boolean' | 'object';
     if (v === 'string') dispatch(updateStaticVariable(variable.id, 'string', ''));
     if (v === 'number') dispatch(updateStaticVariable(variable.id, 'number', 0));
     if (v === 'boolean') dispatch(updateStaticVariable(variable.id, 'boolean', true));
@@ -42,20 +47,24 @@ export const StaticVariableConfig = ({ variable }: Props) => {
   const handleNumberValueChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     dispatch(updateStaticVariable(variable.id, 'number', Number(event.target.value)));
 
-  const handleBooleanValueChange = ({ value }: any) =>
-    dispatch(updateStaticVariable(variable.id, 'boolean', value as boolean));
+  const handleBooleanValueChange = (event: SelectChangeEvent<number>) =>
+    dispatch(updateStaticVariable(variable.id, 'boolean', Boolean(event.target.value as number)));
 
   const handleObjectValueChange = (value: string) =>
     dispatch(updateStaticVariable(variable.id, 'object', value as string));
 
   return (
     <>
-      <Select
-        label="Value type"
-        value={valueTypeOptions.find((o) => o.value === variable.valueType)}
-        onChange={handleValueTypeChange}
-        options={valueTypeOptions}
-      />
+      <FormControl fullWidth>
+        <InputLabel>Value type</InputLabel>
+        <Select value={variable.valueType} label="Value type" onChange={handleValueTypeChange}>
+          {valueTypeOptions.map((o) => (
+            <MenuItem key={o.value} value={o.value}>
+              {o.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       {variable.valueType === 'string' && (
         <TextField label="Value" value={variable.value} onChange={handleStringValueChange} />
       )}
@@ -68,11 +77,15 @@ export const StaticVariableConfig = ({ variable }: Props) => {
         />
       )}
       {variable.valueType === 'boolean' && (
-        <Select
-          value={booleanOptions.find((o) => o.value === variable.value)}
-          onChange={handleBooleanValueChange}
-          options={booleanOptions}
-        />
+        <FormControl fullWidth>
+          <Select value={variable.value ? 1 : 0} onChange={handleBooleanValueChange}>
+            {booleanOptions.map((o) => (
+              <MenuItem key={o.value} value={o.value}>
+                {o.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       )}
       {variable.valueType === 'object' && (
         <AceEditor
