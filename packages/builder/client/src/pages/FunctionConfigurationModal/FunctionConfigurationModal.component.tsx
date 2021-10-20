@@ -1,4 +1,9 @@
 import * as React from 'react';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { OpenAPIV3 } from 'openapi-types';
 import { Event$TriggerAction, FunctionVariable, FunctionVariableArg } from '@ui-studio/types';
 import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariableArgConfig';
@@ -22,6 +27,18 @@ export const FunctionConfigurationModalComponent = ({
 }: Props) => {
   if (!schema) throw new Error();
 
+  const pathParamaters =
+    schema.parameters?.filter(
+      (p): p is OpenAPIV3.ParameterObject =>
+        !('ref' in p) && (p as OpenAPIV3.ParameterObject).in === 'path',
+    ) ?? [];
+
+  const queryParamaters =
+    schema.parameters?.filter(
+      (p): p is OpenAPIV3.ParameterObject =>
+        !('ref' in p) && (p as OpenAPIV3.ParameterObject).in === 'query',
+    ) ?? [];
+
   const bodySchema = (() => {
     const rb = schema.requestBody;
     if (!rb) return null;
@@ -34,41 +51,62 @@ export const FunctionConfigurationModalComponent = ({
 
   return (
     <Styles.Container>
-      <span>Path parameters:</span>
-      {schema.parameters
-        ?.filter(
-          (p): p is OpenAPIV3.ParameterObject =>
-            !('ref' in p) && (p as OpenAPIV3.ParameterObject).in === 'path',
-        )
-        .map((p) => (
-          <FunctionVariableArgConfig
-            key={p.name}
-            name={p.name}
-            schema={{ type: 'string' }}
-            arg={config.args.path[p.name]}
-            onChange={onPathParamChange}
-          />
-        ))}
-      <span>Query string parameters:</span>
-      {schema.parameters
-        ?.filter(
-          (p): p is OpenAPIV3.ParameterObject =>
-            !('ref' in p) && (p as OpenAPIV3.ParameterObject).in === 'query',
-        )
-        .map((p) => (
-          <FunctionVariableArgConfig
-            key={p.name}
-            name={p.name}
-            schema={{ type: 'string' }}
-            arg={config.args.query[p.name]}
-            onChange={onQueryStringParamChange}
-          />
-        ))}
-      {bodySchema && (
-        <>
-          <span>Body parameters:</span>
-          {Object.keys(bodySchema.properties || {}).map((k) => {
-            const s = bodySchema.properties?.[k];
+      <Accordion
+        disabled={pathParamaters.length === 0}
+        defaultExpanded={pathParamaters.length > 0}
+        disableGutters
+        square
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Path parameters</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {pathParamaters.map((p) => (
+            <FunctionVariableArgConfig
+              key={p.name}
+              name={p.name}
+              schema={{ type: 'string' }}
+              arg={config.args.path[p.name]}
+              onChange={onPathParamChange}
+            />
+          ))}
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion
+        disabled={queryParamaters.length === 0}
+        defaultExpanded={queryParamaters.length > 0}
+        disableGutters
+        square
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Query parameters</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {queryParamaters.map((p) => (
+            <FunctionVariableArgConfig
+              key={p.name}
+              name={p.name}
+              schema={{ type: 'string' }}
+              arg={config.args.query[p.name]}
+              onChange={onQueryStringParamChange}
+            />
+          ))}
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion
+        disabled={bodySchema === null}
+        defaultExpanded={bodySchema !== null}
+        disableGutters
+        square
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Body parameters</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {Object.keys(bodySchema?.properties || {}).map((k) => {
+            const s = bodySchema?.properties?.[k];
             if (!s || 'ref' in s) throw new Error();
             return (
               <FunctionVariableArgConfig
@@ -80,8 +118,8 @@ export const FunctionConfigurationModalComponent = ({
               />
             );
           })}
-        </>
-      )}
+        </AccordionDetails>
+      </Accordion>
     </Styles.Container>
   );
 };

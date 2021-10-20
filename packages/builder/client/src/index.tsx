@@ -75,6 +75,10 @@ const GlobalStyles = createGlobalStyle`
       margin: 4px;
     }
   }
+
+  & .MuiDialogContent-root {
+    padding: 0;
+  }
 `;
 
 const theme = createTheme(themeSettings);
