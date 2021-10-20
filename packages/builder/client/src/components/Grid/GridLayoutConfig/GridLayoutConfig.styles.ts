@@ -12,13 +12,13 @@ export const Container = styled.div`
     grid-column: 1/-1;
   }
 
-  & > *:nth-child(2) {
+  /* & > *:nth-child(2) {
     grid-column: 1;
   }
 
   & > *:nth-child(3) {
     grid-column: 2;
-  }
+  } */
 
   & > *:nth-child(4) {
     grid-column: 1;

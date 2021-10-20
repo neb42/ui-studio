@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import IconButton from '@mui/material/IconButton';
 import AddSharp from '@mui/icons-material/AddSharp';
 import DeleteSharp from '@mui/icons-material/DeleteSharp';
+import Typography from '@mui/material/Typography';
 import { Variable } from '@ui-studio/types';
 import { addVariable, removeVariable } from 'actions/variable';
 import { selectVariable } from 'actions/view';
@@ -25,7 +26,7 @@ export const VariableList = () => {
   return (
     <Styles.Container>
       <Styles.Header>
-        <Styles.HeaderTitle>Variables</Styles.HeaderTitle>
+        <Typography variant="subtitle2">Variables</Typography>
         <IconButton onClick={handleAddVariable} size="small">
           <AddSharp />
         </IconButton>
@@ -37,7 +38,8 @@ export const VariableList = () => {
             onClick={handleSelectVariable(v.id)}
             active={v.id === selectedVariableId}
           >
-            <Styles.Name>{v.name}</Styles.Name>
+            <Typography variant="body1">{v.name}</Typography>
+            <div />
             <Styles.Actions selected={selectedVariableId === v.id}>
               <IconButton onClick={handleDeleteVariable(v.id)} size="small">
                 <DeleteSharp />

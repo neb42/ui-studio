@@ -74,7 +74,6 @@ export const ElementTreeHeaderComponent = ({
           ))}
         </Select>
       </FormControl>
-      <div />
       <IconButton onClick={handleOpenAddMenu} size="small">
         <AddSharp />
       </IconButton>

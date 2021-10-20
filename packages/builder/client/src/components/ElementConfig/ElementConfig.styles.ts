@@ -24,8 +24,8 @@ export const ComponentName = styled.span`
 export const Body = styled.div`
   display: grid;
   grid-auto-rows: min-content;
-  row-gap: 24px;
-  padding: 16px;
+  row-gap: 16px;
+  padding: 24px 16px;
   overflow: auto;
   background-color: ${({ theme }) => theme.colors.background.lightAlt};
 `;

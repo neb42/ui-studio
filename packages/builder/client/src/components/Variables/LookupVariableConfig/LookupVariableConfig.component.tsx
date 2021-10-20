@@ -29,7 +29,8 @@ export const LookupVariableConfigComponent = ({
   return (
     <>
       <FormControl fullWidth>
-        <Select value={variable.variableId} onChange={handleVariableChange}>
+        <InputLabel>Variable</InputLabel>
+        <Select label="Variable" value={variable.variableId} onChange={handleVariableChange}>
           {options.map((o) => (
             <MenuItem key={o.value} value={o.value}>
               {o.label}
@@ -37,7 +38,7 @@ export const LookupVariableConfigComponent = ({
           ))}
         </Select>
       </FormControl>
-      <TextField value={variable.lookup} onChange={handleLookupChange} />
+      <TextField label="Lookup" value={variable.lookup} onChange={handleLookupChange} />
     </>
   );
 };
