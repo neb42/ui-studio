@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { useTheme } from 'styled-components';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Element } from '@ui-studio/types';
-import { ElementIcon } from 'components/ElementIcon';
 import { CustomComponentConfig } from 'components/CustomComponent/CustomComponentConfig';
 import { ExposedProperties } from 'components/CustomComponent/ExposedProperties';
 import { WidgetConfig } from 'components/WidgetConfig';
@@ -29,11 +27,10 @@ export const ElementConfigComponent = ({
   hasEvents,
   hasLayout,
 }: Props): JSX.Element => {
-  const theme = useTheme();
   const [tabIndex, setTabIndex] = React.useState(0);
 
   if (!selectedElement) {
-    return <Styles.Container>No element selected</Styles.Container>;
+    return <Styles.Container />;
   }
 
   const tabHeaders = (() => {
