@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import AddSharp from '@mui/icons-material/AddSharp';
-import Typography from '@mui/material/Typography';
+import { OpenAPIV3 } from 'openapi-types';
 import {
   Mode,
   Value$Complex,
@@ -13,7 +13,7 @@ import {
   Value$Widget,
 } from '@ui-studio/types';
 import { ModeButtons } from 'components/WidgetConfig/ModeButtons';
-import { OpenAPIV3 } from 'openapi-types';
+import { Outline } from 'components/Outline';
 
 import * as Styles from './ValueConfig.styles';
 import { ValueItem } from './ValueItem.component';
@@ -83,22 +83,23 @@ export const ValueConfigComponent = ({
   };
 
   return (
-    <Styles.Container>
-      <Typography variant="body1">{name}</Typography>
-      <ModeButtons mode={mode} modeOptions={modeOptions} onModeChange={handleModeChange} />
-      <ValueItem
-        id={id}
-        mode={mode}
-        value={value}
-        schema={schema}
-        handleValueChange={handleValueChange}
-        root
-      />
-      {schema.type === 'array' && mode === 'form' && (
-        <Button variant="outlined" onClick={handleAddPropToList} startIcon={<AddSharp />}>
-          Add list item
-        </Button>
-      )}
-    </Styles.Container>
+    <Outline label={name}>
+      <Styles.Container>
+        <ModeButtons mode={mode} modeOptions={modeOptions} onModeChange={handleModeChange} />
+        <ValueItem
+          id={id}
+          mode={mode}
+          value={value}
+          schema={schema}
+          handleValueChange={handleValueChange}
+          root
+        />
+        {schema.type === 'array' && mode === 'form' && (
+          <Button variant="outlined" onClick={handleAddPropToList} startIcon={<AddSharp />}>
+            Add list item
+          </Button>
+        )}
+      </Styles.Container>
+    </Outline>
   );
 };

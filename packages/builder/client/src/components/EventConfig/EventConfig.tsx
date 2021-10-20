@@ -25,6 +25,7 @@ import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/ev
 import { openActionConfigurationModal } from 'actions/modal';
 import { getSelectedRootId } from 'selectors/view';
 import { EventModel } from 'models/event';
+import { Outline } from 'components/Outline';
 
 import * as Styles from './EventConfig.styles';
 
@@ -210,44 +211,45 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element | null =>
   return (
     <Styles.Container>
       {eventConfig.map((e) => (
-        <Styles.Event key={e.key}>
-          <Styles.EventLabel>{e.label}</Styles.EventLabel>
-          <IconButton onClick={handleAddEvent(e.key)} size="small">
-            <AddSharp />
-          </IconButton>
-          {widget.events[e.key].map((ee, i) => (
-            <Styles.EventInstance key={i}>
-              <IconButton onClick={handleRemoveEvent(e.key, i)} size="small">
-                <DeleteSharp />
-              </IconButton>
-              <FormControl fullWidth>
-                <Select value={ee.type} onChange={handleEventTypeChange(e.key, i)}>
-                  {eventTypeOptions.map((o) => (
-                    <MenuItem key={o.value} value={o.value}>
-                      {o.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              {ee.type === 'update-variable' && (
-                <UpdateVariableEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
-              )}
-              {ee.type === 'trigger-action' && (
-                <TriggerActionEventConfig
-                  event={ee}
-                  onChange={handleEventChange(e.key, i)}
-                  pageId={rootId}
-                  widgetId={widget.id}
-                  eventKey={e.key}
-                  eventInstanceIndex={i}
-                />
-              )}
-              {ee.type === 'navigate-page' && (
-                <NavigatePageEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
-              )}
-            </Styles.EventInstance>
-          ))}
-        </Styles.Event>
+        <Outline key={e.key} label={e.label}>
+          <Styles.Event>
+            {widget.events[e.key].map((ee, i) => (
+              <Styles.EventInstance key={i}>
+                <IconButton onClick={handleRemoveEvent(e.key, i)} size="small">
+                  <DeleteSharp />
+                </IconButton>
+                <FormControl fullWidth>
+                  <Select value={ee.type} onChange={handleEventTypeChange(e.key, i)}>
+                    {eventTypeOptions.map((o) => (
+                      <MenuItem key={o.value} value={o.value}>
+                        {o.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {ee.type === 'update-variable' && (
+                  <UpdateVariableEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
+                )}
+                {ee.type === 'trigger-action' && (
+                  <TriggerActionEventConfig
+                    event={ee}
+                    onChange={handleEventChange(e.key, i)}
+                    pageId={rootId}
+                    widgetId={widget.id}
+                    eventKey={e.key}
+                    eventInstanceIndex={i}
+                  />
+                )}
+                {ee.type === 'navigate-page' && (
+                  <NavigatePageEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
+                )}
+              </Styles.EventInstance>
+            ))}
+            <Button variant="outlined" onClick={handleAddEvent(e.key)} startIcon={<AddSharp />}>
+              Add event action
+            </Button>
+          </Styles.Event>
+        </Outline>
       ))}
     </Styles.Container>
   );

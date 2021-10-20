@@ -5,15 +5,12 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border: 1px solid #000;
-  border-radius: 8px;
-  margin-bottom: 16px;
   position: relative;
-  padding: 16px;
+  padding: 8px 0;
 
   & .MuiSpeedDial-root {
-    top: 16px;
-    right: 16px;
+    top: -20px;
+    right: -24px;
   }
 `;
 

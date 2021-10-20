@@ -25,7 +25,8 @@ export const Body = styled.div`
   display: grid;
   grid-auto-rows: min-content;
   row-gap: 16px;
-  padding: 24px 16px;
+  padding: 24px;
+  padding-left: 16px;
   overflow: auto;
   background-color: ${({ theme }) => theme.colors.background.lightAlt};
 `;

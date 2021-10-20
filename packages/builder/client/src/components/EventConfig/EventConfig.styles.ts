@@ -4,30 +4,10 @@ import styled from 'styled-components';
 export const Container = styled.div``;
 
 export const Event = styled.div`
-  display: grid;
-  grid-template-columns: auto 30px;
-  align-items: center;
-  row-gap: 8px;
-  border: 1px solid #000;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  padding: 16px;
-
-  & > * {
-    grid-column: 1/-1;
-  }
-
-  & > *:nth-child(1) {
-    grid-column: 1;
-  }
-
-  & > *:nth-child(2) {
-    grid-column: 2;
-  }
-`;
-
-export const EventLabel = styled.div`
-  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 0;
 `;
 
 export const EventInstance = styled.div`

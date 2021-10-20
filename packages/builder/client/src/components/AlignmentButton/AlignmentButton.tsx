@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useTheme } from 'styled-components';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Outline } from 'components/Outline';
 import { ReactComponent as AlignCenter } from 'icons/align-center.svg';
 import { ReactComponent as AlignEnd } from 'icons/align-end.svg';
 import { ReactComponent as AlignStart } from 'icons/align-start.svg';
@@ -17,7 +18,6 @@ import { ReactComponent as SelfStart } from 'icons/self-start.svg';
 import { ReactComponent as SelfStretch } from 'icons/self-stretch.svg';
 
 import * as Styles from './AlignmentButton.styles';
-import { Outline } from 'components/Outline';
 
 const options: {
   [layoutType: string]: {

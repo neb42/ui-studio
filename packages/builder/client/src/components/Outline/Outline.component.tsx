@@ -11,6 +11,7 @@ const InputComponent = ({ inputRef: _, ...other }: any) => <div {...other} />;
 export const OutlineComponent = ({ children, label }: Props) => {
   return (
     <TextField
+      fullWidth
       variant="outlined"
       label={label}
       multiline

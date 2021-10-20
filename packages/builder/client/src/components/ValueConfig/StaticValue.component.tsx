@@ -2,7 +2,8 @@ import * as React from 'react';
 import AceEditor from 'react-ace';
 import { useTheme } from 'styled-components';
 import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -18,7 +19,6 @@ type Props = {
 };
 
 export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
-  console.log(value, schema)
   const theme = useTheme();
   const [hasFocus, setHasFocus] = React.useState(false);
 
@@ -42,8 +42,9 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
     handleValueChange({ ...value, value: event.target.value });
   };
 
-  const handleCheckboxOnChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    handleValueChange({ ...value, value: event.target.checked });
+  const handleBooleanOnChange = (_: React.MouseEvent<HTMLElement>, v: boolean) => {
+    if (value !== null) handleValueChange({ ...value, value: v });
+  };
 
   if (schema.type === 'array' || schema.type === 'object') {
     const valueString = (() => {
@@ -116,10 +117,17 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
   if (schema.type === 'boolean') {
     if (typeof value.value !== 'boolean') throw new Error();
     return (
-      <FormControlLabel
-        label="Label"
-        control={<Checkbox checked={value.value} onChange={handleCheckboxOnChange} />}
-      />
+      <ToggleButtonGroup
+        value={value.value}
+        exclusive
+        onChange={handleBooleanOnChange}
+        fullWidth
+        color="primary"
+        size="small"
+      >
+        <ToggleButton value>True</ToggleButton>
+        <ToggleButton value={false}>False</ToggleButton>
+      </ToggleButtonGroup>
     );
   }
 
