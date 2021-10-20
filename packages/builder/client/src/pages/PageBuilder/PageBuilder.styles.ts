@@ -14,14 +14,14 @@ export const Body = styled.div`
 `;
 
 export const ColLeft = styled.div`
-  border-right: 1px solid ${({ theme }) => theme.colors.secondary300};
+  border-right: 1px solid ${({ theme }) => theme.palette.info.main};
 `;
 
 export const PopoverContainer = styled.div`
-  height: calc(100vh - 55px);
+  height: calc(100vh - 49px);
   width: calc(100vw - 600px - 48px);
   position: fixed;
   left: 348px;
-  top: calc(55px);
+  top: calc(49px);
   background-color: ${({ theme }) => theme.colors.background.light};
 `;

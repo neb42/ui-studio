@@ -15,7 +15,7 @@ export const Header = styled.div`
 
 export const Tree = styled.div`
   padding: 16px;
-  height: calc(100vh - 55px - 38px - 55px);
+  height: calc(100vh - 49px - 68px);
   overflow: auto;
   background-color: ${({ theme }) => theme.colors.background.lightAlt};
 `;
@@ -32,14 +32,17 @@ export const TreeItemLabel = styled.div<{ active: boolean }>`
   border-radius: 3px;
 
   background-color: ${({ active, theme }) =>
-    active ? Color(theme.colors.brand500).alpha(0.4).hsl().string() : 'none'};
+    active ? Color(theme.palette.primary.main).alpha(0.08).hsl().string() : 'none'};
+
+  color: ${({ active, theme }) => (active ? theme.palette.primary.main : 'rgba(0,0,0,0.54)')};
 
   &:hover {
     background-color: ${({ active, theme }) =>
-      Color(active ? theme.colors.brand500 : theme.colors.secondary300)
-        .alpha(0.4)
-        .hsl()
-        .string()};
+      active ? Color(theme.palette.primary.main).alpha(0.08).hsl().string() : 'rgba(0,0,0,0.04)'};
+  }
+
+  & > svg:first-of-type {
+    fill: ${({ theme, active }) => (active ? theme.palette.primary.main : 'rgba(0,0,0,0.54)')};
   }
 
   & span {

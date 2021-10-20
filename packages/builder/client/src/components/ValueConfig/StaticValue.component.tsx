@@ -1,9 +1,16 @@
 import * as React from 'react';
 import AceEditor from 'react-ace';
-import { Value$Static } from '@ui-studio/types';
-import { OpenAPIV3 } from 'openapi-types';
 import { useTheme } from 'styled-components';
-import { Checkbox, Input, Select } from '@faculty/adler-web-components';
+import TextField from '@mui/material/TextField';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { OpenAPIV3 } from 'openapi-types';
+import { Value$Static } from '@ui-studio/types';
 
 type Props = {
   value: Value$Static;
@@ -15,11 +22,11 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
   const theme = useTheme();
   const [hasFocus, setHasFocus] = React.useState(false);
 
-  const handleInputOnChange = (v: string) => {
+  const handleInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (schema.type === 'number' || schema.type === 'integer') {
-      handleValueChange({ ...value, value: Number(v) });
+      handleValueChange({ ...value, value: Number(event.target.value) });
     } else {
-      handleValueChange({ ...value, value: v });
+      handleValueChange({ ...value, value: event.target.value });
     }
   };
 
@@ -31,11 +38,13 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
     }
   };
 
-  const handleSelectOnChange = ({ value: v }: any) => {
-    handleValueChange({ ...value, value: v });
+  const handleSelectOnChange = (event: SelectChangeEvent) => {
+    handleValueChange({ ...value, value: event.target.value });
   };
 
-  const handleCheckboxOnChange = (v: boolean) => handleValueChange({ ...value, value: v });
+  const handleBooleanOnChange = (_: React.MouseEvent<HTMLElement>, v: boolean) => {
+    if (value !== null) handleValueChange({ ...value, value: v });
+  };
 
   if (schema.type === 'array' || schema.type === 'object') {
     const valueString = (() => {
@@ -80,27 +89,45 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
     if ('enum' in schema) {
       const options = schema.enum?.map((e) => ({ value: e, label: e })) ?? [];
       return (
-        <Select
-          value={options.find((o) => o.value === value.value)}
-          options={options}
-          onChange={handleSelectOnChange}
-        />
+        <FormControl fullWidth>
+          <Select value={value.value} onChange={handleSelectOnChange}>
+            {options.map((o) => (
+              <MenuItem key={o.value} value={o.value}>
+                {o.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       );
     }
-    return <Input onChange={handleInputOnChange} value={value.value} />;
+    return <TextField onChange={handleInputOnChange} value={value.value} />;
   }
 
   if (schema.type === 'number' || schema.type === 'integer') {
     if (typeof value.value !== 'number') throw new Error();
-    return <Input type="number" onChange={handleInputOnChange} value={value.value} />;
+    return (
+      <TextField
+        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+        onChange={handleInputOnChange}
+        value={value.value}
+      />
+    );
   }
 
   if (schema.type === 'boolean') {
     if (typeof value.value !== 'boolean') throw new Error();
     return (
-      <Checkbox checked={value.value} onChange={handleCheckboxOnChange} controlled>
-        label
-      </Checkbox>
+      <ToggleButtonGroup
+        value={value.value}
+        exclusive
+        onChange={handleBooleanOnChange}
+        fullWidth
+        color="primary"
+        size="small"
+      >
+        <ToggleButton value>True</ToggleButton>
+        <ToggleButton value={false}>False</ToggleButton>
+      </ToggleButtonGroup>
     );
   }
 

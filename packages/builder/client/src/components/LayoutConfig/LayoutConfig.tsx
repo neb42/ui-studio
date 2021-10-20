@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import Select from '@faculty/adler-web-components/atoms/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Widget, CustomComponentInstance } from '@ui-studio/types';
 import { GridLayoutConfig } from 'components/Grid/GridLayoutConfig';
 import { FlexLayoutConfig } from 'components/Flex/FlexLayoutConfig';
@@ -19,18 +22,22 @@ interface Props {
 export const LayoutConfig = ({ widget }: Props): JSX.Element | null => {
   const dispatch = useDispatch();
 
-  const handleLayoutTypeChange = ({ value }: any) => {
-    dispatch(updateWidgetLayoutType(widget.id, value));
+  const handleLayoutTypeChange = (event: SelectChangeEvent) => {
+    dispatch(updateWidgetLayoutType(widget.id, event.target.value as 'grid' | 'flex' | 'basic'));
   };
 
   return (
     <>
-      <Select
-        label="Layout type"
-        value={layoutTypeOptions.find((o) => o.value === widget.layout?.type)}
-        options={layoutTypeOptions}
-        onChange={handleLayoutTypeChange}
-      />
+      <FormControl fullWidth>
+        <InputLabel>Layout type</InputLabel>
+        <Select value={widget.layout?.type} label="Layout type" onChange={handleLayoutTypeChange}>
+          {layoutTypeOptions.map((o) => (
+            <MenuItem key={o.value} value={o.value}>
+              {o.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       {widget.layout?.type === 'grid' && <GridLayoutConfig widget={widget} />}
       {widget.layout?.type === 'flex' && <FlexLayoutConfig widget={widget} />}
     </>

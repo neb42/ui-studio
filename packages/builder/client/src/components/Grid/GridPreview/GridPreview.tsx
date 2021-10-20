@@ -2,6 +2,7 @@ import * as React from 'react';
 import { IGridCell, TGridStyleLayout } from '@ui-studio/types';
 
 import * as Styles from './GridPreview.styles';
+import { Outline } from 'components/Outline';
 
 interface IGridPreview {
   columns: IGridCell[];
@@ -112,26 +113,28 @@ export const GridPreview = ({
   React.useEffect(() => document.removeEventListener('mouseup', handleMouseUp), []);
 
   return (
-    <Styles.Container>
-      <Styles.Grid columns={columns} rows={rows}>
-        {new Array(rows.length)
-          .fill(1)
-          .map((_, r) =>
-            new Array(columns.length)
-              .fill(1)
-              .map((__, c) => (
-                <Styles.Cell
-                  key={r * c}
-                  onMouseDown={handleMouseDown(r + 1, c + 1)}
-                  onMouseEnter={handleMouseEnter(r + 1, c + 1)}
-                  onMouseUp={handleMouseUp}
-                  readOnly={!selectGrid}
-                  active={isActive(r + 1, c + 1)}
-                  disabled={isDisabled(r + 1, c + 1)}
-                />
-              )),
-          )}
-      </Styles.Grid>
-    </Styles.Container>
+    <Outline label="Grid">
+      <Styles.Container>
+        <Styles.Grid columns={columns} rows={rows}>
+          {new Array(rows.length)
+            .fill(1)
+            .map((_, r) =>
+              new Array(columns.length)
+                .fill(1)
+                .map((__, c) => (
+                  <Styles.Cell
+                    key={r * c}
+                    onMouseDown={handleMouseDown(r + 1, c + 1)}
+                    onMouseEnter={handleMouseEnter(r + 1, c + 1)}
+                    onMouseUp={handleMouseUp}
+                    readOnly={!selectGrid}
+                    active={isActive(r + 1, c + 1)}
+                    disabled={isDisabled(r + 1, c + 1)}
+                  />
+                )),
+            )}
+        </Styles.Grid>
+      </Styles.Container>
+    </Outline>
   );
 };

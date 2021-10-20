@@ -7,6 +7,7 @@ import { Element } from '@ui-studio/types';
 import { updateElementCSS } from 'actions/styles';
 
 import * as Styles from './CSSInput.styles';
+import { Outline } from 'components/Outline';
 
 interface ICSSInput {
   element: Element;
@@ -20,8 +21,7 @@ export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
   const handleOnChange = (value: string) => dispatch(updateElementCSS(value));
 
   return (
-    <Styles.Container>
-      <Styles.Header>CSS</Styles.Header>
+    <Outline label="CSS">
       <AceEditor
         name={`${element.id}-css-editor`}
         mode="css"
@@ -30,7 +30,7 @@ export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
         onChange={handleOnChange}
         editorProps={{ $blockScrolling: true }}
         width="100%"
-        height="300px"
+        height="250px"
         tabSize={2}
         wrapEnabled
         onFocus={() => setHasFocus(true)}
@@ -44,14 +44,9 @@ export const CSSInput = ({ element }: ICSSInput): JSX.Element => {
           enableSnippets: true,
         }}
         style={{
-          padding: '8px',
-          border: `1px solid ${
-            hasFocus ? theme.input.border.color.focused : theme.input.border.color.default
-          }`,
           fontFamily: 'Menlo, monospace',
-          transition: 'border 300ms ease-in-out',
         }}
       />
-    </Styles.Container>
+    </Outline>
   );
 };

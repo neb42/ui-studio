@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Input from '@faculty/adler-web-components/atoms/Input';
-import Select from '@faculty/adler-web-components/atoms/Select';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { updateVariableName, updateVariableType } from 'actions/variable';
 import { getSelectedVariable } from 'selectors/variable';
 import { StaticVariableConfig } from 'components/Variables/StaticVariableConfig';
@@ -20,15 +23,17 @@ export const VariableConfig = () => {
   const dispatch = useDispatch();
   const selectedVariable = useSelector(getSelectedVariable);
 
-  const handleOnNameChange = (name: string) => {
+  const handleOnNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (selectedVariable) {
-      dispatch(updateVariableName(selectedVariable.id, name));
+      dispatch(updateVariableName(selectedVariable.id, event.target.value));
     }
   };
 
-  const handleOnTypeChange = ({ value }: any) => {
+  const handleOnTypeChange = (event: SelectChangeEvent) => {
     if (selectedVariable) {
-      dispatch(updateVariableType(selectedVariable.id, value as 'static' | 'function'));
+      dispatch(
+        updateVariableType(selectedVariable.id, event.target.value as 'static' | 'function'),
+      );
     }
   };
 
@@ -36,18 +41,23 @@ export const VariableConfig = () => {
 
   return (
     <Styles.Container>
-      <Input
+      <TextField
         label="Name"
         value={selectedVariable.name}
         onChange={handleOnNameChange}
-        error={selectedVariable.name.length === 0 ? 'Required' : undefined}
+        error={selectedVariable.name.length === 0}
+        helperText="Required"
       />
-      <Select
-        label="Type"
-        value={variableTypeOptions.find((o) => o.value === selectedVariable?.type)}
-        onChange={handleOnTypeChange}
-        options={variableTypeOptions}
-      />
+      <FormControl fullWidth>
+        <InputLabel>Type</InputLabel>
+        <Select value={selectedVariable.type} label="Type" onChange={handleOnTypeChange}>
+          {variableTypeOptions.map((o) => (
+            <MenuItem key={o.value} value={o.value}>
+              {o.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       {selectedVariable?.type === 'static' && <StaticVariableConfig variable={selectedVariable} />}
       {selectedVariable?.type === 'function' && (
         <FunctionVariableConfig variable={selectedVariable} />

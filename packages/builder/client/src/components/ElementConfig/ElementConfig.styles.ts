@@ -4,27 +4,15 @@ export const Container = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100%;
-  border-left: 1px solid ${({ theme }) => theme.colors.secondary300};
+  border-left: 1px solid ${({ theme }) => theme.palette.info.main};
   overflow: hidden;
 `;
 
 export const Header = styled.div`
-  display: grid;
-  grid-template-columns: 20px auto;
-  grid-column-gap: ${({ theme }) => theme.spacing.px.small}px;
-  align-items: center;
-  padding: ${({ theme }) => theme.spacing.px.small}px ${({ theme }) => theme.spacing.px.regular}px;
-  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
   background-color: ${({ theme }) => theme.header.background.color};
   box-shadow: 0 5px 10px 0 ${({ theme }) => theme.header.boxshadow.color};
-
-  & > *:last-child {
-    grid-column: 1/-1;
-  }
-
-  & button {
-    padding: ${({ theme }) => theme.spacing.px.small}px;
-  }
 `;
 
 export const ComponentName = styled.span`
@@ -36,8 +24,9 @@ export const ComponentName = styled.span`
 export const Body = styled.div`
   display: grid;
   grid-auto-rows: min-content;
-  row-gap: 24px;
-  padding: 16px;
+  row-gap: 16px;
+  padding: 24px;
+  padding-left: 16px;
   overflow: auto;
   background-color: ${({ theme }) => theme.colors.background.lightAlt};
 `;

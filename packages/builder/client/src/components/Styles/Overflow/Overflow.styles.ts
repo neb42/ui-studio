@@ -5,8 +5,3 @@ export const Container = styled.div`
   flex-direction: column;
   gap: 8px;
 `;
-
-export const Header = styled.span`
-  color: ${({ theme }) => theme.colors.primary};
-  font-weight: 500;
-`;

@@ -1,10 +1,16 @@
 import * as React from 'react';
-import Button from '@faculty/adler-web-components/atoms/Button';
-import Input from '@faculty/adler-web-components/atoms/Input';
-import Select from '@faculty/adler-web-components/atoms/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import DeleteSharp from '@mui/icons-material/DeleteSharp';
+import TextField from '@mui/material/TextField';
 import { IGridCell, GridUnit } from '@ui-studio/types';
 
 import * as Styles from './GridTemplateControls.styles';
+import { Outline } from 'components/Outline';
 
 // const units = ['fr', '%', 'px', 'em', 'auto', 'min-content', 'max-content', 'minmax'] as const;
 const units = ['fr', '%', 'px', 'em', 'auto', 'min-content', 'max-content'] as const;
@@ -40,23 +46,23 @@ export const GridTemplateControls = ({
     updateConfig(config.filter((_, i) => i !== idx));
   };
 
-  const handleValueChange = (idx: number) => (value: string) => {
+  const handleValueChange = (idx: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     updateConfig(
       config.map((r, i) => {
         if (i === idx) {
-          return { ...r, value: Number(value) };
+          return { ...r, value: Number(event.target.value) };
         }
         return r;
       }),
     );
   };
 
-  const handleUnitChange = (idx: number) => ({ value }: any) => {
-    const v = value as GridUnit;
+  const handleUnitChange = (idx: number) => (event: SelectChangeEvent) => {
+    const v = event.target.value as GridUnit;
     updateConfig(
       config.map((r, i) => {
         if (i === idx) {
-          return { ...r, unit: value, value: initialUnitValues[v] };
+          return { ...r, unit: v, value: initialUnitValues[v] };
         }
         return r;
       }),
@@ -66,42 +72,38 @@ export const GridTemplateControls = ({
   const showValueControl = (unit: GridUnit) => ['fr', '%', 'px', 'em'].includes(unit);
 
   return (
-    <Styles.Container>
-      <Styles.Header>
-        <Styles.Name>{name}s</Styles.Name>
-        <Button
-          icon="add"
-          onClick={handleAdd}
-          style={Button.styles.naked}
-          color={Button.colors.secondary}
-          size={Button.sizes.medium}
-        />
-      </Styles.Header>
-      {config.map((c, i) => (
-        <Styles.Cell key={i} showValueControl={showValueControl(c.unit)}>
-          {showValueControl(c.unit) && (
-            <Input
-              type="number"
-              value={c.value || ''}
-              onChange={handleValueChange(i)}
-              disabled={c.value === null}
-            />
-          )}
-          <Select
-            value={{ value: c.unit, label: c.unit }}
-            onChange={handleUnitChange(i)}
-            options={units.map((u) => ({ value: u, label: u }))}
-          />
-          <Button
-            icon="delete"
-            onClick={handleRemove(i)}
-            style={Button.styles.naked}
-            color={Button.colors.secondary}
-            size={Button.sizes.medium}
-            disabled={config.length === 1}
-          />
-        </Styles.Cell>
-      ))}
-    </Styles.Container>
+    <Outline label={`${name.charAt(0).toUpperCase() + name.slice(1)}s`}>
+      <Styles.Container>
+        {config.map((c, i) => (
+          <Styles.Cell key={i} showValueControl={showValueControl(c.unit)}>
+            {showValueControl(c.unit) && (
+              <TextField
+                label="Value"
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                value={c.value || ''}
+                onChange={handleValueChange(i)}
+                disabled={c.value === null}
+              />
+            )}
+            <FormControl fullWidth>
+              <InputLabel>Unit</InputLabel>
+              <Select label="Unit" value={c.unit} onChange={handleUnitChange(i)}>
+                {units.map((u) => (
+                  <MenuItem key={u} value={u}>
+                    {u}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <IconButton onClick={handleRemove(i)} disabled={config.length === 1} size="small">
+              <DeleteSharp />
+            </IconButton>
+          </Styles.Cell>
+        ))}
+        <Button variant="outlined" onClick={handleAdd} fullWidth>
+          Add {name}
+        </Button>
+      </Styles.Container>
+    </Outline>
   );
 };

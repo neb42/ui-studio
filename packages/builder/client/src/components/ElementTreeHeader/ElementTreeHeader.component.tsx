@@ -1,7 +1,13 @@
 import * as React from 'react';
-import { Menu, MenuItem } from '@material-ui/core';
-import Select from '@faculty/adler-web-components/atoms/Select';
-import Button from '@faculty/adler-web-components/atoms/Button';
+import InputLabel from '@mui/material/InputLabel';
+import ListSubheader from '@mui/material/ListSubheader';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import IconButton from '@mui/material/IconButton';
+import AddSharp from '@mui/icons-material/AddSharp';
+import DeleteSharp from '@mui/icons-material/DeleteSharp';
 import { Page, CustomComponent } from '@ui-studio/types';
 
 import * as Styles from './ElementTreeHeader.styles';
@@ -30,8 +36,8 @@ export const ElementTreeHeaderComponent = ({
     setAnchorEl(event.currentTarget);
   const handleCloseAddMenu = () => setAnchorEl(null);
 
-  const handleOnChange = ({ value }: any) => {
-    onRootChange(value as string);
+  const handleOnChange = (event: SelectChangeEvent) => {
+    onRootChange(event.target.value as string);
   };
 
   const handleAddPage = () => {
@@ -52,36 +58,32 @@ export const ElementTreeHeaderComponent = ({
 
   return (
     <Styles.Container>
-      <Select
-        value={{ label: rootElement.name, value: rootElement.id }}
-        onChange={handleOnChange}
-        options={[
-          {
-            label: 'Pages',
-            options: pages.map((p) => ({ value: p.id, label: p.name })),
-          },
-          {
-            label: 'Components',
-            options: customComponents.map((p) => ({ value: p.id, label: p.name })),
-          },
-        ]}
-      />
-      <div />
-      <Button
-        icon="add"
-        style={Button.styles.naked}
-        color={Button.colors.secondary}
-        size={Button.sizes.medium}
-        onClick={handleOpenAddMenu}
-      />
-      <Button
-        icon="delete"
-        style={Button.styles.naked}
-        color={Button.colors.secondary}
-        size={Button.sizes.medium}
+      <FormControl fullWidth>
+        <Select value={rootElement.id} onChange={handleOnChange} size="small">
+          <ListSubheader>Pages</ListSubheader>
+          {pages.map((o) => (
+            <MenuItem key={o.id} value={o.id}>
+              {o.name}
+            </MenuItem>
+          ))}
+          <ListSubheader>Components</ListSubheader>
+          {customComponents.map((o) => (
+            <MenuItem key={o.id} value={o.id}>
+              {o.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <IconButton onClick={handleOpenAddMenu} size="small">
+        <AddSharp />
+      </IconButton>
+      <IconButton
         onClick={handleRemove}
         disabled={rootElement.type === 'page' && Object.keys(pages).length === 1}
-      />
+        size="small"
+      >
+        <DeleteSharp />
+      </IconButton>
       <Menu keepMounted anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseAddMenu}>
         <MenuItem onClick={handleAddPage}>Page</MenuItem>
         <MenuItem onClick={handleAddCustomComponent}>Component</MenuItem>

@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import Select from '@faculty/adler-web-components/atoms/Select';
-import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import {
   Widget,
   FlexJustification,
@@ -27,8 +31,8 @@ export const FlexLayoutConfig = ({ widget }: FlexLayoutConfigProps): JSX.Element
 
   if (widget.layout?.type !== 'flex') throw Error();
 
-  const handleUpdateDirection = ({ value }: any) => {
-    dispatch(updateWidgetLayoutConfig('direction', value as 'row' | 'column'));
+  const handleUpdateDirection = (event: SelectChangeEvent) => {
+    dispatch(updateWidgetLayoutConfig('direction', event.target.value as 'row' | 'column'));
   };
 
   const handleUpdateAlignment = (value: string) => {
@@ -39,46 +43,43 @@ export const FlexLayoutConfig = ({ widget }: FlexLayoutConfigProps): JSX.Element
     dispatch(updateWidgetLayoutConfig('justify', value as FlexJustification));
   };
 
-  const handleUpdateWrap = (wrap: boolean) => {
-    dispatch(updateWidgetLayoutConfig('wrap', wrap));
+  const handleUpdateWrap = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(updateWidgetLayoutConfig('wrap', event.target.checked));
   };
 
   const { direction } = widget.layout;
   return (
     <Styles.Container>
-      <Styles.Field>
-        <Styles.FieldHeader>Direction</Styles.FieldHeader>
-        <Select
-          value={directionOptions.find((o) => o.value === direction)}
-          onChange={handleUpdateDirection}
-          options={directionOptions}
-        />
-      </Styles.Field>
-      <Styles.Field>
-        <Styles.FieldHeader>Alignment</Styles.FieldHeader>
-        <AlignmentButton
-          layoutType="flex"
-          direction={direction}
-          alignmentType="align"
-          value={widget.layout.align}
-          onChange={handleUpdateAlignment}
-        />
-      </Styles.Field>
-      <Styles.Field>
-        <Styles.FieldHeader>Justification</Styles.FieldHeader>
-        <AlignmentButton
-          layoutType="flex"
-          direction={direction}
-          alignmentType="justify"
-          value={widget.layout.justify}
-          onChange={handleUpdateJustification}
-        />
-      </Styles.Field>
-      <Styles.Field>
-        <Checkbox checked={widget.layout.wrap} onChange={handleUpdateWrap} controlled>
-          Wrap
-        </Checkbox>
-      </Styles.Field>
+      <FormControl fullWidth>
+        <InputLabel>Direction</InputLabel>
+        <Select label="Direction" value={direction} onChange={handleUpdateDirection}>
+          {directionOptions.map((o) => (
+            <MenuItem key={o.value} value={o.value}>
+              {o.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <AlignmentButton
+        label="Alignment"
+        layoutType="flex"
+        direction={direction}
+        alignmentType="align"
+        value={widget.layout.align}
+        onChange={handleUpdateAlignment}
+      />
+      <AlignmentButton
+        label="Justification"
+        layoutType="flex"
+        direction={direction}
+        alignmentType="justify"
+        value={widget.layout.justify}
+        onChange={handleUpdateJustification}
+      />
+      <FormControlLabel
+        label="Wrap"
+        control={<Checkbox checked={widget.layout.wrap} onChange={handleUpdateWrap} />}
+      />
     </Styles.Container>
   );
 };

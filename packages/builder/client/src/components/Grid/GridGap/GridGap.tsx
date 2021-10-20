@@ -1,7 +1,5 @@
 import * as React from 'react';
-import Input from '@faculty/adler-web-components/atoms/Input';
-
-import * as Styles from './GridGap.styles';
+import TextField from '@mui/material/TextField';
 
 interface GridGapProps {
   name: 'column' | 'row';
@@ -10,10 +8,15 @@ interface GridGapProps {
 }
 
 export const GridGap = ({ name, gap, updateGap }: GridGapProps): JSX.Element => {
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    updateGap(Number(event.target.value));
+
   return (
-    <Styles.Container>
-      <Styles.Name>{name} gap</Styles.Name>
-      <Input type="number" value={gap} onChange={updateGap} />
-    </Styles.Container>
+    <TextField
+      label={`${name.charAt(0).toUpperCase() + name.slice(1)} gap`}
+      value={gap}
+      onChange={handleOnChange}
+      inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+    />
   );
 };

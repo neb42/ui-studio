@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useTheme } from 'styled-components';
-
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Outline } from 'components/Outline';
 import { ReactComponent as AlignCenter } from 'icons/align-center.svg';
 import { ReactComponent as AlignEnd } from 'icons/align-end.svg';
 import { ReactComponent as AlignStart } from 'icons/align-start.svg';
@@ -145,6 +147,7 @@ const options: {
 };
 
 type Props = {
+  label: string;
   layoutType: 'flex' | 'grid';
   alignmentType: string;
   value: string;
@@ -153,6 +156,7 @@ type Props = {
 };
 
 export const AlignmentButton = ({
+  label,
   layoutType,
   alignmentType,
   value: rawValue,
@@ -163,48 +167,39 @@ export const AlignmentButton = ({
 
   const value = rawValue.replace('flex-', '');
 
-  const handleOnClick = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const v = event.target.value;
+  const handleOnClick = (_: React.MouseEvent<HTMLElement>, newValue: string): void => {
     // For some reason "end" doesn't work with flex so we set it to flex end
-    if (layoutType === 'flex' && v === 'end') {
-      onChange('flex-end');
-    } else {
-      onChange(v);
+    if (newValue !== null) {
+      if (layoutType === 'flex' && newValue === 'end') {
+        onChange('flex-end');
+      } else {
+        onChange(newValue);
+      }
     }
   };
 
   const config = options[layoutType][alignmentType];
 
-  const SelectedIcon = config[value].icon;
   return (
-    <Styles.SegmentedControl onChange={handleOnClick}>
-      {Object.keys(config).map((key) => (
-        <Styles.HiddenRadio
-          key={key}
-          type="radio"
-          value={key}
-          id={`${direction}-${alignmentType}-${key}`}
-          name={alignmentType}
-          checked={value === key}
-        />
-      ))}
-      {Object.entries(config).map(([key, { icon: Icon, tooltip }]) => (
-        <Styles.Label
-          key={key}
-          htmlFor={`${direction}-${alignmentType}-${key}`}
-          count={Object.keys(config).length}
-          rotate={direction === 'column'}
-        >
-          <Icon width={16} height={16} fill={theme.colors.primary} />
-        </Styles.Label>
-      ))}
-      <Styles.ActiveSegment
-        activeIdx={Object.keys(config).findIndex((k) => k === value)}
-        count={Object.keys(config).length}
-        rotate={direction === 'column'}
-      >
-        <SelectedIcon width={16} height={16} fill="#fff" />
-      </Styles.ActiveSegment>
-    </Styles.SegmentedControl>
+    <Outline label={label}>
+      <ToggleButtonGroup value={value} exclusive onChange={handleOnClick} fullWidth color="primary">
+        {Object.entries(config).map(([key, { icon: Icon, tooltip }]) => (
+          <ToggleButton key={key} value={key}>
+            <Icon
+              width={18}
+              height={18}
+              fill="currentColor"
+              style={
+                direction === 'column'
+                  ? {
+                      transform: 'rotate(90deg) scaleY(-1)',
+                    }
+                  : {}
+              }
+            />
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
+    </Outline>
   );
 };

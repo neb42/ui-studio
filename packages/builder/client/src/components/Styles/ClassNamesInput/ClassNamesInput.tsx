@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import Input from '@faculty/adler-web-components/atoms/Input';
+import TextField from '@mui/material/TextField';
 import { Element } from '@ui-studio/types';
 import { updateElementClassNames } from 'actions/styles';
 
@@ -13,12 +13,15 @@ interface Props {
 export const ClassNamesInput = ({ element }: Props): JSX.Element => {
   const dispatch = useDispatch();
 
-  const handleOnChange = (value: string) => dispatch(updateElementClassNames(value));
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    dispatch(updateElementClassNames(event.target.value));
 
   return (
-    <Styles.Container>
-      <Styles.Header>Class names</Styles.Header>
-      <Input onChange={handleOnChange} value={element.style.classNames} />
-    </Styles.Container>
+    <TextField
+      label="Class names"
+      fullWidth
+      onChange={handleOnChange}
+      value={element.style.classNames}
+    />
   );
 };

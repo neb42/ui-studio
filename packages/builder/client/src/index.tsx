@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
-import { defaultTokens, ThemeProvider } from '@faculty/adler-tokens';
+import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles';
 
 import 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
@@ -12,7 +12,12 @@ import 'ace-builds/src-noconflict/mode-css';
 import 'ace-builds/src-noconflict/worker-css';
 import 'ace-builds/src-noconflict/theme-chrome';
 import 'ace-builds/src-noconflict/ext-language_tools';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
+import { themeSettings } from './theme';
 import store from './store';
 import App from './App';
 
@@ -55,10 +60,10 @@ const GlobalStyles = createGlobalStyle`
     }
 
     & .MuiFab-primary {
-      background-color: #1c1c1c;
+      background-color: ${({ theme }) => theme.palette.info.dark};
 
       &:hover {
-        background-color: #1c1c1c;
+        background-color: ${({ theme }) => theme.palette.info.dark};
       }
     }
 
@@ -70,18 +75,26 @@ const GlobalStyles = createGlobalStyle`
       margin: 4px;
     }
   }
+
+  & .MuiDialogContent-root {
+    padding: 0;
+  }
 `;
+
+const theme = createTheme(themeSettings);
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={defaultTokens}>
-      <Provider store={store}>
-        <GlobalStyles />
-        <Router>
-          <App />
-        </Router>
-      </Provider>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>
+          <GlobalStyles />
+          <Router>
+            <App />
+          </Router>
+        </Provider>
+      </ThemeProvider>
+    </StyledEngineProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

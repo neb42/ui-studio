@@ -1,4 +1,7 @@
 import * as React from 'react';
+import Button from '@mui/material/Button';
+import AddSharp from '@mui/icons-material/AddSharp';
+import { OpenAPIV3 } from 'openapi-types';
 import {
   Mode,
   Value$Complex,
@@ -10,8 +13,7 @@ import {
   Value$Widget,
 } from '@ui-studio/types';
 import { ModeButtons } from 'components/WidgetConfig/ModeButtons';
-import { OpenAPIV3 } from 'openapi-types';
-import { Button } from '@faculty/adler-web-components';
+import { Outline } from 'components/Outline';
 
 import * as Styles from './ValueConfig.styles';
 import { ValueItem } from './ValueItem.component';
@@ -62,7 +64,13 @@ export const ValueConfigComponent = ({
       (schema.items as OpenAPIV3.SchemaObject).type === 'object'
         ? {
             mode: 'complex',
-            props: defaultValue,
+            props: Object.keys(defaultValue).reduce(
+              (acc, cur) => ({
+                ...acc,
+                [cur]: { mode: 'static', value: defaultValue[cur] },
+              }),
+              {},
+            ),
           }
         : {
             mode: 'static',
@@ -75,27 +83,23 @@ export const ValueConfigComponent = ({
   };
 
   return (
-    <Styles.Container>
-      <Styles.Name>{name}</Styles.Name>
-      <ModeButtons mode={mode} modeOptions={modeOptions} onModeChange={handleModeChange} />
-      <ValueItem
-        id={id}
-        mode={mode}
-        value={value}
-        schema={schema}
-        handleValueChange={handleValueChange}
-        root
-      />
-      {schema.type === 'array' && mode === 'form' && (
-        <Button
-          text="Add list item"
-          icon="add"
-          onClick={handleAddPropToList}
-          style={Button.styles.outline}
-          color={Button.colors.primary}
-          size={Button.sizes.medium}
+    <Outline label={name}>
+      <Styles.Container>
+        <ModeButtons mode={mode} modeOptions={modeOptions} onModeChange={handleModeChange} />
+        <ValueItem
+          id={id}
+          mode={mode}
+          value={value}
+          schema={schema}
+          handleValueChange={handleValueChange}
+          root
         />
-      )}
-    </Styles.Container>
+        {schema.type === 'array' && mode === 'form' && (
+          <Button variant="outlined" onClick={handleAddPropToList} startIcon={<AddSharp />}>
+            Add list item
+          </Button>
+        )}
+      </Styles.Container>
+    </Outline>
   );
 };

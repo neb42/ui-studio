@@ -1,10 +1,13 @@
 import * as React from 'react';
+import { useSelector } from 'react-redux';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Value$Variable } from '@ui-studio/types';
 import { OpenAPIV3 } from 'openapi-types';
-import { useSelector } from 'react-redux';
 import { getVariables } from 'selectors/variable';
 import { Store } from 'types/store';
-import { Select } from '@faculty/adler-web-components';
 import { compareSchemas, getResponseSchemaForEndpoint, getSchemaForLookup } from 'utils/openapi';
 
 type Props = {
@@ -56,18 +59,21 @@ export const VariableValue = ({ value, schema, handleValueChange }: Props) => {
   });
 
   const selectedVariableId = value.variableId;
-  const selectedVariable = variables.find((v) => v.id === selectedVariableId);
 
-  const handleVariableChange = ({ value: v }: any) => {
-    handleValueChange({ mode: 'variable', variableId: v });
+  const handleVariableChange = (event: SelectChangeEvent) => {
+    handleValueChange({ mode: 'variable', variableId: event.target.value as string });
   };
 
   return (
-    <Select
-      label="Variable"
-      value={selectedVariable ? { value: selectedVariable.id, label: selectedVariable.name } : null}
-      onChange={handleVariableChange}
-      options={variables.map((v) => ({ value: v.id, label: v.name }))}
-    />
+    <FormControl fullWidth>
+      <InputLabel>Variable</InputLabel>
+      <Select value={selectedVariableId} label="Variable" onChange={handleVariableChange}>
+        {variables.map((v) => (
+          <MenuItem key={v.id} value={v.id}>
+            {v.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };

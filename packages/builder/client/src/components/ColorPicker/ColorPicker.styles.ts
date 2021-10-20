@@ -6,21 +6,12 @@ export const Container = styled.div`
   align-items: center;
   row-gap: 8px;
   column-gap: 8px;
-
-  & > *:first-child {
-    grid-column: 1/-1;
-  }
 `;
 
 export const ColorPickerWrapper = styled.div<{ x: number; y: number }>`
   position: fixed;
   top: ${({ y }) => y}px;
   right: calc(100vw - ${({ x }) => x}px);
-`;
-
-export const Header = styled.span`
-  color: ${({ theme }) => theme.colors.primary};
-  font-weight: 500;
 `;
 
 export const Swatch = styled.div<{ color: string }>`

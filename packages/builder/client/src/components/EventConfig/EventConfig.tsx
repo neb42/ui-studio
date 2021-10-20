@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { OpenAPIV3 } from 'openapi-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton } from '@material-ui/core';
-import { AddSharp, DeleteSharp } from '@material-ui/icons';
-import Select from '@faculty/adler-web-components/atoms/Select';
+import Button from '@mui/material/Button';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { IconButton } from '@mui/material';
+import { AddSharp, DeleteSharp } from '@mui/icons-material';
+import { OpenAPIV3 } from 'openapi-types';
 import {
   Event,
   Event$UpdateVariable,
@@ -13,16 +17,15 @@ import {
   Page,
   CustomComponentInstance,
   CustomComponent,
-  Value$Static,
 } from '@ui-studio/types';
 import { getComponents, getActions, getArgTypeLookUp } from 'selectors/configuration';
 import { getRoots } from 'selectors/tree';
 import { getVariables } from 'selectors/variable';
 import { addWidgetEvent, updateWidgetEvent, removeWidgetEvent } from 'actions/event';
-import { Button } from '@faculty/adler-web-components';
 import { openActionConfigurationModal } from 'actions/modal';
 import { getSelectedRootId } from 'selectors/view';
 import { EventModel } from 'models/event';
+import { Outline } from 'components/Outline';
 
 import * as Styles from './EventConfig.styles';
 
@@ -39,18 +42,22 @@ const UpdateVariableEventConfig = ({
     (v) => v.type === 'function' && v.trigger === 'event',
   );
 
-  const handleOnChange = ({ value }: any) => {
-    onChange({ type: 'update-variable', variableId: value as string });
+  const handleOnChange = (e: SelectChangeEvent) => {
+    onChange({ type: 'update-variable', variableId: e.target.value as string });
   };
 
   const options = eventFunctionVariables.map((v) => ({ value: v.id, label: v.name }));
 
   return (
-    <Select
-      value={options.find((o) => o.value === event.variableId)}
-      options={options}
-      onChange={handleOnChange}
-    />
+    <FormControl fullWidth>
+      <Select value={event.variableId} onChange={handleOnChange}>
+        {options.map((o) => (
+          <MenuItem key={o.value} value={o.value}>
+            {o.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 
@@ -71,14 +78,18 @@ const TriggerActionEventConfig = ({
   const actions = useSelector(getActions);
   const argTypeLookUp = useSelector(getArgTypeLookUp);
 
-  const handleActionChange = ({ value }: any) => {
-    const newActionId = value as { method: OpenAPIV3.HttpMethods; path: string };
+  const handleActionChange = (e: SelectChangeEvent) => {
+    const [path, method] = (e.target.value as string).split(' ');
     const args = EventModel.getDefaultFunctionArgs(
       argTypeLookUp,
-      newActionId.path,
-      newActionId.method,
+      path,
+      method as OpenAPIV3.HttpMethods,
     );
-    onChange({ type: 'trigger-action', actionId: newActionId, args });
+    onChange({
+      type: 'trigger-action',
+      actionId: { path, method: method as OpenAPIV3.HttpMethods },
+      args,
+    });
   };
 
   const options = actions.map((a) => ({ value: a, label: `${a.method.toUpperCase()} ${a.path}` }));
@@ -97,20 +108,24 @@ const TriggerActionEventConfig = ({
 
   return (
     <>
-      <Select
-        value={options.find(
-          (o) => o.value.method === event.actionId.method && o.value.path === event.actionId.path,
-        )}
-        options={options}
-        onChange={handleActionChange}
-      />
-      <Button
-        text="Configure function"
-        onClick={handleOpenConfigureFunction}
-        color={Button.colors.primary}
-        style={Button.styles.outline}
-        size={Button.sizes.medium}
-      />
+      <FormControl fullWidth>
+        <Select
+          value={`${event.actionId.path} ${event.actionId.method}`}
+          onChange={handleActionChange}
+        >
+          {options.map((o) => (
+            <MenuItem
+              key={`${o.value.path} ${o.value.method}`}
+              value={`${o.value.path} ${o.value.method}`}
+            >
+              {o.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <Button variant="outlined" onClick={handleOpenConfigureFunction}>
+        Configure function
+      </Button>
     </>
   );
 };
@@ -121,18 +136,22 @@ const NavigatePageEventConfig = ({
 }: EventConfigInstanceProps<Event$NavigatePage>): JSX.Element => {
   const pages = useSelector(getRoots).filter((e): e is Page => e.type === 'page');
 
-  const handleOnChange = ({ value }: any) => {
-    onChange({ type: 'navigate-page', pageId: value as string });
+  const handleOnChange = (e: SelectChangeEvent) => {
+    onChange({ type: 'navigate-page', pageId: e.target.value as string });
   };
 
   const options = pages.map((p) => ({ value: p.name, label: p.name }));
 
   return (
-    <Select
-      value={options.find((o) => o.value === event.pageId)}
-      options={options}
-      onChange={handleOnChange}
-    />
+    <FormControl fullWidth>
+      <Select value={event.pageId} onChange={handleOnChange}>
+        {options.map((o) => (
+          <MenuItem key={o.value} value={o.value}>
+            {o.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 
@@ -141,29 +160,6 @@ const eventTypes = [
   { key: 'trigger-action', label: 'Trigger action' },
   { key: 'navigate-page', label: 'Navigate page' },
 ];
-
-const buildDefaultEvent = (
-  eventType: 'update-variable' | 'reset-variable' | 'trigger-action' | 'navigate-page',
-): Event => {
-  switch (eventType) {
-    case 'update-variable':
-      return { type: eventType, variableId: '' };
-    case 'trigger-action':
-      return {
-        type: eventType,
-        actionId: { path: '', method: OpenAPIV3.HttpMethods.POST },
-        args: {
-          path: {},
-          query: {},
-          body: {},
-        },
-      };
-    case 'navigate-page':
-      return { type: eventType, pageId: '' };
-    default:
-      throw Error();
-  }
-};
 
 interface EventConfigProps {
   widget: Widget | CustomComponentInstance;
@@ -190,7 +186,7 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element | null =>
 
   const handleAddEvent = (eventKey: string) => () => {
     const eventType = 'update-variable';
-    const defaultEvent = buildDefaultEvent(eventType);
+    const defaultEvent = EventModel.getDefaultEvent(eventType);
     dispatch(addWidgetEvent(eventKey, defaultEvent));
   };
 
@@ -198,9 +194,9 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element | null =>
     dispatch(removeWidgetEvent(eventKey, index));
   };
 
-  const handleEventTypeChange = (eventKey: string, index: number) => ({ value }: any) => {
-    const eventType = value as 'update-variable' | 'trigger-action' | 'navigate-page';
-    const defaultEvent = buildDefaultEvent(eventType);
+  const handleEventTypeChange = (eventKey: string, index: number) => (e: SelectChangeEvent) => {
+    const eventType = e.target.value as 'update-variable' | 'trigger-action' | 'navigate-page';
+    const defaultEvent = EventModel.getDefaultEvent(eventType);
     dispatch(updateWidgetEvent(eventKey, index, defaultEvent));
   };
 
@@ -215,40 +211,45 @@ export const EventConfig = ({ widget }: EventConfigProps): JSX.Element | null =>
   return (
     <Styles.Container>
       {eventConfig.map((e) => (
-        <Styles.Event key={e.key}>
-          <Styles.EventLabel>{e.label}</Styles.EventLabel>
-          <IconButton onClick={handleAddEvent(e.key)} size="small">
-            <AddSharp />
-          </IconButton>
-          {widget.events[e.key].map((ee, i) => (
-            <Styles.EventInstance key={i}>
-              <IconButton onClick={handleRemoveEvent(e.key, i)} size="small">
-                <DeleteSharp />
-              </IconButton>
-              <Select
-                value={eventTypeOptions.find((o) => o.value === ee.type)}
-                options={eventTypeOptions}
-                onChange={handleEventTypeChange(e.key, i)}
-              />
-              {ee.type === 'update-variable' && (
-                <UpdateVariableEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
-              )}
-              {ee.type === 'trigger-action' && (
-                <TriggerActionEventConfig
-                  event={ee}
-                  onChange={handleEventChange(e.key, i)}
-                  pageId={rootId}
-                  widgetId={widget.id}
-                  eventKey={e.key}
-                  eventInstanceIndex={i}
-                />
-              )}
-              {ee.type === 'navigate-page' && (
-                <NavigatePageEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
-              )}
-            </Styles.EventInstance>
-          ))}
-        </Styles.Event>
+        <Outline key={e.key} label={e.label}>
+          <Styles.Event>
+            {widget.events[e.key].map((ee, i) => (
+              <Styles.EventInstance key={i}>
+                <IconButton onClick={handleRemoveEvent(e.key, i)} size="small">
+                  <DeleteSharp />
+                </IconButton>
+                <FormControl fullWidth>
+                  <Select value={ee.type} onChange={handleEventTypeChange(e.key, i)}>
+                    {eventTypeOptions.map((o) => (
+                      <MenuItem key={o.value} value={o.value}>
+                        {o.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {ee.type === 'update-variable' && (
+                  <UpdateVariableEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
+                )}
+                {ee.type === 'trigger-action' && (
+                  <TriggerActionEventConfig
+                    event={ee}
+                    onChange={handleEventChange(e.key, i)}
+                    pageId={rootId}
+                    widgetId={widget.id}
+                    eventKey={e.key}
+                    eventInstanceIndex={i}
+                  />
+                )}
+                {ee.type === 'navigate-page' && (
+                  <NavigatePageEventConfig event={ee} onChange={handleEventChange(e.key, i)} />
+                )}
+              </Styles.EventInstance>
+            ))}
+            <Button variant="outlined" onClick={handleAddEvent(e.key)} startIcon={<AddSharp />}>
+              Add event action
+            </Button>
+          </Styles.Event>
+        </Outline>
       ))}
     </Styles.Container>
   );

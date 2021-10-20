@@ -1,7 +1,7 @@
 import * as React from 'react';
-import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import { Edit, Functions, Widgets, Settings, ViewComfy, AppsSharp } from '@material-ui/icons';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import { Edit, Functions, Widgets, Settings, ViewComfy, AppsSharp } from '@mui/icons-material';
 import { Mode } from '@ui-studio/types';
 
 const iconMap = {
@@ -65,7 +65,7 @@ export const ModeButtons = ({
 
   return (
     <SpeedDial
-      ariaLabel="SpeedDial example"
+      ariaLabel="Mode speed dial"
       icon={<CurrentIcon />}
       onClose={handleClose}
       onOpen={handleOpen}

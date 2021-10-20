@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Menu, ListItemIcon, MenuItem, Divider } from '@material-ui/core';
-import * as Icons from '@material-ui/icons';
+import { Menu, ListItemIcon, MenuItem, Divider } from '@mui/material';
+import * as Icons from '@mui/icons-material';
 import { Component, Widget, CustomComponent, CustomComponentInstance } from '@ui-studio/types';
 
 export type WidgetMenuItem = {

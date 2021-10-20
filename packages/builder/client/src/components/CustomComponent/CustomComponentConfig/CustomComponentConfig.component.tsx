@@ -1,8 +1,15 @@
 import * as React from 'react';
-import Button from '@faculty/adler-web-components/atoms/Button';
-import Select from '@faculty/adler-web-components/atoms/Select';
-import Checkbox from '@faculty/adler-web-components/atoms/Checkbox';
-import Input from '@faculty/adler-web-components/atoms/Input';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import AddSharp from '@mui/icons-material/AddSharp';
+import DeleteSharp from '@mui/icons-material/DeleteSharp';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
 import { ComponentConfig } from '@ui-studio/types';
 import { OpenAPIV3 } from 'openapi-types';
 
@@ -45,37 +52,45 @@ export const CustomComponentConfigComponent = ({
 
   const handleRemoveConfig = (key: string) => () => onRemoveConfig(key);
 
-  const handleNameChange = (key: string) => (value: string) => {
-    onUpdateName(key, value);
+  const handleNameChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    onUpdateName(key, event.target.value);
   };
 
-  const handleModeChange = (key: string) => ({ value }: any) => {
-    onUpdateMode(key, value);
+  const handleModeChange = (key: string) => (event: SelectChangeEvent) => {
+    onUpdateMode(key, event.target.value as 'input' | 'select');
   };
 
-  const handleTypeChange = (key: string) => ({ value }: any) => {
-    onUpdateType(key, value);
+  const handleTypeChange = (key: string) => (event: SelectChangeEvent) => {
+    onUpdateType(key, event.target.value as 'string' | 'number' | 'boolean');
   };
 
-  const handleListChange = (key: string) => (value: boolean) => onUpdateList(key, value);
+  const handleListChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) =>
+    onUpdateList(key, event.target.checked);
 
-  const handleIterableChange = (key: string) => (value: boolean) => onUpdateIterable(key, value);
+  const handleIterableChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) =>
+    onUpdateIterable(key, event.target.checked);
 
-  const handleInputBooleanDefaultValueChange = (key: string) => (value: boolean) =>
-    onUpdateDefaultValue(key, value);
+  const handleInputBooleanDefaultValueChange = (key: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => onUpdateDefaultValue(key, event.target.checked);
 
-  const handleInputNonBooleanDefaultValueChange = (key: string) => (value: string | number) =>
-    onUpdateDefaultValue(key, value);
+  const handleInputNonBooleanDefaultValueChange = (key: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => onUpdateDefaultValue(key, event.target.value);
 
-  const handleSelectBooleanTrueValueChange = (key: string) => (value: string) => {
+  const handleSelectBooleanTrueValueChange = (key: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const falseValue = { label: 'False', key: false };
-    const options = [{ label: value, key: true }, falseValue];
+    const options = [{ label: event.target.value, key: true }, falseValue];
     onUpdateSelectOptions(key, options);
   };
 
-  const handleSelectBooleanFalseValueChange = (key: string) => (value: string) => {
+  const handleSelectBooleanFalseValueChange = (key: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const trueValue = { label: 'True', key: true };
-    const options = [trueValue, { label: value, key: false }];
+    const options = [trueValue, { label: event.target.value, key: false }];
     onUpdateSelectOptions(key, options);
   };
 
@@ -96,7 +111,9 @@ export const CustomComponentConfigComponent = ({
     onUpdateSelectOptions(key, options);
   };
 
-  const handleUpdateSelectOption = (key: string, idx: number) => (value: string | number) => {
+  const handleUpdateSelectOption = (key: string, idx: number) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const configItem = getConfigItem(key);
     const options = (() => {
       if (configItem.schema.type === 'array') {
@@ -109,7 +126,7 @@ export const CustomComponentConfigComponent = ({
       if (e === false) return { label: 'False', key: false };
       return { label: e, key: e };
     });
-    options[idx] = { label: value.toString(), key: value };
+    options[idx] = { label: event.target.value.toString(), key: event.target.value };
     onUpdateSelectOptions(key, options);
   };
 
@@ -175,77 +192,74 @@ export const CustomComponentConfigComponent = ({
 
         return (
           <Styles.ConfigItem key={c.key}>
-            <Button
-              icon="delete"
-              color={Button.colors.secondary}
-              style={Button.styles.naked}
-              size={Button.sizes.medium}
-              onClick={handleRemoveConfig(c.key)}
+            <IconButton onClick={handleRemoveConfig(c.key)} size="small">
+              <DeleteSharp />
+            </IconButton>
+            <TextField label="Name" value={c.label} onChange={handleNameChange(c.key)} />
+            <FormControl fullWidth>
+              <InputLabel>Mode</InputLabel>
+              <Select value={control} label="Mode" onChange={handleModeChange(c.key)}>
+                {['input', 'select'].map((m) => (
+                  <MenuItem key={m} value={m}>
+                    {m.replace(/^\w/, (w) => w.toUpperCase())}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel>Type</InputLabel>
+              <Select value={type} label="Type" onChange={handleTypeChange(c.key)}>
+                {['string', 'number', 'boolean'].map((m) => (
+                  <MenuItem key={m} value={m}>
+                    {m.replace(/^\w/, (w) => w.toUpperCase())}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControlLabel
+              label="List"
+              control={<Checkbox checked={Boolean(list)} onChange={handleListChange(c.key)} />}
             />
-            <Input label="Name" value={c.label} onChange={handleNameChange(c.key)} />
-            <Select
-              label="Mode"
-              onChange={handleModeChange(c.key)}
-              value={{
-                value: control,
-                label: control.replace(/^\w/, (w) => w.toUpperCase()),
-              }}
-              options={['input', 'select'].map((m) => ({
-                value: m,
-                label: m.replace(/^\w/, (w) => w.toUpperCase()),
-              }))}
+            <FormControlLabel
+              label="Iterable"
+              control={
+                <Checkbox
+                  checked={Boolean(c.iterable)}
+                  disabled={!list}
+                  onChange={handleIterableChange(c.key)}
+                />
+              }
             />
-            <Select
-              label="Type"
-              onChange={handleTypeChange(c.key)}
-              value={{
-                value: type,
-                label: type.replace(/^\w/, (w) => w.toUpperCase()),
-              }}
-              options={['string', 'number', 'boolean'].map((m) => ({
-                value: m,
-                label: m.replace(/^\w/, (w) => w.toUpperCase()),
-              }))}
-            />
-            <Checkbox controlled checked={Boolean(list)} onChange={handleListChange(c.key)}>
-              List
-            </Checkbox>
-            <Checkbox
-              controlled
-              checked={Boolean(c.iterable)}
-              disabled={!list}
-              onChange={handleIterableChange(c.key)}
-            >
-              Iterable
-            </Checkbox>
             {control === 'input' && type !== 'boolean' && (
-              <Input
-                type={type}
+              <TextField
+                inputProps={type === 'number' ? { inputMode: 'numeric', pattern: '[0-9]*' } : {}}
                 label="Default value"
                 value={c.defaultValue}
                 onChange={handleInputNonBooleanDefaultValueChange(c.key)}
               />
             )}
             {control === 'input' && type === 'boolean' && (
-              <Checkbox
-                controlled
-                checked={c.defaultValue}
-                onChange={handleInputBooleanDefaultValueChange(c.key)}
-              >
-                Default value
-              </Checkbox>
+              <FormControlLabel
+                label="Default value"
+                control={
+                  <Checkbox
+                    checked={c.defaultValue}
+                    onChange={handleInputBooleanDefaultValueChange(c.key)}
+                  />
+                }
+              />
             )}
             {control === 'select' && type === 'boolean' && (
               <>
-                <Input
+                <TextField
                   label="True label"
                   value={options.find((v) => v.key === true)?.label ?? ''}
-                  onChange={handleSelectBooleanTrueValueChange}
+                  onChange={handleSelectBooleanTrueValueChange(c.key)}
                 />
-                <Input
+                <TextField
                   label="False label"
                   value={options.find((v) => v.key === false)?.label ?? ''}
-                  onChange={handleSelectBooleanFalseValueChange}
+                  onChange={handleSelectBooleanFalseValueChange(c.key)}
                 />
               </>
             )}
@@ -253,41 +267,31 @@ export const CustomComponentConfigComponent = ({
               <>
                 {options.map((o: any, ii: any) => (
                   <Styles.SelectOption key={ii}>
-                    <Input
+                    <TextField
                       type={type}
                       value={o.label}
                       onChange={handleUpdateSelectOption(c.key, ii)}
                     />
-                    <Button
-                      icon="delete"
-                      color={Button.colors.secondary}
-                      style={Button.styles.naked}
-                      size={Button.sizes.medium}
-                      onClick={handleRemoveSelectOption(c.key, ii)}
-                    />
+                    <IconButton onClick={handleRemoveSelectOption(c.key, ii)} size="small">
+                      <DeleteSharp />
+                    </IconButton>
                   </Styles.SelectOption>
                 ))}
                 <Button
-                  icon="add"
-                  text="Add select option"
-                  color={Button.colors.primary}
-                  style={Button.styles.outline}
-                  size={Button.sizes.small}
+                  variant="outlined"
                   onClick={handleAddSelectOption(c.key)}
-                />
+                  startIcon={<AddSharp />}
+                >
+                  Add select option
+                </Button>
               </>
             )}
           </Styles.ConfigItem>
         );
       })}
-      <Button
-        icon="add"
-        text="Add component config"
-        color={Button.colors.primary}
-        style={Button.styles.outline}
-        size={Button.sizes.medium}
-        onClick={onAddConfig}
-      />
+      <Button variant="outlined" onClick={onAddConfig} startIcon={<AddSharp />}>
+        Add component config
+      </Button>
       <div style={{ height: 24 }} />
     </Styles.Container>
   );

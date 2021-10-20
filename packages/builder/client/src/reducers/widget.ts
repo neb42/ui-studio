@@ -208,18 +208,18 @@ export const widgetReducer = (
             [cur]: widget,
           };
         }
-        if (state[rootId][widgetId].parent === widgetId) {
+        if (state[rootId][cur].parent === widgetId) {
           return {
             ...acc,
             [cur]: {
-              ...state[cur],
+              ...state[rootId][cur],
               style: StylesModel.getDefaultStyle(widget),
             },
           };
         }
         return {
           ...acc,
-          [cur]: state[rootId][widgetId],
+          [cur]: state[rootId][cur],
         };
       }, {});
       return {

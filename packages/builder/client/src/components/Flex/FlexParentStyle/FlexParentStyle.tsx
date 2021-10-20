@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import Slider from '@faculty/adler-web-components/atoms/Slider/Slider';
+import Slider from '@mui/material/Slider';
 import { Widget, FlexAlignment, IFlexStyle, CustomComponentInstance } from '@ui-studio/types';
 import { updateStyle } from 'actions/styles';
 import { AlignmentButton } from 'components/AlignmentButton';
+import { Outline } from 'components/Outline';
 
 import * as Styles from './FlexParentStyle.styles';
 
@@ -29,12 +30,12 @@ export const FlexParentStyle = ({ element, parent }: FlexParentStyleProps): JSX.
     dispatch(updateStyle(style));
   };
 
-  const handleUpdateGrow = (grow: number) => {
-    if (element.style.type !== 'flex') throw Error();
+  const handleUpdateGrow = (_: Event, grow: number | number[]) => {
+    if (element.style.type !== 'flex' || Array.isArray(grow)) throw Error();
 
     const style: IFlexStyle = {
       ...element.style,
-      grow,
+      grow: grow as number,
     };
 
     dispatch(updateStyle(style));
@@ -44,26 +45,17 @@ export const FlexParentStyle = ({ element, parent }: FlexParentStyleProps): JSX.
 
   return (
     <Styles.Container>
-      <Styles.Field>
-        <Styles.FieldHeader>Grow</Styles.FieldHeader>
-        <Slider
-          value={grow}
-          onChangeComplete={handleUpdateGrow}
-          minValue={0}
-          maxValue={10}
-          step={1}
-        />
-      </Styles.Field>
-      <Styles.Field>
-        <Styles.FieldHeader>Alignment</Styles.FieldHeader>
-        <AlignmentButton
-          layoutType="flex"
-          direction={parent.layout.direction}
-          alignmentType="self"
-          value={align}
-          onChange={handleUpdateAlignment}
-        />
-      </Styles.Field>
+      <Outline label="Grow">
+        <Slider value={grow} onChange={handleUpdateGrow} step={1} marks min={1} max={10} />
+      </Outline>
+      <AlignmentButton
+        label="Alignment"
+        layoutType="flex"
+        direction={parent.layout.direction}
+        alignmentType="self"
+        value={align}
+        onChange={handleUpdateAlignment}
+      />
     </Styles.Container>
   );
 };

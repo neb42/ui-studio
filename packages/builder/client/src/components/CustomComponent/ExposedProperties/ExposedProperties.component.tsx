@@ -1,8 +1,11 @@
 import * as React from 'react';
-import Select from '@faculty/adler-web-components/atoms/Select';
-import { Select$Option } from '@faculty/adler-web-components/types/Select';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import ListSubheader from '@mui/material/ListSubheader';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { CustomComponent$ExposedProperties, ExposedProperty } from '@ui-studio/types';
-import Input from '@faculty/adler-web-components/atoms/Input';
 
 import * as Styles from './ExposedProperties.styles';
 
@@ -33,15 +36,19 @@ export const ExposedPropertiesComponent = ({
     }),
   );
 
-  const handleSelectOnChange = (value: Select$Option[]) => {
+  const handleSelectOnChange = (event: SelectChangeEvent<string[]>) => {
+    const value = (event.target.value as string[]).map((v) => {
+      const [widgetId, property] = v.split(' ');
+      return { widgetId, property };
+    });
     const addedProperties = value.reduce<CustomComponent$ExposedProperties[]>((acc, cur) => {
       const existing = Object.keys(selectedExposedProperties).find(
         (k) =>
-          selectedExposedProperties[k].widgetId === cur.value.widgetId &&
-          selectedExposedProperties[k].property === cur.value.property,
+          selectedExposedProperties[k].widgetId === cur.widgetId &&
+          selectedExposedProperties[k].property === cur.property,
       );
       if (existing) return [...acc];
-      return [...acc, cur.value];
+      return [...acc, cur];
     }, []);
 
     addedProperties.map((p) => onAddExposedProperty(p.widgetId, p.property));
@@ -50,8 +57,8 @@ export const ExposedPropertiesComponent = ({
       (acc, cur) => {
         const existing = value.find(
           (v) =>
-            selectedExposedProperties[cur].widgetId === v.value.widgetId &&
-            selectedExposedProperties[cur].property === v.value.property,
+            selectedExposedProperties[cur].widgetId === v.widgetId &&
+            selectedExposedProperties[cur].property === v.property,
         );
         if (existing) return [...acc];
         return [...acc, cur];
@@ -62,25 +69,33 @@ export const ExposedPropertiesComponent = ({
     removedProperties.map((k) => onRemoveExposedProperty(k));
   };
 
-  const handleInputOnChange = (idx: number) => (value: string) => {
+  const handleInputOnChange = (idx: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const oldKey = Object.keys(selectedExposedProperties)[idx];
-    onUpdateExposedPropertyKey(oldKey, value);
+    onUpdateExposedPropertyKey(oldKey, event.target.value);
   };
+
+  const makeValueFromObject = (obj: CustomComponent$ExposedProperties) =>
+    `${obj.widgetId} ${obj.property}`;
+
+  const value = Object.values(selectedExposedProperties).map((v) => makeValueFromObject(v));
 
   return (
     <Styles.Container>
-      <Select
-        label="Available properties"
-        multi
-        value={Object.values(selectedExposedProperties).map((v) => ({
-          label: v.property,
-          value: v,
-        }))}
-        options={availableExposedPropertyOptions}
-        onChange={handleSelectOnChange as any}
-      />
+      <FormControl fullWidth>
+        <InputLabel>Available properties</InputLabel>
+        <Select multiple value={value} label="Available properties" onChange={handleSelectOnChange}>
+          {availableExposedPropertyOptions.map((o) => [
+            <ListSubheader key={o.label}>{o.label}</ListSubheader>,
+            ...o.options.map((oo) => (
+              <MenuItem key={makeValueFromObject(oo.value)} value={makeValueFromObject(oo.value)}>
+                {oo.label}
+              </MenuItem>
+            )),
+          ])}
+        </Select>
+      </FormControl>
       {Object.keys(selectedExposedProperties).map((k, i) => (
-        <Input
+        <TextField
           key={i}
           value={k}
           label={`${widgetIdNameMap[selectedExposedProperties[k].widgetId]} - ${

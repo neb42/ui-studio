@@ -7,8 +7,9 @@ import Tree, {
   TreeDestinationPosition,
   ItemId,
 } from '@atlaskit/tree';
-import { IconButton } from '@material-ui/core';
-import { ClearSharp, AddSharp } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { ClearSharp, AddSharp } from '@mui/icons-material';
+import Typography from '@mui/material/Typography';
 import { Widget, Element, CustomComponentInstance } from '@ui-studio/types';
 import { ElementIcon } from 'components/ElementIcon';
 import { ElementTreeHeader } from 'components/ElementTreeHeader';
@@ -72,7 +73,7 @@ const TreeItemLabelBuilder = ({
           active={element.id === selectedElement?.id}
         >
           <ElementIcon element={element} color={theme.colors.primary} />
-          <Styles.ElementName>{element.name}</Styles.ElementName>
+          <Typography variant="body1">{element.name}</Typography>
           <Styles.TreeItemActions
             selected={Boolean(selectedElement && selectedElement.id === element.id)}
           >
