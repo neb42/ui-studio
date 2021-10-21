@@ -4,6 +4,42 @@
   link: '/'
 - label: 'Getting started'
   link: '/getting-started'
+- label: 'Navigating the UI'
+  link: '/navigating-the-ui'
+- label: 'Widgets'
+  items:
+    - label: 'Introduction'
+      link: '/widgets/introduction'
+    - label: 'Config'
+      link: '/widgets/config'
+    - label: 'Layout'
+      link: '/widgets/layout'
+    - label: 'Styles'
+      link: '/widgets/styles'
+    - label: 'Events'
+      link: '/widgets/events'
+- label: 'Components'
+  items:
+    - label: 'Writing components in React'
+      link: '/components/react'
+    - label: 'Building components from widgets'
+      link: '/components/widgets'
+- label: 'Variables'
+  items:
+    - label: 'Introduction'
+      link: '/variables/introduction'
+    - label: 'Static variables'
+      link: '/variables/static'
+    - label: 'Function variables'
+      link: '/variables/static'
+    - label: 'Lookup variables'
+      link: '/variables/static'
+- label: 'Templates'
+  items:
+    - label: 'Using templates'
+      link: '/templates/using'
+    - label: 'Creating templates'
+      link: '/templates/creating'
 - label: Usage
   items:
     - label: 'Creating docs'
@@ -17,4 +53,4 @@
     - label: FAQ
       link: /faq
     - label: 'Github'
-      link: https://github.com/rocketseat/gatsby-themes
+      link: https://github.com/neb42/ui-studio
