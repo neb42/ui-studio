@@ -3,7 +3,7 @@
   "version": "0.1.35",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
-  "homepage": "https://github.com/neb42/canvas/tree/master/packages/create-ui-studio#readme",
+  "homepage": "https://github.com/neb42/ui-studio/tree/master/packages/create-ui-studio#readme",
   "license": "MIT",
   "main": "build/index.js",
   "bin": {
@@ -14,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neb42/canvas.git"
+    "url": "git+https://github.com/neb42/ui-studio.git"
   },
   "scripts": {
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
@@ -22,7 +22,7 @@
     "build": "rm -rf build/* && tsc && yarn copy-template"
   },
   "bugs": {
-    "url": "https://github.com/neb42/canvas/issues"
+    "url": "https://github.com/neb42/ui-studio/issues"
   },
   "dependencies": {
     "fs-extra": "^9.1.0",

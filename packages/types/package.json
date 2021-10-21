@@ -2,7 +2,7 @@
   "name": "@ui-studio/types",
   "version": "0.1.26",
   "private": false,
-  "homepage": "https://github.com/neb42/canvas/tree/master/packages/types#readme",
+  "homepage": "https://github.com/neb42/ui-studio/tree/master/packages/types#readme",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {

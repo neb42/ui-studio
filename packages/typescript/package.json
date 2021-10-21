@@ -3,12 +3,12 @@
   "version": "0.1.25",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
-  "homepage": "https://github.com/neb42/canvas/tree/master/packages/typescript#readme",
+  "homepage": "https://github.com/neb42/ui-studio/tree/master/packages/typescript#readme",
   "license": "MIT",
   "main": "build/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neb42/canvas.git"
+    "url": "git+https://github.com/neb42/ui-studio.git"
   },
   "files": [
     "build"

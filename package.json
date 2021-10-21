@@ -3,11 +3,11 @@
   "private": true,
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
-  "homepage": "https://github.com/neb42/canvas#readme",
+  "homepage": "https://github.com/neb42/ui-studio#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neb42/canvas.git"
+    "url": "git+https://github.com/neb42/ui-studio.git"
   },
   "workspaces": [
     "packages/*",

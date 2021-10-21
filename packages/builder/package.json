@@ -3,7 +3,7 @@
   "version": "0.1.41",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
-  "homepage": "https://github.com/neb42/canvas/tree/master/packages/builder#readme",
+  "homepage": "https://github.com/neb42/ui-studio/tree/master/packages/builder#readme",
   "license": "MIT",
   "main": "build/server.js",
   "bin": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neb42/canvas.git"
+    "url": "git+https://github.com/neb42/ui-studio.git"
   },
   "files": [
     "build"
