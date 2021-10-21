@@ -7,7 +7,7 @@
   "license": "MIT",
   "main": "build/server.js",
   "bin": {
-    "ui-studio-builder": "build/server.js"
+    "ui-studio-builder": "build/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,15 +22,16 @@
     "build:client": "cd client && yarn build && cp -r build/ ../build/client",
     "build": "yarn build:server && yarn build:client",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "dev": "yarn build:server && yarn start --path /Users/bmcalindin/workspace/ExampleApp",
-    "start": "node ."
+    "dev": "yarn build:server && node ./build/index.js --path /Users/bmcalindin/workspace/ExampleApp"
   },
   "dependencies": {
     "@types/yargs": "^15.0.5",
     "@ui-studio/render-engine": "^0.1.33",
     "axios": "^0.21.1",
+    "blessed": "^0.1.81",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "figlet": "^1.5.2",
     "get-port": "^5.1.1",
     "nodemon": "^2.0.4",
     "open": "^7.3.1",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/blessed": "^0.1.19",
     "@types/cors": "^2.8.7",
     "@types/express": "^4.17.7",
     "@types/socket.io": "^2.1.11",
