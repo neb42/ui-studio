@@ -24,6 +24,10 @@ export class ClientRunner {
   }
 
   public start = (): void => {
+    this.stop();
+
+    this.write('Starting client runner...');
+
     const installPackageProcess = this.installPackages();
 
     installPackageProcess.on('exit', (code: number) => {
@@ -36,8 +40,10 @@ export class ClientRunner {
   };
 
   public stop = (): void => {
-    // this.process.stdin.pause();
-    this.process.kill();
+    if (this.process) {
+      this.write('Stopping client runner...');
+      this.process.kill();
+    }
   };
 
   private installPackages = (): ChildProcessWithoutNullStreams => {

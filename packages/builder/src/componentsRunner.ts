@@ -22,6 +22,10 @@ export class ComponentsRunner {
   }
 
   public run = (): Promise<void> => {
+    this.stop();
+
+    this.write('Starting component build...');
+
     this.running = true;
 
     const installPackageProcess = this.installPackages();
@@ -38,10 +42,11 @@ export class ComponentsRunner {
     return this.wait();
   };
 
-  // This process should run and finish, hence this shouldn't be neccassery
   public stop = (): void => {
-    // this.process.stdin.pause();
-    this.process.kill();
+    if (this.process) {
+      this.write('Stopping component build...');
+      this.process.kill();
+    }
   };
 
   private wait = (ms = 2000): Promise<void> => {

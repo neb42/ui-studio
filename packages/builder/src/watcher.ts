@@ -34,8 +34,6 @@ export class Watcher {
 
   private watchPackageJSON = (): void => {
     this.packageJSONWatcher = fs.watch(join(this.path, 'package.json'), async () => {
-      this.componentsRunner.stop();
-      this.clientRunner.stop();
       await this.componentsRunner.run();
       this.clientRunner.start();
     });
@@ -43,8 +41,6 @@ export class Watcher {
 
   private watchSrc = (): void => {
     this.srcWatcher = fs.watch(join(this.path, 'src'), { recursive: true }, async () => {
-      this.componentsRunner.stop();
-      this.clientRunner.stop();
       await this.componentsRunner.run();
       this.clientRunner.start();
     });
