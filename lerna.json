@@ -1,7 +1,12 @@
 {
   "packages": [
-    "packages/*",
-    "packages/builder/client"
+    "packages/builder",
+    "packages/builder/client",
+    "packages/create-ui-studio",
+    "packages/render-engine",
+    "packages/templates/example",
+    "packages/types",
+    "packages/typescript"
   ],
   "version": "independent",
   "npmClient": "yarn",

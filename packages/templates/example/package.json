@@ -1,5 +1,17 @@
 {
   "name": "@ui-studio/uis-template-example",
+  "description": "> TODO: description",
   "version": "0.0.1",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/neb42/ui-studio/packages/templates/example#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neb42/ui-studio.git"
+  },
+  "files": [
+    "api",
+    "Components",
+    "App.tsx",
+    "template.json"
+  ]
 }

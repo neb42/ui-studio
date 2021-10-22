@@ -10,8 +10,13 @@
     "url": "git+https://github.com/neb42/ui-studio.git"
   },
   "workspaces": [
-    "packages/*",
-    "packages/builder/client"
+    "packages/builder",
+    "packages/builder/client",
+    "packages/create-ui-studio",
+    "packages/render-engine",
+    "packages/templates/example",
+    "packages/types",
+    "packages/typescript"
   ],
   "scripts": {
     "lerna": "lerna",
