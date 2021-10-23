@@ -1,1 +1,0 @@
-export { AlignmentButton } from './AlignmentButton';

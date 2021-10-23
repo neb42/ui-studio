@@ -1,8 +1,0 @@
-{
-  "baseUrl": "./packages",
-  "paths": {
-    "@ui-studio/render-engine": ["render-engine/src"],
-    "@ui-studio/typescript": ["typescript/src"],
-    "@ui-studio/types": ["types/src"]
-  }
-}

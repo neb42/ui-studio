@@ -1,1 +1,0 @@
-export { FunctionVariableConfig } from './FunctionVariableConfig';

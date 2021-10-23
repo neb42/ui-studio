@@ -1,1 +1,0 @@
-export { ClassNamesInput } from './ClassNamesInput';

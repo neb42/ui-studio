@@ -1,8 +1,0 @@
-declare module 'functions-pkg';
-declare module 'functions-pkg/build/Components';
-{{ #components }}
-declare module '{{{ componentsImportPath }}}';
-{{ /components }}
-{{ #entryPoints }}
-declare module '{{{ entryPointImportPath }}}';
-{{ /entryPoints }}

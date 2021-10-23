@@ -1,1 +1,0 @@
-export { WidgetConfigItem } from './WidgetConfigItem';

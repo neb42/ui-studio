@@ -1,1 +1,0 @@
-export { GridAlignmentConfig } from './GridAlignmentConfig';
