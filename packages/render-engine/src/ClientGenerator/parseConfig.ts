@@ -86,9 +86,12 @@ const getPackageLocation = async (name: string, version: string): Promise<Packag
 
   const packageMatch = name.match(/^(@[^/]+\/)?([^@]+)?$/);
   const scope = packageMatch[1] || '';
-  const templateName = `uis-template-${packageMatch[2] || ''}`;
+  const rawPackageName = packageMatch[2] || '';
+  const packageName = rawPackageName.startsWith('uis-template-')
+    ? rawPackageName
+    : `uis-template-${rawPackageName}`;
 
-  const { tarUrl } = await getNpmVersion(`${scope}${templateName}`, version);
+  const { tarUrl } = await getNpmVersion(`${scope}${packageName}`, version);
 
   return {
     fileType: 'tar',
