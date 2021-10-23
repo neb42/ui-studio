@@ -65,7 +65,8 @@ export PATH="$HOME/.pyenv/versions/ui-studio-api/bin:$PATH"
 
 poetry install
 
-gunicorn \
+exec gunicorn \
+   --reload \
   -k uvicorn.workers.UvicornWorker \
   --bind "localhost:${PORT}" \
   "api:app_factory()"
