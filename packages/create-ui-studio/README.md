@@ -11,8 +11,8 @@ Create a UI Studio application
 yarn create ui-studio <directory>
 ```
 
-Create a UI Studio application with components from Faculty's Adler design system
+Create a UI Studio application with the example template 
 
 ```
-yarn create ui-studio -t faculty <directory>
+yarn create ui-studio -t @ui-studio/example <directory>
 ```
