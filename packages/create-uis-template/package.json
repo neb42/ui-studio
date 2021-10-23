@@ -1,0 +1,39 @@
+{
+  "name": "create-uis-template",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "author": "Ben McAlindin <bmcalindin@faculty.ai>",
+  "homepage": "https://github.com/neb42/ui-studio/tree/master/packages/create-uis-template#readme",
+  "license": "MIT",
+  "main": "build/index.js",
+  "bin": {
+    "create-uis-template": "build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neb42/ui-studio.git"
+  },
+  "scripts": {
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "copy-template": "cp -r src/template build/template",
+    "build": "rm -rf build/* && tsc && yarn copy-template",
+    "dev": "yarn build && node ./build/index.js foo"
+  },
+  "bugs": {
+    "url": "https://github.com/neb42/ui-studio/issues"
+  },
+  "dependencies": {
+    "fs-extra": "^10.0.0",
+    "mustache": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.13"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "9030fec9098e03a803e0bd1dfb46833e8dbd7e3d"
+}
