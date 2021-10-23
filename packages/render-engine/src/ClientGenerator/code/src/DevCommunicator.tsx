@@ -54,7 +54,7 @@ export const DevCommunicator = () => {
           ...Object.values(Components[cur]).map(
             ({ component: _, ...cc }: Component & { component: React.FC }) => ({
               ...cc,
-              library: cc.library || 'custom',
+              library: cur,
             }),
           ),
         ];
