@@ -1,4 +1,4 @@
-name: Deploy 
+name: Deploy patch 
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  patch:
+  deploy-patch:
 
     runs-on: ubuntu-latest
 
