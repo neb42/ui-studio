@@ -70,7 +70,7 @@ const getNpmVersion = async (
   });
 };
 
-const getPackageLocation = async (name: string, version: string): PackageLocation => {
+const getPackageLocation = async (name: string, version: string): Promise<PackageLocation> => {
   if (version.match(/^file:/)) {
     return {
       fileType: version.match(/^.+\.(tgz|tar\.gz)$/) ? 'tar' : 'directory',
