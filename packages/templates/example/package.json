@@ -8,10 +8,10 @@
     "type": "git",
     "url": "git+https://github.com/neb42/ui-studio.git"
   },
-  "files": [
-    "api",
-    "Components",
-    "App.tsx",
-    "template.json"
-  ]
+  "scripts": {
+    "build": "rm -rf build/* && tsc"
+  },
+  "dependencies": {
+    "@ui-studio/typescript": "^0.1.25"
+  }
 }

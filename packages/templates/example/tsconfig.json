@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "lib": ["es2020"],
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "outDir": "build",
+    "sourceMap": true,
+    "target": "es6",
+    "jsx": "react",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true
+  },
+  "compileOnSave": true,
+  "include": [
+    "Components",
+    "App.tsx"
+  ]
+}

@@ -1,13 +1,12 @@
 {
-  "entryPoint": "./App.tsx",
-  "apiDir": "./api",
-  "componentsDir": "./Components",
-  "package": {
-    "dependencies": {},
-    "devDependencies": {},
-    "scripts": {},
-    "uiStudio": {
-      "openAPIEndpoint": "/api/v1/openapi.json"
-    }
+  "entryPoint": {
+    "path": "./build/App.tsx"
+  },
+  "api": {
+    "path": "./api",
+    "openAPIEndpoint": "/api/v1/openapi.json"
+  },
+  "components": {
+    "path": "./build/Components"
   }
 }
