@@ -1,0 +1,21 @@
+{
+  "name": "@ui-studio/uis-template-example",
+  "description": "> TODO: description",
+  "version": "0.0.3",
+  "license": "MIT",
+  "homepage": "https://github.com/neb42/ui-studio/packages/templates/example#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neb42/ui-studio.git"
+  },
+  "scripts": {
+    "build": "rm -rf build/* && tsc"
+  },
+  "dependencies": {
+    "@ui-studio/types": "^0.1.27",
+    "@ui-studio/typescript": "^0.1.26"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

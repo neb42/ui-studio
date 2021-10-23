@@ -10,8 +10,14 @@
     "url": "git+https://github.com/neb42/ui-studio.git"
   },
   "workspaces": [
-    "packages/*",
-    "packages/builder/client"
+    "packages/builder",
+    "packages/builder/client",
+    "packages/create-ui-studio",
+    "packages/create-uis-template",
+    "packages/render-engine",
+    "packages/templates/example",
+    "packages/types",
+    "packages/typescript"
   ],
   "scripts": {
     "lerna": "lerna",
@@ -47,6 +53,8 @@
     "typescript": "^4.2.4"
   },
   "resolutions": {
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   }
 }

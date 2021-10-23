@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component } from '@ui-studio/types';
 
-export const Example: Component & { component: any } = {
+const Example: Component & { component: any } = {
   key: 'Example',
   name: 'Example',
   library: '',
@@ -86,3 +86,5 @@ export const Example: Component & { component: any } = {
     );
   },
 };
+
+export default Example

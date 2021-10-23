@@ -1,0 +1,12 @@
+{
+  "entryPoint": {
+    "path": "./build/App.tsx"
+  },
+  "api": {
+    "path": "./api",
+    "openAPIEndpoint": "/api/v1/openapi.json"
+  },
+  "components": {
+    "path": "./build/Components"
+  }
+}

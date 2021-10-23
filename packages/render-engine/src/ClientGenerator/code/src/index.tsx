@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 
-import App from './App';
+import MergedEntryPoint from './MergedEntryPoint';
 import { Router } from './Router';
 import { store } from './store';
 import { DevCommunicator } from './DevCommunicator';
@@ -36,7 +36,7 @@ const GlobalStyles = createGlobalStyle`
 
 ReactDOM.render(
   <React.StrictMode>
-    <App>
+    <MergedEntryPoint>
       <Provider store={store}>
         <BrowserRouter>
           <GlobalStyles />
@@ -44,7 +44,7 @@ ReactDOM.render(
           <DevCommunicator />
         </BrowserRouter>
       </Provider>
-    </App>
+    </MergedEntryPoint>
   </React.StrictMode>,
   document.getElementById('root'),
 );

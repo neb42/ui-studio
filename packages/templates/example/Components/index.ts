@@ -1,5 +1,7 @@
 import { parseComponents } from '@ui-studio/typescript';
 
-const Components = parseComponents([]);
+import Example from './Example';
+
+const Components = parseComponents([Example]);
 
 export default Components;

@@ -4,12 +4,7 @@ import * as path from 'path';
 import { execSync } from 'child_process';
 
 import * as fs from 'fs-extra';
-import { copySync } from 'fs-extra';
-import yargs from 'yargs/yargs';
-import { hideBin } from 'yargs/helpers';
 import * as Mustache from 'mustache';
-
-import { mergeTemplate } from './template';
 
 const error = (message: string) => {
   console.log(message);
@@ -51,7 +46,7 @@ const renderPackageJson = (name: string, directory: string) => {
 const initGit = (directory: string) => {
   execSync('git init', { cwd: directory, stdio: 'inherit' });
   execSync('git add .', { cwd: directory, stdio: 'inherit' });
-  execSync("git commit -m 'Initialised from create-ui-studio'", {
+  execSync("git commit -m 'Initialised from create-uis-template'", {
     cwd: directory,
     stdio: 'inherit',
   });
@@ -85,39 +80,29 @@ const addPackages = (directory: string, runner: 'npm' | 'yarn') => {
 };
 
 const run = async (): Promise<void> => {
-  const { argv } = yargs(hideBin(process.argv))
-    .array('template')
-    .alias('template', 't')
-    .default('template', [])
-    .string('template');
-
-  const rawDirectory = argv._[0].toString();
-  const templates = argv.template;
+  const input = process.argv[2];
 
   checkNodeVersion();
 
   const runner = getNpmRunner();
 
-  if (!rawDirectory || rawDirectory.length === 0) error('A directory must be specified');
+  if (!input || input.length === 0) error('A package name must be specified');
 
-  const directory = rawDirectory.startsWith('/')
-    ? rawDirectory
-    : path.join(process.cwd(), rawDirectory);
-  const name = directory.split('/').slice(-1)[0];
+  const [_, scope, name] = input.match(/^(@[^/]+\/)?([^@]+)?$/);
+
+  const packageName = `${scope}${name.startsWith('uis-template-') ? '' : 'uis-template-'}${name}`;
+
+  const directory = path.join(process.cwd(), name);
 
   if (fs.existsSync(directory)) error('Directory already exists');
-  if (!fs.existsSync(directory.split('/').slice(0, -1).join('/')))
-    error('Parent directory does not exist');
 
   fs.mkdirSync(directory);
 
-  copySync(path.join(__dirname, 'template'), directory);
+  fs.copySync(path.join(__dirname, 'template'), directory);
 
-  renderPackageJson(name, directory);
+  renderPackageJson(packageName, directory);
 
   addPackages(directory, runner);
-
-  await Promise.all(templates.map((t) => mergeTemplate(t, directory)));
 
   initGit(directory);
 };

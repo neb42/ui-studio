@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/render-engine",
-  "version": "0.1.34",
+  "version": "0.1.37",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/ui-studio/tree/master/packages/render-engine#readme",
@@ -18,16 +18,23 @@
     "copy-templates": "yarn copy-templates:client && yarn copy-templates:client-code",
     "copy-templates:client": "cp -r src/ClientGenerator/templates build/ClientGenerator/templates",
     "copy-templates:client-code": "cp -r src/ClientGenerator/code build/ClientGenerator/code",
-    "build": "rm -rf build/* && tsc && yarn copy-templates"
+    "build": "rm -rf build/* && tsc && yarn copy-templates",
+    "dev": "yarn build && node build/run.js /Users/bmcalindin/workspace/DevApp"
   },
   "dependencies": {
-    "@ui-studio/types": "^0.1.26",
-    "@ui-studio/typescript": "^0.1.25",
+    "@ui-studio/types": "^0.1.27",
+    "@ui-studio/typescript": "^0.1.26",
     "fs-extra": "^9.1.0",
-    "mustache": "^4.0.1"
+    "lodash.camelcase": "^4.3.0",
+    "mustache": "^4.0.1",
+    "tar": "^6.1.11"
   },
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "242398e7b52c5789bdafd5e87acb301a79426870"
+  "gitHead": "242398e7b52c5789bdafd5e87acb301a79426870",
+  "devDependencies": {
+    "@types/lodash.camelcase": "^4.3.6",
+    "@types/tar": "^6.1.0"
+  }
 }

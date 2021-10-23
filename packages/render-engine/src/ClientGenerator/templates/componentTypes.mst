@@ -1,6 +1,8 @@
 declare module 'functions-pkg';
-declare module 'functions-pkg/build/Functions';
 declare module 'functions-pkg/build/Components';
-{{ #componentPackages }}
-declare module '{{{ name }}}/build/Components';
-{{ /componentPackages }}
+{{ #components }}
+declare module '{{{ componentsImportPath }}}';
+{{ /components }}
+{{ #entryPoints }}
+declare module '{{{ entryPointImportPath }}}';
+{{ /entryPoints }}

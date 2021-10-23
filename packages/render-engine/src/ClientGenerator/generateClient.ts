@@ -2,25 +2,21 @@ import generatePackageFile from './package';
 import generateComponentsFile from './components';
 import { copyCode } from './copyCode';
 import generateComponentTypesFile from './componentTypes';
-import generateAppFile from './app';
+import generateEntryPoint from './entryPoint';
+import { UIStudioConfig } from './parseConfig';
 
 interface Args {
-  componentPackages: { name: string; version: string }[];
+  config: UIStudioConfig;
   source: string;
-  dev: boolean;
 }
 
-const generateClient = async ({
-  componentPackages,
-  source,
-  dev,
-}: Args): Promise<[void, void, void]> => {
+const generateClient = async ({ config, source }: Args): Promise<[void, void, void, void]> => {
   copyCode();
-  generateAppFile();
   return Promise.all([
-    generateComponentTypesFile(componentPackages),
-    generatePackageFile(componentPackages, source, dev),
-    generateComponentsFile(componentPackages),
+    generateEntryPoint(config),
+    generateComponentTypesFile(config),
+    generatePackageFile(config, source),
+    generateComponentsFile(config),
   ]);
 };
 
