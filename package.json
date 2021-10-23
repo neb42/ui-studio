@@ -26,7 +26,11 @@
     "deploy:prepatch": "yarn build && lerna publish prepatch",
     "deploy:patch": "yarn build && lerna publish patch",
     "deploy:minor": "yarn build && lerna publish minor",
-    "deploy:major": "yarn build && lerna publish major"
+    "deploy:major": "yarn build && lerna publish major",
+    "deploy:prepatch:ci": "yarn build && lerna publish prepatch --yes",
+    "deploy:patch:ci": "yarn build && lerna publish patch --yes",
+    "deploy:minor:ci": "yarn build && lerna publish minor --yes",
+    "deploy:major:ci": "yarn build && lerna publish major --yes"
   },
   "devDependencies": {
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
