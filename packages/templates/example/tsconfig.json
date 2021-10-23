@@ -10,7 +10,7 @@
     "noImplicitReturns": true,
     "outDir": "build",
     "sourceMap": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
