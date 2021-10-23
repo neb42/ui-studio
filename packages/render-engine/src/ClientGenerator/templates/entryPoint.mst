@@ -1,0 +1,26 @@
+import * as React from 'react';
+{{ #dependencies }}
+import {{{ cleanName }}} from '{{{ entryPointImportPath }}}';
+{{ /dependencies }}
+
+{{ #hasCustomEntryPoint }}
+import App from './App';
+{{ /hasCustomEntryPoint }}
+
+const MergedEntryPoint = ({ children }: any) => (
+  {{ #dependencies }}
+  <{{ cleanName }}>
+  {{ /dependencies }}
+  {{ #hasCustomEntryPoint }}
+  <App>
+  {{ /hasCustomEntryPoint }}
+    {children}
+  {{ #hasCustomEntryPoint }}
+  </App>
+  {{ /hasCustomEntryPoint }}
+  {{ #reverseDependencies }}
+  </{{ cleanName }}>
+  {{ /reverseDependencies }}
+);
+
+export default MergedEntryPoint;

@@ -5,6 +5,8 @@ import * as Mustache from 'mustache';
 
 import { FilePaths } from '../FilePaths';
 
+import { UIStudioConfig } from './parseConfig';
+
 const baseDependencies = [
   { name: 'axios', version: '^0.21.1', last: false },
   { name: 'socket.io-client', version: '^2.3.0', last: false },
@@ -38,34 +40,21 @@ const devDependencies = [
   { name: '@types/styled-components', version: '^5.1.4', last: false },
 ];
 
-const generatePackageFile = async (
-  componentPackages: { name: string; version: string }[],
-  source: string,
-  dev: boolean,
-): Promise<void> => {
+const generatePackageFile = async (config: UIStudioConfig, source: string): Promise<void> => {
   const dependencies = [...baseDependencies];
-  if (dev) {
-    dependencies.push({
-      name: 'functions-pkg',
-      version: `link:${source}`,
-      last: false,
-    });
-  } else {
-    // TODO not sure we need this
-    dependencies.push({
-      name: 'functions-pkg',
-      version: `https://github.com/ui-studio-builder-function-packages/${source}`,
-      last: false,
-    });
-  }
-
-  componentPackages.forEach((p) => {
-    dependencies.push({
-      name: p.name,
-      version: p.version,
-      last: false,
-    });
+  dependencies.push({
+    name: 'functions-pkg',
+    version: `link:${source}`,
+    last: false,
   });
+
+  Object.values(config.dependencies).forEach((d) =>
+    dependencies.push({
+      name: d.name,
+      version: d.version,
+      last: false,
+    }),
+  );
 
   const pkgJson = JSON.parse(
     (await fs.readFile(path.join(__dirname, '../../package.json'))).toString(),

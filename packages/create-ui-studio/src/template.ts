@@ -9,8 +9,19 @@ import https from 'https';
 
 import * as fs from 'fs-extra';
 import tar from 'tar';
-import merge from 'lodash.merge';
-import camelCase from 'lodash.camelcase';
+
+type RawUIStudioConfig = {
+  entryPoint: {
+    path: string;
+  };
+  api: {
+    path: string;
+    openAPIEndpoint: string;
+  };
+  components: {
+    path: string;
+  };
+};
 
 type PackageLocation = {
   fileType: 'directory' | 'tar';
@@ -23,34 +34,25 @@ const makeTempDir = (): string => {
   return fs.mkdtempSync(dir);
 };
 
-const getPackageLocation = (template: string): PackageLocation => {
-  if (template.match(/^file:/)) {
-    return {
-      fileType: template.match(/^.+\.(tgz|tar\.gz)$/) ? 'tar' : 'directory',
-      location: 'file',
-      uri: template.match(/^file:(.*)?$/)[1],
-    };
-  }
+const getNpmVersion = async (name: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    https
+      .get(`https://registry.npmjs.org/${name}`, (res) => {
+        let body = '';
 
-  if (template.includes('://')) {
-    // TODO handle git urls
-    throw new Error('Git urls are not currently supported');
-  }
+        res.on('data', (chunk) => {
+          body += chunk;
+        });
 
-  const packageMatch = template.match(/^(@[^/]+\/)?([^@]+)?(@.+)?$/);
-  const scope = packageMatch[1] || '';
-  const templateName = `uis-template-${packageMatch[2] || ''}`;
-  const version = (packageMatch[3] || '').replace('@', '');
-
-  const packageUrl = `https://registry.npmjs.org/${
-    scope || templateName
-  }/-/${templateName}-${version}.tgz`;
-
-  return {
-    fileType: 'tar',
-    location: 'npm',
-    uri: packageUrl,
-  };
+        res.on('end', () => {
+          const npmResponse = JSON.parse(body);
+          resolve(npmResponse['dist-tags'].latest);
+        });
+      })
+      .on('error', (err) => {
+        reject(new Error(err.message));
+      });
+  });
 };
 
 const downloadFile = async (url: string, fileFullPath: string) => {
@@ -101,99 +103,8 @@ const extractFiles = async (packageLocation: PackageLocation, dir: string): Prom
 
 const readPackageJSON = (rootDir: string) => fs.readJsonSync(path.join(rootDir, 'package.json'));
 
-const readTemplateJSON = (rootDir: string) => fs.readJsonSync(path.join(rootDir, 'template.json'));
-
-const mergePackageJSON = (
-  templateName: string,
-  templatePackage: any,
-  rootDir: string,
-  hasComponents: boolean,
-) => {
-  const rootPackageJSONPath = path.join(rootDir, 'package.json');
-  const rootPackageJSON = fs.readJsonSync(rootPackageJSONPath);
-
-  const template = (() => {
-    const {
-      name: _,
-      private: __,
-      version: ___,
-      description: ____,
-      license: ______,
-      main: ________,
-      // scripts,
-      // dependencies,
-      // devDependencies,
-      // peerDependencies,
-      uiStudio,
-      ...other
-    } = templatePackage;
-    return {
-      // scripts,
-      // dependencies,
-      // devDependencies,
-      // peerDependencies,
-      uiStudio,
-      other,
-    };
-  })();
-
-  const root = (() => {
-    const {
-      name,
-      private: _private,
-      version,
-      description,
-      license,
-      main,
-      // scripts,
-      // dependencies,
-      // devDependencies,
-      // peerDependencies,
-      uiStudio,
-      ...other
-    } = rootPackageJSON;
-    return {
-      name,
-      private: _private,
-      version,
-      description,
-      license,
-      main,
-      // scripts,
-      // dependencies,
-      // devDependencies,
-      // peerDependencies,
-      uiStudio,
-      other,
-    };
-  })();
-
-  const mergedUIStudio = merge(root.uiStudio || {}, template.uiStudio || {});
-
-  const merged = {
-    name: root.name,
-    private: root.private,
-    version: root.version,
-    description: root.description,
-    license: root.license,
-    main: root.main,
-    ...merge(root.other, template.other),
-    uiStudio: hasComponents
-      ? {
-          ...mergedUIStudio,
-          componentPackages: [...mergedUIStudio.componentPackages, templateName],
-        }
-      : mergedUIStudio,
-  };
-
-  fs.writeJsonSync(rootPackageJSONPath, merged, { spaces: 2 });
-};
-
-const mergeComponents = (templateComponentsRoot: string, rootDir: string) => {
-  const rootComponentsRoot = path.join(rootDir, 'src', 'Components');
-  fs.ensureDirSync(rootComponentsRoot);
-  fs.copySync(templateComponentsRoot, rootComponentsRoot);
-};
+const readTemplateJSON = (rootDir: string): RawUIStudioConfig =>
+  fs.readJsonSync(path.join(rootDir, 'template.json'));
 
 const overwriteApi = (templateApiRoot: string, rootDir: string) => {
   const apiRoot = path.join(rootDir, 'api');
@@ -201,40 +112,95 @@ const overwriteApi = (templateApiRoot: string, rootDir: string) => {
   fs.copySync(templateApiRoot, apiRoot);
 };
 
-const copyEntryPoint = (entryPointPath: string, packageName: string, rootDir: string) => {
-  const appDir = path.join(rootDir, 'src', 'App');
-  const fileName = `EP${camelCase(packageName)}.tsx`;
-  fs.ensureDirSync(appDir);
-  fs.copyFileSync(entryPointPath, path.join(appDir, fileName));
+const updatePackageJSON = (
+  name: string,
+  version: string,
+  config: RawUIStudioConfig,
+  rootDir: string,
+) => {
+  const rootPackageJSONPath = path.join(rootDir, 'package.json');
+  const rootPackageJSON = fs.readJsonSync(rootPackageJSONPath);
+  fs.writeJSONSync(
+    rootPackageJSONPath,
+    {
+      ...rootPackageJSON,
+      uiStudio: {
+        ...(rootPackageJSON.uiStudio || {}),
+        openAPIEndpoint:
+          config?.api?.openAPIEndpoint ?? rootPackageJSON?.uiStudio?.openAPIEndpoint ?? '',
+        dependencies: {
+          ...(rootPackageJSON.uiStudio.dependencies || {}),
+          [name]: version,
+        },
+      },
+    },
+    { spaces: 2 },
+  );
+};
+
+const handleFile = async (filePath: string, rootDir: string) => {
+  const packageLocation = {
+    fileType: filePath.match(/^.+\.(tgz|tar\.gz)$/) ? 'tar' : 'directory',
+    location: 'file',
+    uri: path.resolve(filePath),
+  } as const;
+  const tempDir = makeTempDir();
+  const filesRoot = await extractFiles(packageLocation, tempDir);
+  const templateJSON = readTemplateJSON(filesRoot);
+
+  const packageJSON = readPackageJSON(filesRoot);
+  const { name } = packageJSON;
+  const version = `file:${filePath}`;
+  updatePackageJSON(name, version, templateJSON, rootDir);
+
+  if (templateJSON.api.path) {
+    overwriteApi(path.join(filesRoot, templateJSON.api.path), rootDir);
+  }
+};
+
+const handleNpm = async (template: string, rootDir: string) => {
+  const packageMatch = template.match(/^(@[^/]+\/)?([^@]+)?(@.+)?$/);
+  const scope = packageMatch[1] || '';
+  const templateName = `uis-template-${packageMatch[2] || ''}`;
+  let version = (packageMatch[3] || '').replace('@', '');
+
+  const name = scope ? `${scope}/${templateName}` : templateName;
+
+  if (!version) {
+    version = await getNpmVersion(name);
+  }
+
+  const packageUrl = `https://registry.npmjs.org/${
+    scope || templateName
+  }/-/${templateName}-${version}.tgz`;
+
+  const tempDir = makeTempDir();
+
+  const packageLocation = {
+    fileType: 'tar',
+    location: 'npm',
+    uri: packageUrl,
+  } as const;
+
+  const filesRoot = await extractFiles(packageLocation, tempDir);
+  const templateJSON = readTemplateJSON(filesRoot);
+
+  if (templateJSON?.components?.path || templateJSON?.entryPoint?.path) {
+    updatePackageJSON(name, version, templateJSON, rootDir);
+  }
+
+  if (templateJSON?.api?.path) {
+    overwriteApi(path.join(filesRoot, templateJSON?.api?.path), rootDir);
+  }
 };
 
 export const mergeTemplate = async (template: string, rootDir: string): Promise<void> => {
-  const tempDir = makeTempDir();
-  const packageLocation = getPackageLocation(template);
-  const filesRoot = await extractFiles(packageLocation, tempDir);
-  const packageJSON = readPackageJSON(filesRoot);
-  const templateJSON = readTemplateJSON(filesRoot);
-
-  mergePackageJSON(
-    packageJSON.name,
-    templateJSON.package || {},
-    rootDir,
-    templateJSON.componentsDir && templateJSON.componentsDir.length > 0,
-  );
-
-  if (templateJSON.componentsDir) {
-    mergeComponents(path.join(filesRoot, templateJSON.componentsDir), rootDir);
-  }
-
-  if (templateJSON.apiDir) {
-    overwriteApi(path.join(filesRoot, templateJSON.apiDir), rootDir);
-  }
-
-  if (templateJSON.entryPoint) {
-    copyEntryPoint(
-      path.join(filesRoot, templateJSON.entryPoint),
-      template.split('/').slice(-1)[0],
-      rootDir,
-    );
+  if (template.match(/^file:/)) {
+    handleFile(template.match(/^file:(.*)?$/)[1], rootDir);
+  } else if (template.includes('://')) {
+    // TODO handle git urls
+    throw new Error('Git urls are not currently supported');
+  } else {
+    handleNpm(template, rootDir);
   }
 };

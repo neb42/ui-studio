@@ -84,37 +84,6 @@ const addPackages = (directory: string, runner: 'npm' | 'yarn') => {
   }
 };
 
-const createComponentsIndex = (rootDir: string) => {
-  const componentsRoot = path.join(rootDir, 'src', 'Components');
-  fs.ensureDirSync(componentsRoot);
-  const components = fs
-    .readdirSync(componentsRoot)
-    .filter((f) => f !== 'index.ts.mst')
-    .map((f) => f.replace(/\.tsx?/, ''));
-  const data = fs.readFileSync(path.join(componentsRoot, 'index.ts.mst'));
-  const renderedFile = Mustache.render(data.toString(), {
-    components,
-  });
-  fs.writeFileSync(path.join(componentsRoot, 'index.ts'), renderedFile);
-  fs.unlinkSync(path.join(componentsRoot, 'index.ts.mst'));
-};
-
-const createEntryPointIndex = (rootDir: string) => {
-  const entryPointRoot = path.join(rootDir, 'src', 'App');
-  const entryPoints = fs
-    .readdirSync(entryPointRoot)
-    .filter((f) => f !== 'index.tsx.mst')
-    .map((f) => f.replace(/\.tsx?/, ''));
-  const data = fs.readFileSync(path.join(entryPointRoot, 'index.tsx.mst'));
-  const renderedFile = Mustache.render(data.toString(), {
-    noEntryPoints: entryPoints.length === 0,
-    entryPoints,
-    reverseEntryPoints: entryPoints.slice().reverse(),
-  });
-  fs.writeFileSync(path.join(entryPointRoot, 'index.tsx'), renderedFile);
-  fs.unlinkSync(path.join(entryPointRoot, 'index.tsx.mst'));
-};
-
 const run = async (): Promise<void> => {
   const { argv } = yargs(hideBin(process.argv))
     .array('template')
@@ -149,10 +118,6 @@ const run = async (): Promise<void> => {
   addPackages(directory, runner);
 
   await Promise.all(templates.map((t) => mergeTemplate(t, directory)));
-
-  createComponentsIndex(directory);
-
-  createEntryPointIndex(directory);
 
   initGit(directory);
 };

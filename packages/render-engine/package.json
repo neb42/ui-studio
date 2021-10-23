@@ -18,16 +18,21 @@
     "copy-templates": "yarn copy-templates:client && yarn copy-templates:client-code",
     "copy-templates:client": "cp -r src/ClientGenerator/templates build/ClientGenerator/templates",
     "copy-templates:client-code": "cp -r src/ClientGenerator/code build/ClientGenerator/code",
-    "build": "rm -rf build/* && tsc && yarn copy-templates"
+    "build": "rm -rf build/* && tsc && yarn copy-templates",
+    "dev": "yarn build && node build/run.js /Users/bmcalindin/workspace/DevApp"
   },
   "dependencies": {
     "@ui-studio/types": "^0.1.26",
     "@ui-studio/typescript": "^0.1.25",
     "fs-extra": "^9.1.0",
+    "lodash.camelcase": "^4.3.0",
     "mustache": "^4.0.1"
   },
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "242398e7b52c5789bdafd5e87acb301a79426870"
+  "gitHead": "242398e7b52c5789bdafd5e87acb301a79426870",
+  "devDependencies": {
+    "@types/lodash.camelcase": "^4.3.6"
+  }
 }

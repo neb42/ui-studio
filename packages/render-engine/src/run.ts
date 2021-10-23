@@ -1,7 +1,7 @@
-import { promises as fs, existsSync, readFileSync } from 'fs';
-import * as path from 'path';
+import { promises as fs, existsSync } from 'fs';
 
 import generateClient from './ClientGenerator/generateClient';
+import { parseConfig } from './ClientGenerator/parseConfig';
 import { FilePaths } from './FilePaths';
 
 const mkdir = async (p: string) => {
@@ -22,26 +22,17 @@ export const run = async (source: string, dev: boolean): Promise<void> => {
 
   await setupDirectory();
 
-  const pkgJson = JSON.parse(readFileSync(path.join(source, 'package.json')).toString());
-  const deps = pkgJson.dependencies || {};
-  const componentPackages: { name: string; version: string }[] = (
-    pkgJson.uiStudio.componentPackages || []
-  ).map((p) => {
-    if (!Object.keys(deps).includes(p))
-      throw Error('Component package is not includes in dependencies');
-    return { name: p, version: deps[p] };
-  });
+  const config = await parseConfig(source);
 
   await generateClient({
-    componentPackages,
+    config,
     source,
-    dev,
   });
 };
 
 if (typeof require !== 'undefined' && require.main === module) {
   try {
-    run('/Users/bmcalindin/workspace/ExampleApp', true);
+    run(process.argv[2], true);
   } catch (error) {
     console.log(error);
   }
