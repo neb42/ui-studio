@@ -34,8 +34,7 @@
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "@types/tar": "^6.1.0",
-    "@types/yargs": "^16.0.0",
-    "@ui-studio/types": "^0.1.26"
+    "@types/yargs": "^16.0.0"
   },
   "publishConfig": {
     "access": "public"
