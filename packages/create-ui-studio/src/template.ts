@@ -34,7 +34,10 @@ const makeTempDir = (): string => {
   return fs.mkdtempSync(dir);
 };
 
-const getNpmVersion = async (name: string): Promise<string> => {
+const getNpmVersion = async (
+  name: string,
+  version?: string | null,
+): Promise<{ version: string; tarUrl: string }> => {
   return new Promise((resolve, reject) => {
     https
       .get(`https://registry.npmjs.org/${name}`, (res) => {
@@ -46,7 +49,11 @@ const getNpmVersion = async (name: string): Promise<string> => {
 
         res.on('end', () => {
           const npmResponse = JSON.parse(body);
-          resolve(npmResponse['dist-tags'].latest);
+          const v = version || npmResponse['dist-tags'].latest;
+          resolve({
+            version: v,
+            tarUrl: npmResponse.versions[v].dist.tarball,
+          });
         });
       })
       .on('error', (err) => {
@@ -162,24 +169,17 @@ const handleNpm = async (template: string, rootDir: string) => {
   const packageMatch = template.match(/^(@[^/]+\/)?([^@]+)?(@.+)?$/);
   const scope = packageMatch[1] || '';
   const templateName = `uis-template-${packageMatch[2] || ''}`;
-  let version = (packageMatch[3] || '').replace('@', '');
 
-  const name = scope ? `${scope}/${templateName}` : templateName;
+  const name = scope ? `${scope}${templateName}` : templateName;
 
-  if (!version) {
-    version = await getNpmVersion(name);
-  }
-
-  const packageUrl = `https://registry.npmjs.org/${
-    scope || templateName
-  }/-/${templateName}-${version}.tgz`;
+  const { version, tarUrl } = await getNpmVersion(name, (packageMatch[3] || '').replace('@', ''));
 
   const tempDir = makeTempDir();
 
   const packageLocation = {
     fileType: 'tar',
     location: 'npm',
-    uri: packageUrl,
+    uri: tarUrl,
   } as const;
 
   const filesRoot = await extractFiles(packageLocation, tempDir);
@@ -196,11 +196,12 @@ const handleNpm = async (template: string, rootDir: string) => {
 
 export const mergeTemplate = async (template: string, rootDir: string): Promise<void> => {
   if (template.match(/^file:/)) {
-    handleFile(template.match(/^file:(.*)?$/)[1], rootDir);
-  } else if (template.includes('://')) {
+    return handleFile(template.match(/^file:(.*)?$/)[1], rootDir);
+  }
+  if (template.includes('://')) {
     // TODO handle git urls
     throw new Error('Git urls are not currently supported');
   } else {
-    handleNpm(template, rootDir);
+    return handleNpm(template, rootDir);
   }
 };

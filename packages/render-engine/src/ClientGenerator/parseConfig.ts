@@ -42,7 +42,35 @@ const makeTempDir = (): string => {
   return fs.mkdtempSync(dir);
 };
 
-const getPackageLocation = (name: string, version: string): PackageLocation => {
+const getNpmVersion = async (
+  name: string,
+  version?: string | null,
+): Promise<{ version: string; tarUrl: string }> => {
+  return new Promise((resolve, reject) => {
+    https
+      .get(`https://registry.npmjs.org/${name}`, (res) => {
+        let body = '';
+
+        res.on('data', (chunk) => {
+          body += chunk;
+        });
+
+        res.on('end', () => {
+          const npmResponse = JSON.parse(body);
+          const v = version || npmResponse['dist-tags'].latest;
+          resolve({
+            version: v,
+            tarUrl: npmResponse.versions[v].dist.tarball,
+          });
+        });
+      })
+      .on('error', (err) => {
+        reject(new Error(err.message));
+      });
+  });
+};
+
+const getPackageLocation = async (name: string, version: string): PackageLocation => {
   if (version.match(/^file:/)) {
     return {
       fileType: version.match(/^.+\.(tgz|tar\.gz)$/) ? 'tar' : 'directory',
@@ -60,14 +88,12 @@ const getPackageLocation = (name: string, version: string): PackageLocation => {
   const scope = packageMatch[1] || '';
   const templateName = `uis-template-${packageMatch[2] || ''}`;
 
-  const packageUrl = `https://registry.npmjs.org/${
-    scope || templateName
-  }/-/${templateName}-${version}.tgz`;
+  const { tarUrl } = await getNpmVersion(`${scope}${templateName}`, version);
 
   return {
     fileType: 'tar',
     location: 'npm',
-    uri: packageUrl,
+    uri: tarUrl,
   };
 };
 
@@ -128,7 +154,7 @@ export const parseConfig = async (source: string): Promise<UIStudioConfig> => {
     Promise<UIStudioConfig['dependencies']>
   >(async (acc, [name, version]) => {
     const tempDir = makeTempDir();
-    const packageLocation = getPackageLocation(name, version as string);
+    const packageLocation = await getPackageLocation(name, version as string);
     const filesRoot = await extractFiles(packageLocation, tempDir);
     const packageJSON = readPackageJSON(filesRoot);
     const templateJSON = readTemplateJSON(filesRoot);
