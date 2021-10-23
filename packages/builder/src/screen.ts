@@ -2,7 +2,7 @@ import blessed from 'blessed';
 import figlet from 'figlet';
 
 export class Screen {
-  private screen: blessed.Widgets.Screen;
+  public screen: blessed.Widgets.Screen;
 
   public topLeft: blessed.Widgets.BoxElement;
 
@@ -32,10 +32,6 @@ export class Screen {
     });
 
     screen.title = title;
-
-    screen.key(['escape', 'q', 'C-c'], () => {
-      return process.exit(0);
-    });
 
     return screen;
   };

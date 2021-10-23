@@ -32,6 +32,11 @@ export class Watcher {
     this.watchSrc();
   };
 
+  public stop = (): void => {
+    if (this.packageJSONWatcher) this.packageJSONWatcher.close();
+    if (this.srcWatcher) this.srcWatcher.close();
+  };
+
   private watchPackageJSON = (): void => {
     this.packageJSONWatcher = fs.watch(join(this.path, 'package.json'), async () => {
       await this.componentsRunner.run();

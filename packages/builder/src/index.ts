@@ -53,6 +53,14 @@ const run = async (): Promise<void> => {
     componentsRunner,
   });
 
+  screen.screen.key(['escape', 'q', 'C-c'], () => {
+    watcher.stop();
+    apiRunner.stop();
+    clientRunner.stop();
+    componentsRunner.stop();
+    return process.exit(0);
+  });
+
   await generateCode(REPO_PATH, DEV);
 
   await componentsRunner.run();
