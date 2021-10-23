@@ -26,13 +26,15 @@
     "@ui-studio/typescript": "^0.1.26",
     "fs-extra": "^9.1.0",
     "lodash.camelcase": "^4.3.0",
-    "mustache": "^4.0.1"
+    "mustache": "^4.0.1",
+    "tar": "^6.1.11"
   },
   "publishConfig": {
     "access": "public"
   },
   "gitHead": "242398e7b52c5789bdafd5e87acb301a79426870",
   "devDependencies": {
-    "@types/lodash.camelcase": "^4.3.6"
+    "@types/lodash.camelcase": "^4.3.6",
+    "@types/tar": "^6.1.0"
   }
 }
