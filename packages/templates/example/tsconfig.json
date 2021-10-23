@@ -1,15 +1,20 @@
 {
   "compilerOptions": {
-    "lib": ["es2020"],
-    "module": "commonjs",
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "module": "esnext",
     "noImplicitReturns": true,
     "outDir": "build",
     "sourceMap": true,
-    "target": "es6",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "compileOnSave": true,
   "include": [

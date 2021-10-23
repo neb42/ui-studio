@@ -12,6 +12,10 @@
     "build": "rm -rf build/* && tsc"
   },
   "dependencies": {
+    "@ui-studio/types": "^0.1.26",
     "@ui-studio/typescript": "^0.1.25"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
