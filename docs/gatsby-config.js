@@ -1,11 +1,12 @@
 module.exports = {
+  pathPrefix: "/ui-studio",
   siteMetadata: {
-    siteTitle: `Rocket Docs`,
-    defaultTitle: `Rocket Docs`,
-    siteTitleShort: `Rocket Docs`,
-    siteDescription: `Out of the box Gatsby Theme for creating documentation websites easily and quickly`,
-    siteUrl: `https://rocketdocs.netlify.app`,
-    siteAuthor: `@rocketseat`,
+    siteTitle: `UI Studio Docs`,
+    defaultTitle: `UI Studio Docs`,
+    siteTitleShort: `UI Studio Docs`,
+    siteDescription: `Documentation for UI Studio`,
+    siteUrl: `https://neb42.github.io/ui-studio`,
+    siteAuthor: `@neb42`,
     siteImage: `/banner.png`,
     siteLanguage: `en`,
     themeColor: `#8257E6`,
@@ -18,15 +19,15 @@ module.exports = {
       options: {
         configPath: `src/config`,
         docsPath: `src/docs`,
-        repositoryUrl: `https://github.com/rocketseat/gatsby-themes`,
-        baseDir: `examples/gatsby-theme-docs`,
+        repositoryUrl: `https://github.com/neb42/ui-studio`,
+        baseDir: `docs`,
       },
     },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Rocketseat Gatsby Themes`,
-        short_name: `RS Gatsby Themes`,
+        name: `UI Studio`,
+        short_name: `UI Studio`,
         start_url: `/`,
         background_color: `#ffffff`,
         display: `standalone`,
@@ -44,7 +45,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-canonical-urls`,
       options: {
-        siteUrl: `https://rocketdocs.netlify.app`,
+        siteUrl: `https://neb42.github.io/ui-studio/`,
       },
     },
     `gatsby-plugin-offline`,

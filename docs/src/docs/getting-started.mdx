@@ -1,78 +1,71 @@
 ---
 title: 'Getting started'
-description: Learn how to get started with Rocket Docs.
+description: Learn how to get started with UI Studio.
 ---
 
-> Rocket Docs is ready for Gatsby v3. New projects will use the new version! <br />
-> If you are still on Gatsby v2, configure it manually.
+UI Studio is built using javascript. This means that you will need to install node and a package manager to get started.
 
-The best way to start is by using our starter:
+## Installing Node
 
-```bash
-npx gatsby new rocket-docs https://github.com/rocketseat/gatsby-starter-rocket-docs
-```
+To install node we recommend using [NVM](https://github.com/nvm-sh/nvm) to manage node versions.
 
-But, if you prefer, you can install and configure manually.
-
-#### Using Yarn:
+> UI Studio requires a minimum node version of 14, but we recommend installing the latest LTS release.
 
 ```bash
-yarn add @rocketseat/gatsby-theme-docs
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 ```
 
-#### Using NPM:
+And add this to your profile file (`~/.bash_profile`, `~/.zshrc`, `~/.profile`, or `~/.bashrc`).
 
 ```bash
-npm i @rocketseat/gatsby-theme-docs
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 ```
 
-## Theme Options
-
-| Key           | Default | Required | Description                                                                                                                                                            |
-| ------------- | ------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| basePath      | /       | No       | Root url for all docs                                                                                                                                                  |
-| configPath    | config  | No       | Location of config files                                                                                                                                               |
-| docsPath      | docs    | No       | The site description for SEO and social (FB, Twitter) tags                                                                                                             |
-| githubUrl     | -       | -        | Deprecated in favor of `repositoryUrl`                                                                                                                                 |
-| repositoryUrl | -       | No       | The complete URL of your repository (supports GitHub, GitLab and Bitbucket). Example: `https://github/rocketseat/gatsby-themes`                                        |
-| baseDir       | -       | No       | If your Gatsby site does not live in the root of your project directory/git repo, pass the subdirectory name here (ex: `docs`)                                         |
-| withMdx       | true    | No       | If necessary, you can add your own MDX options to the theme. To do so, make sure you turn this option to false and include `gatsby-plugin-mdx` on your `gatsby-config` |
-| branch        | main    | No       | Default branch of the repository                                                                                                                                       |
-
-<br />
-
-> Note: When adding a BitBucket link on the `repositoryUrl` option, don't add the `src/<branch>` to it.
-> Example of correct link: <br /> `https://bitbucket.org/jpedroschmitz/gatsby-themes`
-
-## Example usage
-
-```js title=gatsby-config.js
-module.exports = {
-  siteMetadata: {
-    siteTitle: `@rocketseat/gatsby-theme-docs`,
-    defaultTitle: `@rocketseat/gatsby-theme-docs`,
-    siteTitleShort: `gatsby-theme-docs`,
-    siteDescription: `Out of the box Gatsby Theme for creating documentation websites easily and quickly`,
-    siteUrl: `https://rocketdocs.netlify.app`,
-    siteAuthor: `@rocketseat`,
-    siteImage: `/banner.png`,
-    siteLanguage: `en`,
-    themeColor: `#8257E6`,
-    basePath: `/`,
-  },
-  plugins: [
-    {
-      resolve: `@rocketseat/gatsby-theme-docs`,
-      options: {
-        basePath: `/`,
-        configPath: `src/config`,
-        docsPath: `src/docs`,
-        repositoryUrl: `https://github.com/rocketseat/gatsby-themes`,
-        baseDir: `examples/gatsby-theme-docs`,
-      },
-    },
-  ],
-};
+Install a node version.
+```bash
+nvm install 16
 ```
 
-Once you have installed the dependencies you will need to create the [navigation](/usage/navigation) and [documentation](/usage/creating-docs) files.
+And set it as your default version.
+```bash
+nvm alias default 16
+```
+
+## Installing a package manager
+
+Currently only [Yarn](https://yarnpkg.com/getting-started/install) is supported as a package manager. To install Yarn:
+
+```bash
+npm install -g yarn
+```
+
+## Creating a UI Studio application
+
+To create an empty application run:
+
+```bash
+yarn create ui-studio <NAME>
+```
+
+UI Studio works best when used with [templates](/templates/using). To create an application with a template run:
+```bash
+yarn create ui-studio <NAME> -t <TEMPLATE> <TEMPLATE>
+```
+
+For example, to create an application named "MyApp" that uses the example template:
+
+```bash
+yarn create ui-studio MyApp -t @ui-studio/example 
+```
+
+This has now generated an application and initialised a git repository. To start the application run:
+
+```bash
+cd <NAME>
+yarn start
+```
+
+The terminal will now show the output of the build process and a browser window should open at [http://localhost:3000](http://localhost:3000).
+
+> There is currently a bug that requires you to refresh the browser window once the build process has finished running 
