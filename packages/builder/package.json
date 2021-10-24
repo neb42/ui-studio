@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/builder",
-  "version": "0.1.46",
+  "version": "0.1.47",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/ui-studio/tree/master/packages/builder#readme",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@types/yargs": "^15.0.5",
-    "@ui-studio/render-engine": "^0.1.38",
+    "@ui-studio/render-engine": "^0.1.39",
     "axios": "^0.21.1",
     "blessed": "^0.1.81",
     "cors": "^2.8.5",
