@@ -12,11 +12,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
       - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
         run: yarn --frozen-lockfile
       - name: Build + deploy
         run: yarn deploy:patch:ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
