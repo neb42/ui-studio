@@ -124,7 +124,7 @@ export const Preview = (): JSX.Element => {
   if (!previewServer) return <div />;
 
   return (
-    <Styles.Container>
+    <Styles.Container loading={!previewClientReady}>
       {previewClientReady && (
         <Styles.Iframe
           previewSize={previewSize}
