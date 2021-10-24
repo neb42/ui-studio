@@ -10,8 +10,11 @@ import DeleteSharp from '@mui/icons-material/DeleteSharp';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { ComponentConfig } from '@ui-studio/types';
 import { OpenAPIV3 } from 'openapi-types';
+import { Outline } from 'components/Outline';
 
 import * as Styles from './CustomComponentConfig.styles';
 
@@ -64,15 +67,23 @@ export const CustomComponentConfigComponent = ({
     onUpdateType(key, event.target.value as 'string' | 'number' | 'boolean');
   };
 
-  const handleListChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) =>
+  const handleListChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     onUpdateList(key, event.target.checked);
+
+    if (event.target.checked === false) {
+      onUpdateIterable(key, false);
+    }
+  };
 
   const handleIterableChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) =>
     onUpdateIterable(key, event.target.checked);
 
   const handleInputBooleanDefaultValueChange = (key: string) => (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => onUpdateDefaultValue(key, event.target.checked);
+    _: React.MouseEvent<HTMLElement>,
+    v: boolean,
+  ) => {
+    if (v !== null) onUpdateDefaultValue(key, v);
+  };
 
   const handleInputNonBooleanDefaultValueChange = (key: string) => (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -239,15 +250,19 @@ export const CustomComponentConfigComponent = ({
               />
             )}
             {control === 'input' && type === 'boolean' && (
-              <FormControlLabel
-                label="Default value"
-                control={
-                  <Checkbox
-                    checked={c.defaultValue}
-                    onChange={handleInputBooleanDefaultValueChange(c.key)}
-                  />
-                }
-              />
+              <Outline label="Default value">
+                <ToggleButtonGroup
+                  value={c.defaultValue}
+                  exclusive
+                  onChange={handleInputBooleanDefaultValueChange(c.key)}
+                  fullWidth
+                  color="primary"
+                  size="small"
+                >
+                  <ToggleButton value>True</ToggleButton>
+                  <ToggleButton value={false}>False</ToggleButton>
+                </ToggleButtonGroup>
+              </Outline>
             )}
             {control === 'select' && type === 'boolean' && (
               <>
@@ -268,7 +283,9 @@ export const CustomComponentConfigComponent = ({
                 {options.map((o: any, ii: any) => (
                   <Styles.SelectOption key={ii}>
                     <TextField
-                      type={type}
+                      inputProps={
+                        type === 'number' ? { inputMode: 'numeric', pattern: '[0-9]*' } : {}
+                      }
                       value={o.label}
                       onChange={handleUpdateSelectOption(c.key, ii)}
                     />
