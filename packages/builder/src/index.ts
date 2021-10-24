@@ -51,6 +51,7 @@ const run = async (): Promise<void> => {
     path: REPO_PATH,
     clientRunner,
     componentsRunner,
+    server,
   });
 
   screen.screen.key(['escape', 'q', 'C-c'], () => {
