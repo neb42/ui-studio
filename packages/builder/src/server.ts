@@ -19,6 +19,8 @@ export class Server {
 
   private port: number;
 
+  private webSocket: socketio.Socket;
+
   public constructor({ REPO_PATH, SERVER_PORT, PREVIEW_SERVER_PORT, PREVIEW_CLIENT_PORT }: Args) {
     const app = this.createApp(PREVIEW_CLIENT_PORT);
     this.server = this.createServer(app);
@@ -28,6 +30,18 @@ export class Server {
 
   public start = (): void => {
     this.server.listen(this.port);
+  };
+
+  public reloadComponents = (): void => {
+    if (this.webSocket) {
+      this.webSocket.emit('reload-components');
+    }
+  };
+
+  public reloadOpenApiSpec = (): void => {
+    if (this.webSocket) {
+      this.webSocket.emit('reload-open-api');
+    }
   };
 
   private createApp = (PREVIEW_CLIENT_PORT: number): express.Express => {
@@ -68,6 +82,7 @@ export class Server {
     io.origins('*:*');
 
     io.on('connection', (socket) => {
+      this.webSocket = socket;
       const clientJsonPath = path.join(REPO_PATH, 'client.json');
       const clientJson = JSON.parse(readFileSync(clientJsonPath).toString());
 

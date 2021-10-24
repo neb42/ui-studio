@@ -40,26 +40,36 @@ export const DevCommunicator = () => {
       );
     });
 
-    socket.on('set-open-api-endpoint', async (endpoint: string) => {
-      const { data: openAPIDef } = await axios.get(endpoint);
-      socket.emit('init-api', openAPIDef);
-      dispatch(initApi(openAPIDef));
-    });
+    const emitSetOpenApiEndpoint = () => {
+      socket.on('set-open-api-endpoint', async (endpoint: string) => {
+        const { data: openAPIDef } = await axios.get(endpoint);
+        socket.emit('init-api', openAPIDef);
+        dispatch(initApi(openAPIDef));
+      });
+    };
 
-    socket.emit('init-builder', {
-      components: Object.keys(Components).reduce<Component[]>((acc, cur) => {
-        if (cur === 'functions-pkg') return acc;
-        return [
-          ...acc,
-          ...Object.values(Components[cur]).map(
-            ({ component: _, ...cc }: Component & { component: React.FC }) => ({
-              ...cc,
-              library: cur,
-            }),
-          ),
-        ];
-      }, []),
-    });
+    const emitInitBuilder = () => {
+      socket.emit('init-builder', {
+        components: Object.keys(Components).reduce<Component[]>((acc, cur) => {
+          if (cur === 'functions-pkg') return acc;
+          return [
+            ...acc,
+            ...Object.values(Components[cur]).map(
+              ({ component: _, ...cc }: Component & { component: React.FC }) => ({
+                ...cc,
+                library: cur,
+              }),
+            ),
+          ];
+        }, []),
+      });
+    };
+
+    emitSetOpenApiEndpoint();
+    emitInitBuilder();
+
+    socket.on('reload-open-api', emitSetOpenApiEndpoint);
+    socket.on('reload-components', emitInitBuilder);
 
     socket.on('navigate-page', (response: { url: string }) => {
       if (response.url !== location.pathname) {
