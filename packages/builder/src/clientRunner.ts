@@ -1,11 +1,13 @@
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 
+import open from 'open';
 import blessed from 'blessed';
 
 type Args = {
   logger: blessed.Widgets.Log;
   path: string;
   port: number;
+  clientUrl: string;
 };
 
 export class ClientRunner {
@@ -17,10 +19,13 @@ export class ClientRunner {
 
   private process: ChildProcessWithoutNullStreams;
 
-  public constructor({ logger, path, port }: Args) {
+  private clientUrl: string;
+
+  public constructor({ logger, path, port, clientUrl }: Args) {
     this.logger = logger;
     this.path = path;
     this.port = port;
+    this.clientUrl = clientUrl;
   }
 
   public start = (): void => {
@@ -74,6 +79,8 @@ export class ClientRunner {
     this.process.stderr.on('data', (msg) => {
       this.write(msg.toString());
     });
+
+    this.process.on('spawn', () => open(this.clientUrl));
   };
 
   private write = (msg: string): void => {

@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import open from 'open';
 import { run as generateCode } from '@ui-studio/render-engine';
 
 import { getOptions } from './options';
@@ -40,6 +39,7 @@ const run = async (): Promise<void> => {
     logger: screen.bottomRight,
     path: GENERATED_CODE_PATH,
     port: PREVIEW_CLIENT_PORT,
+    clientUrl: `http://localhost:${SERVER_PORT}`,
   });
 
   const componentsRunner = new ComponentsRunner({
@@ -66,14 +66,12 @@ const run = async (): Promise<void> => {
 
   await componentsRunner.run();
 
+  server.start();
+
   apiRunner.start();
   clientRunner.start();
 
   watcher.watch();
-
-  server.start();
-
-  open(`http://localhost:${SERVER_PORT}`);
 };
 
 if (typeof require !== 'undefined' && require.main === module) {
