@@ -7,9 +7,7 @@ import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/
 
 import 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-noconflict/worker-json';
 import 'ace-builds/src-noconflict/mode-css';
-import 'ace-builds/src-noconflict/worker-css';
 import 'ace-builds/src-noconflict/theme-chrome';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import '@fontsource/roboto/300.css';
