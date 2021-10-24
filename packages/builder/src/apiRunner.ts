@@ -42,7 +42,7 @@ export class ApiRunner {
   public stop = (): void => {
     if (this.process) {
       this.write('Stopping api runner...');
-      this.process.kill();
+      this.process.kill(9);
     }
   };
 

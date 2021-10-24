@@ -45,7 +45,7 @@ export class ComponentsRunner {
   public stop = (): void => {
     if (this.process) {
       this.write('Stopping component build...');
-      this.process.kill();
+      this.process.kill(9);
     }
   };
 

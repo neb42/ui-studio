@@ -42,7 +42,7 @@ export class ClientRunner {
   public stop = (): void => {
     if (this.process) {
       this.write('Stopping client runner...');
-      this.process.kill();
+      this.process.kill(9);
     }
   };
 
