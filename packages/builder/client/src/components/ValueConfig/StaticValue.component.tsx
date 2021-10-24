@@ -43,7 +43,7 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
   };
 
   const handleBooleanOnChange = (_: React.MouseEvent<HTMLElement>, v: boolean) => {
-    if (value !== null) handleValueChange({ ...value, value: v });
+    if (v !== null) handleValueChange({ ...value, value: v });
   };
 
   if (schema.type === 'array' || schema.type === 'object') {
