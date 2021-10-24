@@ -1,5 +1,5 @@
 import { defaultTokens } from '@faculty/adler-tokens';
-import purple from '@mui/material/colors/purple';
+import deepPurple from '@mui/material/colors/deepPurple';
 import grey from '@mui/material/colors/grey';
 
 const adlerTheme = {
@@ -12,7 +12,7 @@ const adlerTheme = {
 
 const muiTheme = {
   palette: {
-    primary: purple,
+    primary: deepPurple,
     info: grey,
   },
   components: {
