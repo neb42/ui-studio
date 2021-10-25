@@ -17,7 +17,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        fetch-depth: 0
+        with:
+          fetch-depth: 0
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
