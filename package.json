@@ -10,6 +10,7 @@
     "url": "git+https://github.com/neb42/ui-studio.git"
   },
   "workspaces": [
+    "docs",
     "packages/builder",
     "packages/builder/client",
     "packages/create-ui-studio",
@@ -22,6 +23,7 @@
   "scripts": {
     "lerna": "lerna",
     "build": "lerna run build",
+    "deploy:docs": "lerna run --scope @ui-studio/docs deploy",
     "deploy": "yarn build && lerna publish",
     "deploy:prepatch": "yarn build && lerna publish prepatch",
     "deploy:patch": "yarn build && lerna publish patch",

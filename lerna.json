@@ -1,5 +1,6 @@
 {
   "packages": [
+    "docs",
     "packages/builder",
     "packages/builder/client",
     "packages/create-ui-studio",

@@ -31,3 +31,5 @@ jobs:
         run: yarn deploy:patch:ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Deploy docs 
+        run: yarn deploy:docs
