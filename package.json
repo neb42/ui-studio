@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "lerna": "lerna",
-    "build": "lerna run build",
+    "build": "lerna run build --ignore @ui-studio/docs",
     "deploy:docs": "lerna run --scope @ui-studio/docs deploy",
     "deploy": "yarn build && lerna publish",
     "deploy:prepatch": "yarn build && lerna publish prepatch",

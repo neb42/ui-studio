@@ -29,7 +29,7 @@
   ],
   "scripts": {
     "deploy": "gatsby build --prefix-paths && gh-pages -d public",
-    "build": "gatsby build",
+    "build": "gatsby build  --prefix-paths",
     "start": "gatsby develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean"
