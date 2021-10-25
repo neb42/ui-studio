@@ -9,7 +9,7 @@ module.exports = {
     siteAuthor: `@neb42`,
     siteImage: `/banner.png`,
     siteLanguage: `en`,
-    themeColor: `#8257E6`,
+    themeColor: `#673ab7`,
     basePath: `/`,
   },
   flags: { PRESERVE_WEBPACK_CACHE: true },
@@ -49,5 +49,14 @@ module.exports = {
       },
     },
     `gatsby-plugin-offline`,
+    {
+      resolve: `gatsby-plugin-google-fonts`,
+      options: {
+        fonts: [
+          `roboto`,
+        ],
+        display: 'swap'
+      }
+    },
   ],
 };
