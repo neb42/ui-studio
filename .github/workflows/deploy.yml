@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
       - name: Build + deploy
-        run: yarn deploy:{{ github.event.inputs.version }}:ci
+        run: yarn deploy:${{ github.event.inputs.version }}:ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Deploy docs 
