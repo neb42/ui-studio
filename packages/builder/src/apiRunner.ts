@@ -28,7 +28,7 @@ export class ApiRunner {
 
     this.write('Starting api runner...');
 
-    this.process = spawn('yarn', ['api:dev', '-p', this.port.toString()], { cwd: this.path });
+    this.process = spawn('yarn', ['api:start', '-p', this.port.toString()], { cwd: this.path });
 
     this.process.stdout.on('data', (msg) => {
       this.write(msg.toString());
@@ -42,7 +42,9 @@ export class ApiRunner {
   public stop = (): void => {
     if (this.process) {
       this.write('Stopping api runner...');
-      this.process.kill(9);
+      spawn('yarn', ['api:stop'], { cwd: this.path }).on('exit', () => {
+        this.process.kill(9);
+      });
     }
   };
 
