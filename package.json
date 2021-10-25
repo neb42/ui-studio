@@ -29,10 +29,10 @@
     "deploy:patch": "yarn build && lerna publish patch",
     "deploy:minor": "yarn build && lerna publish minor",
     "deploy:major": "yarn build && lerna publish major",
-    "deploy:prepatch:ci": "yarn build && lerna publish prepatch --yes",
-    "deploy:patch:ci": "yarn build && lerna publish patch --yes",
-    "deploy:minor:ci": "yarn build && lerna publish minor --yes",
-    "deploy:major:ci": "yarn build && lerna publish major --yes"
+    "deploy:prepatch:ci": "yarn build && lerna publish prepatch --yes --no-verify-access",
+    "deploy:patch:ci": "yarn build && lerna publish patch --yes --no-verify-access",
+    "deploy:minor:ci": "yarn build && lerna publish minor --yes --no-verify-access",
+    "deploy:major:ci": "yarn build && lerna publish major --yes --no-verify-access"
   },
   "devDependencies": {
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
