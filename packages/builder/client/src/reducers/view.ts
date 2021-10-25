@@ -5,6 +5,8 @@ import {
   SELECT_VIEW,
   UPDATE_PREVIEW_SIZE,
   SELECT_VARIABLE,
+  SET_PREVIEW_SERVER,
+  SET_PREVIEW_READY,
   Action$View,
 } from 'actions/view';
 import { OPEN_MODAL, CLOSE_MODAL, OpenModal, CloseModal } from 'actions/modal';
@@ -21,6 +23,9 @@ const initialState: Store$View = {
     selectedVariableId: null,
   },
   preview: {
+    ready: false,
+    host: 'http://localhost',
+    port: 3000,
     size: 'monitor',
   },
   selectedView: 'preview',
@@ -89,7 +94,27 @@ export const view = (
       return {
         ...state,
         preview: {
+          ...state.preview,
           size: action.payload.previewSize,
+        },
+      };
+    }
+    case SET_PREVIEW_SERVER: {
+      return {
+        ...state,
+        preview: {
+          ...state.preview,
+          host: action.payload.host,
+          port: action.payload.port,
+        },
+      };
+    }
+    case SET_PREVIEW_READY: {
+      return {
+        ...state,
+        preview: {
+          ...state.preview,
+          ready: action.payload,
         },
       };
     }

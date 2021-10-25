@@ -14,3 +14,8 @@ export const getPreviewSize = (state: Store): ScreenSize => state.view.preview.s
 
 export const getSelectedView = (state: Store): 'preview' | 'variable' | 'css' =>
   state.view.selectedView;
+
+export const getPreviewUrl = (state: Store): string =>
+  `${state.view.preview.host}:${state.view.preview.port}`;
+
+export const isPreviewReady = (state: Store): boolean => state.view.preview.ready;

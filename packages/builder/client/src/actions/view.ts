@@ -76,10 +76,39 @@ export const selectVariable = (id: string): SelectVariable => ({
   payload: id,
 });
 
+export interface SetPreviewServer {
+  type: 'SET_PREVIEW_SERVER';
+  payload: {
+    host: string;
+    port: number;
+  };
+}
+
+export const SET_PREVIEW_SERVER = 'SET_PREVIEW_SERVER';
+
+export const setPreviewServer = (host: string, port: number): SetPreviewServer => ({
+  type: SET_PREVIEW_SERVER,
+  payload: { host, port },
+});
+
+export interface SetPreviewReady {
+  type: 'SET_PREVIEW_READY';
+  payload: boolean;
+}
+
+export const SET_PREVIEW_READY = 'SET_PREVIEW_READY';
+
+export const setPreviewReady = (ready: boolean): SetPreviewReady => ({
+  type: SET_PREVIEW_READY,
+  payload: ready,
+});
+
 export type Action$View =
   | SelectRootElement
   | SelectElement
   | HoverElement
   | UpdatePreviewSize
   | SelectView
-  | SelectVariable;
+  | SelectVariable
+  | SetPreviewServer
+  | SetPreviewReady;

@@ -1,5 +1,4 @@
-import styled, { css, keyframes } from 'styled-components';
-import deepPurple from '@mui/material/colors/deepPurple';
+import styled from 'styled-components';
 import { ScreenSize } from 'types/store';
 
 const screenSizeToWidthMap = {
@@ -9,34 +8,9 @@ const screenSizeToWidthMap = {
   mobile: '320px',
 };
 
-const pulse = keyframes`
-  0% {
-      background-position: 100% 0%
-  }
-  100% {
-      background-position: 15% 100%
-  }
-}
-`;
-
-export const Container = styled.div<{ loading: boolean }>`
+export const Container = styled.div`
   width: 100%;
   height: 100%;
-  ${({ loading }) =>
-    loading
-      ? css`
-          background: ${deepPurple[500]};
-          background: linear-gradient(
-            45deg,
-            ${deepPurple[500]} 0%,
-            ${deepPurple[100]} 33%,
-            ${deepPurple[500]} 66%,
-            ${deepPurple[100]} 100%
-          );
-          background-size: 400% 400%;
-          animation: ${pulse} 5s linear infinite;
-        `
-      : ''}
 `;
 
 export const Iframe = styled.iframe<{ previewSize: ScreenSize }>`

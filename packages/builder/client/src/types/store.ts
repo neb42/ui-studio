@@ -39,6 +39,9 @@ export type Store$View = {
     selectedVariableId: string | null;
   };
   preview: {
+    ready: boolean;
+    host: string;
+    port: number;
     size: ScreenSize;
   };
   selectedView: 'preview' | 'variable' | 'css';
