@@ -3,12 +3,12 @@
   "name": "UI Studio",
   "icons": [
     {
-      "src": "favicon-16x16.ico",
+      "src": "favicon-16x16.png",
       "sizes": "24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "favicon-32x32.ico",
+      "src": "favicon-32x32.png",
       "sizes": "64x64 32x32",
       "type": "image/x-icon"
     }
