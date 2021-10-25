@@ -1,12 +1,17 @@
-name: Deploy patch 
+name: Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+        version:
+          description: 'version'     
+          required: true
+          default: 'patch'
     branches:
       - master
 
 jobs:
-  deploy-patch:
+  deploy:
 
     runs-on: ubuntu-latest
 
@@ -28,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
       - name: Build + deploy
-        run: yarn deploy:patch:ci
+        run: yarn deploy:{{ github.event.inputs.version }}:ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Deploy docs 
