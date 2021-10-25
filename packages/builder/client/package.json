@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/builder-client",
-  "version": "0.1.34",
+  "version": "0.1.35",
   "private": true,
   "proxy": "http://localhost:3002",
   "dependencies": {
@@ -70,7 +70,7 @@
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^3.8.0",
     "@typescript-eslint/parser": "^3.8.0",
-    "@ui-studio/types": "^0.1.29",
+    "@ui-studio/types": "^0.1.30",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^6.7.0",
