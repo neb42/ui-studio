@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          token: '${{ secrets.GITHUB_TOKEN }}'
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
@@ -29,5 +30,3 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Deploy docs 
         run: yarn deploy:docs
-        with:
-          token: '${{ secrets.GITHUB_TOKEN }}'
