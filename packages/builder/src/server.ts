@@ -14,6 +14,8 @@ type Args = {
   PREVIEW_CLIENT_PORT: number;
 };
 
+const POLL_TIMEOUT = 1000;
+
 export class Server {
   private server: http.Server;
 
@@ -21,15 +23,21 @@ export class Server {
 
   private webSocket: socketio.Socket;
 
+  private clientReady = false;
+
+  private clientPort: number;
+
   public constructor({ REPO_PATH, SERVER_PORT, PREVIEW_SERVER_PORT, PREVIEW_CLIENT_PORT }: Args) {
-    const app = this.createApp(PREVIEW_CLIENT_PORT);
+    const app = this.createApp();
     this.server = this.createServer(app);
     this.createWebSocket(this.server, REPO_PATH, PREVIEW_SERVER_PORT, PREVIEW_CLIENT_PORT);
     this.port = SERVER_PORT;
+    this.clientPort = PREVIEW_CLIENT_PORT;
   }
 
   public start = (): void => {
     this.server.listen(this.port);
+    this.pollClient();
   };
 
   public reloadComponents = (): void => {
@@ -44,19 +52,10 @@ export class Server {
     }
   };
 
-  private createApp = (PREVIEW_CLIENT_PORT: number): express.Express => {
+  private createApp = (): express.Express => {
     const app = express();
 
     app.use(cors());
-
-    app.get('/preview-client-ready', async (request: any, response: express.Response) => {
-      try {
-        const { status } = await axios.get(`http://localhost:${PREVIEW_CLIENT_PORT}`);
-        response.sendStatus(status);
-      } catch {
-        response.sendStatus(500);
-      }
-    });
 
     app.use(express.static(path.join(__dirname, 'client')));
 
@@ -89,6 +88,10 @@ export class Server {
       const packageJsonPath = path.join(REPO_PATH, 'package.json');
       const packageJson = JSON.parse(readFileSync(packageJsonPath).toString());
       const { openAPIEndpoint } = packageJson.uiStudio;
+
+      if (this.clientReady) {
+        socket.emit('client-ready');
+      }
 
       socket.emit('init-client', clientJson);
 
@@ -130,5 +133,21 @@ export class Server {
     });
 
     return io;
+  };
+
+  private pollClient = () => {
+    let timeout: NodeJS.Timeout | null = null;
+
+    const doPoll = async () => {
+      try {
+        await axios.get(`http://localhost:${this.clientPort}`);
+        this.clientReady = true;
+        this.webSocket.emit('client-ready');
+      } catch {
+        timeout = setTimeout(doPoll, POLL_TIMEOUT);
+      }
+    };
+
+    doPoll();
   };
 }

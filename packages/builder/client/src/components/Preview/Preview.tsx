@@ -45,22 +45,6 @@ export const Preview = (): JSX.Element => {
   const variables = useSelector(getVariables);
 
   React.useEffect(() => {
-    let timeout: NodeJS.Timeout | null = null;
-    const checkPreviewClient = async () => {
-      const { status } = await axios.get('/preview-client-ready');
-      if (status === 200) {
-        setPreviewClientReady(true);
-      } else {
-        timeout = setTimeout(checkPreviewClient, 500);
-      }
-    };
-    checkPreviewClient();
-    return () => {
-      if (timeout) clearTimeout(timeout);
-    };
-  }, []);
-
-  React.useEffect(() => {
     socket.on(
       'init-client',
       async (client: {
@@ -72,6 +56,8 @@ export const Preview = (): JSX.Element => {
         setIsLoaded(true);
       },
     );
+
+    socket.on('client-ready', () => setPreviewClientReady(true));
 
     socket.on('set-server', setPreviewServer);
 
@@ -125,7 +111,7 @@ export const Preview = (): JSX.Element => {
 
   return (
     <Styles.Container loading={!previewClientReady}>
-      {previewClientReady && (
+      {previewClientReady && previewServer && (
         <Styles.Iframe
           previewSize={previewSize}
           src={`${previewServer.host}:${previewServer.clientPort}`}
