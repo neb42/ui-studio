@@ -29,7 +29,8 @@
     "gatsby-starter"
   ],
   "scripts": {
-    "deploy": "gatsby build --prefix-paths && gh-pages -d public",
+    "deploy": "yarn build && gh-pages -d public",
+    "deploy:ci": "yarn build && gh-pages -d public  -u \"github-actions-bot <support+actions@github.com>\"",
     "build": "gatsby build  --prefix-paths",
     "start": "gatsby develop",
     "serve": "gatsby serve",
