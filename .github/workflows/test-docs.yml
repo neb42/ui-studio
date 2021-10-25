@@ -33,3 +33,5 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Deploy docs 
         run: yarn deploy:docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
