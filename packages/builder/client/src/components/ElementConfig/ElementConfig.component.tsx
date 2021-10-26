@@ -64,22 +64,32 @@ export const ElementConfigComponent = ({
       </Styles.Header>
       <Styles.Body>
         {selectedElement.type === 'customComponent' && isSelected('Config') && (
-          <CustomComponentConfig customComponent={selectedElement} />
+          <CustomComponentConfig
+            key={`custom-component-config-${selectedElement.id}`}
+            customComponent={selectedElement}
+          />
         )}
         {selectedElement.type === 'customComponent' && isSelected('Properties') && (
-          <ExposedProperties customComponent={selectedElement} />
+          <ExposedProperties
+            key={`exposed-properties-${selectedElement.id}`}
+            customComponent={selectedElement}
+          />
         )}
         {hasConfig && !selectedElement.rootElement && isSelected('Config') && (
-          <WidgetConfig widget={selectedElement} />
+          <WidgetConfig key={`widget-config-${selectedElement.id}`} widget={selectedElement} />
         )}
         {hasLayout && !selectedElement.rootElement && isSelected('Layout') && (
-          <LayoutConfig widget={selectedElement} />
+          <LayoutConfig key={`layout-config-${selectedElement.id}`} widget={selectedElement} />
         )}
         {!selectedElement.rootElement && isSelected('Events') && (
-          <EventConfig widget={selectedElement} />
+          <EventConfig key={`event-config-${selectedElement.id}`} widget={selectedElement} />
         )}
         {isSelected('Styles') && (
-          <StyleConfig element={selectedElement} parentElement={parentElement} />
+          <StyleConfig
+            key={`style-config-${selectedElement.id}`}
+            element={selectedElement}
+            parentElement={parentElement}
+          />
         )}
       </Styles.Body>
     </Styles.Container>
