@@ -6,7 +6,7 @@ import * as Styles from './Header.styles';
 
 export const Header = () => (
   <Styles.Container>
-    <Typography variant="h5" sx={{ color: '#fff', textShadow: '1px 1px #000' }}>
+    <Typography variant="h5" sx={{ color: 'text.secondary' }}>
       UI Studio
     </Typography>
     <ScreenSizeSelection />
