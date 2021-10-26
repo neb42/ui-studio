@@ -2,14 +2,79 @@
 
 ## Terminal
 
+When running `yarn start` the terminal will open. 
+
+![Terminal](/terminal/terminal.png)
+
+The terminal will show output in three sections. 
+
+#### Component builder
+
+![Terminal: component builder](/terminal/component-builder.png)
+
+When making changes to any [React components](/components/react) or in `package.json` 
+the component builder will compile and install these changes to the client.
+The top-right box in the terminal will show the output of the compilation and installation.
+
+#### API runner
+
+![Terminal: API runner](/terminal/api-runner.png)
+
+The output of the [API](/api/introduction) is shown in the bottom left.
+
+#### Client runner
+
+![Terminal: Client runner](/terminal/client-runner.png)
+
+The output of the clien is shown in the bottom right.
+This includes the package installation output and the output of the webpack dev server.
+
 ## Page editor
+
+![Editor](/editor/editor.png)
+
+Once the initial build has finished the editor will be opened in the browser.
+The initial tree will be empty, but the above image has been populated with some widgets as an example.
 
 ### Page selection
 
+![Editor: page selection](/editor/page-selection.png)
+
+On the far left is the page navigation. 
+The first item opens the page editor, the second opens the variable editor, and the third the CSS editor.
+
 ### Widget tree
+
+![Editor: widget tree](/editor/tree.png)
+
+The widget tree is where you can add pages/components (a root), 
+change the current root, and add/edit/remove widgets from the current root.
+This dropdown at the top will change the current root and the buttons to the side will add/remove it.
+
+Each node on the tree has one or two buttons. All nodes have a button to remove it, and it's children, from the tree.
+Once removed a node is not deleted, but can be added in again.
+If a node supports children it will have an add button.
+This will open a menu with components that are organised into categories.
+Clicking a component will add an instance of it (a widget) to the tree as a child of the current node.
+
+### Client preview 
+
+![Editor: client preview](/editor/client.png)
+
+In the middle of the page is a preview of the client being built.
+This will update in real time as changes are made.
+The size of the preview can be changed with the controls above.
 
 ### Widget configuration
 
-### Preview
+![Editor: widget configuration](/editor/config.png)
+
+The right hand panel contains the configuration for the currently selected widget in the tree.
+The contents will change depending on the widget's component, but will be a selection of
+[Config (Widget)](/widgets/config), [Events](/widgets/events), [Layout](/widgets/layout), [Styles](/widgets/styles), [Properties and Config (Component)](/components/widgets).
 
 ## Variable editor
+
+![Editor: variables](/editor/variables.png)
+
+On the variable editor page you can add/remove variables in the side bar, and edit in the centre.
