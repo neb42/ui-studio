@@ -19,7 +19,6 @@ module.exports = {
       options: {
         configPath: `src/config`,
         docsPath: `src/docs`,
-        repositoryUrl: `https://github.com/neb42/ui-studio`,
         baseDir: `docs`,
       },
     },
