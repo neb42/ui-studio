@@ -1,18 +1,32 @@
 import { Element, BaseStyle, IGridStyle, IFlexStyle, TStyle } from '@ui-studio/types';
 
 export class StylesModel {
-  static getDefaultStyle = (parent?: Element | null): TStyle => {
-    if (parent) {
-      if (!parent.rootElement) {
-        if (parent.layout?.type === 'grid') {
-          return StylesModel.getDefaultGridStyle();
-        }
-        if (parent.layout?.type === 'flex') {
-          return StylesModel.getDefaultFlexStyle();
+  static getDefaultStyle = (parent?: Element | null, existingStyle?: TStyle): TStyle => {
+    const style = (() => {
+      if (parent) {
+        if (!parent.rootElement) {
+          if (parent.layout?.type === 'grid') {
+            return StylesModel.getDefaultGridStyle();
+          }
+          if (parent.layout?.type === 'flex') {
+            return StylesModel.getDefaultFlexStyle();
+          }
         }
       }
-    }
-    return StylesModel.getDefaultBaseStyle();
+      return StylesModel.getDefaultBaseStyle();
+    })();
+
+    if (existingStyle) return StylesModel.mergeStyles(style, existingStyle);
+    return style;
+  };
+
+  static mergeStyles = <T extends TStyle>(style: T, existingStyle: TStyle): T => {
+    return {
+      ...style,
+      css: existingStyle.css,
+      classNames: existingStyle.classNames,
+      properties: existingStyle.properties,
+    };
   };
 
   static getDefaultGridStyle = (): IGridStyle => {

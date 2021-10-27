@@ -213,7 +213,7 @@ export const widgetReducer = (
             ...acc,
             [cur]: {
               ...state[rootId][cur],
-              style: StylesModel.getDefaultStyle(widget),
+              style: StylesModel.getDefaultStyle(widget, state[rootId][cur].style),
             },
           };
         }
