@@ -57,8 +57,25 @@ const Example: Component & { component: any } = {
       },
     },
   ],
-  exposedProperties: [{ property: 'exampleProperty', schema: { type: 'string' } }],
-  component: ({ onClick, list, complex, input, complexList }: any) => {
+  exposedProperties: [
+    { property: 'exampleProperty', schema: { type: 'string' } },
+    { property: 'clickCount', schema: { type: 'number' } },
+  ],
+  component: ({ onClick, list, complex, input, complexList, onExposedPropertiesChange }: any) => {
+    const [clickCount, setClickCount] = React.useState(0);
+
+    React.useEffect(() => {
+      onExposedPropertiesChange({
+        exampleProperty: 'An example exposed property',
+        clickCount,
+      });
+    }, [clickCount]);
+
+    const handleOnClick = () => {
+      setClickCount(clickCount + 1);
+      onClick();
+    };
+
     const json = (() => {
       try {
         return JSON.stringify(
@@ -78,7 +95,7 @@ const Example: Component & { component: any } = {
 
     return (
       <div>
-        <div onClick={onClick}>Click me</div>
+        <div onClick={handleOnClick}>Click me</div>
         <pre>
           <code>{json}</code>
         </pre>
