@@ -20,6 +20,8 @@ type Props = {
   hasLayout: boolean;
 };
 
+type TabHeaders = 'Config' | 'Properties' | 'Layout' | 'Events' | 'Styles';
+
 export const ElementConfigComponent = ({
   selectedElement,
   parentElement,
@@ -27,15 +29,12 @@ export const ElementConfigComponent = ({
   hasEvents,
   hasLayout,
 }: Props): JSX.Element => {
-  const [tabIndex, setTabIndex] = React.useState(0);
-
-  if (!selectedElement) {
-    return <Styles.Container />;
-  }
+  // Default to "Config" as it will be the left most tab if it exists
+  const [tabKey, setTabKey] = React.useState<TabHeaders>('Config');
 
   const tabHeaders = (() => {
-    const th = [];
-    if (selectedElement.type === 'customComponent') {
+    const th: TabHeaders[] = [];
+    if (selectedElement?.type === 'customComponent') {
       th.push('Config');
       th.push('Properties');
     }
@@ -46,11 +45,21 @@ export const ElementConfigComponent = ({
     return th;
   })();
 
+  React.useEffect(() => {
+    if (!tabHeaders.includes(tabKey)) setTabKey(tabHeaders[0]);
+  }, [JSON.stringify(tabHeaders)]);
+
+  if (!selectedElement) {
+    return <Styles.Container />;
+  }
+
+  const tabIndex = tabHeaders.findIndex((t) => t === tabKey);
+
   const handleTabChange = (_: any, newValue: number) => {
-    setTabIndex(newValue);
+    setTabKey(tabHeaders[newValue]);
   };
 
-  const isSelected = (key: string) => tabHeaders.findIndex((k) => k === key) === tabIndex;
+  const isSelected = (k: TabHeaders) => k === tabKey;
 
   return (
     <Styles.Container>
