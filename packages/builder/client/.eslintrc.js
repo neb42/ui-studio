@@ -1,11 +1,11 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2020, // TODO: update in adler
+    ecmaVersion: 2020,
   },
   settings: {
     react: {
-      version: 'detect', // TODO: add in adler
+      version: 'detect',
     },
     'import/resolver': {
       typescript: {},

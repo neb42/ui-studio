@@ -11,14 +11,8 @@ export const Container = styled.div`
 export const Header = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.header.background.color};
-  box-shadow: 0 5px 10px 0 ${({ theme }) => theme.header.boxshadow.color};
-`;
-
-export const ComponentName = styled.span`
-  color: ${({ theme }) => theme.colors.text.secondary};
-  font-weight: 600;
-  font-size: 16px;
+  background-color: ${({ theme }) => theme.palette.background.default};
+  box-shadow: 0 4px 6px -6px ${({ theme }) => theme.palette.info.main};
 `;
 
 export const Body = styled.div`
@@ -28,5 +22,5 @@ export const Body = styled.div`
   padding: 24px;
   padding-left: 16px;
   overflow: auto;
-  background-color: ${({ theme }) => theme.colors.background.lightAlt};
+  background-color: ${({ theme }) => theme.background.alt};
 `;

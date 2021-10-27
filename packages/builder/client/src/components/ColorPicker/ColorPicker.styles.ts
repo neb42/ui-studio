@@ -19,11 +19,11 @@ export const Swatch = styled.div<{ color: string }>`
   height: 16px;
   border-radius: 3px;
   background-color: ${({ color }) => color};
-  border: 1px solid ${({ theme }) => theme.colors.primary};
+  border: 1px solid ${({ theme }) => theme.palette.text.secondary};
 `;
 
 export const Value = styled.div`
-  color: ${({ theme }) => theme.colors.grey700};
+  color: ${({ theme }) => theme.palette.text.secondary};
   text-transform: uppercase;
-  font-family: ${({ theme }) => theme.fonts.family.code};
+  font-family: Menlo, monospace;
 `;

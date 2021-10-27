@@ -7,12 +7,11 @@ import { Element } from '@ui-studio/types';
 import { updateElementName } from 'actions/name';
 import { ElementIcon } from 'components/ElementIcon';
 
-interface EditNameProps {
+interface Props {
   element: Element;
-  component?: StyledComponent<any, DefaultTheme, {}, never>;
 }
 
-export const EditName = ({ element, component }: EditNameProps) => {
+export const EditName = ({ element }: Props) => {
   const dispatch = useDispatch();
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {

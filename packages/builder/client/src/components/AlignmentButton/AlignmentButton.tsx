@@ -17,8 +17,6 @@ import { ReactComponent as SelfEnd } from 'icons/self-end.svg';
 import { ReactComponent as SelfStart } from 'icons/self-start.svg';
 import { ReactComponent as SelfStretch } from 'icons/self-stretch.svg';
 
-import * as Styles from './AlignmentButton.styles';
-
 const options: {
   [layoutType: string]: {
     [alignmentType: string]: { [value: string]: { icon: any; tooltip: string } };

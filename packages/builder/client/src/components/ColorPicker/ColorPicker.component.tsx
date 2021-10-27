@@ -5,9 +5,9 @@ import IconButton from '@mui/material/IconButton';
 import PaletteIcon from '@mui/icons-material/Palette';
 import ColorizeIcon from '@mui/icons-material/Colorize';
 import { Store$Configuration } from 'types/store';
+import { Outline } from 'components/Outline';
 
 import * as Styles from './ColorPicker.styles';
-import { Outline } from 'components/Outline';
 
 type Props = {
   header: string;
@@ -78,19 +78,19 @@ export const ColorPickerComponent = ({ header, color, colorConfig, onColorChange
 
   return (
     <>
-        <Outline label={header}>
-      <Styles.Container>
-        <Styles.Swatch color={color} />
-        <Styles.Value>{color}</Styles.Value>
-        {colorConfig && (
-          <IconButton onClick={handleOpenColorPicker(colorConfig.type)} size="small">
-            <PaletteIcon onClick={handleOpenColorPicker(colorConfig.type)} />
+      <Outline label={header}>
+        <Styles.Container>
+          <Styles.Swatch color={color} />
+          <Styles.Value>{color}</Styles.Value>
+          {colorConfig && (
+            <IconButton onClick={handleOpenColorPicker(colorConfig.type)} size="small">
+              <PaletteIcon onClick={handleOpenColorPicker(colorConfig.type)} />
+            </IconButton>
+          )}
+          <IconButton onClick={handleOpenColorPicker('picker')} size="small">
+            <ColorizeIcon />
           </IconButton>
-        )}
-        <IconButton onClick={handleOpenColorPicker('picker')} size="small">
-          <ColorizeIcon />
-        </IconButton>
-      </Styles.Container>
+        </Styles.Container>
       </Outline>
       {colorPickerType &&
         ReactDOM.createPortal(

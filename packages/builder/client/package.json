@@ -5,7 +5,6 @@
   "proxy": "http://localhost:3002",
   "dependencies": {
     "@atlaskit/tree": "^8.2.0",
-    "@faculty/adler-tokens": "^0.0.129",
     "@fontsource/roboto": "^4.5.1",
     "@mui/icons-material": "^5.0.4",
     "@mui/lab": "^5.0.0-alpha.51",

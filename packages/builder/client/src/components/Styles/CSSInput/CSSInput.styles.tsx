@@ -5,8 +5,3 @@ export const Container = styled.div`
   grid-auto-rows: min-content;
   row-gap: 8px;
 `;
-
-export const Header = styled.div`
-  font-weight: 500;
-  color: ${({ theme }) => theme.colors.primary};
-`;

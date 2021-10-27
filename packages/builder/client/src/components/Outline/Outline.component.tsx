@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 
 type Props = {
-  label: string;
+  label?: string;
   children: any;
 };
 

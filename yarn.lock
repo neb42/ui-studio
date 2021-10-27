@@ -1441,14 +1441,6 @@
     unique-filename "^1.1.1"
     which "^1.3.1"
 
-"@faculty/adler-tokens@^0.0.129":
-  version "0.0.129"
-  resolved "https://registry.yarnpkg.com/@faculty/adler-tokens/-/adler-tokens-0.0.129.tgz#a9403fe087160c052a1118b6ee6e20c52e69b719"
-  integrity sha512-OVUPbo25hWpbrDe+hmNmfrdZ8pkpdhM4uzIXs7Ep/xyCCy1hR7n8nru0+lJC2B0Vlef6b1CTRS1gKx5/mCpVSQ==
-  dependencies:
-    color "^3.1.1"
-    lodash.merge "^4.6.1"
-
 "@faculty/eslint-config-base@0.0.108":
   version "0.0.108"
   resolved "https://registry.yarnpkg.com/@faculty/eslint-config-base/-/eslint-config-base-0.0.108.tgz#25dc42a2fc228b1b862941f52e868a5c47c8f826"
@@ -6449,7 +6441,7 @@ color-string@^1.6.0:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color@^3.1.1, color@^3.1.2:
+color@^3.1.2:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/color/-/color-3.2.1.tgz#3544dc198caf4490c3ecc9a790b54fe9ff45e164"
   integrity sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==
@@ -13247,7 +13239,7 @@ lodash.memoize@^4.1.2:
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
   integrity sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
 
-lodash.merge@^4.4.0, lodash.merge@^4.6.0, lodash.merge@^4.6.1, lodash.merge@^4.6.2:
+lodash.merge@^4.4.0, lodash.merge@^4.6.0, lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==

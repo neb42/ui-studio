@@ -1,14 +1,5 @@
-import { defaultTokens } from '@faculty/adler-tokens';
 import deepPurple from '@mui/material/colors/deepPurple';
 import grey from '@mui/material/colors/grey';
-
-const adlerTheme = {
-  colors: defaultTokens.colors,
-  fonts: defaultTokens.fonts,
-  header: defaultTokens.header,
-  boxshadow: defaultTokens.boxshadow,
-  input: defaultTokens.input,
-} as const;
 
 const muiTheme = {
   palette: {
@@ -90,4 +81,9 @@ const muiTheme = {
   },
 } as const;
 
-export const themeSettings = { ...adlerTheme, ...muiTheme };
+const background = {
+  default: '#fff',
+  alt: grey[100],
+};
+
+export const themeSettings = { ...muiTheme, background };

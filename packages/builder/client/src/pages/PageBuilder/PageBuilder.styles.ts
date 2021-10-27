@@ -48,5 +48,5 @@ export const PopoverContainer = styled.div`
   position: fixed;
   left: 348px;
   top: calc(49px);
-  background-color: ${({ theme }) => theme.colors.background.light};
+  background-color: ${({ theme }) => theme.palette.background.default};
 `;

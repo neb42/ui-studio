@@ -74,9 +74,8 @@ export const StaticValue = ({ value, schema, handleValueChange }: Props) => {
         }}
         style={{
           padding: '8px',
-          border: `1px solid ${
-            hasFocus ? theme.input.border.color.focused : theme.input.border.color.default
-          }`,
+          border: `1px solid ${hasFocus ? theme.palette.primary.main : theme.palette.divider}`,
+          borderRadius: '3px',
           fontFamily: 'Menlo, monospace',
           transition: 'border 300ms ease-in-out',
         }}

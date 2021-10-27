@@ -72,7 +72,7 @@ const TreeItemLabelBuilder = ({
           onMouseLeave={onMouseLeave}
           active={element.id === selectedElement?.id}
         >
-          <ElementIcon element={element} color={theme.colors.primary} />
+          <ElementIcon element={element} />
           <Typography variant="body1">{element.name}</Typography>
           <Styles.TreeItemActions
             selected={Boolean(selectedElement && selectedElement.id === element.id)}

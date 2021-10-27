@@ -202,108 +202,110 @@ export const CustomComponentConfigComponent = ({
         });
 
         return (
-          <Styles.ConfigItem key={c.key}>
-            <IconButton onClick={handleRemoveConfig(c.key)} size="small">
-              <DeleteSharp />
-            </IconButton>
-            <TextField label="Name" value={c.label} onChange={handleNameChange(c.key)} />
-            <FormControl fullWidth>
-              <InputLabel>Mode</InputLabel>
-              <Select value={control} label="Mode" onChange={handleModeChange(c.key)}>
-                {['input', 'select'].map((m) => (
-                  <MenuItem key={m} value={m}>
-                    {m.replace(/^\w/, (w) => w.toUpperCase())}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel>Type</InputLabel>
-              <Select value={type} label="Type" onChange={handleTypeChange(c.key)}>
-                {['string', 'number', 'boolean'].map((m) => (
-                  <MenuItem key={m} value={m}>
-                    {m.replace(/^\w/, (w) => w.toUpperCase())}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControlLabel
-              label="List"
-              control={<Checkbox checked={Boolean(list)} onChange={handleListChange(c.key)} />}
-            />
-            <FormControlLabel
-              label="Iterable"
-              control={
-                <Checkbox
-                  checked={Boolean(c.iterable)}
-                  disabled={!list}
-                  onChange={handleIterableChange(c.key)}
-                />
-              }
-            />
-            {control === 'input' && type !== 'boolean' && (
-              <TextField
-                inputProps={type === 'number' ? { inputMode: 'numeric', pattern: '[0-9]*' } : {}}
-                label="Default value"
-                value={c.defaultValue}
-                onChange={handleInputNonBooleanDefaultValueChange(c.key)}
+          <Outline key={c.key}>
+            <Styles.ConfigItem>
+              <IconButton onClick={handleRemoveConfig(c.key)} size="small">
+                <DeleteSharp />
+              </IconButton>
+              <TextField label="Name" value={c.label} onChange={handleNameChange(c.key)} />
+              <FormControl fullWidth>
+                <InputLabel>Mode</InputLabel>
+                <Select value={control} label="Mode" onChange={handleModeChange(c.key)}>
+                  {['input', 'select'].map((m) => (
+                    <MenuItem key={m} value={m}>
+                      {m.replace(/^\w/, (w) => w.toUpperCase())}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel>Type</InputLabel>
+                <Select value={type} label="Type" onChange={handleTypeChange(c.key)}>
+                  {['string', 'number', 'boolean'].map((m) => (
+                    <MenuItem key={m} value={m}>
+                      {m.replace(/^\w/, (w) => w.toUpperCase())}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControlLabel
+                label="List"
+                control={<Checkbox checked={Boolean(list)} onChange={handleListChange(c.key)} />}
               />
-            )}
-            {control === 'input' && type === 'boolean' && (
-              <Outline label="Default value">
-                <ToggleButtonGroup
+              <FormControlLabel
+                label="Iterable"
+                control={
+                  <Checkbox
+                    checked={Boolean(c.iterable)}
+                    disabled={!list}
+                    onChange={handleIterableChange(c.key)}
+                  />
+                }
+              />
+              {control === 'input' && type !== 'boolean' && (
+                <TextField
+                  inputProps={type === 'number' ? { inputMode: 'numeric', pattern: '[0-9]*' } : {}}
+                  label="Default value"
                   value={c.defaultValue}
-                  exclusive
-                  onChange={handleInputBooleanDefaultValueChange(c.key)}
-                  fullWidth
-                  color="primary"
-                  size="small"
-                >
-                  <ToggleButton value>True</ToggleButton>
-                  <ToggleButton value={false}>False</ToggleButton>
-                </ToggleButtonGroup>
-              </Outline>
-            )}
-            {control === 'select' && type === 'boolean' && (
-              <>
-                <TextField
-                  label="True label"
-                  value={options.find((v) => v.key === true)?.label ?? ''}
-                  onChange={handleSelectBooleanTrueValueChange(c.key)}
+                  onChange={handleInputNonBooleanDefaultValueChange(c.key)}
                 />
-                <TextField
-                  label="False label"
-                  value={options.find((v) => v.key === false)?.label ?? ''}
-                  onChange={handleSelectBooleanFalseValueChange(c.key)}
-                />
-              </>
-            )}
-            {control === 'select' && type !== 'boolean' && (
-              <>
-                {options.map((o: any, ii: any) => (
-                  <Styles.SelectOption key={ii}>
-                    <TextField
-                      inputProps={
-                        type === 'number' ? { inputMode: 'numeric', pattern: '[0-9]*' } : {}
-                      }
-                      value={o.label}
-                      onChange={handleUpdateSelectOption(c.key, ii)}
-                    />
-                    <IconButton onClick={handleRemoveSelectOption(c.key, ii)} size="small">
-                      <DeleteSharp />
-                    </IconButton>
-                  </Styles.SelectOption>
-                ))}
-                <Button
-                  variant="outlined"
-                  onClick={handleAddSelectOption(c.key)}
-                  startIcon={<AddSharp />}
-                >
-                  Add select option
-                </Button>
-              </>
-            )}
-          </Styles.ConfigItem>
+              )}
+              {control === 'input' && type === 'boolean' && (
+                <Outline label="Default value">
+                  <ToggleButtonGroup
+                    value={c.defaultValue}
+                    exclusive
+                    onChange={handleInputBooleanDefaultValueChange(c.key)}
+                    fullWidth
+                    color="primary"
+                    size="small"
+                  >
+                    <ToggleButton value>True</ToggleButton>
+                    <ToggleButton value={false}>False</ToggleButton>
+                  </ToggleButtonGroup>
+                </Outline>
+              )}
+              {control === 'select' && type === 'boolean' && (
+                <>
+                  <TextField
+                    label="True label"
+                    value={options.find((v) => v.key === true)?.label ?? ''}
+                    onChange={handleSelectBooleanTrueValueChange(c.key)}
+                  />
+                  <TextField
+                    label="False label"
+                    value={options.find((v) => v.key === false)?.label ?? ''}
+                    onChange={handleSelectBooleanFalseValueChange(c.key)}
+                  />
+                </>
+              )}
+              {control === 'select' && type !== 'boolean' && (
+                <>
+                  {options.map((o: any, ii: any) => (
+                    <Styles.SelectOption key={ii}>
+                      <TextField
+                        inputProps={
+                          type === 'number' ? { inputMode: 'numeric', pattern: '[0-9]*' } : {}
+                        }
+                        value={o.label}
+                        onChange={handleUpdateSelectOption(c.key, ii)}
+                      />
+                      <IconButton onClick={handleRemoveSelectOption(c.key, ii)} size="small">
+                        <DeleteSharp />
+                      </IconButton>
+                    </Styles.SelectOption>
+                  ))}
+                  <Button
+                    variant="outlined"
+                    onClick={handleAddSelectOption(c.key)}
+                    startIcon={<AddSharp />}
+                  >
+                    Add select option
+                  </Button>
+                </>
+              )}
+            </Styles.ConfigItem>
+          </Outline>
         );
       })}
       <Button variant="outlined" onClick={onAddConfig} startIcon={<AddSharp />}>

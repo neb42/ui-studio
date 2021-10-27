@@ -10,10 +10,7 @@ export const ConfigItem = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
   column-gap: 24px;
-  row-gap: 24px;
-  padding: 16px;
-  box-shadow: ${({ theme }) => theme.boxshadow.card};
-  background-color: ${({ theme }) => theme.colors.background.light};
+  row-gap: 16px;
 
   & > * {
     grid-column: 1/-1;
@@ -32,6 +29,11 @@ export const ConfigItem = styled.div`
 
   & > button::first-of-type {
     width: 100%;
+  }
+
+  & .MuiCheckbox-root {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 `;
 
