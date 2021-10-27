@@ -32,21 +32,22 @@ export const makeOpenAPIRequest = async (
   pathArgs: Record<string, FunctionVariableArg>,
   queryArgs: Record<string, FunctionVariableArg>,
   bodyArgs: Record<string, FunctionVariableArg>,
+  rootId: string | null,
   event?: any,
 ): Promise<any> => {
   const url = (() => {
     let u = path;
-    const resolvedPathArgs = resolveArgSet(state, pathArgs);
+    const resolvedPathArgs = resolveArgSet(state, pathArgs, rootId);
     Object.keys(pathArgs).forEach((key) => {
       u = u.replace(`{${key}}`, resolvedPathArgs[key]);
     });
     return u;
   })();
 
-  const queryParams = resolveArgSet(state, queryArgs);
+  const queryParams = resolveArgSet(state, queryArgs, rootId);
 
   const body = {
-    ...resolveArgSet(state, bodyArgs),
+    ...resolveArgSet(state, bodyArgs, rootId),
     __event__: isJson(event) ? event : null,
   };
 

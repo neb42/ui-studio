@@ -62,6 +62,10 @@ export const getResponseSchemaForEndpoint = (
 };
 
 export const compareSchemas = (a: OpenAPIV3.SchemaObject, b: OpenAPIV3.SchemaObject): boolean => {
+  // Handle number and integer being the same
+  if (a.type === 'number' && b.type === 'integer') return true;
+  if (a.type === 'integer' && b.type === 'number') return true;
+
   if (a.type !== b.type) return false;
   if (a.type === 'array' && b.type === 'array') {
     const { items: itemsA } = a;

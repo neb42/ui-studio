@@ -93,7 +93,11 @@ export const getVariableValue = (state: Store) => (variableId: string, lookup: s
   return variable;
 };
 
-export const resolveArgSet = (state: Store, args: Record<string, FunctionVariableArg>) => {
+export const resolveArgSet = (
+  state: Store,
+  args: Record<string, FunctionVariableArg>,
+  rootId: string | null,
+) => {
   const resolveArg = (arg: FunctionVariableArg) => {
     if (arg.mode === 'static') {
       return arg.value;
@@ -111,7 +115,7 @@ export const resolveArgSet = (state: Store, args: Record<string, FunctionVariabl
     }
 
     if (arg.mode === 'widget') {
-      return getWidgetPropertyValue(state)(arg.widgetId, null, arg.property);
+      return getWidgetPropertyValue(state)(arg.widgetId, rootId, arg.property);
     }
 
     return null;

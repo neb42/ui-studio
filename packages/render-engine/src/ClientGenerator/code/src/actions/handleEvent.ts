@@ -7,6 +7,7 @@ import { triggerAction } from './triggerAction';
 
 export const handleEvent = (
   widgetId: string,
+  rootId: string | null,
   eventKey: string,
   push: (path: string) => void,
   event?: any,
@@ -20,7 +21,7 @@ export const handleEvent = (
         break;
       }
       case 'trigger-action': {
-        dispatch(triggerAction(ei, event));
+        dispatch(triggerAction(ei, rootId, event));
         break;
       }
       case 'navigate-page': {

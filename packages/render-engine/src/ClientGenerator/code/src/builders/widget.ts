@@ -131,13 +131,13 @@ const useGetProps = (
   };
 };
 
-const useEventHandlers = (widget: Widget | CustomComponentInstance) => {
+const useEventHandlers = (widget: Widget | CustomComponentInstance, rootId: string | null) => {
   const dispatch = useDispatch();
   const history = useHistory();
   return Object.keys(widget.events).reduce((acc, cur) => {
     return {
       ...acc,
-      [cur]: (event?: any) => dispatch(handleEvent(widget.id, cur, history.push, event)),
+      [cur]: (event?: any) => dispatch(handleEvent(widget.id, rootId, cur, history.push, event)),
     };
   }, {});
 };
@@ -154,7 +154,7 @@ export const WidgetBuilder: React.FC<any> = ({
   const widget = useSelector((state: Store) => state.widget.config[widgetId]);
   const dispatch = useDispatch();
   const { loading, error, values, exposedProperties } = useGetProps(widget, rootId, iteratorIndex);
-  const eventHandlers = useEventHandlers(widget);
+  const eventHandlers = useEventHandlers(widget, rootId);
   const isSelected = useSelector(
     (state: Store) =>
       state.development.selectedElement === widget.id ||

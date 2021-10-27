@@ -29,7 +29,11 @@ export const ACTION_API_CALL_PENDING = 'ACTION_API_CALL_PENDING';
 export const ACTION_API_CALL_FULFILLED = 'ACTION_API_CALL_FULFILLED';
 export const ACTION_API_CALL_REJECTED = 'ACTION_API_CALL_REJECTED';
 
-export const triggerAction = (eventInstance: Event$TriggerAction, event?: any) => async (
+export const triggerAction = (
+  eventInstance: Event$TriggerAction,
+  rootId: string | null,
+  event?: any,
+) => async (
   dispatch: Dispatch<TriggerAction$Pending | TriggerAction$Fulfilled | TriggerAction$Rejected>,
   getState: GetState,
 ): Promise<void> => {
@@ -48,6 +52,7 @@ export const triggerAction = (eventInstance: Event$TriggerAction, event?: any) =
       eventInstance.args.path,
       eventInstance.args.query,
       eventInstance.args.body,
+      rootId,
       event,
     );
 
