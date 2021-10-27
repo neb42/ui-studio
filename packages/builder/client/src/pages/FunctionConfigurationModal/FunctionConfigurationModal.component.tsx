@@ -11,6 +11,7 @@ import { FunctionVariableArgConfig } from 'components/Variables/FunctionVariable
 import * as Styles from './FunctionConfigurationModal.styles';
 
 type Props = {
+  rootId: string | null;
   schema: OpenAPIV3.OperationObject;
   config: FunctionVariable | Event$TriggerAction;
   onPathParamChange: (key: string, arg: FunctionVariableArg) => any;
@@ -19,6 +20,7 @@ type Props = {
 };
 
 export const FunctionConfigurationModalComponent = ({
+  rootId,
   schema,
   config,
   onPathParamChange,
@@ -64,6 +66,7 @@ export const FunctionConfigurationModalComponent = ({
           {pathParamaters.map((p) => (
             <FunctionVariableArgConfig
               key={p.name}
+              rootId={rootId}
               name={p.name}
               schema={{ type: 'string' }}
               arg={config.args.path[p.name]}
@@ -86,6 +89,7 @@ export const FunctionConfigurationModalComponent = ({
           {queryParamaters.map((p) => (
             <FunctionVariableArgConfig
               key={p.name}
+              rootId={rootId}
               name={p.name}
               schema={{ type: 'string' }}
               arg={config.args.query[p.name]}
@@ -111,6 +115,7 @@ export const FunctionConfigurationModalComponent = ({
             return (
               <FunctionVariableArgConfig
                 key={k}
+                rootId={rootId}
                 name={k}
                 schema={s as OpenAPIV3.SchemaObject}
                 arg={config.args.body[k]}

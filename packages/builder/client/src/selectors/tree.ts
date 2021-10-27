@@ -28,8 +28,17 @@ export const getRawTree = (state: Store): Store$Tree =>
 
 export const getWidgetsForRoot = (
   state: Store,
-  rootId: string,
-): (Widget | CustomComponentInstance)[] => Object.values(state.widget[rootId]);
+  rootId: string | null,
+): (Widget | CustomComponentInstance)[] => {
+  if (rootId) {
+    return Object.values(state.widget[rootId]);
+  }
+  // Return all widgets within pages
+  const pages = getRoots(state).filter((r) => r.type === 'page');
+  return pages.reduce<(Widget | CustomComponentInstance)[]>((acc, cur) => {
+    return [...acc, ...Object.values(state.widget[cur.id])];
+  }, []);
+};
 
 export const getWidgetsInSelectedTree = (state: Store): (Widget | CustomComponentInstance)[] => {
   const rootId = getSelectedRootId(state);

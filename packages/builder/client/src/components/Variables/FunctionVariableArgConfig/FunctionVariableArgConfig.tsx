@@ -6,13 +6,20 @@ import { ValueConfig } from 'components/ValueConfig';
 import * as Styles from './FunctionVariableArgConfig.styles';
 
 interface Props {
+  rootId: string | null;
   name: string;
   schema: OpenAPIV3.SchemaObject;
   arg: FunctionVariableArg;
   onChange: (argName: string, arg: FunctionVariableArg) => void;
 }
 
-export const FunctionVariableArgConfig = ({ name, schema, arg, onChange }: Props): JSX.Element => {
+export const FunctionVariableArgConfig = ({
+  rootId,
+  name,
+  schema,
+  arg,
+  onChange,
+}: Props): JSX.Element => {
   const modeOptions: Mode[] = ['static', 'variable', 'widget'];
 
   const handleOnChange = (a: Value) => {
@@ -30,6 +37,7 @@ export const FunctionVariableArgConfig = ({ name, schema, arg, onChange }: Props
     <Styles.Container>
       <ValueConfig
         id="" // Not used
+        rootId={rootId}
         name={name}
         schema={schema}
         defaultValue=""

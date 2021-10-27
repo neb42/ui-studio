@@ -4,6 +4,7 @@ import { WidgetProp, ComponentConfig, Mode } from '@ui-studio/types';
 import { WidgetModel } from 'models/widget';
 import { getAvailableIteratorKeys } from 'selectors/element';
 import { ValueConfig } from 'components/ValueConfig';
+import { getSelectedRootElement } from 'selectors/tree';
 
 import * as Styles from './WidgetConfigItem.styles';
 
@@ -22,6 +23,8 @@ export const WidgetConfigItem = ({
   config,
   onChange,
 }: WidgetConfigProps): JSX.Element => {
+  const root = useSelector(getSelectedRootElement);
+
   const hasIterableParent = useSelector(getAvailableIteratorKeys)(widgetId).length > 0;
 
   const handleModeChange = (mode: Mode) => {
@@ -52,6 +55,7 @@ export const WidgetConfigItem = ({
   return (
     <ValueConfig
       id={widgetId}
+      rootId={root?.id}
       name={config.label}
       schema={config.schema}
       defaultValue={config.defaultValue}

@@ -5,24 +5,27 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { CustomComponent, CustomComponentInstance, Value$Widget, Widget } from '@ui-studio/types';
-import { getRoots, getWidgetsInSelectedTree } from 'selectors/tree';
+import { getRoots, getWidgetsForRoot, getWidgetsInSelectedTree } from 'selectors/tree';
 import { getComponents } from 'selectors/configuration';
 import { Store, Store$Widget } from 'types/store';
 import { compareSchemas } from 'utils/openapi';
 import { OpenAPIV3 } from 'openapi-types';
 
 type Props = {
+  rootId?: string | null;
   value: Value$Widget;
   schema: OpenAPIV3.SchemaObject;
   handleValueChange: (value: Value$Widget) => any;
 };
 
-export const WidgetValue = ({ schema, value, handleValueChange }: Props) => {
+export const WidgetValue = ({ rootId, schema, value, handleValueChange }: Props) => {
   const roots = useSelector(getRoots);
   const components = useSelector(getComponents);
   const allWidgets = useSelector<Store, Store$Widget>((state) => state.widget);
 
-  const widgets = useSelector(getWidgetsInSelectedTree).filter((w) => {
+  const widgets = useSelector<Store, (Widget | CustomComponentInstance)[]>((state) =>
+    getWidgetsForRoot(state, rootId || null),
+  ).filter((w) => {
     const handleWidget = (widget: Widget) => {
       const comp = components.find((c) => c.key === widget.component);
       const matchingExposedProperties =

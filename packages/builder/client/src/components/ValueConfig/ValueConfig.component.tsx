@@ -20,6 +20,7 @@ import { ValueItem } from './ValueItem.component';
 
 type Props = {
   id: string;
+  rootId?: string | null;
   mode: Mode;
   value:
     | Value$List
@@ -48,6 +49,7 @@ type Props = {
 
 export const ValueConfigComponent = ({
   id,
+  rootId,
   name,
   schema,
   mode,
@@ -88,6 +90,7 @@ export const ValueConfigComponent = ({
         <ModeButtons mode={mode} modeOptions={modeOptions} onModeChange={handleModeChange} />
         <ValueItem
           id={id}
+          rootId={rootId}
           mode={mode}
           value={value}
           schema={schema}

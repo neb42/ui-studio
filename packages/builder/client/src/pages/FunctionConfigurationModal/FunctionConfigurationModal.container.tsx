@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Drawer from '@mui/material/Drawer';
@@ -40,6 +39,11 @@ export const FunctionConfigurationModalContainer = ({}: Props) => {
     }
     throw new Error();
   });
+
+  const rootId = (() => {
+    if (!modalConfig.open || modalConfig.type === 'function') return null;
+    return modalConfig.id[0];
+  })();
 
   const schema = useSelector<Store, OpenAPIV3.OperationObject | null>((state) => {
     if (!modalConfig.open) return null;
@@ -98,6 +102,7 @@ export const FunctionConfigurationModalContainer = ({}: Props) => {
       </DialogTitle>
       <DialogContent dividers>
         <FunctionConfigurationModalComponent
+          rootId={rootId}
           schema={schema}
           config={config}
           onPathParamChange={handlePathParamChange}

@@ -22,6 +22,7 @@ import * as Styles from './ValueConfig.styles';
 
 type Props = {
   id: string;
+  rootId?: string | null;
   mode: Mode;
   value:
     | Value$List
@@ -36,7 +37,7 @@ type Props = {
   root: boolean;
 };
 
-export const ValueItem = ({ id, mode, schema, value, handleValueChange, root }: Props) => {
+export const ValueItem = ({ id, rootId, mode, schema, value, handleValueChange, root }: Props) => {
   if (mode === 'form') {
     if (schema.type === 'array') {
       if (value.mode !== 'list') throw new Error();
@@ -60,6 +61,7 @@ export const ValueItem = ({ id, mode, schema, value, handleValueChange, root }: 
                 <Styles.ValueItem key={i} root={root} direction="row">
                   <ValueItem
                     id={id}
+                    rootId={rootId}
                     mode="form"
                     schema={items}
                     value={v}
@@ -82,6 +84,7 @@ export const ValueItem = ({ id, mode, schema, value, handleValueChange, root }: 
               <Styles.ValueItem key={i} root={root} direction="row">
                 <ValueItem
                   id={id}
+                  rootId={rootId}
                   mode="static"
                   schema={items}
                   value={v}
@@ -116,6 +119,7 @@ export const ValueItem = ({ id, mode, schema, value, handleValueChange, root }: 
               <ValueItem
                 key={key}
                 id={id}
+                rootId={rootId}
                 mode="static"
                 schema={nestedSchema as OpenAPIV3.NonArraySchemaObject}
                 value={value.props[key]}
@@ -162,6 +166,7 @@ export const ValueItem = ({ id, mode, schema, value, handleValueChange, root }: 
     return (
       <Styles.ValueItem root={root} direction="column">
         <WidgetValue
+          rootId={rootId}
           schema={schema}
           value={value as Value$Widget}
           handleValueChange={handleValueChange}
