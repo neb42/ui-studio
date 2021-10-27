@@ -61,6 +61,8 @@
   "resolutions": {
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
-    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
+    "prettier": "2.0.5",
+    "prettier-eslint": "11.0.0"
   }
 }
