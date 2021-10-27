@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/types",
-  "version": "0.1.34",
+  "version": "0.1.35",
   "private": false,
   "homepage": "https://github.com/neb42/ui-studio/tree/master/packages/types#readme",
   "main": "build/index.js",
