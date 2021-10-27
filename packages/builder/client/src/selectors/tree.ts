@@ -26,17 +26,54 @@ export const getRawTree = (state: Store): Store$Tree =>
     };
   }, {});
 
+export const getElement = (state: Store, rootId: string, elementId: string): Element | null => {
+  if (!rootId) return null;
+  if (rootId === elementId) {
+    if (rootId in state.page) return state.page[rootId];
+    if (rootId in state.customComponent) return state.customComponent[rootId];
+  }
+  return state.widget[rootId][elementId];
+};
+
+export const getParentElement = (
+  state: Store,
+  rootId: string,
+  elementId: string,
+): Element | null => {
+  const element = getElement(state, rootId, elementId);
+  if (!element || element.rootElement) return null;
+  return getElement(state, rootId, element.parent);
+};
+
+export const getParentElementForSelectedElement = (state: Store): Element | null => {
+  const rootId = getSelectedRootId(state);
+  const selectedElementId = getSelectedElementId(state);
+  if (!rootId || !selectedElementId) return null;
+  return getParentElement(state, rootId, selectedElementId);
+};
+
+export const isElementOrphaned = (state: Store, element: Element, rootId: string): boolean => {
+  if (element.rootElement) return false;
+  if (!element.parent) return true;
+  const parent = getParentElement(state, rootId, element.id);
+  if (!parent) return true;
+  return isElementOrphaned(state, parent, rootId);
+};
+
 export const getWidgetsForRoot = (
   state: Store,
   rootId: string | null,
 ): (Widget | CustomComponentInstance)[] => {
   if (rootId) {
-    return Object.values(state.widget[rootId]);
+    return Object.values(state.widget[rootId]).filter((w) => !isElementOrphaned(state, w, rootId));
   }
   // Return all widgets within pages
   const pages = getRoots(state).filter((r) => r.type === 'page');
   return pages.reduce<(Widget | CustomComponentInstance)[]>((acc, cur) => {
-    return [...acc, ...Object.values(state.widget[cur.id])];
+    return [
+      ...acc,
+      ...Object.values(state.widget[cur.id]).filter((w) => !isElementOrphaned(state, w, cur.id)),
+    ];
   }, []);
 };
 
@@ -128,30 +165,4 @@ export const getSelectedTree = (state: Store): Record<string, TreeItem> => {
   const rootId = getSelectedRootId(state);
   if (!rootId) return {};
   return getTreeForRoot(state, rootId);
-};
-
-export const getElement = (state: Store, rootId: string, elementId: string): Element | null => {
-  if (!rootId) return null;
-  if (rootId === elementId) {
-    if (rootId in state.page) return state.page[rootId];
-    if (rootId in state.customComponent) return state.customComponent[rootId];
-  }
-  return state.widget[rootId][elementId];
-};
-
-export const getParentElement = (
-  state: Store,
-  rootId: string,
-  elementId: string,
-): Element | null => {
-  const element = getElement(state, rootId, elementId);
-  if (!element || element.rootElement) return null;
-  return getElement(state, rootId, element.parent);
-};
-
-export const getParentElementForSelectedElement = (state: Store): Element | null => {
-  const rootId = getSelectedRootId(state);
-  const selectedElementId = getSelectedElementId(state);
-  if (!rootId || !selectedElementId) return null;
-  return getParentElement(state, rootId, selectedElementId);
 };
