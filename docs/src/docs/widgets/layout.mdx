@@ -1,0 +1,38 @@
+# Widget layout
+
+When defining a component it can be configured to have a layout.
+Layout allows you to apply a flex or grid layout to it.
+This is used in the built in `Layout` component, but can be added to any other component.
+
+When an immediate parent element has a layout defined, the style tab of a widget will display
+options related to the parent.
+
+## Basic layout
+
+Basic layout is the same as having no layout.
+It means that the widget can have layout applied to it, 
+but in this instance you have chosen not to.
+
+## Flex layout
+
+Flex layout using CSS' flexbox. The layout tab is populated with controls to configure the most
+common flexbox values. Any missing can be added in the CSS section of the styles.
+
+* Direction: Which direction it's child elements with be rendered. This can be row or column.
+* Alignment:
+* Justification:
+* Wrap:
+
+Child elements will have the options:
+
+* Self alignment:
+* Self justification:
+
+
+## Grid layout
+
+Grid layout provides an interface for defining a simplified version of CSS' grid.
+On the parent element a grid can be defined with rows and columns.
+
+Child elements can define which grid space they will occupy and how they will postion themselves in 
+that grid space.

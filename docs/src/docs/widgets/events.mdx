@@ -1,0 +1,21 @@
+# Widget events
+
+A widget can have any number of events. For example, a Button widget may have an `onClick` event.
+For each event any number of event instances may take place. There are three types of event instances:
+
+## Trigger action
+
+Any API endpoint that is a `POST` request is considered an action.
+These endpoints will not show in variables, but will in events.
+When defining a trigger action event you can select an endpoint and configure it's parameters. 
+The response is ignored.
+
+## Navigate page
+
+If your app contains multiple pages you can navigate between them with events.
+
+## Update variable
+
+Some variables are configured to update in response to an event.
+This means that when their input changes they will not update, until
+and update variable event occurs.

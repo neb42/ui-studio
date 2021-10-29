@@ -1,0 +1,32 @@
+# Widget config
+
+A widget's config defines how it is rendered to the screen.
+If you are familiar with React the config can be thought of as a component's props.
+
+For example, the built in `Text` widget has a config item called `text`. This is a string,
+that will render the value within a span tag.
+
+Config is defined with OpenAPI 3.0 meaning that each item can be one of:
+
+* string
+* number (integer is treated as number)
+* boolean
+* object
+* array
+
+There are several methods of entering values for a config item:
+
+* Static: Manually enter a value. This is a text field for string and number,
+a toggle for boolean, and a JSON editor for object and array. This is the default mode for
+object and array.
+
+* Form: This is only applicable for object and array items.
+It allows the you to enter each array item or object field as a static value.
+
+* Widget: If a widget on the page has an exposed property matching the type of the
+config item it can be used as a value.
+
+* Variable: Variable's that match the type of the config item can be used as a value.
+
+* Iterable: If the widget is a child of an iterable widget, it can use the iterator
+as it's value.
