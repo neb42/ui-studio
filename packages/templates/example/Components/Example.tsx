@@ -1,10 +1,24 @@
 import * as React from 'react';
-import { Component } from '@ui-studio/types';
+import { ComponentDefinition } from '@ui-studio/types';
 
-const Example: Component & { component: any } = {
+type Props = {
+  input: string;
+  list: string[];
+  complex: {
+    complexInput: string; 
+    complexSelect: string; 
+  },
+  complexList: {
+    complexInput: string; 
+    complexSelect: string; 
+  }[],
+  onClick: () => any;
+  onExposedPropertiesChange: (exposedProperties: Record<string, any>) => any;
+}
+
+const Example: ComponentDefinition = {
   key: 'Example',
   name: 'Example',
-  library: '',
   category: 'Examples',
   icon: 'Help',
   hasChildren: false,
@@ -61,7 +75,7 @@ const Example: Component & { component: any } = {
     { property: 'exampleProperty', schema: { type: 'string' } },
     { property: 'clickCount', schema: { type: 'number' } },
   ],
-  component: ({ onClick, list, complex, input, complexList, onExposedPropertiesChange }: any) => {
+  component: ({ input, list, complex, complexList, onClick, onExposedPropertiesChange }: Props) => {
     const [clickCount, setClickCount] = React.useState(0);
 
     React.useEffect(() => {

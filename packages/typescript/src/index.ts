@@ -1,15 +1,8 @@
-import { Component } from '@ui-studio/types';
+import { ComponentDefinition } from '@ui-studio/types';
 
 export const parseComponents = (
-  components: (Component & {
-    component: any;
-  })[],
-): Record<
-  string,
-  Component & {
-    component: any;
-  }
-> =>
+  components: ComponentDefinition[],
+): Record<string, ComponentDefinition> =>
   components.reduce(
     (acc, cur) => ({
       ...acc,

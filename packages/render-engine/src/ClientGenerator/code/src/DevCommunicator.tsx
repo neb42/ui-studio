@@ -9,6 +9,7 @@ import {
   Variable,
   Page,
   Component,
+  ComponentDefinition,
   CustomComponent,
   CustomComponentInstance,
 } from '@ui-studio/types';
@@ -55,7 +56,7 @@ export const DevCommunicator = () => {
           return [
             ...acc,
             ...Object.values(Components[cur]).map(
-              ({ component: _, ...cc }: Component & { component: React.FC }) => ({
+              ({ component: _, ...cc }: ComponentDefinition) => ({
                 ...cc,
                 library: cur,
               }),

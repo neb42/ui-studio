@@ -30,3 +30,16 @@ export interface Component {
   events?: Component$Event[];
   config?: ComponentConfig[];
 }
+
+export interface ComponentDefinition {
+  key: string;
+  name: string;
+  category: string;
+  icon: string;
+  hasChildren?: boolean;
+  hasLayout?: boolean;
+  exposedProperties?: ExposedProperty[];
+  events?: Component$Event[];
+  config?: ComponentConfig[];
+  component: (props?: any) => React.ReactNode;
+}
