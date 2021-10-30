@@ -11,15 +11,15 @@ import * as fs from 'fs-extra';
 import tar from 'tar';
 
 type RawUIStudioConfig = {
-  entryPoint: {
-    path: string;
+  entryPoint?: {
+    path?: string;
   };
-  api: {
-    path: string;
-    openAPIEndpoint: string;
+  api?: {
+    path?: string;
+    openAPIEndpoint?: string;
   };
-  components: {
-    path: string;
+  components?: {
+    path?: string;
   };
 };
 
@@ -27,6 +27,11 @@ type PackageLocation = {
   fileType: 'directory' | 'tar';
   location: 'npm' | 'file';
   uri: string;
+};
+
+const error = (message: string) => {
+  console.log(message);
+  process.exit(1);
 };
 
 const makeTempDir = (): string => {
@@ -146,10 +151,11 @@ const updatePackageJSON = (
 };
 
 const handleFile = async (filePath: string, rootDir: string) => {
+  const absoluteFilePath = path.join(process.cwd(), filePath);
   const packageLocation = {
     fileType: filePath.match(/^.+\.(tgz|tar\.gz)$/) ? 'tar' : 'directory',
     location: 'file',
-    uri: path.resolve(filePath),
+    uri: absoluteFilePath,
   } as const;
   const tempDir = makeTempDir();
   const filesRoot = await extractFiles(packageLocation, tempDir);
@@ -157,22 +163,29 @@ const handleFile = async (filePath: string, rootDir: string) => {
 
   const packageJSON = readPackageJSON(filesRoot);
   const { name } = packageJSON;
-  const version = `file:${filePath}`;
+  const version = `file:${packageLocation.uri}`;
   updatePackageJSON(name, version, templateJSON, rootDir);
 
-  if (templateJSON.api.path) {
+  if (templateJSON?.api?.path) {
     overwriteApi(path.join(filesRoot, templateJSON.api.path), rootDir);
   }
 };
 
 const handleNpm = async (template: string, rootDir: string) => {
-  const packageMatch = template.match(/^(@[^/]+\/)?([^@]+)?(@.+)?$/);
-  const scope = packageMatch[1] || '';
-  const templateName = `uis-template-${packageMatch[2] || ''}`;
+  const match = template.match(/^(@[^/]+\/)?([^@]+)?(@.+)?$/);
+  const scope = match[1] || '';
+  const requestedName = match[2] || '';
+  const requestedVersion = (match[3] || '').replace('@', '');
 
-  const name = scope ? `${scope}${templateName}` : templateName;
+  if (requestedName.length === 0) error('');
 
-  const { version, tarUrl } = await getNpmVersion(name, (packageMatch[3] || '').replace('@', ''));
+  const name = requestedName.startsWith('uis-template-')
+    ? requestedName
+    : `uis-template-${requestedName}`;
+
+  const packageName = `${scope}${name}`;
+
+  const { version, tarUrl } = await getNpmVersion(packageName, requestedVersion);
 
   const tempDir = makeTempDir();
 
@@ -186,7 +199,7 @@ const handleNpm = async (template: string, rootDir: string) => {
   const templateJSON = readTemplateJSON(filesRoot);
 
   if (templateJSON?.components?.path || templateJSON?.entryPoint?.path) {
-    updatePackageJSON(name, version, templateJSON, rootDir);
+    updatePackageJSON(packageName, version, templateJSON, rootDir);
   }
 
   if (templateJSON?.api?.path) {
