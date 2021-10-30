@@ -7,7 +7,7 @@ import { Widget, CustomComponentInstance } from '@ui-studio/types';
 import { getProp } from '../selectors';
 import { handleEvent } from '../actions/handleEvent';
 import { updateWidget } from '../actions/updateWidget';
-import { updateHoverElement, updateSelectedElement } from '../actions/development';
+// import { updateHoverElement, updateSelectedElement } from '../actions/development';
 import { Components } from '../Components';
 import { Store } from '../types/store';
 
