@@ -41,5 +41,5 @@ export interface ComponentDefinition {
   exposedProperties?: ExposedProperty[];
   events?: Component$Event[];
   config?: ComponentConfig[];
-  component: (props?: any) => React.ReactNode;
+  component: React.VoidFunctionComponent;
 }
