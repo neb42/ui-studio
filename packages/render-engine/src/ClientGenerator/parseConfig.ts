@@ -7,15 +7,15 @@ import tar from 'tar';
 import camelCase from 'lodash.camelcase';
 
 type RawUIStudioConfig = {
-  entryPoint: {
-    path: string;
+  entryPoint?: {
+    path?: string;
   };
-  api: {
-    path: string;
-    openAPIEndpoint: string;
+  api?: {
+    path?: string;
+    openAPIEndpoint?: string;
   };
-  components: {
-    path: string;
+  components?: {
+    path?: string;
   };
 };
 

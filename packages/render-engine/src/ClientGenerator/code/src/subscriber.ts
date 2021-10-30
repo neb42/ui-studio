@@ -39,6 +39,7 @@ const handleChange = async () => {
             current?.path ?? {},
             current?.query ?? {},
             current?.body ?? {},
+            null,
           );
 
           store.dispatch({
