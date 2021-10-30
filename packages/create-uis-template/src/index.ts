@@ -5,9 +5,14 @@ import { execSync } from 'child_process';
 
 import * as fs from 'fs-extra';
 import * as Mustache from 'mustache';
+import validateNpmPackageName from 'validate-npm-package-name';
 
-const error = (message: string) => {
-  console.log(message);
+const error = (message: string | string[]) => {
+  if (Array.isArray(message)) {
+    message.forEach((m) => console.log(m));
+  } else {
+    console.log(message);
+  }
   process.exit(1);
 };
 
@@ -88,9 +93,24 @@ const run = async (): Promise<void> => {
 
   if (!input || input.length === 0) error('A package name must be specified');
 
-  const [_, scope, name] = input.match(/^(@[^/]+\/)?([^@]+)?$/);
+  const match = input.match(/^(@[^/]+\/)?([^@]+)?$/);
 
-  const packageName = `${scope}${name.startsWith('uis-template-') ? '' : 'uis-template-'}${name}`;
+  const scope = match[1] || '';
+  const requestedName = match[2] || '';
+
+  // This shouldn't happen
+  if (requestedName.length === 0) error('');
+
+  const name = requestedName.startsWith('uis-template-')
+    ? requestedName
+    : `uis-template-${requestedName}`;
+
+  const packageName = `${scope}${name}`;
+
+  const { validForNewPackages, warnings, errors } = validateNpmPackageName(packageName);
+
+  if (!validForNewPackages)
+    error([`Invalid package name: ${packageName}`, ...(errors || []), ...(warnings || [])]);
 
   const directory = path.join(process.cwd(), name);
 
