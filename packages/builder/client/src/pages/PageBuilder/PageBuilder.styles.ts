@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from 'styled-components';
-import deepPurple from '@mui/material/colors/deepPurple';
+import grey from '@mui/material/colors/grey';
 
 export const Container = styled.div`
   display: grid;
@@ -24,13 +24,13 @@ export const Body = styled.div<{ loading: boolean }>`
   ${({ loading }) =>
     loading
       ? css`
-          background: ${deepPurple[300]};
+          background: ${grey[500]};
           background: linear-gradient(
             45deg,
-            ${deepPurple[300]} 0%,
-            ${deepPurple[100]} 33%,
-            ${deepPurple[300]} 66%,
-            ${deepPurple[100]} 100%
+            ${grey[500]} 0%,
+            ${grey[100]} 33%,
+            ${grey[500]} 66%,
+            ${grey[100]} 100%
           );
           background-size: 400% 400%;
           animation: ${pulse} 5s linear infinite;
