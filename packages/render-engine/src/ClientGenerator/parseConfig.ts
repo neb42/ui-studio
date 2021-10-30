@@ -156,13 +156,14 @@ export const parseConfig = async (source: string): Promise<UIStudioConfig> => {
   const dependencies = await Object.entries(pkgJson.uiStudio.dependencies).reduce<
     Promise<UIStudioConfig['dependencies']>
   >(async (acc, [name, version]) => {
+    const resolvedAcc = await acc;
     const tempDir = makeTempDir();
     const packageLocation = await getPackageLocation(name, version as string);
     const filesRoot = await extractFiles(packageLocation, tempDir);
     const packageJSON = readPackageJSON(filesRoot);
     const templateJSON = readTemplateJSON(filesRoot);
     return {
-      ...acc,
+      ...resolvedAcc,
       [packageJSON.name]: {
         name: packageJSON.name,
         version,
