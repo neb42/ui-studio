@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/render-engine",
-  "version": "0.1.50",
+  "version": "0.1.51",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/ui-studio/tree/master/packages/render-engine#readme",
@@ -22,8 +22,8 @@
     "dev": "yarn build && node build/run.js /Users/bmcalindin/workspace/DevApp"
   },
   "dependencies": {
-    "@ui-studio/types": "^0.1.39",
-    "@ui-studio/typescript": "^0.1.38",
+    "@ui-studio/types": "^0.1.40",
+    "@ui-studio/typescript": "^0.1.39",
     "fs-extra": "^9.1.0",
     "lodash.camelcase": "^4.3.0",
     "mustache": "^4.0.1",
