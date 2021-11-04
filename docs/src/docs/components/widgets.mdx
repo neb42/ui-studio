@@ -1,0 +1,30 @@
+# Building components from widgets
+
+Building components in React provide the most flexibility,
+but they require the skills of a frontend engineer.
+Reusable components are a useful concept for anyone.
+To allow for this it is possible to build a component in the builder.
+This is similar to creating a page.
+
+Next to the page selection dropdown, there is a plus button.
+Click this and then click `Component` in the menu that opens.
+This will create new component.
+
+This interface will be very similar to a page.
+You can create your component here as you would create a page
+and it can be used elsewhere, but it will not be generic.
+
+In order to make a component generic, first select the root element in the tree.
+There are two new tabs on the right-hand panel.
+
+## Config
+
+For a widget the config panel will specify which values to use for the config.
+For a component you are defining the configuration.
+Here you can add an item, choose it's type, default value, etc. Currently objects are not supported as types.
+When adding a widget to the tree of a component you can choose to use one of the component config items as it's value.
+
+## Exposed properties
+
+Each widget in the tree can have it's exposed properties.
+In this tab you can surface a property to the component, rename it, and then allow it to be used elsewhere.
