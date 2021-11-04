@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { Component } from '@ui-studio/types';
+import { ComponentDefinition } from '@ui-studio/types';
 
-export const HTML: Component & { component: any } = {
+type Props = {
+  html: string;
+};
+
+export const HTML: ComponentDefinition = {
   key: 'html',
   name: 'HTML',
   category: 'Text',
-  library: 'internal',
   icon: 'Code',
   config: [
     {
@@ -15,5 +18,5 @@ export const HTML: Component & { component: any } = {
       schema: { type: 'string' },
     },
   ],
-  component: ({ html }: { html: string }) => <div dangerouslySetInnerHTML={{ __html: html }} />,
+  component: ({ html }: Props) => <div dangerouslySetInnerHTML={{ __html: html }} />,
 };

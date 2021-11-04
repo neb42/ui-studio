@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { Component } from '@ui-studio/types';
+import { ComponentDefinition } from '@ui-studio/types';
 
-export const Conditional: Component & { component: any } = {
+type Props = {
+  activeIdx: number;
+  children?: React.ReactNode | undefined;
+};
+
+export const Conditional: ComponentDefinition = {
   key: 'conditional-renderer',
   name: 'Conditional',
   category: 'Layout',
-  library: 'internal',
   icon: 'HdrWeak',
   hasChildren: true,
   hasLayout: true,
@@ -17,7 +21,7 @@ export const Conditional: Component & { component: any } = {
       schema: { type: 'number' },
     },
   ],
-  component: ({ activeIdx, children }: any) => {
+  component: ({ activeIdx, children }: Props) => {
     const child = React.Children.toArray(children)[activeIdx];
     return child || null;
   },

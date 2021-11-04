@@ -31,15 +31,22 @@ export interface Component {
   config?: ComponentConfig[];
 }
 
-export interface ComponentDefinition {
+export type ComponentDefinition = {
   key: string;
   name: string;
   category: string;
   icon: string;
-  hasChildren?: boolean;
   hasLayout?: boolean;
   exposedProperties?: ExposedProperty[];
   events?: Component$Event[];
   config?: ComponentConfig[];
-  component: React.VoidFunctionComponent;
-}
+} & (
+  | {
+      hasChildren?: false;
+      component: React.VoidFunctionComponent;
+    }
+  | {
+      hasChildren: true;
+      component: React.FunctionComponent;
+    }
+);

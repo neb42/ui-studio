@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { Component } from '@ui-studio/types';
+import { ComponentDefinition } from '@ui-studio/types';
 
-export const Iterable: Component & { component: any } = {
+type Props = {
+  widgetId: string;
+  iteratorIndex: { [widgetId: string]: { [prop: string]: number } };
+  iterator: string[];
+  children?: React.ReactNode | undefined;
+};
+
+export const Iterable: ComponentDefinition = {
   key: 'iterable',
   name: 'Repeating',
   category: 'Layout',
-  library: 'internal',
   icon: 'ViewComfy',
   hasChildren: true,
   hasLayout: true,
@@ -18,17 +24,7 @@ export const Iterable: Component & { component: any } = {
       iterable: true,
     },
   ],
-  component: ({
-    widgetId,
-    iteratorIndex,
-    iterator,
-    children,
-  }: {
-    widgetId: string;
-    iteratorIndex: { [widgetId: string]: { [prop: string]: number } };
-    iterator: any[];
-    children: any;
-  }) => {
+  component: ({ widgetId, iteratorIndex, iterator, children }: Props) => {
     const child = React.Children.toArray(children)[0] as React.ReactElement<any>;
     if (!child || !iterator) return null;
     return iterator.map((_, idx) =>

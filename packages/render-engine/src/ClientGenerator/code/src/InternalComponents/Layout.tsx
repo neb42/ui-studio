@@ -1,13 +1,16 @@
 import * as React from 'react';
-import { Component } from '@ui-studio/types';
+import { ComponentDefinition } from '@ui-studio/types';
 
-export const Layout: Component & { component: any } = {
+type Props = {
+  children?: React.ReactNode | undefined;
+};
+
+export const Layout: ComponentDefinition = {
   key: 'layout',
   name: 'Layout',
   category: 'Layout',
-  library: 'internal',
   icon: 'DashboardSharp',
   hasChildren: true,
   hasLayout: true,
-  component: ({ children }: any) => children,
+  component: ({ children }: Props) => children,
 };
