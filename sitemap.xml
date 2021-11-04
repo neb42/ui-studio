@@ -4,8 +4,6 @@
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/api/custom</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/api/fast-api</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/api/introduction</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://neb42.github.io/ui-studio/ui-studio/components/react</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://neb42.github.io/ui-studio/ui-studio/components/widgets</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/templates/creating</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/templates/using</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/usage/custom-component</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -19,6 +17,9 @@
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/faq</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/getting-started</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/navigating-the-ui</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://neb42.github.io/ui-studio/ui-studio/components/introduction</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://neb42.github.io/ui-studio/ui-studio/components/react</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://neb42.github.io/ui-studio/ui-studio/components/widgets</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/usage/creating-docs</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/usage/navigation</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/usage/shadowing</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
