@@ -20,6 +20,8 @@
       link: '/widgets/events'
 - label: 'Components'
   items:
+    - label: 'Introduction'
+      link: '/components/introduction'
     - label: 'Writing components in React'
       link: '/components/react'
     - label: 'Building components from widgets'
