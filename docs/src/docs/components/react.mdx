@@ -1,0 +1,315 @@
+# React components
+
+Components are primarily built in React.
+This allows for a high level of customisation and for integration with existing React libraries.
+
+React components can be created in two ways:
+
+
+## Template package
+
+Creating a template package allows for reusable components across projects.
+A typical workflow would be to integrate an existing design system into UI Studio.
+Here the template package would specify the configuration for each React component
+and provide a light-weight wrapper around the component.
+It is also possible to write the entire React component within the template,
+but it is typically better to separate concerns.
+
+## The `Components` directory of your application
+
+Creating a component directly within the application can be used for elements that are
+only reusable within that application. It is a useful way of bypassing any limitations found by
+many UI builder tools and also allows for importing any other packages required.
+For example, you may want to add a d3 chart to your application and none of the existing chart templates
+work for you. You could then build a chart component in your application to the exact configuration required.
+
+## Creating a component
+
+In order to create a component there are two things to do:
+
+1. Add a component definition to a new file. Here is the `Example` component that is included in the `example` template.
+```jsx title=Components/Example.tsx
+import * as React from 'react';
+import { ComponentDefinition } from '@ui-studio/types';
+
+type Props = {
+  input: string;
+  list: string[];
+  complex: {
+    complexInput: string; 
+    complexSelect: string; 
+  },
+  complexList: {
+    complexInput: string; 
+    complexSelect: string; 
+  }[],
+  onClick: () => any;
+  onExposedPropertiesChange: (exposedProperties: Record<string, any>) => any;
+}
+
+const Example: ComponentDefinition = {
+  key: 'Example',
+  name: 'Example',
+  category: 'Examples',
+  icon: 'Help',
+  hasChildren: false,
+  hasLayout: false,
+  events: [{ key: 'onClick', label: 'Example event' }],
+  config: [
+    {
+      key: 'input',
+      label: 'Input',
+      defaultValue: 'Default input value',
+      schema: { type: 'string' },
+    },
+    {
+      key: 'list',
+      label: 'List',
+      defaultValue: 'Default list value',
+      schema: { type: 'array', items: { type: 'string' } },
+    },
+    {
+      key: 'complex',
+      label: 'Complex',
+      defaultValue: {
+        complexInput: 'Default complex input',
+        complexSelect: 'Option 2',
+      },
+      schema: {
+        type: 'object',
+        properties: {
+          complexInput: { type: 'string' },
+          complexSelect: { type: 'string', enum: ['Option 1', 'Option 2'] },
+        },
+      },
+    },
+    {
+      key: 'complexList',
+      label: 'Complex list',
+      defaultValue: {
+        complexInput: 'Default complex input',
+        complexSelect: 'Option 2',
+      },
+      schema: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            complexInput: { type: 'string' },
+            complexSelect: { type: 'string', enum: ['Option 1', 'Option 2'] },
+          },
+        },
+      },
+    },
+  ],
+  exposedProperties: [
+    { property: 'exampleProperty', schema: { type: 'string' } },
+    { property: 'clickCount', schema: { type: 'number' } },
+  ],
+  component: ({ input, list, complex, complexList, onClick, onExposedPropertiesChange }: Props) => {
+    const [clickCount, setClickCount] = React.useState(0);
+
+    React.useEffect(() => {
+      onExposedPropertiesChange({
+        exampleProperty: 'An example exposed property',
+        clickCount,
+      });
+    }, [clickCount]);
+
+    const handleOnClick = () => {
+      setClickCount(clickCount + 1);
+      onClick();
+    };
+
+    const json = (() => {
+      try {
+        return JSON.stringify(
+          {
+            list,
+            complex,
+            input,
+            complexList,
+          },
+          null,
+          2,
+        );
+      } catch {
+        return 'Error parsing json';
+      }
+    })();
+
+    return (
+      <div>
+        <div onClick={handleOnClick}>Click me</div>
+        <pre>
+          <code>{json}</code>
+        </pre>
+      </div>
+    );
+  },
+};
+
+export default Example
+```
+
+2. In `Componets/index.ts` import your new component and add it to the parse function.
+
+```jsx title=Components/index.ts highlight={3,6}
+import { parseComponents } from '@ui-studio/typescript';
+
+import Example from './Example';
+
+const Components = parseComponents([
+  Example,
+]);
+
+export default Components;
+```
+
+## Component definition
+
+This can also be found in the `ComponentDefinition` type in the [@ui-studio/types](https://github.com/neb42/ui-studio/blob/master/packages/types/src/components.ts) package.
+
+| Key               | Value                                                                       | Required  | Description | 
+| ----------------- | --------------------------------------------------------------------------- | --------- | ----------- |
+| key               | string                                                                      | yes       |             |
+| name              | string                                                                      | yes       |             |
+| category          | string                                                                      | yes       |             |
+| icon              | [key of a material ui icon](https://mui.com/components/material-icons/)     | yes       |             |
+| hasChildren       | boolean                                                                     | no        |             |
+| hasLayout         | boolean                                                                     | no        |             |
+| config            | Array of [Config](/components/react#config)                                 | no        |             |
+| component         | React functional component                                                  | yes       |             |
+| exposedProperties | Array of [Exposed properties](/components/react#exposed-properties)         | no        |             |
+| events            | Array of [Events](/components/react#events)                                 | no        |             |
+
+### Config
+
+Config allows you to specify any *** for a component.
+The type of the config item is defined using an OpenAPI schema.
+The config items are then passed to the component as props,
+with the `key` field being used as the prop name.
+
+Using an OpenAPI schema you can set a config item to be a string, number, or boolean with
+`{ type: 'string' }`, `{ type: 'number' }`, or `{ type: 'boolean' }`;
+
+If your config item is an object, the schema can be set as:
+```js
+{
+  type: 'object',
+  properties: {
+    stringProperty: { type: 'string' },
+    numberProperty: { type: 'number' },
+    booleanProperty: { type: 'boolean' },
+  },
+}
+```
+
+If your config item is an array, the schema can be set as:
+```js
+{
+  type: 'array',
+  items: { type: 'string' },
+},
+```
+
+An array of objects can be set as:
+```js
+{
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      stringProperty: { type: 'string' },
+      numberProperty: { type: 'number' },
+      booleanProperty: { type: 'boolean' },
+    },
+  },
+},
+```
+
+Both object and array types are valid OpenAPI schemas. 
+These will be displayed in the builder as separate fields,
+but can be set together using a variable or widget.
+
+> It is recommended to only use a single level of arrays or objects
+as the builder will become overly complex as your schemas become more complex.
+
+| Key           | Value             | Required  | Description | 
+| ------------- | ----------------- | --------- | ----------- |
+| key           | string            | yes       |             |
+| label         | string            | yes       |             |
+| defaultValue  | any               | yes       |             |
+| schema        | OpenAPI V3 schema | yes       |             |
+| iterable      | boolean           | no        |             |
+
+
+### Component
+
+The `component` field is the React component that is actually rendered.
+It should be a functional component.
+If the `hasChildren` prop is `true` is should take children as a prop.
+The children will be passed in through the tree and cannot be passed props
+other than iterator configuration.
+
+A components props come from three places:
+
+1. `config` Each config item coresponds to a prop. The `key` field will be it's prop name.
+2. `events` Each event coresponds to a prop. The `key` field will be it's prop name.
+3. An `onExposedPropertiesChange` prop will be passed to set exposed property values.
+4. An `iteratorIndex` prop will be passed, containing information about any iterable parents
+and the widgets position in the iterator. This is not used for getting a widget's position, but
+for setting it in an iterable component.
+
+### Exposed properties
+
+Exposed properties surface a value for a widget that can be used in other widgets, variables, events.
+For example, a text input would expose the value inputted by the user. 
+
+The `exposedProperties` field in a component is an array of properties, each consisting of:
+
+| Key       | Value             | Required  | Description | 
+| ----------| ----------------- | --------- | ----------- |
+| property  | string            | yes       |             |
+| schema    | OpenAPI V3 schema | yes       |             |
+
+The `component` is then passed a prop called `onExposedPropertiesChange`.
+This function takes an object of key/value pairs for each exposed property.
+This function should always be called with all properties.
+
+An example input component may look like:
+
+```jsx
+exposedProperties: [{ property: 'value', schema: { type: 'string' }}],
+component: ({ onExposedPropertiesChange }: Props) => {
+  const [value, setValue] = React.useState('');
+
+  React.useEffect(() => {
+    onExposedPropertiesChange({ value });
+  }, [value]);
+
+  return <input value={value} onChange={setValue} />;
+},
+```
+
+### Events
+
+Events allow for your component to interact with other parts of the application/api.
+An event definition requires little configuration as the event itself is set on a widget level.
+Each event is then passed to the component as a prop.
+
+The `events` field in a component is an array of event, each consisting of:
+
+| Key   | Value   | Required  | Description | 
+| ------| ------- | --------- | ----------- |
+| key   | string  | yes       |             |
+| label | string  | yes       |             |
+
+An example button component may look like:
+
+```jsx
+events: [{ key: 'onClick', label: 'On click' }],
+component: ({ onClick }: Props) => {
+  return <button onClick={onClick}>Click me</button>;
+},
+```
