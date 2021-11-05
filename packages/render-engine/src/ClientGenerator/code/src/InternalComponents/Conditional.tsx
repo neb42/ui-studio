@@ -23,6 +23,6 @@ export const Conditional: ComponentDefinition = {
   ],
   component: ({ activeIdx, children }: Props) => {
     const child = React.Children.toArray(children)[activeIdx];
-    return child || null;
+    return <>{child || null}</>;
   },
 };

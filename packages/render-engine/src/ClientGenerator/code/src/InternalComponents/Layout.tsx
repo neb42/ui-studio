@@ -12,5 +12,5 @@ export const Layout: ComponentDefinition = {
   icon: 'DashboardSharp',
   hasChildren: true,
   hasLayout: true,
-  component: ({ children }: Props) => children,
+  component: ({ children }: Props) => <>{children}</>,
 };

@@ -27,13 +27,17 @@ export const Iterable: ComponentDefinition = {
   component: ({ widgetId, iteratorIndex, iterator, children }: Props) => {
     const child = React.Children.toArray(children)[0] as React.ReactElement<any>;
     if (!child || !iterator) return null;
-    return iterator.map((_, idx) =>
-      React.cloneElement<any>(child, {
-        iteratorIndex: {
-          ...iteratorIndex,
-          [widgetId]: { iterator: idx },
-        },
-      }),
+    return (
+      <>
+        {iterator.map((_, idx) =>
+          React.cloneElement<any>(child, {
+            iteratorIndex: {
+              ...iteratorIndex,
+              [widgetId]: { iterator: idx },
+            },
+          }),
+        )}
+      </>
     );
   },
 };
