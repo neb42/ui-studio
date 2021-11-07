@@ -11,9 +11,7 @@
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/usage/variables</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/usage/widgets</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/variables/function</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://neb42.github.io/ui-studio/ui-studio/variables/introduction</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/variables/lookup</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://neb42.github.io/ui-studio/ui-studio/variables/static</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/faq</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/getting-started</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/navigating-the-ui</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -23,6 +21,8 @@
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/usage/creating-docs</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/usage/navigation</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/usage/shadowing</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://neb42.github.io/ui-studio/ui-studio/variables/introduction</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://neb42.github.io/ui-studio/ui-studio/variables/static</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/widgets/config</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/widgets/events</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://neb42.github.io/ui-studio/ui-studio/widgets/introduction</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
