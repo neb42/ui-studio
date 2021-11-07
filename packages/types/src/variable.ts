@@ -13,7 +13,6 @@ export type StaticVariable = BaseVariable & {
     | { valueType: 'string'; value: string }
     | { valueType: 'number'; value: number }
     | { valueType: 'boolean'; value: boolean }
-    | { valueType: 'object'; value: string }
   );
 
 export type LookupVariable = BaseVariable & {

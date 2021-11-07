@@ -141,11 +141,6 @@ export function updateStaticVariable(
   valueType: 'boolean',
   value: boolean,
 ): UpdateStaticVariable$Boolean;
-export function updateStaticVariable(
-  id: string,
-  valueType: 'object',
-  value: string,
-): UpdateStaticVariable$Boolean;
 export function updateStaticVariable(id: string, valueType: any, value: any): any {
   return (dispatch: Dispatch<UpdateStaticVariable>, getState: TGetState) => {
     const state = getState();

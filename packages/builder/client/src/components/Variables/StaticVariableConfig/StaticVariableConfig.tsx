@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import { useTheme } from 'styled-components';
-import AceEditor from 'react-ace';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,7 +12,6 @@ const valueTypeOptions = [
   { value: 'string', label: 'String' },
   { value: 'number', label: 'Number' },
   { value: 'boolean', label: 'Boolean' },
-  { value: 'object', label: 'Object' },
 ];
 
 const booleanOptions = [
@@ -27,18 +24,13 @@ interface Props {
 }
 
 export const StaticVariableConfig = ({ variable }: Props) => {
-  const theme = useTheme();
   const dispatch = useDispatch();
-  const [hasFocus, setHasFocus] = React.useState(false);
 
-  const handleValueTypeChange = (
-    event: SelectChangeEvent<'string' | 'number' | 'boolean' | 'object'>,
-  ) => {
-    const v = event.target.value as 'string' | 'number' | 'boolean' | 'object';
+  const handleValueTypeChange = (event: SelectChangeEvent<'string' | 'number' | 'boolean'>) => {
+    const v = event.target.value as 'string' | 'number' | 'boolean';
     if (v === 'string') dispatch(updateStaticVariable(variable.id, 'string', ''));
     if (v === 'number') dispatch(updateStaticVariable(variable.id, 'number', 0));
     if (v === 'boolean') dispatch(updateStaticVariable(variable.id, 'boolean', true));
-    if (v === 'object') dispatch(updateStaticVariable(variable.id, 'object', ''));
   };
 
   const handleStringValueChange = (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -49,9 +41,6 @@ export const StaticVariableConfig = ({ variable }: Props) => {
 
   const handleBooleanValueChange = (event: SelectChangeEvent<number>) =>
     dispatch(updateStaticVariable(variable.id, 'boolean', Boolean(event.target.value as number)));
-
-  const handleObjectValueChange = (value: string) =>
-    dispatch(updateStaticVariable(variable.id, 'object', value as string));
 
   return (
     <>
@@ -86,36 +75,6 @@ export const StaticVariableConfig = ({ variable }: Props) => {
             ))}
           </Select>
         </FormControl>
-      )}
-      {variable.valueType === 'object' && (
-        <AceEditor
-          mode="json"
-          theme="chrome"
-          defaultValue={variable.value}
-          onChange={handleObjectValueChange}
-          editorProps={{ $blockScrolling: true }}
-          width="100%"
-          height="300px"
-          tabSize={2}
-          wrapEnabled
-          onFocus={() => setHasFocus(true)}
-          onBlur={() => setHasFocus(false)}
-          highlightActiveLine={false}
-          showGutter={false}
-          showPrintMargin={false}
-          setOptions={{
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            enableSnippets: true,
-          }}
-          style={{
-            padding: '8px',
-            border: `1px solid ${hasFocus ? theme.palette.primary.main : theme.palette.divider}`,
-            borderRadius: '3px',
-            fontFamily: 'Menlo, monospace',
-            transition: 'border 300ms ease-in-out',
-          }}
-        />
       )}
     </>
   );
