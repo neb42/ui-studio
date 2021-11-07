@@ -13,7 +13,9 @@ export class VariableModel {
     if (type === 'static') {
       const existingValueType = VariableModel.getValueType(variable, openAPISchema, allVariables);
       switch (existingValueType) {
-        case 'string': {
+        case 'string':
+        case 'object':
+        case 'array': {
           return {
             id: variable.id,
             name: variable.name,
@@ -38,15 +40,6 @@ export class VariableModel {
             type: 'static',
             valueType: 'boolean',
             value: true,
-          };
-        }
-        case 'object': {
-          return {
-            id: variable.id,
-            name: variable.name,
-            type: 'static',
-            valueType: 'object',
-            value: '',
           };
         }
         default:
@@ -89,7 +82,7 @@ export class VariableModel {
     variable: Variable,
     openAPISchema: OpenAPIV3.Document,
     allVariables: Store$Variable,
-  ): 'string' | 'number' | 'boolean' | 'object' {
+  ): 'string' | 'number' | 'boolean' | 'object' | 'array' {
     if (variable.type === 'static') return variable.valueType;
 
     if (variable.type === 'function') {
@@ -100,7 +93,6 @@ export class VariableModel {
       );
 
       const schemaType = getSchemaType(responseSchema);
-      if (schemaType === 'array') throw new Error();
       return schemaType;
     }
 
@@ -117,7 +109,6 @@ export class VariableModel {
       const lookupSchema = getSchemaForLookup(responseSchema, variable.lookup);
 
       const schemaType = getSchemaType(lookupSchema);
-      if (schemaType === 'array') throw new Error();
       return schemaType;
     }
 
