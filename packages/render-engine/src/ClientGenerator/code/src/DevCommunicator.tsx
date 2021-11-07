@@ -20,6 +20,29 @@ import { updateHoverElement, updateSelectedElement } from './actions/development
 import { initApi } from './actions/initApi';
 import { Components } from './Components';
 
+const messages = {
+  builder: {
+    registerBuilder: 'REGISTER-BUILDER',
+    initClient: 'BUILDER: INIT-CLIENT',
+    clientReady: 'BUILDER: CLIENT-READY',
+    setServer: 'BUILDER: SET-SERVER',
+    initBuilder: 'BUILDER: INIT-BUILDER',
+    initApi: 'BUILDER: INIT-API',
+    navigatePage: 'BUILDER: NAVIGATE-PAGE',
+  },
+  client: {
+    registerClient: 'REGISTER-CLIENT',
+    initClient: 'CLIENT: INIT-CLIENT',
+    updateTree: 'CLIENT: UPDATE-TREE',
+    setOpenApiEndpoint: 'CLIENT: SET-OPEN-API-ENDPOINT',
+    reloadOpenApi: 'CLIENT: RELOAD-OPEN-API',
+    reloadComponents: 'CLIENT: RELOAD-COMPONENTS',
+    navigatePage: 'CLIENT: NAVIGATE-PAGE',
+    selectElement: 'CLIENT: SELECT-ELEMENT',
+    hoverElement: 'CLIENT: HOVER-ELEMENT',
+  },
+};
+
 export const DevCommunicator = () => {
   const dispatch = useDispatch();
   const socket = React.useMemo(() => io('http://localhost:3002'), []);
@@ -28,7 +51,9 @@ export const DevCommunicator = () => {
   const selectedElementId = useSelector((state: Store) => state.development.selectedElement);
 
   React.useEffect(() => {
-    ['init-client', 'update-tree'].forEach((e) => {
+    socket.emit(messages.client.registerClient);
+
+    [messages.client.initClient, messages.client.updateTree].forEach((e) => {
       socket.on(
         e,
         (client: {
@@ -42,15 +67,15 @@ export const DevCommunicator = () => {
     });
 
     const emitSetOpenApiEndpoint = () => {
-      socket.on('set-open-api-endpoint', async (endpoint: string) => {
+      socket.on(messages.client.setOpenApiEndpoint, async (endpoint: string) => {
         const { data: openAPIDef } = await axios.get(endpoint);
-        socket.emit('init-api', openAPIDef);
+        socket.emit(messages.builder.initApi, openAPIDef);
         dispatch(initApi(openAPIDef));
       });
     };
 
     const emitInitBuilder = () => {
-      socket.emit('init-builder', {
+      socket.emit(messages.builder.initBuilder, {
         components: Object.keys(Components).reduce<Component[]>((acc, cur) => {
           if (cur === 'functions-pkg') return acc;
           return [
@@ -69,31 +94,27 @@ export const DevCommunicator = () => {
     emitSetOpenApiEndpoint();
     emitInitBuilder();
 
-    socket.on('reload-open-api', emitSetOpenApiEndpoint);
-    socket.on('reload-components', emitInitBuilder);
+    socket.on(messages.client.reloadOpenApi, emitSetOpenApiEndpoint);
+    socket.on(messages.client.reloadComponents, emitInitBuilder);
 
-    socket.on('navigate-page', (response: { url: string }) => {
+    socket.on(messages.client.navigatePage, (response: { url: string }) => {
       if (response.url !== location.pathname) {
         history.push(response.url);
       }
     });
 
-    socket.on('select-element', (response: { id: string | null }) => {
+    socket.on(messages.client.selectElement, (response: { id: string | null }) => {
       if (response.id !== selectedElementId) dispatch(updateSelectedElement(response.id));
     });
 
-    socket.on('hover-element', (response: { id: string | null }) => {
+    socket.on(messages.client.hoverElement, (response: { id: string | null }) => {
       dispatch(updateHoverElement(response.id));
     });
   }, []);
 
   React.useEffect(() => {
-    socket.emit('navigate-page', { url: location.pathname });
+    socket.emit(messages.builder.navigatePage, { url: location.pathname });
   }, [location.pathname]);
-
-  React.useEffect(() => {
-    socket.emit('select-element', { id: selectedElementId });
-  }, [selectedElementId]);
 
   return null;
 };
