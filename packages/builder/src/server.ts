@@ -10,29 +10,60 @@ import axios from 'axios';
 type Args = {
   REPO_PATH: string;
   SERVER_PORT: number;
-  PREVIEW_SERVER_PORT: number;
   PREVIEW_CLIENT_PORT: number;
 };
 
 const POLL_TIMEOUT = 1000;
+
+const rooms = {
+  client: 'CLIENT',
+  builder: 'BUILDER',
+  server: 'SERVER',
+};
+
+const messages = {
+  builder: {
+    registerBuilder: 'REGISTER-BUILDER',
+    initClient: 'BUILDER: INIT-CLIENT',
+    clientReady: 'BUILDER: CLIENT-READY',
+    setServer: 'BUILDER: SET-SERVER',
+    initBuilder: 'BUILDER: INIT-BUILDER',
+    initApi: 'BUILDER: INIT-API',
+    navigatePage: 'BUILDER: NAVIGATE-PAGE',
+  },
+  client: {
+    registerClient: 'REGISTER-CLIENT',
+    initClient: 'CLIENT: INIT-CLIENT',
+    updateTree: 'CLIENT: UPDATE-TREE',
+    setOpenApiEndpoint: 'CLIENT: SET-OPEN-API-ENDPOINT',
+    reloadOpenApi: 'CLIENT: RELOAD-OPEN-API',
+    reloadComponents: 'CLIENT: RELOAD-COMPONENTS',
+    navigatePage: 'CLIENT: NAVIGATE-PAGE',
+    selectElement: 'CLIENT: SELECT-ELEMENT',
+    hoverElement: 'CLIENT: HOVER-ELEMENT',
+  },
+};
 
 export class Server {
   private server: http.Server;
 
   private port: number;
 
-  private webSocket: socketio.Socket;
+  private io: socketio.Server;
 
   private clientReady = false;
 
   private clientPort: number;
 
-  public constructor({ REPO_PATH, SERVER_PORT, PREVIEW_SERVER_PORT, PREVIEW_CLIENT_PORT }: Args) {
-    const app = this.createApp();
-    this.server = this.createServer(app);
-    this.createWebSocket(this.server, REPO_PATH, PREVIEW_SERVER_PORT, PREVIEW_CLIENT_PORT);
+  private clientUrl = '/';
+
+  public constructor({ REPO_PATH, SERVER_PORT, PREVIEW_CLIENT_PORT }: Args) {
     this.port = SERVER_PORT;
     this.clientPort = PREVIEW_CLIENT_PORT;
+
+    const app = this.createApp();
+    this.server = this.createServer(app);
+    this.io = this.createWebSocket(this.server, REPO_PATH);
   }
 
   public start = (): void => {
@@ -41,14 +72,14 @@ export class Server {
   };
 
   public reloadComponents = (): void => {
-    if (this.webSocket) {
-      this.webSocket.emit('reload-components');
+    if (this.io) {
+      this.io.to(rooms.client).emit(messages.client.reloadComponents);
     }
   };
 
   public reloadOpenApiSpec = (): void => {
-    if (this.webSocket) {
-      this.webSocket.emit('reload-open-api');
+    if (this.io) {
+      this.io.to(rooms.client).emit(messages.client.reloadOpenApi);
     }
   };
 
@@ -71,17 +102,11 @@ export class Server {
     return server;
   };
 
-  private createWebSocket = (
-    server: http.Server,
-    REPO_PATH: string,
-    PREVIEW_SERVER_PORT: number,
-    PREVIEW_CLIENT_PORT: number,
-  ): socketio.Server => {
+  private createWebSocket = (server: http.Server, REPO_PATH: string): socketio.Server => {
     const io = socketio(server);
     io.origins('*:*');
 
     io.on('connection', (socket) => {
-      this.webSocket = socket;
       const clientJsonPath = path.join(REPO_PATH, 'client.json');
       const clientJson = JSON.parse(readFileSync(clientJsonPath).toString());
 
@@ -89,50 +114,78 @@ export class Server {
       const packageJson = JSON.parse(readFileSync(packageJsonPath).toString());
       const { openAPIEndpoint } = packageJson.uiStudio;
 
-      if (this.clientReady) {
-        socket.emit('client-ready');
-      }
-
-      socket.emit('init-client', clientJson);
-
-      socket.emit('set-open-api-endpoint', openAPIEndpoint);
-
-      socket.emit('set-server', {
-        host: 'http://localhost',
-        serverPort: PREVIEW_SERVER_PORT,
-        clientPort: PREVIEW_CLIENT_PORT,
+      socket.on(messages.builder.registerBuilder, () => {
+        this.registerBuilder(socket, clientJson, clientJsonPath);
       });
 
-      socket.on('init-builder', (r) => {
-        socket.broadcast.emit('init-builder', r);
-      });
-
-      socket.on('init-api', (r) => {
-        socket.broadcast.emit('init-api', r);
-      });
-
-      socket.on('elements-updated', async (elements) => {
-        socket.broadcast.emit('update-tree', elements);
-        writeFileSync(
-          clientJsonPath,
-          JSON.stringify({ version: clientJson.version, ...elements }, null, 4),
-        );
-      });
-
-      socket.on('navigate-page', (r) => {
-        socket.broadcast.emit('navigate-page', r);
-      });
-
-      socket.on('select-element', (r) => {
-        socket.broadcast.emit('select-element', r);
-      });
-
-      socket.on('hover-element', (r) => {
-        socket.broadcast.emit('hover-element', r);
+      socket.on(messages.client.registerClient, () => {
+        this.registerClient(socket, clientJson, openAPIEndpoint);
       });
     });
 
     return io;
+  };
+
+  private registerBuilder = (
+    socket: socketio.Socket,
+    clientJson: any,
+    clientJsonPath: string,
+  ): void => {
+    socket.join(rooms.builder);
+
+    if (this.clientReady) {
+      socket.to(socket.id).emit(messages.builder.clientReady);
+    }
+
+    socket.to(socket.id).emit(messages.builder.initClient, clientJson);
+
+    socket.to(socket.id).emit(messages.builder.setServer, {
+      host: 'http://localhost',
+      clientPort: this.clientPort,
+    });
+
+    socket.on(messages.client.updateTree, (elements) => {
+      socket.to(rooms.client).emit(messages.client.updateTree, elements);
+      writeFileSync(
+        clientJsonPath,
+        JSON.stringify({ version: clientJson.version, ...elements }, null, 4),
+      );
+    });
+
+    socket.on(messages.client.navigatePage, (r) => {
+      socket.to(rooms.client).emit(messages.client.navigatePage, r);
+    });
+
+    socket.on(messages.client.hoverElement, (r) => {
+      socket.to(rooms.client).emit(messages.client.hoverElement, r);
+    });
+
+    socket.on(messages.client.selectElement, (r) => {
+      socket.to(rooms.client).emit(messages.client.selectElement, r);
+    });
+  };
+
+  private registerClient = (
+    socket: socketio.Socket,
+    clientJson: string,
+    openAPIEndpoint: string,
+  ): void => {
+    socket.join(rooms.client);
+
+    socket.to(socket.id).emit(messages.client.initClient, clientJson);
+    socket.to(socket.id).emit(messages.client.setOpenApiEndpoint, openAPIEndpoint);
+
+    socket.on(messages.builder.navigatePage, (r) => {
+      socket.to(rooms.builder).emit(messages.builder.navigatePage, r);
+    });
+
+    socket.on(messages.builder.initApi, (r) => {
+      socket.to(rooms.builder).emit(messages.builder.initApi, r);
+    });
+
+    socket.on(messages.builder.initBuilder, (r) => {
+      socket.to(rooms.builder).emit(messages.builder.initBuilder, r);
+    });
   };
 
   private pollClient = () => {
@@ -142,7 +195,7 @@ export class Server {
       try {
         await axios.get(`http://localhost:${this.clientPort}`);
         this.clientReady = true;
-        this.webSocket.emit('client-ready');
+        this.io.to(rooms.builder).emit(messages.builder.clientReady);
       } catch {
         timeout = setTimeout(doPoll, POLL_TIMEOUT);
       }

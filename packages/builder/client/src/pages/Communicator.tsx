@@ -12,6 +12,29 @@ import { initComponents, initApi } from 'actions/configuration';
 import { initClient } from 'actions/init';
 import { selectRootElement, selectElement, setPreviewReady, setPreviewServer } from 'actions/view';
 
+const messages = {
+  builder: {
+    registerBuilder: 'REGISTER-BUILDER',
+    initClient: 'BUILDER: INIT-CLIENT',
+    clientReady: 'BUILDER: CLIENT-READY',
+    setServer: 'BUILDER: SET-SERVER',
+    initBuilder: 'BUILDER: INIT-BUILDER',
+    initApi: 'BUILDER: INIT-API',
+    navigatePage: 'BUILDER: NAVIGATE-PAGE',
+  },
+  client: {
+    registerClient: 'REGISTER-CLIENT',
+    initClient: 'CLIENT: INIT-CLIENT',
+    updateTree: 'CLIENT: UPDATE-TREE',
+    setOpenApiEndpoint: 'CLIENT: SET-OPEN-API-ENDPOINT',
+    reloadOpenApi: 'CLIENT: RELOAD-OPEN-API',
+    reloadComponents: 'CLIENT: RELOAD-COMPONENTS',
+    navigatePage: 'CLIENT: NAVIGATE-PAGE',
+    selectElement: 'CLIENT: SELECT-ELEMENT',
+    hoverElement: 'CLIENT: HOVER-ELEMENT',
+  },
+};
+
 const getUrl = (state: Store) => {
   const root = getSelectedRootElement(state);
   if (!root) return '';
@@ -35,8 +58,12 @@ export const Communicator = (): null => {
   const variables = useSelector(getVariables);
 
   React.useEffect(() => {
+    socket.on('connect', () => {
+      socket.emit(messages.builder.registerBuilder);
+    });
+
     socket.on(
-      'init-client',
+      messages.builder.initClient,
       async (client: {
         tree: Store$Tree;
         variables: Store$Variable;
@@ -47,35 +74,32 @@ export const Communicator = (): null => {
       },
     );
 
-    socket.on('client-ready', () => dispatch(setPreviewReady(true)));
+    socket.on(messages.builder.clientReady, () => dispatch(setPreviewReady(true)));
 
-    socket.on('set-server', ({ host, clientPort }: { host: string; clientPort: number }) =>
-      dispatch(setPreviewServer(host, clientPort)),
+    socket.on(
+      messages.builder.setServer,
+      ({ host, clientPort }: { host: string; clientPort: number }) =>
+        dispatch(setPreviewServer(host, clientPort)),
     );
 
     socket.on(
-      'init-builder',
+      messages.builder.initBuilder,
       ({ components }: { components: Component[]; colors: Store$Configuration['colors'] }) => {
         dispatch(initComponents(components));
       },
     );
 
-    socket.on('init-api', (openAPIDef: OpenAPIV3.Document) => {
+    socket.on(messages.builder.initApi, (openAPIDef: OpenAPIV3.Document) => {
       dispatch(initApi(openAPIDef));
-    });
-
-    socket.on('select-element', (response: { id: string | null }) => {
-      if (response.id !== selectedElementId) dispatch(selectElement(response.id));
     });
   }, []);
 
   React.useEffect(() => {
-    socket.on('navigate-page', (response: { url: string }) => {
+    socket.on(messages.builder.navigatePage, (response: { url: string }) => {
       if (url) {
         const currentRootIdentifier = url.replace('/__customComponent', '').replace('/', '');
         const nextRootIdentifier = response.url.replace('/__customComponent', '').replace('/', '');
         if (currentRootIdentifier !== nextRootIdentifier) {
-          // TODO check if page or component
           const nextRootId = roots.find((p) => p.name === nextRootIdentifier)?.id;
           if (nextRootId) dispatch(selectRootElement(nextRootId));
         }
@@ -84,19 +108,19 @@ export const Communicator = (): null => {
   }, [JSON.stringify(roots), url]);
 
   React.useEffect(() => {
-    if (isLoaded) socket.emit('elements-updated', { tree, variables, colors: colorConfig });
+    if (isLoaded) socket.emit(messages.client.updateTree, { tree, variables, colors: colorConfig });
   }, [JSON.stringify(tree), JSON.stringify(variables)]);
 
   React.useEffect(() => {
-    socket.emit('navigate-page', { url });
+    socket.emit(messages.client.navigatePage, { url });
   }, [url]);
 
   React.useEffect(() => {
-    socket.emit('select-element', { id: selectedElementId });
+    socket.emit(messages.client.selectElement, { id: selectedElementId });
   }, [selectedElementId]);
 
   React.useEffect(() => {
-    socket.emit('hover-element', { id: hoverElementId });
+    socket.emit(messages.client.hoverElement, { id: hoverElementId });
   }, [hoverElementId]);
 
   return null;

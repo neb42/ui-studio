@@ -25,7 +25,6 @@ const run = async (): Promise<void> => {
   const server = new Server({
     REPO_PATH,
     SERVER_PORT,
-    PREVIEW_SERVER_PORT,
     PREVIEW_CLIENT_PORT,
   });
 
