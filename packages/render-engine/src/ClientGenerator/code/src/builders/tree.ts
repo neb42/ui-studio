@@ -21,36 +21,6 @@ const getElements = createSelector<
   (widgets, pages) => ({ widgets, pages }),
 );
 
-// UNUSED
-// export const useBuildTree = (): ElementTreeNode[] => {
-//   const { widgets, pages } = useSelector(getElements);
-
-//   const all = { ...pages, ...widgets };
-
-//   const elementGraph = Graph();
-//   Object.keys(all).forEach((k) => elementGraph.addNode(k));
-//   Object.values(widgets).forEach((v) => elementGraph.addEdge(v.parent, v.id));
-
-//   const buildTree = (node: string): ElementTreeNode => {
-//     const element = all[node];
-//     const children = elementGraph.adjacent(node);
-//     return {
-//       id: element.id,
-//       name: element.name,
-//       type: element.type,
-//       position: element.rootElement ? 0 : element.position,
-//       children: children
-//         .map(buildTree)
-//         .sort((a: ElementTreeNode, b: ElementTreeNode) => (a.position > b.position ? 1 : -1)),
-//       element,
-//     };
-//   };
-
-//   const elementTree: ElementTreeNode[] = Object.keys(pages).map(buildTree);
-
-//   return elementTree;
-// };
-
 export const useChildrenMap = (
   nodeId: string,
   rootId: string | null = null,
@@ -83,5 +53,8 @@ export const useChildrenMap = (
     });
   }, [JSON.stringify(children)]);
 
-  return children.sort((a, b) => (a.position > b.position ? 1 : -1)).map((c) => childrenMap[c.id]);
+  return children
+    .sort((a, b) => (a.position > b.position ? 1 : -1))
+    .map((c) => childrenMap[c.id])
+    .filter((c) => c);
 };
