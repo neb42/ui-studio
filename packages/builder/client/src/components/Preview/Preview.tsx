@@ -4,13 +4,16 @@ import { getPreviewSize, getPreviewUrl } from 'selectors/view';
 
 import * as Styles from './Preview.styles';
 
-export const Preview = (): JSX.Element => {
-  const url = useSelector(getPreviewUrl);
-  const previewSize = useSelector(getPreviewSize);
+// eslint-disable-next-line react/display-name
+export const Preview = React.memo(
+  (): JSX.Element => {
+    const url = useSelector(getPreviewUrl);
+    const previewSize = useSelector(getPreviewSize);
 
-  return (
-    <Styles.Container>
-      <Styles.Iframe previewSize={previewSize} src={url} />
-    </Styles.Container>
-  );
-};
+    return (
+      <Styles.Container>
+        <Styles.Iframe previewSize={previewSize} src={url} />
+      </Styles.Container>
+    );
+  },
+);
