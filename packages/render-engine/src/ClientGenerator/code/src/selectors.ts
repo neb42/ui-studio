@@ -44,14 +44,6 @@ export const getVariableValue = (state: Store) => (variableId: string, lookup: s
   if (!variable && variableConfig.type !== 'lookup') return null;
 
   try {
-    if (variableConfig.type === 'static') {
-      if (variableConfig.valueType === 'object') {
-        if (typeof variable === 'string') {
-          variable = JSON.parse(variable);
-        }
-      }
-    }
-
     if (variableConfig.type === 'function') {
       const schema = getResponseSchemaForEndpoint(
         state.variable.openAPISchema,
