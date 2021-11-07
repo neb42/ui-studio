@@ -18,7 +18,6 @@ const POLL_TIMEOUT = 1000;
 const rooms = {
   client: 'CLIENT',
   builder: 'BUILDER',
-  server: 'SERVER',
 };
 
 const messages = {
@@ -115,11 +114,11 @@ export class Server {
       const { openAPIEndpoint } = packageJson.uiStudio;
 
       socket.on(messages.builder.registerBuilder, () => {
-        this.registerBuilder(socket, clientJson, clientJsonPath);
+        this.registerBuilder(io, socket, clientJson, clientJsonPath);
       });
 
       socket.on(messages.client.registerClient, () => {
-        this.registerClient(socket, clientJson, openAPIEndpoint);
+        this.registerClient(io, socket, clientJson, openAPIEndpoint);
       });
     });
 
@@ -127,64 +126,66 @@ export class Server {
   };
 
   private registerBuilder = (
+    io: socketio.Server,
     socket: socketio.Socket,
     clientJson: any,
     clientJsonPath: string,
   ): void => {
-    socket.join(rooms.builder);
+    socket.join(rooms.builder, () => {
+      if (this.clientReady) {
+        io.to(socket.id).emit(messages.builder.clientReady);
+      }
 
-    if (this.clientReady) {
-      socket.to(socket.id).emit(messages.builder.clientReady);
-    }
+      io.to(socket.id).emit(messages.builder.initClient, clientJson);
 
-    socket.to(socket.id).emit(messages.builder.initClient, clientJson);
+      io.to(socket.id).emit(messages.builder.setServer, {
+        host: 'http://localhost',
+        clientPort: this.clientPort,
+      });
 
-    socket.to(socket.id).emit(messages.builder.setServer, {
-      host: 'http://localhost',
-      clientPort: this.clientPort,
-    });
+      socket.on(messages.client.updateTree, (elements) => {
+        socket.to(rooms.client).emit(messages.client.updateTree, elements);
+        writeFileSync(
+          clientJsonPath,
+          JSON.stringify({ version: clientJson.version, ...elements }, null, 4),
+        );
+      });
 
-    socket.on(messages.client.updateTree, (elements) => {
-      socket.to(rooms.client).emit(messages.client.updateTree, elements);
-      writeFileSync(
-        clientJsonPath,
-        JSON.stringify({ version: clientJson.version, ...elements }, null, 4),
-      );
-    });
+      socket.on(messages.client.navigatePage, (r) => {
+        socket.to(rooms.client).emit(messages.client.navigatePage, r);
+      });
 
-    socket.on(messages.client.navigatePage, (r) => {
-      socket.to(rooms.client).emit(messages.client.navigatePage, r);
-    });
+      socket.on(messages.client.hoverElement, (r) => {
+        socket.to(rooms.client).emit(messages.client.hoverElement, r);
+      });
 
-    socket.on(messages.client.hoverElement, (r) => {
-      socket.to(rooms.client).emit(messages.client.hoverElement, r);
-    });
-
-    socket.on(messages.client.selectElement, (r) => {
-      socket.to(rooms.client).emit(messages.client.selectElement, r);
+      socket.on(messages.client.selectElement, (r) => {
+        socket.to(rooms.client).emit(messages.client.selectElement, r);
+      });
     });
   };
 
   private registerClient = (
+    io: socketio.Server,
     socket: socketio.Socket,
     clientJson: string,
     openAPIEndpoint: string,
   ): void => {
-    socket.join(rooms.client);
+    socket.join(rooms.client, () => {
+      io.to(socket.id).emit(messages.client.initClient, clientJson);
+      io.to(socket.id).emit(messages.client.setOpenApiEndpoint, openAPIEndpoint);
 
-    socket.to(socket.id).emit(messages.client.initClient, clientJson);
-    socket.to(socket.id).emit(messages.client.setOpenApiEndpoint, openAPIEndpoint);
+      socket.on(messages.builder.navigatePage, (r) => {
+        socket.to(rooms.builder).emit(messages.builder.navigatePage, r);
+      });
 
-    socket.on(messages.builder.navigatePage, (r) => {
-      socket.to(rooms.builder).emit(messages.builder.navigatePage, r);
-    });
+      socket.on(messages.builder.initApi, (r) => {
+        socket.to(rooms.builder).emit(messages.builder.initApi, r);
+      });
 
-    socket.on(messages.builder.initApi, (r) => {
-      socket.to(rooms.builder).emit(messages.builder.initApi, r);
-    });
-
-    socket.on(messages.builder.initBuilder, (r) => {
-      socket.to(rooms.builder).emit(messages.builder.initBuilder, r);
+      socket.on(messages.builder.initBuilder, (r) => {
+        socket.to(rooms.builder).emit(messages.builder.initBuilder, r);
+      });
     });
   };
 
