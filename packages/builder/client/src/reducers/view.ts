@@ -137,6 +137,10 @@ export const view = (
       };
     }
     case INIT_CLIENT: {
+      const rootIds = Object.keys(action.payload.tree);
+      if (state.tree.rootId && rootIds.includes(state.tree.rootId)) {
+        return state;
+      }
       return {
         ...state,
         tree: {
