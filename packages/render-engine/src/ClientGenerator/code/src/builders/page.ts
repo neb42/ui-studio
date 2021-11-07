@@ -28,7 +28,7 @@ export const PageBuilder = ({ pageId }: { pageId: string }): React.ReactElement<
   const page = useSelector((state: Store) => state.root.config[pageId]);
   const children = useChildrenMap(pageId);
 
-  const handleMouseLeave = () => dispatch(updateHoverElement(null));
+  const handleMouseLeave = React.useCallback(() => dispatch(updateHoverElement(null)), []);
 
   return React.createElement(
     PageWrapper,
