@@ -1,23 +1,14 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { Widget, Page, CustomComponent, CustomComponentInstance } from '@ui-studio/types';
 
-import { Store, KeyedObject } from '../types/store';
+import { Store } from '../types/store';
 
 import { WidgetBuilder } from './widget';
 
-const getElements = createSelector<
-  Store,
-  KeyedObject<Widget | CustomComponentInstance>,
-  KeyedObject<Page | CustomComponent>,
-  {
-    widgets: KeyedObject<Widget | CustomComponentInstance>;
-    pages: KeyedObject<Page | CustomComponent>;
-  }
->(
-  (state) => state.widget.config,
-  (state) => state.root.config,
+const getElements = createSelector(
+  (state: Store) => state.widget.config,
+  (state: Store) => state.root.config,
   (widgets, pages) => ({ widgets, pages }),
 );
 
