@@ -1,7 +1,7 @@
 {
   "name": "@ui-studio/docs",
   "private": true,
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Documentation for UI Studio",
   "author": "Ben McAlindin <bmcalindin@gmail.com> (@neb42)",
   "license": "MIT",

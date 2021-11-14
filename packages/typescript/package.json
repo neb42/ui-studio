@@ -1,6 +1,6 @@
 {
   "name": "@ui-studio/typescript",
-  "version": "0.1.42",
+  "version": "0.1.43",
   "description": "> TODO: description",
   "author": "Ben McAlindin <bmcalindin@faculty.ai>",
   "homepage": "https://github.com/neb42/ui-studio/tree/master/packages/typescript#readme",
@@ -18,7 +18,7 @@
     "build": "rm -rf build/* && tsc"
   },
   "dependencies": {
-    "@ui-studio/types": "^0.1.43"
+    "@ui-studio/types": "^0.1.44"
   },
   "publishConfig": {
     "access": "public"
