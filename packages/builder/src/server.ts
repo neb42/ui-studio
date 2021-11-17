@@ -56,6 +56,8 @@ export class Server {
 
   private clientUrl = '/';
 
+  private pollTimeout: NodeJS.Timeout | null;
+
   public constructor({ REPO_PATH, SERVER_PORT, PREVIEW_CLIENT_PORT }: Args) {
     this.port = SERVER_PORT;
     this.clientPort = PREVIEW_CLIENT_PORT;
@@ -68,6 +70,14 @@ export class Server {
   public start = (): void => {
     this.server.listen(this.port);
     this.pollClient();
+  };
+
+  public stop = (): void => {
+    this.server.close();
+    if (this.pollTimeout) {
+      clearTimeout(this.pollTimeout);
+      this.pollTimeout = null;
+    }
   };
 
   public reloadComponents = (): void => {
@@ -190,15 +200,15 @@ export class Server {
   };
 
   private pollClient = () => {
-    let timeout: NodeJS.Timeout | null = null;
-
     const doPoll = async () => {
       try {
         await axios.get(`http://localhost:${this.clientPort}`);
         this.clientReady = true;
         this.io.to(rooms.builder).emit(messages.builder.clientReady);
+        clearTimeout(this.pollTimeout);
+        this.pollTimeout = null;
       } catch {
-        timeout = setTimeout(doPoll, POLL_TIMEOUT);
+        this.pollTimeout = setTimeout(doPoll, POLL_TIMEOUT);
       }
     };
 

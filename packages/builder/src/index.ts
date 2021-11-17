@@ -71,6 +71,16 @@ const run = async (): Promise<void> => {
   clientRunner.start();
 
   watcher.watch();
+
+  ['exit', 'SIGINT', 'SIGTERM'].forEach((eventType) => {
+    process.on(eventType, () => {
+      server.stop();
+      apiRunner.stop();
+      clientRunner.stop();
+      componentsRunner.stop();
+      watcher.stop();
+    });
+  });
 };
 
 if (typeof require !== 'undefined' && require.main === module) {
