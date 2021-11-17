@@ -13,33 +13,10 @@ import { Store } from '../types/store';
 
 import { useChildrenMap } from './tree';
 
-const WidgetWrapper = styled.div<{ widget: Widget | CustomComponentInstance; isSelected: boolean }>`
-  ${({ widget }) =>
-    widget.layout?.type === 'grid'
-      ? `
-        display: grid;
-        grid-template-columns: ${widget.layout.columns
-          .map((l) => `${l.value || ''}${l.unit}`)
-          .join(' ')};
-        grid-template-rows: ${widget.layout.rows.map((l) => `${l.value || ''}${l.unit}`).join(' ')};
-        grid-column-gap: ${widget.layout.columnGap}px;
-        grid-row-gap: ${widget.layout.rowGap}px;
-        align-items: ${widget.layout.rowAlignment};
-        justify-content: ${widget.layout.columnAlignment};
-      `
-      : ''}
-
-  ${({ widget }) =>
-    widget.layout?.type === 'flex'
-      ? `
-        display: flex;
-        flex-direction: ${widget.layout.direction};
-        align-items: ${widget.layout.align};
-        justify-content: ${widget.layout.justify};
-        flex-wrap: ${widget.layout.wrap ? 'wrap' : 'nowrap'};
-      `
-      : ''}
-
+const WidgetStyleWrapper = styled.div<{
+  widget: Widget | CustomComponentInstance;
+  isSelected: boolean;
+}>`
   ${({ widget }) =>
     widget.style.type === 'grid'
       ? `
@@ -69,6 +46,34 @@ const WidgetWrapper = styled.div<{ widget: Widget | CustomComponentInstance; isS
   ${({ widget }) => widget.style.css}
 
   ${({ isSelected }) => (isSelected ? 'border: 1px solid #000;' : '')}
+`;
+
+const WidgetLayoutWrapper = styled.div<{ widget: Widget | CustomComponentInstance }>`
+  ${({ widget }) =>
+    widget.layout?.type === 'grid'
+      ? `
+        display: grid;
+        grid-template-columns: ${widget.layout.columns
+          .map((l) => `${l.value || ''}${l.unit}`)
+          .join(' ')};
+        grid-template-rows: ${widget.layout.rows.map((l) => `${l.value || ''}${l.unit}`).join(' ')};
+        grid-column-gap: ${widget.layout.columnGap}px;
+        grid-row-gap: ${widget.layout.rowGap}px;
+        align-items: ${widget.layout.rowAlignment};
+        justify-content: ${widget.layout.columnAlignment};
+      `
+      : ''}
+
+  ${({ widget }) =>
+    widget.layout?.type === 'flex'
+      ? `
+        display: flex;
+        flex-direction: ${widget.layout.direction};
+        align-items: ${widget.layout.align};
+        justify-content: ${widget.layout.justify};
+        flex-wrap: ${widget.layout.wrap ? 'wrap' : 'nowrap'};
+      `
+      : ''}
 `;
 
 const useGetProps = (
@@ -209,15 +214,23 @@ export const WidgetBuilder: React.FC<any> = ({
     widget.type === 'widget' ? Components[widget.library][widget.component].component : 'div';
 
   return React.createElement(
-    WidgetWrapper,
+    WidgetStyleWrapper,
     {
-      key: `widget-wrapper-${widget.id}`,
+      key: `widget-style-wrapper-${widget.id}`,
       className: widget.style.classNames,
       // onClick: handleOnClick,
       // onMouseOver: handleOnMouseMove,
       widget,
       isSelected,
     },
-    React.createElement(C, props, children),
+    React.createElement(
+      C,
+      props,
+      React.createElement(
+        WidgetLayoutWrapper,
+        { key: `widget-layout-wrapper-${widget.id}`, widget },
+        children,
+      ),
+    ),
   );
 };
