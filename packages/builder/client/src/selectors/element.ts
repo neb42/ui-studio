@@ -109,8 +109,8 @@ export const getAvailableIteratorKeys = (state: Store) => (
         throw new Error();
       })();
       const iterablePropKeys = Object.keys(cur.props).reduce<string[]>((a, c) => {
-        const iterableSchema = propSchemaLookup[c].schema;
-        if (iterableSchema.type === 'array' && propSchemaLookup[c].iterable) {
+        const iterableSchema = propSchemaLookup[c]?.schema;
+        if (iterableSchema && iterableSchema.type === 'array' && propSchemaLookup[c].iterable) {
           const iterableArrayItemSchema = (iterableSchema as OpenAPIV3.ArraySchemaObject).items;
           if ('ref' in iterableArrayItemSchema) throw new Error();
           if (
