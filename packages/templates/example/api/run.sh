@@ -31,18 +31,18 @@ start() {
       echo "pyenv and pyenv-virtualenv required"
       exit 1
   else
-      if ! [ -d "$(pyenv root)/versions/3.9.7" ]
+      if ! [ -d "$(pyenv root)/versions/3.9.11" ]
       then
-          echo "Installing python 3.9.7..."
-          pyenv install 3.9.7
+          echo "Installing python 3.9.11..."
+          pyenv install 3.9.11
       else
-          echo "Python 3.9.7 is already installed"
+          echo "Python 3.9.11 is already installed"
       fi
 
       if ! [ -d "$(pyenv root)/versions/ui-studio-api" ]
       then
           echo "Creating ui-studio-api virtualenv..."
-          pyenv virtualenv 3.9.7 ui-studio-api
+          pyenv virtualenv 3.9.11 ui-studio-api
       else
           echo "Using existing ui-studio-api virtualenv"
       fi
