@@ -7,3 +7,5 @@ yarn-error.log
 **/*.pid
 
 **/*.pyc
+
+.DS_Store
