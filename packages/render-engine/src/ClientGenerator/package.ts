@@ -40,6 +40,13 @@ const devDependencies = [
   { name: '@types/styled-components', version: '^5.1.4', last: false },
 ];
 
+const resolveVersionPath = (version: string): string => {
+  if (version.startsWith('file:') || version.startsWith('link:')) {
+    return `${version.substring(0, 5)}${path.resolve(version.substring(5))}`;
+  }
+  return version;
+};
+
 const generatePackageFile = async (config: UIStudioConfig, source: string): Promise<void> => {
   const dependencies = [...baseDependencies];
   dependencies.push({
@@ -51,7 +58,7 @@ const generatePackageFile = async (config: UIStudioConfig, source: string): Prom
   Object.values(config.dependencies).forEach((d) =>
     dependencies.push({
       name: d.name,
-      version: d.version,
+      version: resolveVersionPath(d.version),
       last: false,
     }),
   );
