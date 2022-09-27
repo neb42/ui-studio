@@ -3,3 +3,5 @@
 **/yarn-error.log
 **/lerna-debug.log
 **/.ui-studio/
+
+.DS_Store
