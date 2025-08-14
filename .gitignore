@@ -3,5 +3,6 @@
 **/yarn-error.log
 **/lerna-debug.log
 **/.ui-studio/
+**/__pycache__/
 
 .DS_Store
